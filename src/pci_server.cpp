@@ -23,8 +23,6 @@ public:
 
 void pci::main(std::string /*url*/) {
 
-	cerr << "Hello world!" << endl;
-
 	main_screen_content::content c;
 	// For DB
 	try {
