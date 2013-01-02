@@ -1,0 +1,38 @@
+html, body {
+	color: black;
+	border: 1px solid red; /* For debug purposes */
+	font: normal 16px Arial, sans-serif;
+	margin:0;
+}
+
+h1{
+	text-align: center;
+}
+
+.content{
+	border: inherit;
+	height: 300px;
+	width: 500px;
+	margin: 0 auto;
+}
+
+.big_button {
+	font-size: 20px;
+	text-align:center;
+	line-height: 200px;
+	height: 200px;
+	width: 200px;
+	border: 2px solid #333;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+.big_button:hover{
+	background-color: #ddd;
+}
+
+#problems{
+	float: left;
+}
+#ideas{
+	float: right;
+}

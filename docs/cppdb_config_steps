@@ -1,0 +1,21 @@
+install mysql (with mysql-libs)
+
+run mysql_secure_installation
+
+mysql -u root -p
+\. cppcms_db.sql (inside mysql client) (the file is in gdrive and has a simple fruit(id,name,variety) table)
+
+download cppdb tar from sourceforge
+
+extract, cd to folder
+
+mkdir build
+cd build
+cmake -DMYSQL_PATH=/usr/include/mysql -DMYSQL_LIB=/usr/lib64/mysql/libmysqlclient.so ..
+(to avoid errors with /usr/local/lib, do the steps about ldconfig in the end of http://cppcms.com/wikipp/en/page/cppcms_1x_build_troubleshooting)
+
+make
+make install
+
+build with:
+c++ hello.cpp -lcppcms -lcppdb -o hello (note -lcppdb)

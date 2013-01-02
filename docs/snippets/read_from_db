@@ -1,0 +1,19 @@
+
+	// For DB
+	try {
+		// Scheme mysql:database=test;user=joe;password='secret'
+		cppdb::session sql("mysql:database=cppcms;user=cpp_user;password='cpp_user'");
+
+		cppdb::result res = sql << "SELECT * FROM fruit";
+		
+		while(res.next()) {
+			int fruit_id;
+			string name;
+			string variety;
+			res >> fruit_id >> name >> variety;
+			response().out()<< fruit_id << '\t' << name << '\t' << variety << "<br>";
+		}
+	}
+	catch(exception const &e) {
+		cerr << "ERROR: " << e.what() << endl;
+	} 

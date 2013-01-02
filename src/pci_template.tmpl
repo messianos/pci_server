@@ -1,0 +1,25 @@
+<% c++ #include "main_screen_content.h" %>  
+<% skin main_screen_skin %>
+<% view welcome uses main_screen_content::content %>  
+<% template render() %>  
+<html> 
+	<head>
+	    <link href="css/basic_style.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div class="content">
+			<h1>Bienvenido <%= user_id %>!</h1>
+			<div class = "button_wrapper">
+				<div class = "big_button" id="problems">
+					Problemas
+				</div>
+				<div class = "big_button" id="ideas">
+					Ideas
+				</div>
+			</div>
+		</div>
+	</body>  
+<html>  
+<% end template %>  
+<% end view %>  
+<% end skin %>  
