@@ -1,3 +1,4 @@
+#include <string>
 using namespace std;
 
 #ifndef CLARIFICATION_H_
