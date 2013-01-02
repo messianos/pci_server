@@ -1,5 +1,6 @@
 -- CREATE DATABASE
 CREATE DATABASE cppcms;
+USE cppcms;
  
 -- CREATE USER
 CREATE USER 'cpp_user'@'localhost' IDENTIFIED BY 'cpp_user';
