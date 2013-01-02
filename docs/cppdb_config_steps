@@ -3,7 +3,7 @@ install mysql (with mysql-libs)
 run mysql_secure_installation
 
 mysql -u root -p
-\. cppcms_db.sql (inside mysql client) (the file is in gdrive and has a simple fruit(id,name,variety) table)
+source cppcms_db.sql (inside mysql client) (the file is in gdrive and has a simple fruit(id,name,variety) table)
 
 download cppdb tar from sourceforge
 

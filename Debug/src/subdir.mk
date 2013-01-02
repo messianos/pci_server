@@ -4,17 +4,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Publication.cpp \
 ../src/pci_server.cpp \
 ../src/pci_template.cpp 
 
 OBJS += \
-./src/Publication.o \
 ./src/pci_server.o \
 ./src/pci_template.o 
 
 CPP_DEPS += \
-./src/Publication.d \
 ./src/pci_server.d \
 ./src/pci_template.d 
 
