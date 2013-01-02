@@ -14,6 +14,10 @@ public:
 	Solution getSolution(long id);
 	/* TODO: define returned data structure */ searchSolutions(long problem_id);
 
+	// Clarification-related queries
+	Clarification getClarification(long id);
+	/* TODO: define returned data structure */ searchClarifications(long associated_publication_id);
+
 	// User-related queries
 	User getUser(long user_name);
 };
