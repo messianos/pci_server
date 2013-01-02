@@ -14,7 +14,6 @@ using namespace std;
 
 class Publication {
 public:
-	Publication();
 	Publication(long id, string content, string description,
 			bool is_anonymous, time_t last_edition_datetime,
 			time_t creation_datetime);

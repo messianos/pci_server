@@ -4,17 +4,20 @@
  *  Created on: Jan 2, 2013
  *      Author: GNZ
  */
+#include <string>
+#include <ctime>
 
+using namespace std;
 
 #ifndef USER_H_
 #define USER_H_
 
-#include <string>
-#include <ctime>
-#include "Dateclass.h"
-using namespace std;
-
 class User {
+public:
+	User();
+	virtual ~User();
+
+
 private:
 	string user_name;
 	string first_name;
@@ -25,9 +28,7 @@ private:
 	Date_class birth_date;
 	time_t signup_date;
 
-public:
-	User();
-	virtual ~User();
+
 
 };
 

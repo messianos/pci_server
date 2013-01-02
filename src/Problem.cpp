@@ -6,8 +6,8 @@
  */
 
 #include "Problem.h"
-Problem::Problem(long id, string content, string description, bool is_anonymous,
-		time_t last_edition_datetime, time_t creation_datetime) {
+
+Problem::Problem() {
 	// TODO Auto-generated constructor stub
 
 }

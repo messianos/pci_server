@@ -1,5 +1,12 @@
+
+
 #ifndef DATABASEINTERFACE_H_
 #define DATABASEINTERFACE_H_
+
+#include "Problem.h"
+#include "Solution.h"
+#include "Clarification.h"
+#include "User.h"
 
 class DatabaseInterface {
 public:
