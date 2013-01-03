@@ -7,12 +7,18 @@
 
 #include "Server.h"
 
-
 using namespace std;
 
 Server::Server(cppcms::service &srv) :
-					cppcms::application(srv)  {
-	dispatcher().assign()
+		cppcms::application(srv) {
+	dispatcher().assign("", &Server::welcome, this);
+	mapper().assign("");
+
+	dispatcher().assign("/home", &Server::home, this);
+
+	dispatcher().assign("/problem", &Server::problem, this);
+
+	dispatcher().assign("/solution", &Server::solution, this);
 
 }
 
@@ -20,8 +26,23 @@ Server::~Server() {
 	// TODO Auto-generated destructor stub
 }
 
-void Server::main(string url){
-	cerr << "hello world!";
+void Server::welcome() {
+	response().out() << "Welcome";
+}
+
+void Server::home() {
+	response().out() << "Home";
+}
+
+void Server::problem() {
+	response().out() << "Problem";
+}
+
+void Server::solution() {
+	response().out() << "Solution";
+}
+
+void Server::main(string url) {
 }
 
 int main(int argc, char ** argv) {

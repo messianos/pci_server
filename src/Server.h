@@ -20,11 +20,16 @@
 using namespace std;
 
 class Server : public cppcms::application {
+
 public:
 	Server();
 	Server(cppcms::service &srv);
 	virtual ~Server();
 	virtual void main(string url);
+	void welcome();
+	void home();
+	void problem();
+	void solution();
 };
 
 #endif /* SERVER_H_ */

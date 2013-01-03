@@ -8,6 +8,6 @@
 	},
 	"file_server" : {  
 		"enable": true, // This is for being able to use css
-		"document_root" : "../www"
+		"document_root" : "www"
 	}
 }

@@ -7,6 +7,10 @@
 
 #include "Publication.h"
 
+Publication::Publication(){
+
+}
+
 Publication::Publication(long id, string content, string description,
 		bool is_anonymous, time_t last_edition_datetime,
 		time_t creation_datetime) {

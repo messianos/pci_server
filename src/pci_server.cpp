@@ -27,8 +27,7 @@ void pci::main(std::string /*url*/) {
 	// For DB
 	try {
 		// Scheme mysql:database=test;user=joe;password='secret'
-		cppdb::session sql;
-		sql = new cppdb::session(
+		cppdb::session sql(
 				"mysql:database=cppcms;user=cpp_user;password='cpp_user'");
 
 		cppdb::result res = sql

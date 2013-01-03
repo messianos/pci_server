@@ -7,6 +7,10 @@
 
 #include "Dateclass.h"
 
+Date_class::Date_class(){
+
+}
+
 Date_class::Date_class(int day, int month, int year) {
 	this->year = year;
 	this->month = month;
