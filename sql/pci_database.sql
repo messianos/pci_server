@@ -50,69 +50,6 @@ IDENTIFIED BY PASSWORD '*6D4CC5751FA512A297F78B8A892AAF9D051B0231';
  * 
  */
 
-/*
-
-CREATE TABLE IF NOT EXISTS Clarification (
-	answer TEXT,
-	associated_publication_id TIPODEID,
-	creator_user_name VARCHAR(MAX_CHAR_USER_NAME),
-	id TIPODEID,
-	question TEXT,
-	PRIMARY KEY(id),
-	FOREIGN KEY(associated_publication_id) REFERENCES Publication(id),
-	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-);
-
-CREATE TABLE IF NOT EXISTS User (
-	birth_date DATE,
-	email VARCHAR(MAX_CHAR_EMAIL),
-	first_name VARCHAR(MAX_CHAR_FIRST_NAME),
-	genre ENUM('M', 'F', 'U'), -- M: male / F: female / U: unspecified
-	last_name VARCHAR(MAX_CHAR_LAST_NAME),
-	location TIPODELOCATION,
-	password VARCHAR(MAX_CHAR_PASSWORD), -- Encrypted password
-	signup_date DATE,
-	user_name VARCHAR(MAX_CHAR_USER_NAME),
-	PRIMARY KEY(user_name)
-);
-
-CREATE TABLE IF NOT EXISTS Problem (
-	accepted_solution_id TIPODEID,
-	content MEDIUMTEXT,
-	creation_datetime DATETIME,
-	creator_user_name VARCHAR(MAX_CHAR_USER_NAME),
-	description TEXT,
-	id TIPODEID,
-	is_anonymous BOOLEAN,
-	is_solved BOOLEAN,
-	last_edition_datetime DATETIME,
-	PRIMARY KEY(id),
-	FOREIGN KEY(accepted_solution_id) REFERENCES Solution(id),
-	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-);
-
-CREATE TABLE IF NOT EXISTS Solution (
-	content MEDIUMTEXT,
-	creation_datetime DATETIME,
-	creator_user_name VARCHAR(MAX_CHAR_USER_NAME),
-	description TEXT,
-	id TIPODEID,
-	is_anonymous BOOLEAN,
-	last_edition_datetime DATETIME,
-	PRIMARY KEY(id),
-	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-);
-
-CREATE TABLE IF NOT EXISTS problem_solutions (
-	problem_id TIPODEID,
-	solution_id TIPODEID,
-	PRIMARY KEY(problem_id, solution_id),
-	FOREIGN KEY(problem_id) REFERENCES Problem(id),
-	FOREIGN KEY(solution_id) REFERENCES Solution(id)
-);
-
-*/
-
 CREATE TABLE IF NOT EXISTS User (
 	birth_date DATE,
 	email VARCHAR(255),
@@ -124,7 +61,7 @@ CREATE TABLE IF NOT EXISTS User (
 	signup_date DATE,
 	user_name VARCHAR(31),
 	PRIMARY KEY(user_name)
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Solution (
 	content MEDIUMTEXT,
@@ -136,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Solution (
 	last_edition_datetime DATETIME,
 	PRIMARY KEY(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Problem (
 	accepted_solution_id BIGINT,
@@ -151,7 +88,7 @@ CREATE TABLE IF NOT EXISTS Problem (
 	PRIMARY KEY(id),
 	FOREIGN KEY(accepted_solution_id) REFERENCES Solution(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS Clarification (
 	answer TEXT,
@@ -161,7 +98,7 @@ CREATE TABLE IF NOT EXISTS Clarification (
 	question TEXT,
 	PRIMARY KEY(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-);
+) ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS problem_solutions (
 	problem_id BIGINT,
@@ -169,4 +106,4 @@ CREATE TABLE IF NOT EXISTS problem_solutions (
 	PRIMARY KEY(problem_id, solution_id),
 	FOREIGN KEY(problem_id) REFERENCES Problem(id),
 	FOREIGN KEY(solution_id) REFERENCES Solution(id)
-);
+) ENGINE = InnoDB;
