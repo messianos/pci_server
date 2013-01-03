@@ -4,7 +4,7 @@
 <% template render() %>  
 <html> 
 	<head>
-	    <link href="css/basic_style.css" rel="stylesheet" type="text/css">
+	    <link href="/css/basic_style.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 		<div class="content">
@@ -16,6 +16,32 @@
 				<div class = "big_button" id="ideas" onclick="location.href='/pci/ideasHome'">
 					Ideas
 				</div>
+			</div>
+		</div>
+	</body>  
+<html>  
+<% end template %>  
+<% end view %>  
+
+<% view problemsHome uses main_screen_content::problemsHome %>  
+<% template render() %>
+<html> 
+	<head>
+	    <link href="/css/problemsHome.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div class="content">
+			<h1>Problemas</h1>
+			<div class = "button_wrapper">
+				<% foreach problem in problems %>  
+ 					<% item %>
+						<div class = "publication" onclick="location.href='/pci/problemsHome'">
+							ProblemID = <%= problem.getID() %>
+						</div>  
+  					<% end %>
+					<% empty %>  
+  					<h2>No problems</h2>  
+				<% end %>
 			</div>
 		</div>
 	</body>  

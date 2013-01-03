@@ -19,6 +19,8 @@ public:
 			bool is_anonymous, time_t last_edition_datetime,
 			time_t creation_datetime);
 	virtual ~Publication();
+	long getID();
+	void setID(long id);
 private:
 	long id;
 	string content;

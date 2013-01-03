@@ -26,7 +26,7 @@ Server::Server(cppcms::service &srv) :
 	dispatcher().assign("/solution", &Server::solution, this);
 	mapper().assign("solution", "/solution");
 
-    mapper().root("/pci");
+	mapper().root("/pci");
 }
 
 Server::~Server() {
@@ -40,10 +40,18 @@ void Server::welcome() {
 }
 
 void Server::problems_home() {
-	response().out() << "Problems Home";
+	main_screen_content::problemsHome ph;
+
+	for (int i = 0; i < 10; ++i) {
+		Problem p;
+		p.setID(i);
+		ph.problems.push_back(p);
+	}
+
+	render("problemsHome", ph);
 }
 
-void Server::ideas_home(){
+void Server::ideas_home() {
 	response().out() << "Ideas Home";
 }
 

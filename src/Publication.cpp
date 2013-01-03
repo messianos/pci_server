@@ -26,3 +26,10 @@ Publication::~Publication() {
 // TODO Auto-generated destructor stub
 }
 
+long Publication::getID(){
+	return id;
+}
+
+void Publication::setID(long id){
+	this->id = id;
+}
