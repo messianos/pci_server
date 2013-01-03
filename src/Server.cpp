@@ -6,7 +6,7 @@
  */
 
 #include "Server.h"
-
+#include "main_screen_content.h"
 using namespace std;
 
 Server::Server(cppcms::service &srv) :
@@ -14,8 +14,11 @@ Server::Server(cppcms::service &srv) :
 	dispatcher().assign("", &Server::welcome, this);
 	mapper().assign("");
 
-	dispatcher().assign("/home", &Server::home, this);
-	mapper().assign("home", "/home");
+	dispatcher().assign("/problemsHome", &Server::problems_home, this);
+	mapper().assign("problemsHome", "/problemsHome");
+
+	dispatcher().assign("/ideasHome", &Server::ideas_home, this);
+	mapper().assign("ideasHome", "/ideasHome");
 
 	dispatcher().assign("/problem", &Server::problem, this);
 	mapper().assign("problem", "/problem");
@@ -31,11 +34,17 @@ Server::~Server() {
 }
 
 void Server::welcome() {
-	response().out() << "Welcome";
+	main_screen_content::content c;
+	c.user_id = "Anonimo";
+	render("welcome", c);
 }
 
-void Server::home() {
-	response().out() << "Home";
+void Server::problems_home() {
+	response().out() << "Problems Home";
+}
+
+void Server::ideas_home(){
+	response().out() << "Ideas Home";
 }
 
 void Server::problem() {

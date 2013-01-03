@@ -26,7 +26,8 @@ public:
 	Server(cppcms::service &srv);
 	virtual ~Server();
 	void welcome();
-	void home();
+	void problems_home();
+	void ideas_home();
 	void problem();
 	void solution();
 };
