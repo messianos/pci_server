@@ -170,7 +170,3 @@ CREATE TABLE IF NOT EXISTS problem_solutions (
 	FOREIGN KEY(problem_id) REFERENCES Problem(id),
 	FOREIGN KEY(solution_id) REFERENCES Solution(id)
 );
-
--- TESTING --------------------------------------------------------------------
-
-
