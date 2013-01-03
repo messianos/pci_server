@@ -25,7 +25,6 @@ public:
 	Server();
 	Server(cppcms::service &srv);
 	virtual ~Server();
-	virtual void main(string url);
 	void welcome();
 	void home();
 	void problem();

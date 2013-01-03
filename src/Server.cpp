@@ -15,11 +15,15 @@ Server::Server(cppcms::service &srv) :
 	mapper().assign("");
 
 	dispatcher().assign("/home", &Server::home, this);
+	mapper().assign("home", "/home");
 
 	dispatcher().assign("/problem", &Server::problem, this);
+	mapper().assign("problem", "/problem");
 
 	dispatcher().assign("/solution", &Server::solution, this);
+	mapper().assign("solution", "/solution");
 
+    mapper().root("/pci");
 }
 
 Server::~Server() {
@@ -40,9 +44,6 @@ void Server::problem() {
 
 void Server::solution() {
 	response().out() << "Solution";
-}
-
-void Server::main(string url) {
 }
 
 int main(int argc, char ** argv) {

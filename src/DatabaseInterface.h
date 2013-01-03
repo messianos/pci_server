@@ -10,6 +10,8 @@
 #include <cppdb/frontend.h>
 #include <list>
 
+using namespace std;
+
 class DatabaseInterface {
 private:
 	cppdb::session databaseHandler;
@@ -21,15 +23,15 @@ public:
 
 	// Problem-related queries
 	Problem *getProblem(long id);
-	list<Problem> searchProblems(/* TODO: define parameters */);
+	list<Problem>* searchProblems(/* TODO: define parameters */);
 
 	// Solution-related queries
 	Solution *getSolution(long id);
-	list<Solution> searchSolutions(long problem_id);
+	list<Solution>* searchSolutions(long problem_id);
 
 	// Clarification-related queries
 	Clarification *getClarification(long id);
-	list<Clarification> searchClarifications(long associated_publication_id);
+	list<Clarification>* searchClarifications(long associated_publication_id);
 
 	// User-related queries
 	User *getUser(long user_name);

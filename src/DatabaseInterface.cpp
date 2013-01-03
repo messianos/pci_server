@@ -24,8 +24,9 @@ Problem *DatabaseInterface::getProblem(long id) {
 	return problem;
 }
 
-list<Problem> DatabaseInterface::searchProblems(/* TODO: define parameters */) {
+list<Problem>* DatabaseInterface::searchProblems(/* TODO: define parameters */) {
 	// TODO
+	return new list<Problem>;
 }
 
 Solution *DatabaseInterface::getSolution(long id) {
@@ -39,8 +40,9 @@ Solution *DatabaseInterface::getSolution(long id) {
 	return solution;
 }
 
-list<Solution> DatabaseInterface::searchSolutions(long problem_id) {
+list<Solution>* DatabaseInterface::searchSolutions(long problem_id) {
 	// TODO
+	return new list<Solution>;
 }
 
 Clarification *DatabaseInterface::getClarification(long id) {
@@ -54,9 +56,9 @@ Clarification *DatabaseInterface::getClarification(long id) {
 	return clarification;
 }
 
-list<Clarification> DatabaseInterface::searchClarifications(long associated_publication_id) {
+list<Clarification>* DatabaseInterface::searchClarifications(long associated_publication_id) {
 	// TODO
-	list<Clarification> list;
+	list<Clarification>* lista = new list<Clarification>();
 	Clarification *clarification;
 	string answer;
 	string creator_user_name;
@@ -76,12 +78,13 @@ list<Clarification> DatabaseInterface::searchClarifications(long associated_publ
 		clarification->setAnswer(answer);
 		clarification->setId(id);
 		clarification->setQuestion(question);
-		list.push_back(*clarification);
+		lista->push_back(*clarification);
 	}
 
-	return list;
+	return lista;
 }
 
 User *DatabaseInterface::getUser(long user_name) {
 	// TODO
+	return 0;
 }
