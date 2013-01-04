@@ -7,10 +7,10 @@ DELETE IGNORE FROM Problem;
 DELETE IGNORE FROM Solution;
 DELETE IGNORE FROM User;
 
-INSERT IGNORE INTO User(user_name)
-VALUES ('problem_related_user');
-INSERT IGNORE INTO User(user_name)
-VALUES ('solution_related_user');
+INSERT IGNORE INTO User(user_name, password)
+VALUES ('problem_related_user', 'password');
+INSERT IGNORE INTO User(user_name, password)
+VALUES ('solution_related_user', 'password');
 
 INSERT IGNORE INTO Problem(content, creator_user_name, description, id, is_anonymous, is_solved)
 VALUES ('problem content', 'problem_related_user', 'problem description', 123, FALSE, FALSE);
