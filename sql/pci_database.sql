@@ -139,37 +139,37 @@ END; !
  */
 CREATE PROCEDURE sign_up
 (
-	/*IN in_birth_date DATE,
+	IN in_birth_date DATE,
 	IN in_email VARCHAR(255),
 	IN in_first_name VARCHAR(31),
 	IN in_genre ENUM('M', 'F', 'U'),
 	IN in_last_name VARCHAR(31),
 	IN in_location VARCHAR(15),
 	IN in_password VARCHAR(127),
-	IN in_signup_date DATE,*/
+	IN in_signup_date DATE,
 	IN in_user_name VARCHAR(31)
 )
 BEGIN
 	INSERT INTO User(
-		/*birth_date,
+		birth_date,
 		email,
 		first_name,
 		genre,
 		last_name,
 		location,
 		password,
-		signup_date,*/
+		signup_date,
 		user_name
 	)
 	VALUES (
-		/*in_birth_date,
+		in_birth_date,
 		in_email,
 		in_first_name,
 		in_genre,
 		in_last_name,
 		in_location,
 		in_password,
-		in_signup_date,*/
+		in_signup_date,
 		in_user_name
 	);
 END; !
