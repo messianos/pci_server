@@ -14,20 +14,17 @@ using namespace std;
 
 class Publication {
 public:
-	Publication();
-	Publication(long id, string content, string description,
-			bool is_anonymous, time_t last_edition_datetime,
-			time_t creation_datetime);
-	virtual ~Publication();
-	long getID();
-	void setID(long id);
-private:
-	long id;
 	string content;
+	time_t creation_datetime;
+	string creator_user_name;
 	string description;
+	long id;
 	bool is_anonymous;
 	time_t last_edition_datetime;
-	time_t creation_datetime;
+
+	Publication();
+	virtual ~Publication();
+
 };
 
 #endif /* PUBLICATION_H_ */

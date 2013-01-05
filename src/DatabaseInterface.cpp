@@ -1,8 +1,9 @@
 #include "DatabaseInterface.h"
 
-
 DatabaseInterface::DatabaseInterface() {
-	databaseHandler = cppdb::session("mysql: database=pci_database; user=pci_user; password=pci_password");
+	databaseHandler =
+			cppdb::session(
+					"mysql: database=pci_database; user=pci_user; password='pci_password'");
 }
 
 DatabaseInterface::~DatabaseInterface() {
@@ -10,72 +11,103 @@ DatabaseInterface::~DatabaseInterface() {
 	databaseHandler.~session();
 }
 
-Problem *DatabaseInterface::getProblem(long id) {
+Problem *DatabaseInterface::getProblem(long searched_id) {
 
 	Problem *problem;
 
-	cppdb::result result = databaseHandler << "SELECT * FROM Problem WHERE id = ?" << id;
+	cppdb::result result = databaseHandler
+			<< "SELECT * FROM Problem WHERE id = ?" << searched_id;
 	problem = new Problem();
-	// TODO: set the problem attributes
+
+	result.next();
+
+	result.fetch("accepted_solution_id", problem->accepted_solution_id);
+	result.fetch("content", problem->content);
+	result.fetch("creation_datetime", problem->creation_datetime);
+	result.fetch("creator_user_name", problem->creator_user_name);
+	result.fetch("description", problem->description);
+	result.fetch("id", problem->id);
+
+	short int boolean;
+	result.fetch("is_anonymous", boolean);
+	problem->is_anonymous = boolean;
+	result.fetch("is_solved", boolean);
+	problem->is_solved = boolean;
+	result.fetch("last_edition_datetime", problem->last_edition_datetime);
 
 	return problem;
 }
 
-list<Problem>* DatabaseInterface::searchProblems(/* TODO: define parameters */) {
+list<Problem*>* DatabaseInterface::searchProblems(/* TODO: define parameters */) {
 	// TODO
-	return new list<Problem>;
+	return new list<Problem*> ;
 }
 
-Solution *DatabaseInterface::getSolution(long id) {
+Solution *DatabaseInterface::getSolution(long searched_id) {
 
 	Solution *solution;
 
-	cppdb::result result = databaseHandler << "SELECT * FROM Solution WHERE id = ?" << id;
+	cppdb::result result = databaseHandler
+			<< "SELECT * FROM Solution WHERE id = ?" << searched_id;
 	solution = new Solution();
-	// TODO: set the solution attributes
+
+	result.next();
+
+	result.fetch("content", solution->content);
+	result.fetch("creation_datetime", solution->creation_datetime);
+	result.fetch("creator_user_name", solution->creator_user_name);
+	result.fetch("description", solution->description);
+	result.fetch("id", solution->id);
+
+	short int boolean;
+	result.fetch("is_anonymous", boolean);
+	solution->is_anonymous = boolean;
+	result.fetch("last_edition_datetime", solution->last_edition_datetime);
 
 	return solution;
 }
 
-list<Solution>* DatabaseInterface::searchSolutions(long problem_id) {
+list<Solution*>* DatabaseInterface::searchSolutions(long problem_id) {
 	// TODO
-	return new list<Solution>;
+	return new list<Solution*> ;
 }
 
-Clarification *DatabaseInterface::getClarification(long id) {
+Clarification *DatabaseInterface::getClarification(long searched_id) {
 
 	Clarification *clarification;
 
-	cppdb::result result = databaseHandler << "SELECT * FROM Clarification WHERE id = ?" << id;
+	cppdb::result result = databaseHandler
+			<< "SELECT * FROM Clarification WHERE id = ?" << searched_id;
 	clarification = new Clarification();
-	// TODO: set the clarification attributes
+
+	result.next();
+
+	result.fetch("answer", clarification->answer);
+	result.fetch("creator_user_name", clarification->creator_user_name);
+	result.fetch("id", clarification->id);
+	result.fetch("question", clarification->question);
 
 	return clarification;
 }
 
-list<Clarification>* DatabaseInterface::searchClarifications(long associated_publication_id) {
-	// TODO
-	list<Clarification>* lista = new list<Clarification>();
-	Clarification *clarification;
-	string answer;
-	string creator_user_name;
-	long id;
-	string question;
+list<Clarification*>* DatabaseInterface::searchClarifications(
+		long associated_publication_id) {
 
-	cppdb::result result = databaseHandler << "SELECT * FROM Clarification WHERE id = ?" << associated_publication_id;
+	list<Clarification*>* lista = new list<Clarification*>();
+
+	cppdb::result result = databaseHandler
+			<< "SELECT * FROM Clarification WHERE id = ?"
+			<< associated_publication_id;
 
 	while (result.next()) {
-		result.fetch("answer", answer);
-		result.fetch("user_name", creator_user_name);
-		result.fetch("id", id);
-		result.fetch("question", question);
+		Clarification *clarification = new Clarification();
 
-		// TODO: check attribute setters
-		clarification = new Clarification();
-		clarification->setAnswer(answer);
-		clarification->setId(id);
-		clarification->setQuestion(question);
-		lista->push_back(*clarification);
+		result.fetch("answer", clarification->answer);
+		result.fetch("creator_user_name", clarification->creator_user_name);
+		result.fetch("id", clarification->id);
+		result.fetch("question", clarification->question);
+
+		lista->push_back(clarification);
 	}
 
 	return lista;
@@ -84,4 +116,12 @@ list<Clarification>* DatabaseInterface::searchClarifications(long associated_pub
 User *DatabaseInterface::getUser(long user_name) {
 	// TODO
 	return 0;
+}
+
+void DatabaseInterface::insertProblem(Problem problem) {
+	cppdb::statement statement;
+	statement =
+			databaseHandler
+					<< "INSERT INTO Problem (accepted_solution_id,content,creation_datetime, creation_user_name, description, id, is_anonymous, is_solve, last_edition) "
+
 }

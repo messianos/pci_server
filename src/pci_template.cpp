@@ -84,7 +84,7 @@ namespace main_screen_skin {
 						"\t\t\t\t\t\t<div class = \"publication\" onclick=\"location.href='/pci/problemsHome'\">\n"
 						"\t\t\t\t\t\t\tProblemID = ";
 					#line 39 "pci_template.tmpl"
-					out()<<cppcms::filters::escape(problem.getID());
+					out()<<cppcms::filters::escape(problem->id);
 					#line 41 "pci_template.tmpl"
 					out()<<"\n"
 						"\t\t\t\t\t\t</div>  \n"

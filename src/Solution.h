@@ -13,9 +13,6 @@
 class Solution: public Publication {
 public:
 	Solution();
-	Solution(long id, string content, string description,
-			bool is_anonymous, time_t last_edition_datetime,
-			time_t creation_datetime);
 	virtual ~Solution();
 };
 

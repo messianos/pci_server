@@ -11,6 +11,8 @@ using namespace std;
 
 Server::Server(cppcms::service &srv) :
 		cppcms::application(srv) {
+	db = new DatabaseInterface();
+
 	dispatcher().assign("", &Server::welcome, this);
 	mapper().assign("");
 
@@ -42,9 +44,8 @@ void Server::welcome() {
 void Server::problems_home() {
 	main_screen_content::problemsHome ph;
 
-	for (int i = 0; i < 10; ++i) {
-		Problem p;
-		p.setID(i);
+	for (int i = 0; i < 1; ++i) {
+		Problem* p = db->getProblem(1000);
 		ph.problems.push_back(p);
 	}
 

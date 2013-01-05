@@ -16,11 +16,13 @@
 #include <cppcms/url_mapper.h>
 #include <stdlib.h>
 #include <iostream>
+#include "DatabaseInterface.h"
 
 using namespace std;
 
 class Server : public cppcms::application {
-
+private:
+	DatabaseInterface* db;
 public:
 	Server();
 	Server(cppcms::service &srv);

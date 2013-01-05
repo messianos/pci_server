@@ -36,7 +36,7 @@
 				<% foreach problem in problems %>  
  					<% item %>
 						<div class = "publication" onclick="location.href='/pci/problemsHome'">
-							ProblemID = <%= problem.getID() %>
+							ProblemID = <%= problem->id %>
 						</div>  
   					<% end %>
 					<% empty %>  

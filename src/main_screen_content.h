@@ -8,6 +8,6 @@ namespace main_screen_content{
 		string user_id;
 	};
 	struct problemsHome : public cppcms::base_content{
-		list<Problem> problems;
+		list<Problem*> problems;
 	};
 }
