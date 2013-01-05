@@ -2,6 +2,9 @@
 #include "DateClass.h"
 #include <sstream>
 #include <string>
+#include <iostream>
+
+// TODO: Fix Datetime attributes fetching, now they're commented
 
 DatabaseInterface::DatabaseInterface() {
 	databaseHandler =
@@ -25,8 +28,7 @@ Problem *DatabaseInterface::getProblem(long searched_id) {
 	result.next();
 
 	result.fetch("accepted_solution_id", problem->accepted_solution_id);
-	result.fetch("content", problem->content);
-	result.fetch("creation_datetime", problem->creation_datetime);
+	//result.fetch("creation_datetime", problem->creation_datetime);
 	result.fetch("creator_user_name", problem->creator_user_name);
 	result.fetch("description", problem->description);
 	result.fetch("id", problem->id);
@@ -36,7 +38,8 @@ Problem *DatabaseInterface::getProblem(long searched_id) {
 	problem->is_anonymous = boolean;
 	result.fetch("is_solved", boolean);
 	problem->is_solved = boolean;
-	result.fetch("last_edition_datetime", problem->last_edition_datetime);
+	result.fetch("content", problem->content);
+	//result.fetch("last_edition_datetime", problem->last_edition_datetime);
 
 	return problem;
 }
@@ -57,7 +60,7 @@ Solution *DatabaseInterface::getSolution(long searched_id) {
 	result.next();
 
 	result.fetch("content", solution->content);
-	result.fetch("creation_datetime", solution->creation_datetime);
+	//result.fetch("creation_datetime", solution->creation_datetime);
 	result.fetch("creator_user_name", solution->creator_user_name);
 	result.fetch("description", solution->description);
 	result.fetch("id", solution->id);
@@ -65,14 +68,26 @@ Solution *DatabaseInterface::getSolution(long searched_id) {
 	short int boolean;
 	result.fetch("is_anonymous", boolean);
 	solution->is_anonymous = boolean;
-	result.fetch("last_edition_datetime", solution->last_edition_datetime);
+	//result.fetch("last_edition_datetime", solution->last_edition_datetime);
 
 	return solution;
 }
 
 list<Solution*>* DatabaseInterface::searchSolutions(long problem_id) {
-	// TODO
-	return new list<Solution*> ;
+	list<Solution*>* lista = new list<Solution*>();
+
+	cppdb::result result = databaseHandler
+			<< "SELECT * FROM problem_solutions WHERE problem_id = ?"
+			<< problem_id;
+	// TODO: Should a join be maked instead of N solutions search by id?
+
+	while (result.next()) {
+		long solution_id;
+		result.fetch("solution_id", solution_id);
+		lista->push_back(getSolution(solution_id));
+	}
+
+	return lista;
 }
 
 Clarification *DatabaseInterface::getClarification(long searched_id) {
@@ -99,7 +114,7 @@ list<Clarification*>* DatabaseInterface::searchClarifications(
 	list<Clarification*>* lista = new list<Clarification*>();
 
 	cppdb::result result = databaseHandler
-			<< "SELECT * FROM Clarification WHERE id = ?"
+			<< "SELECT * FROM Clarification WHERE associated_publication_id = ?"
 			<< associated_publication_id;
 
 	while (result.next()) {
@@ -263,23 +278,23 @@ list<Problem*>* DatabaseInterface::searchProblemsRandom(int number) {
 	list<Problem*>* lista = new list<Problem*>();
 
 	cppdb::result result = databaseHandler
-			<< "SELECT * FROM Problems ORDER BY rand() LIMIT ?" << number;
+			<< "SELECT * FROM Problem ORDER BY RAND() LIMIT ?" << number;
 	while (result.next()) {
 		Problem *problem = new Problem();
 
 		result.fetch("accepted_solution_id", problem->accepted_solution_id);
 		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", problem->creation_datetime);
-		result.fetch("creation_user_name", problem->creator_user_name);
+		//result.fetch("creation_datetime", problem->creation_datetime);
+		result.fetch("creator_user_name", problem->creator_user_name);
 		result.fetch("description", problem->description);
 		result.fetch("id", problem->id);
 
 		short int boolean;
 		result.fetch("is_anonymous", boolean);
 		problem->is_anonymous = boolean;
-		result.fetch("is_solve", boolean);
+		result.fetch("is_solved", boolean);
 		problem->is_solved = boolean;
-		result.fetch("last_edition", problem->last_edition_datetime);
+		//result.fetch("last_edition_datetime", problem->last_edition_datetime);
 
 		lista->push_back(problem);
 	}

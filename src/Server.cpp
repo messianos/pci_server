@@ -42,14 +42,11 @@ void Server::welcome() {
 }
 
 void Server::problems_home() {
-	main_screen_content::problemsHome ph;
+	main_screen_content::problemsHome problems_home;
 
-	for (int i = 0; i < 1; ++i) {
-		Problem* p = db->getProblem(1000);
-		ph.problems.push_back(p);
-	}
+	problems_home.problems = db->searchProblemsRandom(10);
 
-	render("problemsHome", ph);
+	render("problemsHome", problems_home);
 }
 
 void Server::ideas_home() {
@@ -66,6 +63,10 @@ void Server::problem(string problem_id) {
 		problem_info.accepted_solution = db->getSolution(
 					problem->accepted_solution_id);
 	}
+
+	problem_info.solutions = db->searchSolutions(p_id);
+
+	problem_info.clarifications = db->searchClarifications(p_id);
 
 	render("problemInfo", problem_info);
 }
