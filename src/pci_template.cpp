@@ -79,12 +79,20 @@ namespace main_screen_skin {
 				for(CPPCMS_TYPEOF((content.problems).begin()) problem_ptr=(content.problems).begin(),problem_ptr_end=(content.problems).end();problem_ptr!=problem_ptr_end;++problem_ptr) {
 				#line 37 "pci_template.tmpl"
 				CPPCMS_TYPEOF(*problem_ptr) &problem=*problem_ptr;
-					#line 39 "pci_template.tmpl"
+					#line 38 "pci_template.tmpl"
 					out()<<"\n"
-						"\t\t\t\t\t\t<div class = \"publication\" onclick=\"location.href='/pci/problemsHome'\">\n"
-						"\t\t\t\t\t\t\tProblemID = ";
+						"\t\t\t\t\t\t<div class = \"publication\" onclick=\"location.href='/pci/problem/";
+					#line 38 "pci_template.tmpl"
+					out()<<cppcms::filters::escape(problem->id);
+					#line 39 "pci_template.tmpl"
+					out()<<"'\">\n"
+						"\t\t\t\t\t\t\t";
 					#line 39 "pci_template.tmpl"
 					out()<<cppcms::filters::escape(problem->id);
+					#line 39 "pci_template.tmpl"
+					out()<<":";
+					#line 39 "pci_template.tmpl"
+					out()<<cppcms::filters::escape(problem->description);
 					#line 41 "pci_template.tmpl"
 					out()<<"\n"
 						"\t\t\t\t\t\t</div>  \n"
@@ -98,7 +106,7 @@ namespace main_screen_skin {
 			 } else {
 				#line 44 "pci_template.tmpl"
 				out()<<"  \n"
-					"  \t\t\t\t\t<h2>No problems</h2>  \n"
+					"  \t\t\t\t\t<h2>No problems</h2>\n"
 					"\t\t\t\t";
 			#line 44 "pci_template.tmpl"
 			} // end of empty
@@ -113,29 +121,99 @@ namespace main_screen_skin {
 		} // end of template render
 	#line 50 "pci_template.tmpl"
 	}; // end of class problemsHome
-#line 51 "pci_template.tmpl"
+	#line 52 "pci_template.tmpl"
+	struct problemInfo :public cppcms::base_view
+	#line 52 "pci_template.tmpl"
+	{
+	#line 52 "pci_template.tmpl"
+		main_screen_content::problemInfo &content;
+	#line 52 "pci_template.tmpl"
+		problemInfo(std::ostream &_s,main_screen_content::problemInfo &_content): cppcms::base_view(_s),content(_content)
+	#line 52 "pci_template.tmpl"
+		{
+	#line 52 "pci_template.tmpl"
+		}
+		#line 53 "pci_template.tmpl"
+		virtual void render() {
+			#line 60 "pci_template.tmpl"
+			out()<<"\n"
+				"<html> \n"
+				"\t<head>\n"
+				"\t    <link href=\"/css/problemsHome.css\" rel=\"stylesheet\" type=\"text/css\">\n"
+				"\t</head>\n"
+				"\t<body>\n"
+				"\t\t<div class=\"content\">\n"
+				"\t\t\t<h1>Problema ";
+			#line 60 "pci_template.tmpl"
+			out()<<cppcms::filters::escape(content.problem->id);
+			#line 63 "pci_template.tmpl"
+			out()<<"</h1>\n"
+				"\t\t\t<div class = \"button_wrapper\">\n"
+				"\t\t\t\t<div class = \"publication\">\n"
+				"\t\t\t\t\tDescripcion: ";
+			#line 63 "pci_template.tmpl"
+			out()<<cppcms::filters::escape(content.problem->description);
+			#line 67 "pci_template.tmpl"
+			out()<<"\n"
+				"\t\t\t\t</div>\n"
+				"\t\t\t</div>\n"
+				"\t\t\t<h2>Solucion</h2>\n"
+				"\t\t\t";
+			#line 67 "pci_template.tmpl"
+			if(content.accepted_solution) {
+				#line 69 "pci_template.tmpl"
+				out()<<"\n"
+					"\t\t\t\t<div class= \"publication\">\n"
+					"\t\t\t\t\tDescripcion: ";
+				#line 69 "pci_template.tmpl"
+				out()<<cppcms::filters::escape(content.accepted_solution->description);
+				#line 71 "pci_template.tmpl"
+				out()<<"\n"
+					"\t\t\t\t</div>\n"
+					"\t\t\t";
+			#line 71 "pci_template.tmpl"
+			}else{
+				#line 73 "pci_template.tmpl"
+				out()<<"\n"
+					"\t\t\t\t<p>No hay una solucion aceptada</p>\n"
+					"\t\t\t";
+			#line 73 "pci_template.tmpl"
+			}
+			#line 77 "pci_template.tmpl"
+			out()<<"\n"
+				"\t\t</div>\n"
+				"\t</body>  \n"
+				"<html>  \n"
+				"";
+		#line 77 "pci_template.tmpl"
+		} // end of template render
+	#line 78 "pci_template.tmpl"
+	}; // end of class problemInfo
+#line 79 "pci_template.tmpl"
 } // end of namespace main_screen_skin
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
 namespace {
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
  cppcms::views::generator my_generator; 
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
  struct loader { 
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
   loader() { 
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
    my_generator.name("main_screen_skin");
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
    my_generator.add_view<main_screen_skin::welcome,main_screen_content::content>("welcome",true);
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
    my_generator.add_view<main_screen_skin::problemsHome,main_screen_content::problemsHome>("problemsHome",true);
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
+   my_generator.add_view<main_screen_skin::problemInfo,main_screen_content::problemInfo>("problemInfo",true);
+#line 79 "pci_template.tmpl"
     cppcms::views::pool::instance().add(my_generator);
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
  }
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
  ~loader() {  cppcms::views::pool::instance().remove(my_generator); }
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
 } a_loader;
-#line 51 "pci_template.tmpl"
+#line 79 "pci_template.tmpl"
 } // anon 

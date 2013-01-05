@@ -30,7 +30,7 @@ public:
 	void welcome();
 	void problems_home();
 	void ideas_home();
-	void problem();
+	void problem(string problem_id);
 	void solution();
 };
 

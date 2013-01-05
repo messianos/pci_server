@@ -35,14 +35,42 @@
 			<div class = "button_wrapper">
 				<% foreach problem in problems %>  
  					<% item %>
-						<div class = "publication" onclick="location.href='/pci/problemsHome'">
-							ProblemID = <%= problem->id %>
+						<div class = "publication" onclick="location.href='/pci/problem/<%= problem->id %>'">
+							<%= problem->id %>:<%= problem->description %>
 						</div>  
   					<% end %>
 					<% empty %>  
-  					<h2>No problems</h2>  
+  					<h2>No problems</h2>
 				<% end %>
 			</div>
+		</div>
+	</body>  
+<html>  
+<% end template %>  
+<% end view %>  
+
+<% view problemInfo uses main_screen_content::problemInfo %>  
+<% template render() %>
+<html> 
+	<head>
+	    <link href="/css/problemsHome.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div class="content">
+			<h1>Problema <%= problem->id %></h1>
+			<div class = "button_wrapper">
+				<div class = "publication">
+					Descripcion: <%= problem->description %>
+				</div>
+			</div>
+			<h2>Solucion</h2>
+			<% if accepted_solution %>
+				<div class= "publication">
+					Descripcion: <%= accepted_solution->description %>
+				</div>
+			<% else %>
+				<p>No hay una solucion aceptada</p>
+			<% end %>
 		</div>
 	</body>  
 <html>  

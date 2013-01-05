@@ -10,6 +10,7 @@ public:
 	virtual ~Clarification();
 
 	string answer;
+	long associated_publication_id;
 	string creator_user_name;
 	long id;
 	string question;

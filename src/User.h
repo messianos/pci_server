@@ -11,21 +11,21 @@
 
 #include <string>
 #include <ctime>
-#include "Dateclass.h"
+#include "DateClass.h"
 using namespace std;
 
 class User {
-private:
+
+public:
 	string user_name;
 	string first_name;
 	string last_name;
+	string location;
 	string password;
-	char genre;
+	string genre;
 	string email;
-	Date_class birth_date;
+	DateClass birth_date;
 	time_t signup_date;
-
-public:
 	User();
 	virtual ~User();
 
