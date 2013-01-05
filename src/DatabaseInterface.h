@@ -15,7 +15,6 @@ using namespace std;
 class DatabaseInterface {
 private:
 	cppdb::session databaseHandler;
-	void connectToDatabase();
 
 public:
 	DatabaseInterface();

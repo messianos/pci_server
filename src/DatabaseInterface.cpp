@@ -1,11 +1,8 @@
 #include "DatabaseInterface.h"
 
-void DatabaseInterface::connectToDatabase() {
-	databaseHandler = cppdb::session("mysql: database=pci_database; user=pci_user; password='pci_password'");
-}
 
 DatabaseInterface::DatabaseInterface() {
-	connectToDatabase();
+	databaseHandler = cppdb::session("mysql: database=pci_database; user=pci_user; password=pci_password");
 }
 
 DatabaseInterface::~DatabaseInterface() {
