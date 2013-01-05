@@ -31,7 +31,7 @@ public:
 	void problems_home();
 	void ideas_home();
 	void problem(string problem_id);
-	void solution();
+	void solution(string solution_id);
 };
 
 #endif /* SERVER_H_ */

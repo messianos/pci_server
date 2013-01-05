@@ -20,10 +20,9 @@ struct problemInfo: public cppcms::base_content {
 	list<Solution*>* solutions;
 	list<Clarification*>* clarifications;
 };
-/*
+
 struct solutionInfo: public cppcms::base_content {
-	Problem* problem;
 	Solution* solution;
-	list<Clarification*>* kk;
-};*/
+	list<Clarification*>* clarifications;
+};
 }

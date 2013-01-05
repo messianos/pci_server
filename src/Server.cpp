@@ -25,8 +25,8 @@ Server::Server(cppcms::service &srv) :
 	dispatcher().assign("/problem/(\\d+)", &Server::problem, this, 1);
 	mapper().assign("problem", "/problem/{1}");
 
-	dispatcher().assign("/solution", &Server::solution, this);
-	mapper().assign("solution", "/solution");
+	dispatcher().assign("/solution/(\\d+)", &Server::solution, this, 1);
+	mapper().assign("solution", "/solution/{1}");
 
 	mapper().root("/pci");
 }
@@ -54,14 +54,14 @@ void Server::ideas_home() {
 }
 
 void Server::problem(string problem_id) {
-	int p_id = atoi(problem_id.c_str());
+	long p_id = atoi(problem_id.c_str());
 	main_screen_content::problemInfo problem_info;
 
 	Problem* problem = db->getProblem(p_id);
 	problem_info.problem = problem;
-	if(problem->is_solved){
+	if (problem->is_solved) {
 		problem_info.accepted_solution = db->getSolution(
-					problem->accepted_solution_id);
+				problem->accepted_solution_id);
 	}
 
 	problem_info.solutions = db->searchSolutions(p_id);
@@ -71,8 +71,15 @@ void Server::problem(string problem_id) {
 	render("problemInfo", problem_info);
 }
 
-void Server::solution() {
-	response().out() << "Solution";
+void Server::solution(string solution_id) {
+	long s_id = atoi(solution_id.c_str());
+	main_screen_content::solutionInfo solution_info;
+
+	solution_info.solution = db->getSolution(s_id);
+
+	solution_info.clarifications = db->searchClarifications(s_id);
+
+	render("solutionInfo", solution_info);
 }
 
 int main(int argc, char ** argv) {
