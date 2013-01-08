@@ -3,37 +3,37 @@
 #ifndef DATABASEINTERFACE_H_
 #define DATABASEINTERFACE_H_
 
+// Includes
+#include "Clarification.h"
 #include "Problem.h"
 #include "Solution.h"
-#include "Clarification.h"
 #include "User.h"
 #include <cppdb/frontend.h>
 #include <list>
+#include <string>
 
 using namespace std;
 
 class DatabaseInterface {
+
 private:
-	cppdb::session databaseHandler;
+	static cppdb::session database_handler;
 
 public:
-	DatabaseInterface();
-	virtual ~DatabaseInterface();
+	static User *searchUser(std::string user_name);
+	static Problem *searchProblem(std::string id);
+	static std::list<Problem *> *searchProblems(/* TODO: define parameters */);
+	static Solution *searchSolution(std::string id);
+	static Solution *searchAcceptedSolution(std::string problem_id);
+	static std::list<Solution *> *searchSolutions(std::string problem_id);
+	static Clarification *searchClarification(std::string id);
+	static std::list<Clarification *> *searchClarifications(std::string associated_publication_id);
 
-	// Problem-related queries
-	Problem *getProblem(long searched_id);
-	list<Problem*>* searchProblems(/* TODO: define parameters */);
+	std::list<Problem *> *searchProblemsByUser(std::string user_name);
 
-	// Solution-related queries
-	Solution *getSolution(long searched_id);
-	list<Solution*>* searchSolutions(long problem_id);
+	std::list<Solution *> *searchSolutionsByUser(std::string user_name);
 
-	// Clarification-related queries
-	Clarification *getClarification(long searched_id);
-	list<Clarification*>* searchClarifications(long associated_publication_id);
-
-	// User-related queries
-	User *getUser(long user_name);
+	std::list<Problem *> *searchProblemsRandom(int number);
 
 	void insertUser(User *user);
 
@@ -54,13 +54,6 @@ public:
 
 	/*remove clarification with de id delete_id*/
 	void removeClarification(long deleted_id);
-
-	list<Problem*>* searchProblemsbyUser(string user);
-
-	list<Solution*>* searchSolutionsbyUser(string user);
-
-	list<Problem*>* searchProblemsRandom(int number);
-
 };
 
 #endif /* DATABASEINTERFACE_H_ */

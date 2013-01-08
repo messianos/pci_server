@@ -1,17 +1,9 @@
-/*
- * Publication.cpp
- *
- *  Created on: 02/01/2013
- *      Author: nico
- */
 
+// Includes
 #include "Publication.h"
 
-Publication::Publication(){
-
+Publication::Publication() {
+	// TODO: initialize attributes with default values
 }
 
-Publication::~Publication() {
-// TODO Auto-generated destructor stub
-}
-
+Publication::~Publication() {}

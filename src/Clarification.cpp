@@ -1,11 +1,9 @@
+
+// Includes
 #include "Clarification.h"
 
 Clarification::Clarification() {
-	// TODO Auto-generated constructor stub
-
+	// TODO: initialize attributes with default values
 }
 
-Clarification::~Clarification() {
-	// TODO Auto-generated destructor stub
-}
-
+Clarification::~Clarification() {}

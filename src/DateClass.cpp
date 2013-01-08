@@ -1,23 +1,15 @@
-/*
- * Dateclass.cpp
- *
- *  Created on: Jan 2, 2013
- *      Author: GNZ
- */
 
+// Includes
 #include "DateClass.h"
 
-DateClass::DateClass(){
-
+DateClass::DateClass() {
+	// TODO: initialize attributes with default values
 }
 
 DateClass::DateClass(int day, int month, int year) {
-	this->year = year;
-	this->month = month;
 	this->day = day;
+	this->month = month;
+	this->year = year;
 }
 
-DateClass::~DateClass() {
-
-}
-
+DateClass::~DateClass() {}

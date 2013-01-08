@@ -1,34 +1,23 @@
-/*
- * User.h
- *
- *  Created on: Jan 2, 2013
- *      Author: GNZ
- */
-
 
 #ifndef USER_H_
 #define USER_H_
 
+// Includes
 #include <string>
-#include <ctime>
-#include "DateClass.h"
-using namespace std;
 
 class User {
 
 public:
-	string user_name;
-	string first_name;
-	string last_name;
-	string location;
-	string password;
-	string genre;
-	string email;
-	DateClass birth_date;
-	time_t signup_date;
+	//struct ctime birth_date; TODO
+	std::string email;
+	std::string first_name;
+	std::string genre;
+	std::string last_name;
+	std::string location;
+	//struct ctime sign_up_date; TODO
+	std::string user_name;
 	User();
 	virtual ~User();
-
 };
 
 #endif /* USER_H_ */

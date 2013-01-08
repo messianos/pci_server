@@ -1,16 +1,9 @@
-/*
- * Solution.cpp
- *
- *  Created on: 02/01/2013
- *      Author: nico
- */
 
+// Includes
 #include "Solution.h"
 
 Solution::Solution(){
-
+	// TODO: initialize attributes with default values
 }
 
-Solution::~Solution() {
-	// TODO Auto-generated destructor stub
-}
+Solution::~Solution() {}

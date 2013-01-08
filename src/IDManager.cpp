@@ -13,15 +13,13 @@ const char IDManager::CLARIFICATION_ID_PREFIX = 'C';
 random_generator IDManager::uuid_generator = random_generator();
 
 string IDManager::generateID(const char prefix) {
-	stringstream stream;
-	uuid uuid;
-	unsigned int uuid_size;
 
 	// Generates the UUID
-	uuid = uuid_generator();
-	uuid_size = uuid.size();
+	uuid uuid = uuid_generator();
+	unsigned int uuid_size = uuid.size();
 
 	// Creates a string representing an hexadecimal number from a prefix and the UUID
+	stringstream stream;
 	stream << hex << setfill('0');
 	stream << setw(2) << static_cast<unsigned int>(prefix);
 	for (unsigned int i = 0; i < uuid_size; i++)

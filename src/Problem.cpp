@@ -1,15 +1,9 @@
-/*
- * Problem.cpp
- *
- *  Created on: 02/01/2013
- *      Author: nico
- */
 
+// Includes
 #include "Problem.h"
+
 Problem::Problem() {
-	// TODO Auto-generated constructor stub
+	// TODO: initialize attributes with default values
 }
 
-Problem::~Problem() {
-	// TODO Auto-generated destructor stub
-}
+Problem::~Problem() {}

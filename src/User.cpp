@@ -1,18 +1,9 @@
-/*
- * User.cpp
- *
- *  Created on: Jan 2, 2013
- *      Author: GNZ
- */
 
+// Includes
 #include "User.h"
 
 User::User() {
-	// TODO Auto-generated constructor stub
-
+	// TODO: initialize attributes with default values
 }
 
-User::~User() {
-	// TODO Auto-generated destructor stub
-}
-
+User::~User() {}
