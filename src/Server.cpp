@@ -7,6 +7,7 @@
 
 #include "Server.h"
 #include "main_screen_content.h"
+#include <string>
 using namespace std;
 
 Server::Server(cppcms::service &srv) :
@@ -54,30 +55,28 @@ void Server::ideas_home() {
 }
 
 void Server::problem(string problem_id) {
-	long p_id = atoi(problem_id.c_str());
 	main_screen_content::problemInfo problem_info;
 
-	Problem* problem = db->getProblem(p_id);
+	Problem* problem = db->searchProblem(problem_id);
 	problem_info.problem = problem;
 	if (problem->is_solved) {
-		problem_info.accepted_solution = db->getSolution(
+		problem_info.accepted_solution = db->searchSolution(
 				problem->accepted_solution_id);
 	}
 
-	problem_info.solutions = db->searchSolutions(p_id);
+	problem_info.solutions = db->searchSolutions(problem_id);
 
-	problem_info.clarifications = db->searchClarifications(p_id);
+	problem_info.clarifications = db->searchClarifications(problem_id);
 
 	render("problemInfo", problem_info);
 }
 
 void Server::solution(string solution_id) {
-	long s_id = atoi(solution_id.c_str());
 	main_screen_content::solutionInfo solution_info;
 
-	solution_info.solution = db->getSolution(s_id);
+	solution_info.solution = db->searchSolution(solution_id);
 
-	solution_info.clarifications = db->searchClarifications(s_id);
+	solution_info.clarifications = db->searchClarifications(solution_id);
 
 	render("solutionInfo", solution_info);
 }
