@@ -1,8 +1,18 @@
 
+/*
+ * TODO:
+ * 
+ * Define share mode on SELECT statements
+ * Add remaining procedures
+ * 
+ */
+
+
+
 -- DATABASE CREATION ----------------------------------------------------------
 
 CREATE DATABASE IF NOT EXISTS pci_database
-CHARACTER SET utf8;
+CHARACTER SET ascii;
 
 USE pci_database;
 
@@ -41,35 +51,37 @@ USE pci_database;
 CREATE TABLE IF NOT EXISTS User (
 	birth_date DATE,
 	email VARCHAR(255),
-	first_name VARCHAR(31),
+	first_name VARCHAR(31) CHARACTER SET utf8,
 	genre ENUM('M', 'F', 'U'), -- M: male / F: female / U: unspecified
-	last_name VARCHAR(31),
+	last_name VARCHAR(31) CHARACTER SET utf8,
 	location VARCHAR(15),
 	password VARCHAR(127), -- Encrypted password
-	signup_date DATE,
+	sign_up_date DATE,
 	user_name VARCHAR(31),
 	PRIMARY KEY(user_name)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS Solution (
-	content MEDIUMTEXT,
+	content MEDIUMTEXT CHARACTER SET utf8,
 	creation_datetime DATETIME,
 	creator_user_name VARCHAR(31),
-	description TEXT,
-	id BIGINT,
+	description TEXT CHARACTER SET utf8,
+	id BINARY(17),
 	is_anonymous BOOLEAN,
 	last_edition_datetime DATETIME,
 	PRIMARY KEY(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS Problem (
-	accepted_solution_id BIGINT,
-	content MEDIUMTEXT,
+	accepted_solution_id BINARY(17),
+	content MEDIUMTEXT CHARACTER SET utf8,
 	creation_datetime DATETIME,
 	creator_user_name VARCHAR(31),
-	description TEXT,
-	id BIGINT,
+	description TEXT CHARACTER SET utf8,
+	id BINARY(17),
 	is_anonymous BOOLEAN,
 	is_solved BOOLEAN,
 	last_edition_datetime DATETIME,
@@ -78,19 +90,21 @@ CREATE TABLE IF NOT EXISTS Problem (
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS Clarification (
-	answer TEXT,
-	associated_publication_id BIGINT,
+	answer TEXT CHARACTER SET utf8,
+	associated_publication_id BINARY(17),
 	creator_user_name VARCHAR(31),
-	id BIGINT,
-	question TEXT,
+	id BINARY(17),
+	question TEXT CHARACTER SET utf8,
 	PRIMARY KEY(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS problem_solutions (
-	problem_id BIGINT,
-	solution_id BIGINT,
+	problem_id BINARY(17),
+	solution_id BINARY(17),
 	PRIMARY KEY(problem_id, solution_id),
 	FOREIGN KEY(problem_id) REFERENCES Problem(id),
 	FOREIGN KEY(solution_id) REFERENCES Solution(id)
@@ -101,14 +115,15 @@ CREATE TABLE IF NOT EXISTS problem_solutions (
 -- VIEWS ----------------------------------------------------------------------
 
 CREATE VIEW User_no_password_view AS
-SELECT 	birth_date,
-		email,
-		first_name,
-		genre,
-		last_name,
-		location,
-		signup_date,
-		user_name
+SELECT
+	birth_date,
+	email,
+	first_name,
+	genre,
+	last_name,
+	location,
+	sign_up_date,
+	user_name
 FROM User;
 
 
@@ -117,36 +132,42 @@ FROM User;
 
 DELIMITER ! -- Changes the current sentence delimiter
 
+
 /*
  * Checks whether the user and password entered are valid.
- * Note: at this point, the received password should already be encrypted.
+ * Note: at this point, the received password must already be encrypted.
  */
-CREATE PROCEDURE sign_in_check(IN in_user_name VARCHAR(31), IN in_password VARCHAR(127), OUT out_success BOOLEAN)
+CREATE PROCEDURE sign_in_check(
+	IN in_user_name VARCHAR(31),
+	IN in_password VARCHAR(127),
+	OUT out_success BOOLEAN
+)
 BEGIN
-	DECLARE found_password VARCHAR(127) DEFAULT NULL;
-	
-	SELECT password
+	SELECT *
 	FROM User
-	WHERE user_name LIKE BINARY in_user_name
-	INTO found_password;
+	WHERE
+		user_name LIKE BINARY in_user_name
+		AND
+		password LIKE BINARY in_password
+	LIMIT 1;
 	
-	SET out_success = found_password IS NOT NULL AND in_password LIKE BINARY found_password;
+	SET out_success = FOUND_ROWS() = 1;
 END; !
+
 
 /*
  * Signs up a new user.
  * Note: this procedure doesn't validate the received parameters.
  */
-CREATE PROCEDURE sign_up
-(
+CREATE PROCEDURE sign_up(
 	IN in_birth_date DATE,
 	IN in_email VARCHAR(255),
-	IN in_first_name VARCHAR(31),
+	IN in_first_name VARCHAR(31) CHARACTER SET utf8,
 	IN in_genre ENUM('M', 'F', 'U'),
-	IN in_last_name VARCHAR(31),
+	IN in_last_name VARCHAR(31) CHARACTER SET utf8,
 	IN in_location VARCHAR(15),
 	IN in_password VARCHAR(127),
-	IN in_signup_date DATE,
+	IN in_sign_up_date DATE,
 	IN in_user_name VARCHAR(31)
 )
 BEGIN
@@ -158,7 +179,7 @@ BEGIN
 		last_name,
 		location,
 		password,
-		signup_date,
+		sign_up_date,
 		user_name
 	)
 	VALUES (
@@ -169,10 +190,352 @@ BEGIN
 		in_last_name,
 		in_location,
 		in_password,
-		in_signup_date,
+		in_sign_up_date,
 		in_user_name
 	);
 END; !
+
+
+/*
+ * Inserts a new problem.
+ * Note: in_id must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE insert_problem(
+	IN in_content MEDIUMTEXT CHARACTER SET utf8,
+	IN in_creation_datetime DATETIME,
+	IN in_creator_user_name VARCHAR(31),
+	IN in_description TEXT CHARACTER SET utf8,
+	IN in_id BINARY(34),
+	IN in_is_anonymous BOOLEAN
+)
+BEGIN
+	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	
+	INSERT INTO Problem(
+		accepted_solution_id,
+		content,
+		creation_datetime,
+		creator_user_name,
+		description,
+		id,
+		is_anonymous,
+		is_solved,
+		last_edition_datetime
+	)
+	VALUES (
+		NULL,
+		in_content,
+		in_creation_datetime,
+		in_creator_user_name,
+		in_description,
+		in_id_binary,
+		in_is_anonymous,
+		FALSE,
+		in_creation_datetime
+	);
+END; !
+
+
+/*
+ * Atomically deletes a problem and all its associated rows.
+ * Note: in_id must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE delete_problem(
+	IN in_id BINARY(34)
+)
+BEGIN
+	DECLARE found_accepted_solution_id BINARY(17) DEFAULT NULL;
+	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	
+	START TRANSACTION;
+	
+	-- Searches the value of the accepted_solution_id column
+	SELECT accepted_solution_id
+	FROM Problem
+	WHERE id LIKE in_id_binary
+	LIMIT 1
+	INTO found_accepted_solution_id;
+	
+	IF found_accepted_solution_id IS NOT NULL THEN
+		-- Deletes the accepted Solution row
+		DELETE FROM Solution
+		WHERE id LIKE found_accepted_solution_id
+		LIMIT 1;
+	END IF;
+	
+	-- Deletes the associated Solution rows
+	DELETE FROM Solution
+	USING Solution, problem_solutions
+	WHERE
+		problem_solutions.problem_id LIKE in_id_binary
+		AND
+		problem_solutions.solution_id LIKE Solution.id;
+	
+	-- Deletes the associated problem_solutions rows
+	DELETE FROM problem_solutions
+	WHERE problem_id LIKE in_id_binary;
+	
+	-- Deletes the Problem row
+	DELETE FROM Problem
+	WHERE id LIKE in_id_binary
+	LIMIT 1;
+	
+	COMMIT;
+END; !
+
+
+/*
+ * Sets the accepted solution of an existing problem.
+ * Note: in_problem_id and in_accepted_solution_id must be strings representing hexadecimal numbers.
+ */
+CREATE PROCEDURE set_accepted_solution(
+	IN in_problem_id BINARY(34),
+	IN in_solution_id BINARY(34)
+)
+BEGIN
+	DECLARE found_accepted_solution_id BINARY(17) DEFAULT NULL;
+	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+	DECLARE in_solution_id_binary BINARY(17) DEFAULT UNHEX(in_solution_id);
+	
+	START TRANSACTION;
+	
+	-- Searches the current accepted solution
+	SELECT accepted_solution_id
+	FROM Problem
+	WHERE id LIKE in_problem_id_binary
+	LIMIT 1
+	INTO found_accepted_solution_id;
+	
+	IF found_accepted_solution_id IS NOT NULL THEN
+		-- The current accepted solution must be unset
+		INSERT INTO problem_solutions(
+			problem_id,
+			solution_id
+		)
+		VALUES (
+			in_problem_id_binary,
+			found_accepted_solution_id
+		);
+	END IF;
+	
+	-- Updates the Problem row
+	UPDATE Problem
+	SET accepted_solution_id = in_solution_id_binary
+	WHERE id LIKE in_problem_id_binary
+	LIMIT 1;
+	
+	COMMIT;
+END; !
+
+
+/*
+ * Unsets the accepted solution of an existing problem.
+ * Note: in_problem_id must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE unset_accepted_solution(
+	IN in_problem_id BINARY(34)
+)
+BEGIN
+	DECLARE found_accepted_solution_id BINARY(17) DEFAULT NULL;
+	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+	
+	START TRANSACTION;
+	
+	-- Searches the current accepted solution
+	SELECT accepted_solution_id
+	FROM Problem
+	WHERE id LIKE in_problem_id_binary
+	LIMIT 1
+	INTO found_accepted_solution_id;
+	
+	IF found_accepted_solution_id IS NOT NULL THEN
+		-- The current accepted solution must be unset
+		INSERT INTO problem_solutions(
+			problem_id,
+			solution_id
+		)
+		VALUES (
+			in_problem_id_binary,
+			found_accepted_solution_id
+		);
+	END IF;
+	
+	-- Updates the Problem row
+	UPDATE Problem
+	SET accepted_solution_id = NULL
+	WHERE id LIKE in_problem_id_binary
+	LIMIT 1;
+	
+	COMMIT;
+END; !
+
+
+/*
+ * Inserts a new solution and all the necessary associated rows.
+ * Note: in_problem_id and in_id must be strings representing hexadecimal numbers.
+ */
+CREATE PROCEDURE insert_solution(
+	IN in_problem_id BINARY(34),
+	IN in_content MEDIUMTEXT CHARACTER SET utf8,
+	IN in_creation_datetime DATETIME,
+	IN in_creator_user_name VARCHAR(31),
+	IN in_description TEXT CHARACTER SET utf8,
+	IN in_id BINARY(34),
+	IN in_is_anonymous BOOLEAN
+)
+BEGIN
+	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+	
+	START TRANSACTION;
+	
+	INSERT INTO Solution(
+		content,
+		creation_datetime,
+		creator_user_name,
+		description,
+		id,
+		is_anonymous,
+		last_edition_datetime
+	)
+	VALUES (
+		in_content,
+		in_creation_datetime,
+		in_creator_user_name,
+		in_description,
+		in_id_binary,
+		in_is_anonymous,
+		in_creation_datetime
+	);
+	
+	INSERT INTO problem_solutions(
+		problem_id,
+		solution_id
+	)
+	VALUES (
+		in_problem_id_binary,
+		in_id_binary
+	);
+	
+	COMMIT;
+END; !
+
+
+/*
+ * Atomically deletes a solution and all its associated rows.
+ * Note: in_id must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE delete_solution(
+	IN in_id BINARY(34)
+)
+BEGIN
+	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	
+	START TRANSACTION;
+	
+	-- Updates the associated Problem row (if there's any)
+	UPDATE Problem
+	SET accepted_solution_id = NULL
+	WHERE accepted_solution_id = in_id_binary
+	LIMIT 1;
+	
+	-- If no rows were affected, a problem_solutions row must be deleted
+	IF ROW_COUNT() = 0 THEN
+		DELETE FROM problem_solutions
+		WHERE solution_id LIKE in_id_binary
+		LIMIT 1;
+	END IF;
+	
+	-- Deletes the Solution row
+	DELETE FROM Solution
+	WHERE id LIKE in_id_binary
+	LIMIT 1;
+	
+	COMMIT;
+END; !
+
+
+/*
+ * Inserts a new clarification.
+ * Note: in_associated_publication_id and in_id must be strings representing hexadecimal numbers.
+ */
+CREATE PROCEDURE insert_clarification(
+	IN in_associated_publication_id BINARY(34),
+	IN in_creator_user_name VARCHAR(31),
+	IN in_id BINARY(34),
+	IN in_question TEXT CHARACTER SET utf8
+)
+BEGIN
+	DECLARE in_associated_publication_id_binary BINARY(17) DEFAULT UNHEX(in_associated_publication_id);
+	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	
+	INSERT INTO Clarification(
+		answer,
+		associated_publication_id,
+		creator_user_name,
+		id,
+		question
+	)
+	VALUES (
+		NULL,
+		in_associated_publication_id_binary,
+		in_creator_user_name,
+		in_id_binary,
+		in_question
+	);
+END; !
+
+
+/*
+ * Atomically deletes a clarification and all its associated rows.
+ * Note: in_id must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE delete_clarification(
+	IN in_id BINARY(34)
+)
+BEGIN
+	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	
+	DELETE FROM Clarification
+	WHERE id LIKE in_id_binary
+	LIMIT 1;
+END; !
+
+
+DELIMITER ; -- Changes the current sentence delimiter
+
+
+
+-- TRIGGERS -------------------------------------------------------------------
+
+DELIMITER ! -- Changes the current sentence delimiter
+
+
+/*
+ * Triggered before a Problem row is deleted.
+ */
+CREATE TRIGGER trigger_delete_Problem
+BEFORE DELETE ON Problem
+FOR EACH ROW
+BEGIN
+	-- Deletes the associated Clarification rows
+	DELETE FROM Clarification
+	WHERE associated_publication_id LIKE OLD.id;
+END; !
+
+
+/*
+ * Triggered before a Solution row is deleted.
+ */
+CREATE TRIGGER trigger_delete_Solution
+BEFORE DELETE ON Solution
+FOR EACH ROW
+BEGIN
+	-- Deletes the associated Clarification rows
+	DELETE FROM Clarification
+	WHERE associated_publication_id LIKE OLD.id;
+END; !
+
 
 DELIMITER ; -- Changes the current sentence delimiter
 
@@ -186,19 +549,19 @@ IDENTIFIED BY PASSWORD '*6D4CC5751FA512A297F78B8A892AAF9D051B0231';
 REVOKE ALL PRIVILEGES, GRANT OPTION
 FROM 'pci_user'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE
+GRANT SELECT
 ON TABLE pci_database.Solution
 TO 'pci_user'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE
+GRANT SELECT
 ON TABLE pci_database.Problem
 TO 'pci_user'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE
+GRANT SELECT
 ON TABLE pci_database.Clarification
 TO 'pci_user'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE, DELETE
+GRANT SELECT
 ON TABLE pci_database.problem_solutions
 TO 'pci_user'@'localhost';
 
@@ -212,4 +575,36 @@ TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
 ON PROCEDURE pci_database.sign_up
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.insert_problem
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.delete_problem
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.set_accepted_solution
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.unset_accepted_solution
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.insert_solution
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.delete_solution
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.insert_clarification
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.delete_clarification
 TO 'pci_user'@'localhost';
