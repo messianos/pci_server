@@ -291,7 +291,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 
 
 list<Problem*>* DatabaseInterface::searchProblemsByUser(string user) {
-	list<Problem*>* lista = new list<Problem*>();
+	/*list<Problem*>* lista = new list<Problem*>();
 
 	result result = database_handler
 			<< "SELECT * FROM Clarification WHERE creator_user_name = ?"
@@ -316,11 +316,13 @@ list<Problem*>* DatabaseInterface::searchProblemsByUser(string user) {
 		lista->push_back(problem);
 	}
 
-	return lista;
+	return lista;*/
+	// TODO
+	return NULL;
 }
 
 list<Solution*>* DatabaseInterface::searchSolutionsByUser(string user) {
-	list<Solution*>* lista = new list<Solution*>();
+	/*list<Solution*>* lista = new list<Solution*>();
 
 	result result = database_handler
 			<< "SELECT * FROM Clarification WHERE creator_user_name = ?"
@@ -343,10 +345,13 @@ list<Solution*>* DatabaseInterface::searchSolutionsByUser(string user) {
 		lista->push_back(solution);
 	}
 
-	return lista;
+	return lista;*/
+	// TODO
+	return NULL;
 }
 
 list<Problem*>* DatabaseInterface::searchProblemsRandom(int number) {
+	/*
 	list<Problem*>* lista = new list<Problem*>();
 
 	result result = database_handler
@@ -371,66 +376,59 @@ list<Problem*>* DatabaseInterface::searchProblemsRandom(int number) {
 		lista->push_back(problem);
 	}
 
-	return lista;
+	return lista;*/
+	// TODO
+	return NULL;
 }
 
 
 
 
+void DatabaseInterface::insertUser(User *user) {
+	// TODO
+}
+
 void DatabaseInterface::insertProblem(Problem *problem) {
+	string query =
+		"CALL insert_problem("
+		"	'?',"
+		//"	'?',"
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	?"
+		")";
+
 	database_handler
-			<< "INSERT INTO Problem (accepted_solution_id,content,creation_datetime, creation_user_name, description, is_anonymous, is_solve, last_edition)"
-					" VALUES (?,?,?,?,?,?,?,?,?"
-			<< problem->accepted_solution_id << problem->content
-			<< problem->creation_datetime << problem->creator_user_name
-			<< problem->description << problem->is_anonymous
-			<< problem->is_solved << problem->last_edition_datetime
-			<< exec;
+		<< query
+		<< problem->content
+		//<< problem->creation_datetime
+		<< problem->creator_user_name
+		<< problem->description
+		<< problem->id
+		<< problem->is_anonymous // TODO: decidir sobre booleanos
+		<< exec;
 }
 
 void DatabaseInterface::insertSolution(Solution *solution) {
-	database_handler
-			<< "INSERT INTO Solution (content ,creation_datetime,creator_user_name ,description,is_anonymous ,last_edition_datetime )"
-					" VALUES (?,?,?,?,?,?,?,?,?" << solution->content
-			<< solution->creation_datetime << solution->creator_user_name
-			<< solution->description << solution->is_anonymous
-			<< solution->last_edition_datetime << exec;
+	// TODO
 }
 
 void DatabaseInterface::insertClarification(Clarification *clarification) {
-	database_handler
-			<< "INSERT INTO Clarification (answer,associated_publication_id,creator_user_name ,question)"
-					" VALUES (?,?,?,?,?,?,?,?,?" << clarification->answer
-			<< clarification->associated_publication_id
-			<< clarification->creator_user_name << clarification->question
-			<< exec;
+	// TODO
 }
 
-void DatabaseInterface::insertUser(User *user) {
-	stringstream s;
-	s << user->birth_date.year << "-" << user->birth_date.month << "-"
-			<< user->birth_date.day;
-	string birth_date = s.str();
-	database_handler
-			<< "INSERT INTO Problem (birth_date ,email ,first_name ,genre,last_name ,location ,	password , signup_date ,user_name)"
-					" VALUES (?,?,?,?,?,?,?,?,?" << birth_date << user->email
-			<< user->first_name << user->genre << user->last_name
-			<< user->password << user->signup_date << user->user_name
-			<< exec;
+void DatabaseInterface::deleteProblem(std::string id) {
+	string query = "CALL delete_problem('?')";
+	database_handler << query << id << exec;
 }
 
-void DatabaseInterface::removeProblem(long deleted_id) {
-	database_handler << "DELETE from Problem WHERE id = '?' " << deleted_id
-			<< exec;
+void DatabaseInterface::deleteSolution(std::string id) {
+	string query = "CALL delete_solution('?')";
+	database_handler << query << id << exec;
 }
 
-void DatabaseInterface::removeSolution(long deleted_id) {
-	database_handler << "DELETE from Solution WHERE id = '?' " << deleted_id
-			<< exec;
+void DatabaseInterface::deleteClarification(std::string id) {
+	string query = "CALL delete_clarification('?')";
+	database_handler << query << id << exec;
 }
-
-void DatabaseInterface::removeClarification(long deleted_id) {
-	database_handler << "DELETE from Clarification WHERE id = '?' " << deleted_id
-			<< exec;
-}
-
