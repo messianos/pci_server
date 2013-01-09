@@ -15,10 +15,10 @@ session DatabaseInterface::database_handler = session("mysql: database=pci_datab
 User *DatabaseInterface::searchUser(string user_name) {
 
 	string query =
-		"SELECT *"
-		"FROM User"
-		"WHERE user_name LIKE BINARY ?"
-		"LIMIT 1";
+	"	SELECT *"
+	"	FROM User"
+	"	WHERE user_name LIKE BINARY ?"
+	"	LIMIT 1";
 
 	result result = database_handler << query << user_name;
 	if (! result.next())
@@ -50,19 +50,19 @@ User *DatabaseInterface::searchUser(string user_name) {
 Problem *DatabaseInterface::searchProblem(string id) {
 
 	string query =
-		"SELECT"
-		"	HEX(accepted_solution_id) AS accepted_solution_id,"
-		"	content,"
-		"	creation_datetime,"
-		"	creator_user_name,"
-		"	description,"
-		"	HEX(id) AS id,"
-		"	is_anonymous,"
-		"	is_solved,"
-		"	last_edition_datetime"
-		"FROM Problem"
-		"WHERE id LIKE UNHEX('?')"
-		"LIMIT 1";
+	"	SELECT"
+	"		HEX(accepted_solution_id) AS accepted_solution_id,"
+	"		content,"
+	"		creation_datetime,"
+	"		creator_user_name,"
+	"		description,"
+	"		HEX(id) AS id,"
+	"		is_anonymous,"
+	"		is_solved,"
+	"		last_edition_datetime"
+	"	FROM Problem"
+	"	WHERE id LIKE UNHEX('?')"
+	"	LIMIT 1";
 
 	result result = database_handler << query << id;
 	if (! result.next())
@@ -92,18 +92,18 @@ list<Problem *> *DatabaseInterface::searchProblems(/* TODO: define parameters */
 list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 
 	string query =
-		"SELECT"
-		"	HEX(accepted_solution_id) AS accepted_solution_id,"
-		"	content,"
-		"	creation_datetime,"
-		"	creator_user_name,"
-		"	description,"
-		"	HEX(id) AS id,"
-		"	is_anonymous,"
-		"	is_solved,"
-		"	last_edition_datetime"
-		"FROM Problem"
-		"WHERE creator_user_name LIKE BINARY ?";
+	"	SELECT"
+	"		HEX(accepted_solution_id) AS accepted_solution_id,"
+	"		content,"
+	"		creation_datetime,"
+	"		creator_user_name,"
+	"		description,"
+	"		HEX(id) AS id,"
+	"		is_anonymous,"
+	"		is_solved,"
+	"		last_edition_datetime"
+	"	FROM Problem"
+	"	WHERE creator_user_name LIKE BINARY ?";
 
 	result result = database_handler << query << user_name;
 
@@ -132,19 +132,19 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 
 	string query =
-		"SELECT"
-		"	HEX(accepted_solution_id) AS accepted_solution_id,"
-		"	content,"
-		"	creation_datetime,"
-		"	creator_user_name,"
-		"	description,"
-		"	HEX(id) AS id,"
-		"	is_anonymous,"
-		"	is_solved,"
-		"	last_edition_datetime"
-		"FROM Problem"
-		"ORDER BY RAND()"
-		"LIMIT ?";
+	"	SELECT"
+	"		HEX(accepted_solution_id) AS accepted_solution_id,"
+	"		content,"
+	"		creation_datetime,"
+	"		creator_user_name,"
+	"		description,"
+	"		HEX(id) AS id,"
+	"		is_anonymous,"
+	"		is_solved,"
+	"		last_edition_datetime"
+	"	FROM Problem"
+	"	ORDER BY RAND()"
+	"	LIMIT ?";
 
 	result result = database_handler << query << amount;
 
@@ -173,17 +173,17 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 Solution *DatabaseInterface::searchSolution(string id) {
 
 	string query =
-		"SELECT"
-		"	content,"
-		"	creation_datetime,"
-		"	creator_user_name,"
-		"	description,"
-		"	HEX(id) AS id,"
-		"	is_anonymous,"
-		"	last_edition_datetime"
-		"FROM Solution"
-		"WHERE id LIKE UNHEX('?')"
-		"LIMIT 1";
+	"	SELECT"
+	"		content,"
+	"		creation_datetime,"
+	"		creator_user_name,"
+	"		description,"
+	"		HEX(id) AS id,"
+	"		is_anonymous,"
+	"		last_edition_datetime"
+	"	FROM Solution"
+	"	WHERE id LIKE UNHEX('?')"
+	"	LIMIT 1";
 
 	result result = database_handler << query << id;
 	if (! result.next())
@@ -206,21 +206,21 @@ Solution *DatabaseInterface::searchSolution(string id) {
 Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 
 	string query =
-		"SELECT"
-		"	Solution.content AS content,"
-		"	Solution.creation_datetime AS creation_datetime,"
-		"	Solution.creator_user_name AS creator_user_name,"
-		"	Solution.description AS description,"
-		"	HEX(Solution.id) AS id,"
-		"	Solution.is_anonymous AS is_anonymous,"
-		"	Solution.last_edition_datetime AS last_edition_datetime"
-		"FROM"
-		"	Problem"
-		"	JOIN"
-		"	Solution"
-		"ON Problem.accepted_solution_id LIKE Solution.id"
-		"WHERE Problem.id LIKE UNHEX('?')"
-		"LIMIT 1";
+	"	SELECT"
+	"		Solution.content AS content,"
+	"		Solution.creation_datetime AS creation_datetime,"
+	"		Solution.creator_user_name AS creator_user_name,"
+	"		Solution.description AS description,"
+	"		HEX(Solution.id) AS id,"
+	"		Solution.is_anonymous AS is_anonymous,"
+	"		Solution.last_edition_datetime AS last_edition_datetime"
+	"	FROM"
+	"		Problem"
+	"		JOIN"
+	"		Solution"
+	"	ON Problem.accepted_solution_id LIKE Solution.id"
+	"	WHERE Problem.id LIKE UNHEX('?')"
+	"	LIMIT 1";
 
 	result result = database_handler << query << problem_id;
 	if (! result.next())
@@ -243,25 +243,25 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 	string query =
-		"SELECT"
-		"	Solution.content AS content,"
-		"	Solution.creation_datetime AS creation_datetime,"
-		"	Solution.creator_user_name AS creator_user_name,"
-		"	Solution.description AS description,"
-		"	HEX(Solution.id) AS id,"
-		"	Solution.is_anonymous AS is_anonymous,"
-		"	Solution.last_edition_datetime AS last_edition_datetime"
-		"FROM"
-		"	Problem"
-		"	JOIN"
-		"	problem_solutions"
-		"	JOIN"
-		"	Solution"
-		"ON"
-		"	Problem.id LIKE problem_solutions.problem_id"
-		"	AND"
-		"	Solution.id LIKE problem_solutions.solution_id"
-		"WHERE Problem.id LIKE UNHEX('?')";
+	"	SELECT"
+	"		Solution.content AS content,"
+	"		Solution.creation_datetime AS creation_datetime,"
+	"		Solution.creator_user_name AS creator_user_name,"
+	"		Solution.description AS description,"
+	"		HEX(Solution.id) AS id,"
+	"		Solution.is_anonymous AS is_anonymous,"
+	"		Solution.last_edition_datetime AS last_edition_datetime"
+	"	FROM"
+	"		Problem"
+	"		JOIN"
+	"		problem_solutions"
+	"		JOIN"
+	"		Solution"
+	"	ON"
+	"		Problem.id LIKE problem_solutions.problem_id"
+	"		AND"
+	"		Solution.id LIKE problem_solutions.solution_id"
+	"	WHERE Problem.id LIKE UNHEX('?')";
 
 	result result = database_handler << query << problem_id;
 
@@ -288,16 +288,16 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 
 	string query =
-		"SELECT"
-		"	content,"
-		"	creation_datetime,"
-		"	creator_user_name,"
-		"	description,"
-		"	HEX(Solution.id) AS id,"
-		"	is_anonymous,"
-		"	last_edition_datetime"
-		"FROM Solution"
-		"WHERE creator_user_name LIKE BINARY ?";
+	"	SELECT"
+	"		content,"
+	"		creation_datetime,"
+	"		creator_user_name,"
+	"		description,"
+	"		HEX(Solution.id) AS id,"
+	"		is_anonymous,"
+	"		last_edition_datetime"
+	"	FROM Solution"
+	"	WHERE creator_user_name LIKE BINARY ?";
 
 	result result = database_handler << query << user_name;
 
@@ -324,15 +324,15 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 Clarification *DatabaseInterface::searchClarification(string id) {
 
 	string query =
-		"SELECT"
-		"	answer,"
-		"	HEX(associated_publication_id) AS associated_publication_id,"
-		"	creator_user_name,"
-		"	HEX(id) AS id,"
-		"	question"
-		"FROM Clarification"
-		"WHERE id LIKE UNHEX('?')"
-		"LIMIT 1";
+	"	SELECT"
+	"		answer,"
+	"		HEX(associated_publication_id) AS associated_publication_id,"
+	"		creator_user_name,"
+	"		HEX(id) AS id,"
+	"		question"
+	"	FROM Clarification"
+	"	WHERE id LIKE UNHEX('?')"
+	"	LIMIT 1";
 
 	result result = database_handler << query << id;
 	if (! result.next())
@@ -353,14 +353,14 @@ Clarification *DatabaseInterface::searchClarification(string id) {
 list<Clarification *> *DatabaseInterface::searchClarifications(string associated_publication_id) {
 
 	string query =
-		"SELECT"
-		"	answer,"
-		"	HEX(associated_publication_id) AS associated_publication_id,"
-		"	creator_user_name,"
-		"	HEX(id) AS id,"
-		"	question"
-		"FROM Clarification"
-		"WHERE associated_publication_id LIKE UNHEX('?')";
+	"	SELECT"
+	"		answer,"
+	"		HEX(associated_publication_id) AS associated_publication_id,"
+	"		creator_user_name,"
+	"		HEX(id) AS id,"
+	"		question"
+	"	FROM Clarification"
+	"	WHERE associated_publication_id LIKE UNHEX('?')";
 
 	result result = database_handler << query << associated_publication_id;
 
@@ -384,17 +384,17 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 
 void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query =
-		"CALL sign_up_user("
-		//"	'?'," TODO
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		//"	'?'," TODO
-		"	'?',"
-		"	'?'"
-		")";
+	"	CALL sign_up_user("
+	//"		'?'," TODO
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	//"		'?'," TODO
+	"		'?',"
+	"		'?'"
+	"	)";
 
 	database_handler
 		<< query
@@ -412,14 +412,14 @@ void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 
 void DatabaseInterface::insertProblem(Problem *problem) {
 	string query =
-		"CALL insert_problem("
-		"	'?',"
-		//"	'?'," TODO
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		"	?"
-		")";
+	"	CALL insert_problem("
+	"		'?',"
+	//"		'?'," TODO
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	"		?"
+	"	)";
 
 	database_handler
 		<< query
@@ -439,16 +439,16 @@ void DatabaseInterface::deleteProblem(string id) {
 
 void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 	string query =
-		"CALL insert_solution("
-		"	'?',"
-		"	'?',"
-		//"	'?'," TODO
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		"	?"
-		")";
+	"	CALL insert_solution("
+	"		'?',"
+	"		'?',"
+	//"		'?'," TODO
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	"		?"
+	"	)";
 
 	database_handler
 		<< query
@@ -469,12 +469,12 @@ void DatabaseInterface::deleteSolution(string id) {
 
 void DatabaseInterface::insertClarification(Clarification *clarification) {
 	string query =
-		"CALL insert_clarification("
-		"	'?',"
-		"	'?',"
-		"	'?',"
-		"	'?'"
-		")";
+	"	CALL insert_clarification("
+	"		'?',"
+	"		'?',"
+	"		'?',"
+	"		'?'"
+	"	)";
 
 	database_handler
 		<< query
