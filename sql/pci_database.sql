@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS User (
 	genre ENUM('M', 'F', 'U'), -- M: male / F: female / U: unspecified
 	last_name VARCHAR(31) CHARACTER SET utf8,
 	location VARCHAR(15),
-	password VARCHAR(127), -- Encrypted password
+	password BINARY(64), -- Encrypted password
 	sign_up_date DATE,
 	user_name VARCHAR(31),
 	PRIMARY KEY(user_name)
@@ -135,20 +135,24 @@ DELIMITER ! -- Changes the current sentence delimiter
 
 /*
  * Checks whether the user name and password entered are valid.
- * Note: at this point, the received password must already be encrypted.
+ * Notes:
+ * 		At this point, the received password must already be encrypted.
+ *		in_encrypted_password must be a string representing an hexadecimal number.
  */
 CREATE PROCEDURE sign_in_user(
 	IN in_user_name VARCHAR(31),
-	IN in_encrypted_password VARCHAR(127),
+	IN in_encrypted_password BINARY(128),
 	OUT out_success BOOLEAN
 )
 BEGIN
+	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	
 	SELECT *
 	FROM User
 	WHERE
 		user_name LIKE BINARY in_user_name
 		AND
-		password LIKE BINARY in_encrypted_password
+		password LIKE in_encrypted_password_binary
 	LIMIT 1;
 	
 	SET out_success = FOUND_ROWS() = 1;
@@ -157,7 +161,9 @@ END; !
 
 /*
  * Signs up a new user.
- * Note: this procedure doesn't validate the received parameters.
+ * Notes:
+ * 		This procedure doesn't validate the received parameters.
+ *		in_encrypted_password must be a string representing an hexadecimal number.
  */
 CREATE PROCEDURE sign_up_user(
 	IN in_birth_date DATE,
@@ -166,11 +172,13 @@ CREATE PROCEDURE sign_up_user(
 	IN in_genre ENUM('M', 'F', 'U'),
 	IN in_last_name VARCHAR(31) CHARACTER SET utf8,
 	IN in_location VARCHAR(15),
-	IN in_encrypted_password VARCHAR(127),
+	IN in_encrypted_password BINARY(128),
 	IN in_sign_up_date DATE,
 	IN in_user_name VARCHAR(31)
 )
 BEGIN
+	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	
 	INSERT INTO User(
 		birth_date,
 		email,
@@ -189,7 +197,7 @@ BEGIN
 		in_genre,
 		in_last_name,
 		in_location,
-		in_encrypted_password,
+		in_encrypted_password_binary,
 		in_sign_up_date,
 		in_user_name
 	);
