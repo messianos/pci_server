@@ -11,7 +11,6 @@ session DatabaseInterface::database_handler = session("mysql: database=pci_datab
 
 // TODO: Fix Datetime attributes fetching, now they're commented
 // TODO: Define share mode on SELECT statements
-// TODO: convert SELECTED ids to hexa
 
 User *DatabaseInterface::searchUser(string user_name) {
 
@@ -71,7 +70,6 @@ Problem *DatabaseInterface::searchProblem(string id) {
 		return NULL;
 
 	Problem *problem = new Problem();
-	short int boolean;
 
 	result.fetch("HEX(accepted_solution_id)", problem->accepted_solution_id);
 	result.fetch("content", problem->content);
@@ -79,10 +77,8 @@ Problem *DatabaseInterface::searchProblem(string id) {
 	result.fetch("creator_user_name", problem->creator_user_name);
 	result.fetch("description", problem->description);
 	result.fetch("HEX(id)", problem->id);
-	result.fetch("is_anonymous", boolean);
-	problem->is_anonymous = boolean;
-	result.fetch("is_solved", boolean);
-	problem->is_solved = boolean;
+	result.fetch("is_anonymous", problem->is_anonymous);
+	result.fetch("is_solved", problem->is_solved);
 	//result.fetch("last_edition_datetime", problem->last_edition_datetime); // TODO
 
 	return problem;
@@ -91,6 +87,87 @@ Problem *DatabaseInterface::searchProblem(string id) {
 list<Problem *> *DatabaseInterface::searchProblems(/* TODO: define parameters */) {
 	// TODO
 	return NULL;
+}
+
+list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
+
+	string query =
+		"SELECT"
+		"	HEX(accepted_solution_id),"
+		"	content,"
+		"	creation_datetime,"
+		"	creator_user_name,"
+		"	description,"
+		"	HEX(id),"
+		"	is_anonymous,"
+		"	is_solved,"
+		"	last_edition_datetime"
+		"FROM Problem"
+		"WHERE creator_user_name LIKE BINARY ?";
+
+	result result = database_handler << query << user_name;
+
+	list<Problem *> *problem_list = new list<Problem *>();
+
+	while (result.next()) {
+
+		Problem *problem = new Problem();
+
+		result.fetch("HEX(accepted_solution_id)", problem->accepted_solution_id);
+		result.fetch("content", problem->content);
+		//result.fetch("creation_datetime", problem->); TODO
+		result.fetch("creator_user_name", problem->creator_user_name);
+		result.fetch("description", problem->description);
+		result.fetch("HEX(id)", problem->id);
+		result.fetch("is_anonymous", problem->is_anonymous);
+		result.fetch("is_solved", problem->is_solved);
+		//result.fetch("last_edition_datetime", problem->); TODO
+
+		problem_list->push_back(problem);
+	}
+
+	return problem_list;
+}
+
+list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
+
+	string query =
+		"SELECT"
+		"	HEX(accepted_solution_id),"
+		"	content,"
+		"	creation_datetime,"
+		"	creator_user_name,"
+		"	description,"
+		"	HEX(id),"
+		"	is_anonymous,"
+		"	is_solved,"
+		"	last_edition_datetime"
+		"FROM Problem"
+		"ORDER BY RAND()"
+		"LIMIT ?";
+
+	result result = database_handler << query << amount;
+
+	list<Problem *> *problem_list = new list<Problem *>();
+
+	while (result.next()) {
+
+		Problem *problem = new Problem();
+
+		result.fetch("HEX(accepted_solution_id)", problem->accepted_solution_id);
+		result.fetch("content", problem->content);
+		//result.fetch("creation_datetime", problem->); TODO
+		result.fetch("creator_user_name", problem->creator_user_name);
+		result.fetch("description", problem->description);
+		result.fetch("HEX(id)", problem->id);
+		result.fetch("is_anonymous", problem->is_anonymous);
+		result.fetch("is_solved", problem->is_solved);
+		//result.fetch("last_edition_datetime", problem->); TODO
+
+		problem_list->push_back(problem);
+	}
+
+	return problem_list;
 }
 
 Solution *DatabaseInterface::searchSolution(string id) {
@@ -114,15 +191,13 @@ Solution *DatabaseInterface::searchSolution(string id) {
 		return NULL;
 
 	Solution *solution = new Solution();
-	short int boolean;
 
 	result.fetch("content", solution->content);
 	//result.fetch("creation_datetime", solution->creation_datetime); // TODO
 	result.fetch("creator_user_name", solution->creator_user_name);
 	result.fetch("description", solution->description);
 	result.fetch("HEX(id)", solution->id);
-	result.fetch("is_anonymous", boolean);
-	solution->is_anonymous = boolean;
+	result.fetch("is_anonymous", solution->is_anonymous);
 	//result.fetch("last_edition_datetime", solution->last_edition_datetime); // TODO
 
 	return solution;
@@ -153,15 +228,13 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 		return NULL;
 
 	Solution *solution = new Solution();
-	short int boolean;
 
 	result.fetch("Solution.content", solution->content);
 	//result.fetch("Solution.creation_datetime", solution->creation_datetime); // TODO
 	result.fetch("Solution.creator_user_name", solution->creator_user_name);
 	result.fetch("Solution.description", solution->description);
 	result.fetch("HEX(Solution.id)", solution->id);
-	result.fetch("Solution.is_anonymous", boolean);
-	solution->is_anonymous = boolean;
+	result.fetch("Solution.is_anonymous", solution->is_anonymous);
 	//result.fetch("Solution.last_edition_datetime", solution->last_edition_datetime); // TODO
 
 	return solution;
@@ -197,16 +270,50 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 	while (result.next()) {
 
 		Solution *solution = new Solution();
-		short int boolean;
 
 		result.fetch("Solution.content", solution->content);
 		//result.fetch("Solution.creation_datetime", solution->); TODO
 		result.fetch("Solution.creator_user_name", solution->creator_user_name);
 		result.fetch("Solution.description", solution->description);
 		result.fetch("HEX(Solution.id)", solution->id);
-		result.fetch("Solution.is_anonymous", boolean);
-		solution->id = boolean;
+		result.fetch("Solution.is_anonymous", solution->id);
 		//result.fetch("Solution.last_edition_datetime", solution->); TODO
+
+		solution_list->push_back(solution);
+	}
+
+	return solution_list;
+}
+
+list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
+
+	string query =
+		"SELECT"
+		"	content,"
+		"	creation_datetime,"
+		"	creator_user_name,"
+		"	description,"
+		"	HEX(Solution.id),"
+		"	is_anonymous,"
+		"	last_edition_datetime"
+		"FROM Solution"
+		"WHERE creator_user_name LIKE BINARY ?";
+
+	result result = database_handler << query << user_name;
+
+	list<Solution *> *solution_list = new list<Solution *>();
+
+	while (result.next()) {
+
+		Solution *solution = new Solution();
+
+		result.fetch("content", solution->content);
+		//result.fetch("creation_datetime", solution->); TODO
+		result.fetch("creator_user_name", solution->creator_user_name);
+		result.fetch("description", solution->description);
+		result.fetch("HEX(id)", solution->id);
+		result.fetch("is_anonymous", solution->is_anonymous);
+		//result.fetch("last_edition_datetime", solution->); TODO
 
 		solution_list->push_back(solution);
 	}
@@ -275,124 +382,39 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	return clarification_list;
 }
 
+void DatabaseInterface::signUpUser(User *user, string password) {
+	string query =
+		"CALL sign_up_user("
+		//"	'?'," TODO
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		//"	'?'," TODO
+		"	'?'"
+		")";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-list<Problem*>* DatabaseInterface::searchProblemsByUser(string user) {
-	/*list<Problem*>* lista = new list<Problem*>();
-
-	result result = database_handler
-			<< "SELECT * FROM Clarification WHERE creator_user_name = ?"
-			<< user;
-	while (result.next()) {
-		Problem *problem = new Problem();
-
-		result.fetch("accepted_solution_id", problem->accepted_solution_id);
-		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", problem->creation_datetime);
-		result.fetch("creation_user_name", problem->creator_user_name);
-		result.fetch("description", problem->description);
-		result.fetch("id", problem->id);
-
-		short int boolean;
-		result.fetch("is_anonymous", boolean);
-		problem->is_anonymous = boolean;
-		result.fetch("is_solve", boolean);
-		problem->is_solved = boolean;
-		result.fetch("last_edition", problem->last_edition_datetime);
-
-		lista->push_back(problem);
-	}
-
-	return lista;*/
-	// TODO
-	return NULL;
-}
-
-list<Solution*>* DatabaseInterface::searchSolutionsByUser(string user) {
-	/*list<Solution*>* lista = new list<Solution*>();
-
-	result result = database_handler
-			<< "SELECT * FROM Clarification WHERE creator_user_name = ?"
-			<< user;
-
-	while (result.next()) {
-		Solution *solution = new Solution();
-
-		result.fetch("content", solution->content);
-		result.fetch("creation_datetime", solution->creation_datetime);
-		result.fetch("creator_user_name", solution->creator_user_name);
-		result.fetch("description", solution->description);
-		result.fetch("id", solution->id);
-
-		short int boolean;
-		result.fetch("is_anonymous", boolean);
-		solution->is_anonymous = boolean;
-		result.fetch("last_edition_datetime", solution->last_edition_datetime);
-
-		lista->push_back(solution);
-	}
-
-	return lista;*/
-	// TODO
-	return NULL;
-}
-
-list<Problem*>* DatabaseInterface::searchProblemsRandom(int number) {
-	/*
-	list<Problem*>* lista = new list<Problem*>();
-
-	result result = database_handler
-			<< "SELECT * FROM Problem ORDER BY RAND() LIMIT ?" << number;
-	while (result.next()) {
-		Problem *problem = new Problem();
-
-		result.fetch("accepted_solution_id", problem->accepted_solution_id);
-		result.fetch("content", problem->content);
-		//result.fetch("creation_datetime", problem->creation_datetime);
-		result.fetch("creator_user_name", problem->creator_user_name);
-		result.fetch("description", problem->description);
-		result.fetch("id", problem->id);
-
-		short int boolean;
-		result.fetch("is_anonymous", boolean);
-		problem->is_anonymous = boolean;
-		result.fetch("is_solved", boolean);
-		problem->is_solved = boolean;
-		//result.fetch("last_edition_datetime", problem->last_edition_datetime);
-
-		lista->push_back(problem);
-	}
-
-	return lista;*/
-	// TODO
-	return NULL;
-}
-
-
-
-
-void DatabaseInterface::insertUser(User *user) {
-	// TODO
+	database_handler
+		<< query
+		//<< user->birth_date TODO
+		<< user->email
+		<< user->first_name
+		<< user->genre
+		<< user->last_name
+		<< user->location
+		<< password
+		//<< user->sign_up_date TODO
+		<< user->user_name
+		<< exec;
 }
 
 void DatabaseInterface::insertProblem(Problem *problem) {
 	string query =
 		"CALL insert_problem("
 		"	'?',"
-		//"	'?',"
+		//"	'?'," TODO
 		"	'?',"
 		"	'?',"
 		"	'?',"
@@ -402,33 +424,68 @@ void DatabaseInterface::insertProblem(Problem *problem) {
 	database_handler
 		<< query
 		<< problem->content
-		//<< problem->creation_datetime
+		//<< problem->creation_datetime TODO
 		<< problem->creator_user_name
 		<< problem->description
 		<< problem->id
-		<< problem->is_anonymous // TODO: decidir sobre booleanos
+		<< problem->is_anonymous
 		<< exec;
 }
 
-void DatabaseInterface::insertSolution(Solution *solution) {
-	// TODO
-}
-
-void DatabaseInterface::insertClarification(Clarification *clarification) {
-	// TODO
-}
-
-void DatabaseInterface::deleteProblem(std::string id) {
+void DatabaseInterface::deleteProblem(string id) {
 	string query = "CALL delete_problem('?')";
 	database_handler << query << id << exec;
 }
 
-void DatabaseInterface::deleteSolution(std::string id) {
+void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
+	string query =
+		"CALL insert_solution("
+		"	'?',"
+		"	'?',"
+		//"	'?'," TODO
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	?"
+		")";
+
+	database_handler
+		<< query
+		<< problem_id
+		<< solution->content
+		//<< solution->creation_datetime TODO
+		<< solution->creator_user_name
+		<< solution->description
+		<< solution->id
+		<< solution->is_anonymous
+		<< exec;
+}
+
+void DatabaseInterface::deleteSolution(string id) {
 	string query = "CALL delete_solution('?')";
 	database_handler << query << id << exec;
 }
 
-void DatabaseInterface::deleteClarification(std::string id) {
+void DatabaseInterface::insertClarification(Clarification *clarification) {
+	string query =
+		"CALL insert_clarification("
+		"	'?',"
+		"	'?',"
+		"	'?',"
+		"	'?'"
+		")";
+
+	database_handler
+		<< query
+		<< clarification->associated_publication_id
+		<< clarification->creator_user_name
+		<< clarification->id
+		<< clarification->question
+		<< exec;
+}
+
+void DatabaseInterface::deleteClarification(string id) {
 	string query = "CALL delete_clarification('?')";
 	database_handler << query << id << exec;
 }

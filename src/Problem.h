@@ -10,7 +10,7 @@ class Problem : public Publication {
 
 public:
 	std::string accepted_solution_id;
-	bool is_solved;
+	short int is_solved;
 	Problem();
 	virtual ~Problem();
 };

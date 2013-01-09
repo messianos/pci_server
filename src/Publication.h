@@ -13,7 +13,7 @@ public:
 	std::string creator_user_name;
 	std::string description;
 	std::string id;
-	bool is_anonymous;
+	short int is_anonymous;
 	//time_t last_edition_datetime; TODO
 	Publication();
 	virtual ~Publication();

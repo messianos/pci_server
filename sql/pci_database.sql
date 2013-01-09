@@ -134,10 +134,10 @@ DELIMITER ! -- Changes the current sentence delimiter
 
 
 /*
- * Checks whether the user and password entered are valid.
+ * Checks whether the user name and password entered are valid.
  * Note: at this point, the received password must already be encrypted.
  */
-CREATE PROCEDURE sign_in_check(
+CREATE PROCEDURE sign_in_user(
 	IN in_user_name VARCHAR(31),
 	IN in_password VARCHAR(127),
 	OUT out_success BOOLEAN
@@ -159,7 +159,7 @@ END; !
  * Signs up a new user.
  * Note: this procedure doesn't validate the received parameters.
  */
-CREATE PROCEDURE sign_up(
+CREATE PROCEDURE sign_up_user(
 	IN in_birth_date DATE,
 	IN in_email VARCHAR(255),
 	IN in_first_name VARCHAR(31) CHARACTER SET utf8,
@@ -570,11 +570,11 @@ ON TABLE pci_database.User_no_password_view
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
-ON PROCEDURE pci_database.sign_in_check
+ON PROCEDURE pci_database.sign_in_user
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
-ON PROCEDURE pci_database.sign_up
+ON PROCEDURE pci_database.sign_up_user
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
