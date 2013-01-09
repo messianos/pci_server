@@ -139,7 +139,7 @@ DELIMITER ! -- Changes the current sentence delimiter
  */
 CREATE PROCEDURE sign_in_user(
 	IN in_user_name VARCHAR(31),
-	IN in_password VARCHAR(127),
+	IN in_encrypted_password VARCHAR(127),
 	OUT out_success BOOLEAN
 )
 BEGIN
@@ -148,7 +148,7 @@ BEGIN
 	WHERE
 		user_name LIKE BINARY in_user_name
 		AND
-		password LIKE BINARY in_password
+		password LIKE BINARY in_encrypted_password
 	LIMIT 1;
 	
 	SET out_success = FOUND_ROWS() = 1;
@@ -166,7 +166,7 @@ CREATE PROCEDURE sign_up_user(
 	IN in_genre ENUM('M', 'F', 'U'),
 	IN in_last_name VARCHAR(31) CHARACTER SET utf8,
 	IN in_location VARCHAR(15),
-	IN in_password VARCHAR(127),
+	IN in_encrypted_password VARCHAR(127),
 	IN in_sign_up_date DATE,
 	IN in_user_name VARCHAR(31)
 )
@@ -189,7 +189,7 @@ BEGIN
 		in_genre,
 		in_last_name,
 		in_location,
-		in_password,
+		in_encrypted_password,
 		in_sign_up_date,
 		in_user_name
 	);

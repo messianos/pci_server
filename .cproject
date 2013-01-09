@@ -30,9 +30,10 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.690947031" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.464917134" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
 								<option id="gnu.cpp.link.option.libs.2033505500" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cppcms"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cppdb"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="booster"/>
+									<listOptionValue builtIn="false" value="cppcms"/>
+									<listOptionValue builtIn="false" value="crypto"/>
+									<listOptionValue builtIn="false" value="cppdb"/>
+									<listOptionValue builtIn="false" value="booster"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1012776986" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

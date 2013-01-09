@@ -28,7 +28,7 @@ public:
 	static std::list<Solution *> *searchSolutionsByUser(std::string user_name);
 	static Clarification *searchClarification(std::string id);
 	static std::list<Clarification *> *searchClarifications(std::string associated_publication_id);
-	static void signUpUser(User *user, std::string password);
+	static void signUpUser(User *user, std::string encrypted_password);
 	static void insertProblem(Problem *problem);
 	static void deleteProblem(std::string id);
 	static void insertSolution(Solution *solution, std::string problem_id);

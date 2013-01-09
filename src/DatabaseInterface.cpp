@@ -382,7 +382,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	return clarification_list;
 }
 
-void DatabaseInterface::signUpUser(User *user, string password) {
+void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query =
 		"CALL sign_up_user("
 		//"	'?'," TODO
@@ -404,7 +404,7 @@ void DatabaseInterface::signUpUser(User *user, string password) {
 		<< user->genre
 		<< user->last_name
 		<< user->location
-		<< password
+		<< encrypted_password
 		//<< user->sign_up_date TODO
 		<< user->user_name
 		<< exec;
