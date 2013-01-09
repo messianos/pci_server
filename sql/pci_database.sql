@@ -55,10 +55,17 @@ CREATE TABLE IF NOT EXISTS User (
 	genre ENUM('M', 'F', 'U'), -- M: male / F: female / U: unspecified
 	last_name VARCHAR(31) CHARACTER SET utf8,
 	location VARCHAR(15),
-	password BINARY(64), -- Encrypted password
 	sign_up_date DATE,
 	user_name VARCHAR(31),
 	PRIMARY KEY(user_name)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS user_password (
+	user_name VARCHAR(31),
+	password BINARY(64), -- Encrypted password
+	PRIMARY KEY(user_name),
+	FOREIGN KEY(user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
 
 
@@ -91,6 +98,15 @@ CREATE TABLE IF NOT EXISTS Problem (
 ) ENGINE = InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS problem_solutions (
+	problem_id BINARY(17),
+	solution_id BINARY(17),
+	PRIMARY KEY(problem_id, solution_id),
+	FOREIGN KEY(problem_id) REFERENCES Problem(id),
+	FOREIGN KEY(solution_id) REFERENCES Solution(id)
+) ENGINE = InnoDB;
+
+
 CREATE TABLE IF NOT EXISTS Clarification (
 	answer TEXT CHARACTER SET utf8,
 	associated_publication_id BINARY(17),
@@ -102,19 +118,15 @@ CREATE TABLE IF NOT EXISTS Clarification (
 ) ENGINE = InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS problem_solutions (
-	problem_id BINARY(17),
-	solution_id BINARY(17),
-	PRIMARY KEY(problem_id, solution_id),
-	FOREIGN KEY(problem_id) REFERENCES Problem(id),
-	FOREIGN KEY(solution_id) REFERENCES Solution(id)
-) ENGINE = InnoDB;
-
-
 
 -- VIEWS ----------------------------------------------------------------------
 
-CREATE VIEW User_no_password_view AS
+/*
+ * Printable views are provided for debugging purposes.
+ * This is to avoid that binary non-printable characters are display on the terminal.
+ */
+
+CREATE VIEW User_printable_view AS
 SELECT
 	birth_date,
 	email,
@@ -127,10 +139,117 @@ SELECT
 FROM User;
 
 
+CREATE VIEW user_password_printable_view AS
+SELECT
+	user_name,
+	HEX(password) AS password
+FROM user_password;
+
+
+CREATE VIEW Problem_printable_view AS
+SELECT
+	HEX(accepted_solution_id) AS accepted_solution_id,
+	content,
+	creation_datetime,
+	creator_user_name,
+	description,
+	HEX(id) AS id,
+	is_anonymous,
+	is_solved,
+	last_edition_datetime
+FROM Problem;
+
+
+CREATE VIEW Solution_printable_view AS
+SELECT
+	content,
+	creation_datetime,
+	creator_user_name,
+	description,
+	HEX(id) AS id,
+	is_anonymous,
+	last_edition_datetime
+FROM Solution;
+
+
+CREATE VIEW problem_solutions_printable_view AS
+SELECT
+	HEX(problem_id) AS problem_id,
+	HEX(solution_id) AS solution_id
+FROM problem_solutions;
+
+
+CREATE VIEW Clarification_printable_view AS
+SELECT
+	answer,
+	HEX(associated_publication_id) AS associated_publication_id,
+	creator_user_name,
+	HEX(id) AS id,
+	question
+FROM Clarification;
+
+
 
 -- STORED PROCEDURES ----------------------------------------------------------
 
 DELIMITER ! -- Changes the current sentence delimiter
+
+
+/*
+ * Signs up a new user.
+ * Notes:
+ * 		This procedure doesn't validate the received parameters.
+ * 		At this point, the received password must already be encrypted.
+ *		in_encrypted_password must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE sign_up_user(
+	IN in_birth_date DATE,
+	IN in_email VARCHAR(255),
+	IN in_first_name VARCHAR(31) CHARACTER SET utf8,
+	IN in_genre ENUM('M', 'F', 'U'),
+	IN in_last_name VARCHAR(31) CHARACTER SET utf8,
+	IN in_location VARCHAR(15),
+	IN in_sign_up_date DATE,
+	IN in_user_name VARCHAR(31),
+	IN in_encrypted_password BINARY(128)
+)
+BEGIN
+	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	
+	START TRANSACTION;
+	
+	INSERT INTO User(
+		birth_date,
+		email,
+		first_name,
+		genre,
+		last_name,
+		location,
+		sign_up_date,
+		user_name
+	)
+	VALUES (
+		in_birth_date,
+		in_email,
+		in_first_name,
+		in_genre,
+		in_last_name,
+		in_location,
+		in_sign_up_date,
+		in_user_name
+	);
+	
+	INSERT INTO user_password(
+		user_name,
+		password
+	)
+	VALUES (
+		in_user_name,
+		in_encrypted_password_binary
+	);
+	
+	COMMIT;
+END; !
 
 
 /*
@@ -148,7 +267,7 @@ BEGIN
 	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
 	
 	SELECT *
-	FROM User
+	FROM user_password
 	WHERE
 		user_name LIKE BINARY in_user_name
 		AND
@@ -156,51 +275,6 @@ BEGIN
 	LIMIT 1;
 	
 	SET out_success = FOUND_ROWS() = 1;
-END; !
-
-
-/*
- * Signs up a new user.
- * Notes:
- * 		This procedure doesn't validate the received parameters.
- *		in_encrypted_password must be a string representing an hexadecimal number.
- */
-CREATE PROCEDURE sign_up_user(
-	IN in_birth_date DATE,
-	IN in_email VARCHAR(255),
-	IN in_first_name VARCHAR(31) CHARACTER SET utf8,
-	IN in_genre ENUM('M', 'F', 'U'),
-	IN in_last_name VARCHAR(31) CHARACTER SET utf8,
-	IN in_location VARCHAR(15),
-	IN in_encrypted_password BINARY(128),
-	IN in_sign_up_date DATE,
-	IN in_user_name VARCHAR(31)
-)
-BEGIN
-	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
-	
-	INSERT INTO User(
-		birth_date,
-		email,
-		first_name,
-		genre,
-		last_name,
-		location,
-		password,
-		sign_up_date,
-		user_name
-	)
-	VALUES (
-		in_birth_date,
-		in_email,
-		in_first_name,
-		in_genre,
-		in_last_name,
-		in_location,
-		in_encrypted_password_binary,
-		in_sign_up_date,
-		in_user_name
-	);
 END; !
 
 
@@ -522,7 +596,7 @@ DELIMITER ! -- Changes the current sentence delimiter
 /*
  * Triggered before a Problem row is deleted.
  */
-CREATE TRIGGER trigger_delete_Problem
+CREATE TRIGGER Problem_before_delete_trigger
 BEFORE DELETE ON Problem
 FOR EACH ROW
 BEGIN
@@ -535,7 +609,7 @@ END; !
 /*
  * Triggered before a Solution row is deleted.
  */
-CREATE TRIGGER trigger_delete_Solution
+CREATE TRIGGER Solution_before_delete_trigger
 BEFORE DELETE ON Solution
 FOR EACH ROW
 BEGIN
@@ -558,7 +632,7 @@ REVOKE ALL PRIVILEGES, GRANT OPTION
 FROM 'pci_user'@'localhost';
 
 GRANT SELECT
-ON TABLE pci_database.Solution
+ON TABLE pci_database.User
 TO 'pci_user'@'localhost';
 
 GRANT SELECT
@@ -566,7 +640,7 @@ ON TABLE pci_database.Problem
 TO 'pci_user'@'localhost';
 
 GRANT SELECT
-ON TABLE pci_database.Clarification
+ON TABLE pci_database.Solution
 TO 'pci_user'@'localhost';
 
 GRANT SELECT
@@ -574,15 +648,15 @@ ON TABLE pci_database.problem_solutions
 TO 'pci_user'@'localhost';
 
 GRANT SELECT
-ON TABLE pci_database.User_no_password_view
-TO 'pci_user'@'localhost';
-
-GRANT EXECUTE
-ON PROCEDURE pci_database.sign_in_user
+ON TABLE pci_database.Clarification
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
 ON PROCEDURE pci_database.sign_up_user
+TO 'pci_user'@'localhost';
+
+GRANT EXECUTE
+ON PROCEDURE pci_database.sign_in_user
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE

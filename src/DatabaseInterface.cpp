@@ -16,7 +16,7 @@ User *DatabaseInterface::searchUser(string user_name) {
 
 	string query =
 		"SELECT *"
-		"FROM User_no_password_view"
+		"FROM User"
 		"WHERE user_name LIKE BINARY ?"
 		"LIMIT 1";
 
@@ -51,12 +51,12 @@ Problem *DatabaseInterface::searchProblem(string id) {
 
 	string query =
 		"SELECT"
-		"	HEX(accepted_solution_id),"
+		"	HEX(accepted_solution_id) AS accepted_solution_id,"
 		"	content,"
 		"	creation_datetime,"
 		"	creator_user_name,"
 		"	description,"
-		"	HEX(id),"
+		"	HEX(id) AS id,"
 		"	is_anonymous,"
 		"	is_solved,"
 		"	last_edition_datetime"
@@ -71,12 +71,12 @@ Problem *DatabaseInterface::searchProblem(string id) {
 
 	Problem *problem = new Problem();
 
-	result.fetch("HEX(accepted_solution_id)", problem->accepted_solution_id);
+	result.fetch("accepted_solution_id", problem->accepted_solution_id);
 	result.fetch("content", problem->content);
 	//result.fetch("creation_datetime", problem->creation_datetime); // TODO
 	result.fetch("creator_user_name", problem->creator_user_name);
 	result.fetch("description", problem->description);
-	result.fetch("HEX(id)", problem->id);
+	result.fetch("id", problem->id);
 	result.fetch("is_anonymous", problem->is_anonymous);
 	result.fetch("is_solved", problem->is_solved);
 	//result.fetch("last_edition_datetime", problem->last_edition_datetime); // TODO
@@ -93,12 +93,12 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 
 	string query =
 		"SELECT"
-		"	HEX(accepted_solution_id),"
+		"	HEX(accepted_solution_id) AS accepted_solution_id,"
 		"	content,"
 		"	creation_datetime,"
 		"	creator_user_name,"
 		"	description,"
-		"	HEX(id),"
+		"	HEX(id) AS id,"
 		"	is_anonymous,"
 		"	is_solved,"
 		"	last_edition_datetime"
@@ -113,12 +113,12 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 
 		Problem *problem = new Problem();
 
-		result.fetch("HEX(accepted_solution_id)", problem->accepted_solution_id);
+		result.fetch("accepted_solution_id", problem->accepted_solution_id);
 		result.fetch("content", problem->content);
 		//result.fetch("creation_datetime", problem->); TODO
 		result.fetch("creator_user_name", problem->creator_user_name);
 		result.fetch("description", problem->description);
-		result.fetch("HEX(id)", problem->id);
+		result.fetch("id", problem->id);
 		result.fetch("is_anonymous", problem->is_anonymous);
 		result.fetch("is_solved", problem->is_solved);
 		//result.fetch("last_edition_datetime", problem->); TODO
@@ -133,12 +133,12 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 
 	string query =
 		"SELECT"
-		"	HEX(accepted_solution_id),"
+		"	HEX(accepted_solution_id) AS accepted_solution_id,"
 		"	content,"
 		"	creation_datetime,"
 		"	creator_user_name,"
 		"	description,"
-		"	HEX(id),"
+		"	HEX(id) AS id,"
 		"	is_anonymous,"
 		"	is_solved,"
 		"	last_edition_datetime"
@@ -154,12 +154,12 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 
 		Problem *problem = new Problem();
 
-		result.fetch("HEX(accepted_solution_id)", problem->accepted_solution_id);
+		result.fetch("accepted_solution_id", problem->accepted_solution_id);
 		result.fetch("content", problem->content);
 		//result.fetch("creation_datetime", problem->); TODO
 		result.fetch("creator_user_name", problem->creator_user_name);
 		result.fetch("description", problem->description);
-		result.fetch("HEX(id)", problem->id);
+		result.fetch("id", problem->id);
 		result.fetch("is_anonymous", problem->is_anonymous);
 		result.fetch("is_solved", problem->is_solved);
 		//result.fetch("last_edition_datetime", problem->); TODO
@@ -178,7 +178,7 @@ Solution *DatabaseInterface::searchSolution(string id) {
 		"	creation_datetime,"
 		"	creator_user_name,"
 		"	description,"
-		"	HEX(id),"
+		"	HEX(id) AS id,"
 		"	is_anonymous,"
 		"	last_edition_datetime"
 		"FROM Solution"
@@ -196,7 +196,7 @@ Solution *DatabaseInterface::searchSolution(string id) {
 	//result.fetch("creation_datetime", solution->creation_datetime); // TODO
 	result.fetch("creator_user_name", solution->creator_user_name);
 	result.fetch("description", solution->description);
-	result.fetch("HEX(id)", solution->id);
+	result.fetch("id", solution->id);
 	result.fetch("is_anonymous", solution->is_anonymous);
 	//result.fetch("last_edition_datetime", solution->last_edition_datetime); // TODO
 
@@ -207,13 +207,13 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 
 	string query =
 		"SELECT"
-		"	Solution.content,"
-		"	Solution.creation_datetime,"
-		"	Solution.creator_user_name,"
-		"	Solution.description,"
-		"	HEX(Solution.id),"
-		"	Solution.is_anonymous,"
-		"	Solution.last_edition_datetime"
+		"	Solution.content AS content,"
+		"	Solution.creation_datetime AS creation_datetime,"
+		"	Solution.creator_user_name AS creator_user_name,"
+		"	Solution.description AS description,"
+		"	HEX(Solution.id) AS id,"
+		"	Solution.is_anonymous AS is_anonymous,"
+		"	Solution.last_edition_datetime AS last_edition_datetime"
 		"FROM"
 		"	Problem"
 		"	JOIN"
@@ -229,13 +229,13 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 
 	Solution *solution = new Solution();
 
-	result.fetch("Solution.content", solution->content);
-	//result.fetch("Solution.creation_datetime", solution->creation_datetime); // TODO
-	result.fetch("Solution.creator_user_name", solution->creator_user_name);
-	result.fetch("Solution.description", solution->description);
-	result.fetch("HEX(Solution.id)", solution->id);
-	result.fetch("Solution.is_anonymous", solution->is_anonymous);
-	//result.fetch("Solution.last_edition_datetime", solution->last_edition_datetime); // TODO
+	result.fetch("content", solution->content);
+	//result.fetch("creation_datetime", solution->creation_datetime); // TODO
+	result.fetch("creator_user_name", solution->creator_user_name);
+	result.fetch("description", solution->description);
+	result.fetch("id", solution->id);
+	result.fetch("is_anonymous", solution->is_anonymous);
+	//result.fetch("last_edition_datetime", solution->last_edition_datetime); // TODO
 
 	return solution;
 }
@@ -244,13 +244,13 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 	string query =
 		"SELECT"
-		"	Solution.content,"
-		"	Solution.creation_datetime,"
-		"	Solution.creator_user_name,"
-		"	Solution.description,"
-		"	HEX(Solution.id),"
-		"	Solution.is_anonymous,"
-		"	Solution.last_edition_datetime"
+		"	Solution.content AS content,"
+		"	Solution.creation_datetime AS creation_datetime,"
+		"	Solution.creator_user_name AS creator_user_name,"
+		"	Solution.description AS description,"
+		"	HEX(Solution.id) AS id,"
+		"	Solution.is_anonymous AS is_anonymous,"
+		"	Solution.last_edition_datetime AS last_edition_datetime"
 		"FROM"
 		"	Problem"
 		"	JOIN"
@@ -271,13 +271,13 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 		Solution *solution = new Solution();
 
-		result.fetch("Solution.content", solution->content);
-		//result.fetch("Solution.creation_datetime", solution->); TODO
-		result.fetch("Solution.creator_user_name", solution->creator_user_name);
-		result.fetch("Solution.description", solution->description);
-		result.fetch("HEX(Solution.id)", solution->id);
-		result.fetch("Solution.is_anonymous", solution->id);
-		//result.fetch("Solution.last_edition_datetime", solution->); TODO
+		result.fetch("content", solution->content);
+		//result.fetch("creation_datetime", solution->); TODO
+		result.fetch("creator_user_name", solution->creator_user_name);
+		result.fetch("description", solution->description);
+		result.fetch("id", solution->id);
+		result.fetch("is_anonymous", solution->id);
+		//result.fetch("last_edition_datetime", solution->); TODO
 
 		solution_list->push_back(solution);
 	}
@@ -293,7 +293,7 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 		"	creation_datetime,"
 		"	creator_user_name,"
 		"	description,"
-		"	HEX(Solution.id),"
+		"	HEX(Solution.id) AS id,"
 		"	is_anonymous,"
 		"	last_edition_datetime"
 		"FROM Solution"
@@ -311,7 +311,7 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 		//result.fetch("creation_datetime", solution->); TODO
 		result.fetch("creator_user_name", solution->creator_user_name);
 		result.fetch("description", solution->description);
-		result.fetch("HEX(id)", solution->id);
+		result.fetch("id", solution->id);
 		result.fetch("is_anonymous", solution->is_anonymous);
 		//result.fetch("last_edition_datetime", solution->); TODO
 
@@ -326,9 +326,9 @@ Clarification *DatabaseInterface::searchClarification(string id) {
 	string query =
 		"SELECT"
 		"	answer,"
-		"	HEX(associated_publication_id),"
+		"	HEX(associated_publication_id) AS associated_publication_id,"
 		"	creator_user_name,"
-		"	HEX(id),"
+		"	HEX(id) AS id,"
 		"	question"
 		"FROM Clarification"
 		"WHERE id LIKE UNHEX('?')"
@@ -342,9 +342,9 @@ Clarification *DatabaseInterface::searchClarification(string id) {
 	Clarification *clarification = new Clarification();
 
 	result.fetch("answer", clarification->answer);
-	result.fetch("HEX(associated_publication_id)", clarification->associated_publication_id);
+	result.fetch("associated_publication_id", clarification->associated_publication_id);
 	result.fetch("creator_user_name", clarification->creator_user_name);
-	result.fetch("HEX(id)", clarification->id);
+	result.fetch("id", clarification->id);
 	result.fetch("question", clarification->question);
 
 	return clarification;
@@ -355,9 +355,9 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	string query =
 		"SELECT"
 		"	answer,"
-		"	HEX(associated_publication_id),"
+		"	HEX(associated_publication_id) AS associated_publication_id,"
 		"	creator_user_name,"
-		"	HEX(id),"
+		"	HEX(id) AS id,"
 		"	question"
 		"FROM Clarification"
 		"WHERE associated_publication_id LIKE UNHEX('?')";
@@ -371,9 +371,9 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 		Clarification *clarification = new Clarification();
 
 		result.fetch("answer", clarification->answer);
-		result.fetch("HEX(associated_publication_id)", clarification->associated_publication_id);
+		result.fetch("associated_publication_id", clarification->associated_publication_id);
 		result.fetch("creator_user_name", clarification->creator_user_name);
-		result.fetch("HEX(id)", clarification->id);
+		result.fetch("id", clarification->id);
 		result.fetch("question", clarification->question);
 
 		clarification_list->push_back(clarification);
@@ -391,8 +391,8 @@ void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 		"	'?',"
 		"	'?',"
 		"	'?',"
-		"	'?',"
 		//"	'?'," TODO
+		"	'?',"
 		"	'?'"
 		")";
 
@@ -404,9 +404,9 @@ void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 		<< user->genre
 		<< user->last_name
 		<< user->location
-		<< encrypted_password
 		//<< user->sign_up_date TODO
 		<< user->user_name
+		<< encrypted_password
 		<< exec;
 }
 
