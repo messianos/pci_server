@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS User (
 	genre ENUM('M', 'F', 'U'), -- M: male / F: female / U: unspecified
 	last_name VARCHAR(31) CHARACTER SET utf8,
 	location VARCHAR(15),
-	sign_up_date DATE,
+	sign_up_datetime TIMESTAMP,
 	user_name VARCHAR(31),
 	PRIMARY KEY(user_name)
 ) ENGINE = InnoDB;
@@ -71,12 +71,12 @@ CREATE TABLE IF NOT EXISTS user_password (
 
 CREATE TABLE IF NOT EXISTS Solution (
 	content MEDIUMTEXT CHARACTER SET utf8,
-	creation_datetime DATETIME,
+	creation_datetime TIMESTAMP,
 	creator_user_name VARCHAR(31),
 	description TEXT CHARACTER SET utf8,
 	id BINARY(17),
 	is_anonymous BOOLEAN,
-	last_edition_datetime DATETIME,
+	last_edition_datetime TIMESTAMP,
 	PRIMARY KEY(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
@@ -85,13 +85,13 @@ CREATE TABLE IF NOT EXISTS Solution (
 CREATE TABLE IF NOT EXISTS Problem (
 	accepted_solution_id BINARY(17),
 	content MEDIUMTEXT CHARACTER SET utf8,
-	creation_datetime DATETIME,
+	creation_datetime TIMESTAMP,
 	creator_user_name VARCHAR(31),
 	description TEXT CHARACTER SET utf8,
 	id BINARY(17),
 	is_anonymous BOOLEAN,
 	is_solved BOOLEAN,
-	last_edition_datetime DATETIME,
+	last_edition_datetime TIMESTAMP,
 	PRIMARY KEY(id),
 	FOREIGN KEY(accepted_solution_id) REFERENCES Solution(id),
 	FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
@@ -134,7 +134,7 @@ SELECT
 	genre,
 	last_name,
 	location,
-	sign_up_date,
+	sign_up_datetime,
 	user_name
 FROM User;
 
@@ -209,12 +209,12 @@ CREATE PROCEDURE sign_up_user(
 	IN in_genre ENUM('M', 'F', 'U'),
 	IN in_last_name VARCHAR(31) CHARACTER SET utf8,
 	IN in_location VARCHAR(15),
-	IN in_sign_up_date DATE,
 	IN in_user_name VARCHAR(31),
 	IN in_encrypted_password BINARY(128)
 )
 BEGIN
 	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	DECLARE in_sign_up_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
 	
 	START TRANSACTION;
 	
@@ -225,7 +225,7 @@ BEGIN
 		genre,
 		last_name,
 		location,
-		sign_up_date,
+		sign_up_datetime,
 		user_name
 	)
 	VALUES (
@@ -235,7 +235,7 @@ BEGIN
 		in_genre,
 		in_last_name,
 		in_location,
-		in_sign_up_date,
+		in_sign_up_datetime,
 		in_user_name
 	);
 	
@@ -284,7 +284,6 @@ END; !
  */
 CREATE PROCEDURE insert_problem(
 	IN in_content MEDIUMTEXT CHARACTER SET utf8,
-	IN in_creation_datetime DATETIME,
 	IN in_creator_user_name VARCHAR(31),
 	IN in_description TEXT CHARACTER SET utf8,
 	IN in_id BINARY(34),
@@ -292,6 +291,7 @@ CREATE PROCEDURE insert_problem(
 )
 BEGIN
 	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE in_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
 	
 	INSERT INTO Problem(
 		accepted_solution_id,
@@ -459,7 +459,6 @@ END; !
 CREATE PROCEDURE insert_solution(
 	IN in_problem_id BINARY(34),
 	IN in_content MEDIUMTEXT CHARACTER SET utf8,
-	IN in_creation_datetime DATETIME,
 	IN in_creator_user_name VARCHAR(31),
 	IN in_description TEXT CHARACTER SET utf8,
 	IN in_id BINARY(34),
@@ -468,6 +467,7 @@ CREATE PROCEDURE insert_solution(
 BEGIN
 	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+	DECLARE in_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
 	
 	START TRANSACTION;
 	

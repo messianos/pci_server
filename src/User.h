@@ -3,18 +3,20 @@
 #define USER_H_
 
 // Includes
+#include "Date.h"
+#include <ctime>
 #include <string>
 
 class User {
 
 public:
-	//struct ctime birth_date; TODO
+	Date *birth_date;
 	std::string email;
 	std::string first_name;
 	std::string genre;
 	std::string last_name;
 	std::string location;
-	//struct ctime sign_up_date; TODO
+	time_t sign_up_datetime;
 	std::string user_name;
 	User();
 	virtual ~User();
