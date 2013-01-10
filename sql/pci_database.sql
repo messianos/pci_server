@@ -213,8 +213,8 @@ CREATE PROCEDURE sign_up_user(
 	IN in_encrypted_password BINARY(128)
 )
 BEGIN
-	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
-	DECLARE in_sign_up_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
+	DECLARE v_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	DECLARE v_sign_up_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
 	
 	START TRANSACTION;
 	
@@ -235,7 +235,7 @@ BEGIN
 		in_genre,
 		in_last_name,
 		in_location,
-		in_sign_up_datetime,
+		v_sign_up_datetime,
 		in_user_name
 	);
 	
@@ -245,7 +245,7 @@ BEGIN
 	)
 	VALUES (
 		in_user_name,
-		in_encrypted_password_binary
+		v_encrypted_password_binary
 	);
 	
 	COMMIT;
@@ -264,14 +264,14 @@ CREATE PROCEDURE sign_in_user(
 	OUT out_success BOOLEAN
 )
 BEGIN
-	DECLARE in_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	DECLARE v_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
 	
 	SELECT *
 	FROM user_password
 	WHERE
 		user_name LIKE BINARY in_user_name
 		AND
-		password LIKE in_encrypted_password_binary
+		password LIKE v_encrypted_password_binary
 	LIMIT 1;
 	
 	SET out_success = FOUND_ROWS() = 1;
@@ -290,8 +290,8 @@ CREATE PROCEDURE insert_problem(
 	IN in_is_anonymous BOOLEAN
 )
 BEGIN
-	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
-	DECLARE in_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
+	DECLARE v_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
+	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	
 	INSERT INTO Problem(
 		accepted_solution_id,
@@ -307,13 +307,13 @@ BEGIN
 	VALUES (
 		NULL,
 		in_content,
-		in_creation_datetime,
+		v_creation_datetime,
 		in_creator_user_name,
 		in_description,
-		in_id_binary,
+		v_id_binary,
 		in_is_anonymous,
 		FALSE,
-		in_creation_datetime
+		v_creation_datetime
 	);
 END; !
 
@@ -326,22 +326,22 @@ CREATE PROCEDURE delete_problem(
 	IN in_id BINARY(34)
 )
 BEGIN
-	DECLARE found_accepted_solution_id BINARY(17) DEFAULT NULL;
-	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE v_found_accepted_solution_id BINARY(17) DEFAULT NULL;
+	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	
 	START TRANSACTION;
 	
 	-- Searches the value of the accepted_solution_id column
 	SELECT accepted_solution_id
 	FROM Problem
-	WHERE id LIKE in_id_binary
+	WHERE id LIKE v_id_binary
 	LIMIT 1
-	INTO found_accepted_solution_id;
+	INTO v_found_accepted_solution_id;
 	
-	IF found_accepted_solution_id IS NOT NULL THEN
+	IF v_found_accepted_solution_id IS NOT NULL THEN
 		-- Deletes the accepted Solution row
 		DELETE FROM Solution
-		WHERE id LIKE found_accepted_solution_id
+		WHERE id LIKE v_found_accepted_solution_id
 		LIMIT 1;
 	END IF;
 	
@@ -349,17 +349,17 @@ BEGIN
 	DELETE FROM Solution
 	USING Solution, problem_solutions
 	WHERE
-		problem_solutions.problem_id LIKE in_id_binary
+		problem_solutions.problem_id LIKE v_id_binary
 		AND
 		problem_solutions.solution_id LIKE Solution.id;
 	
 	-- Deletes the associated problem_solutions rows
 	DELETE FROM problem_solutions
-	WHERE problem_id LIKE in_id_binary;
+	WHERE problem_id LIKE v_id_binary;
 	
 	-- Deletes the Problem row
 	DELETE FROM Problem
-	WHERE id LIKE in_id_binary
+	WHERE id LIKE v_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -375,35 +375,35 @@ CREATE PROCEDURE set_accepted_solution(
 	IN in_solution_id BINARY(34)
 )
 BEGIN
-	DECLARE found_accepted_solution_id BINARY(17) DEFAULT NULL;
-	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
-	DECLARE in_solution_id_binary BINARY(17) DEFAULT UNHEX(in_solution_id);
+	DECLARE v_found_accepted_solution_id BINARY(17) DEFAULT NULL;
+	DECLARE v_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+	DECLARE v_solution_id_binary BINARY(17) DEFAULT UNHEX(in_solution_id);
 	
 	START TRANSACTION;
 	
 	-- Searches the current accepted solution
 	SELECT accepted_solution_id
 	FROM Problem
-	WHERE id LIKE in_problem_id_binary
+	WHERE id LIKE v_problem_id_binary
 	LIMIT 1
-	INTO found_accepted_solution_id;
+	INTO v_found_accepted_solution_id;
 	
-	IF found_accepted_solution_id IS NOT NULL THEN
+	IF v_found_accepted_solution_id IS NOT NULL THEN
 		-- The current accepted solution must be unset
 		INSERT INTO problem_solutions(
 			problem_id,
 			solution_id
 		)
 		VALUES (
-			in_problem_id_binary,
-			found_accepted_solution_id
+			v_problem_id_binary,
+			v_found_accepted_solution_id
 		);
 	END IF;
 	
 	-- Updates the Problem row
 	UPDATE Problem
-	SET accepted_solution_id = in_solution_id_binary
-	WHERE id LIKE in_problem_id_binary
+	SET accepted_solution_id = v_solution_id_binary
+	WHERE id LIKE v_problem_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -418,34 +418,34 @@ CREATE PROCEDURE unset_accepted_solution(
 	IN in_problem_id BINARY(34)
 )
 BEGIN
-	DECLARE found_accepted_solution_id BINARY(17) DEFAULT NULL;
-	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+	DECLARE v_found_accepted_solution_id BINARY(17) DEFAULT NULL;
+	DECLARE v_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
 	
 	START TRANSACTION;
 	
 	-- Searches the current accepted solution
 	SELECT accepted_solution_id
 	FROM Problem
-	WHERE id LIKE in_problem_id_binary
+	WHERE id LIKE v_problem_id_binary
 	LIMIT 1
-	INTO found_accepted_solution_id;
+	INTO v_found_accepted_solution_id;
 	
-	IF found_accepted_solution_id IS NOT NULL THEN
+	IF v_found_accepted_solution_id IS NOT NULL THEN
 		-- The current accepted solution must be unset
 		INSERT INTO problem_solutions(
 			problem_id,
 			solution_id
 		)
 		VALUES (
-			in_problem_id_binary,
-			found_accepted_solution_id
+			v_problem_id_binary,
+			v_found_accepted_solution_id
 		);
 	END IF;
 	
 	-- Updates the Problem row
 	UPDATE Problem
 	SET accepted_solution_id = NULL
-	WHERE id LIKE in_problem_id_binary
+	WHERE id LIKE v_problem_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -465,9 +465,9 @@ CREATE PROCEDURE insert_solution(
 	IN in_is_anonymous BOOLEAN
 )
 BEGIN
-	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
-	DECLARE in_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
-	DECLARE in_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
+	DECLARE v_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
+	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE v_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
 	
 	START TRANSACTION;
 	
@@ -482,12 +482,12 @@ BEGIN
 	)
 	VALUES (
 		in_content,
-		in_creation_datetime,
+		v_creation_datetime,
 		in_creator_user_name,
 		in_description,
-		in_id_binary,
+		v_id_binary,
 		in_is_anonymous,
-		in_creation_datetime
+		v_creation_datetime
 	);
 	
 	INSERT INTO problem_solutions(
@@ -495,8 +495,8 @@ BEGIN
 		solution_id
 	)
 	VALUES (
-		in_problem_id_binary,
-		in_id_binary
+		v_problem_id_binary,
+		v_id_binary
 	);
 	
 	COMMIT;
@@ -511,26 +511,26 @@ CREATE PROCEDURE delete_solution(
 	IN in_id BINARY(34)
 )
 BEGIN
-	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	
 	START TRANSACTION;
 	
 	-- Updates the associated Problem row (if there's any)
 	UPDATE Problem
 	SET accepted_solution_id = NULL
-	WHERE accepted_solution_id = in_id_binary
+	WHERE accepted_solution_id = v_id_binary
 	LIMIT 1;
 	
 	-- If no rows were affected, a problem_solutions row must be deleted
 	IF ROW_COUNT() = 0 THEN
 		DELETE FROM problem_solutions
-		WHERE solution_id LIKE in_id_binary
+		WHERE solution_id LIKE v_id_binary
 		LIMIT 1;
 	END IF;
 	
 	-- Deletes the Solution row
 	DELETE FROM Solution
-	WHERE id LIKE in_id_binary
+	WHERE id LIKE v_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -548,8 +548,8 @@ CREATE PROCEDURE insert_clarification(
 	IN in_question TEXT CHARACTER SET utf8
 )
 BEGIN
-	DECLARE in_associated_publication_id_binary BINARY(17) DEFAULT UNHEX(in_associated_publication_id);
-	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE v_associated_publication_id_binary BINARY(17) DEFAULT UNHEX(in_associated_publication_id);
+	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	
 	INSERT INTO Clarification(
 		answer,
@@ -560,9 +560,9 @@ BEGIN
 	)
 	VALUES (
 		NULL,
-		in_associated_publication_id_binary,
+		v_associated_publication_id_binary,
 		in_creator_user_name,
-		in_id_binary,
+		v_id_binary,
 		in_question
 	);
 END; !
@@ -576,10 +576,10 @@ CREATE PROCEDURE delete_clarification(
 	IN in_id BINARY(34)
 )
 BEGIN
-	DECLARE in_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	
 	DELETE FROM Clarification
-	WHERE id LIKE in_id_binary
+	WHERE id LIKE v_id_binary
 	LIMIT 1;
 END; !
 
