@@ -1,7 +1,7 @@
 
 // Includes
 #include "IDManager.h"
-// Prueba
+
 // Namespaces
 using namespace boost::uuids;
 using namespace std;

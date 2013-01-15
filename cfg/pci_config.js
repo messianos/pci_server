@@ -1,13 +1,15 @@
-{  
-	"service" : {  
-		"api" : "http",  
-		"port" : 8080  
-	},  
-	"http" : {  
-		"script_names" : [ "/", "/pci" ]  
+{
+	"service" : {
+		"api" : "http",
+		"port" : 8080
 	},
-	"file_server" : {  
-		"enable": true, // This is for being able to use css
+	
+	"http" : {
+		"script_names" : [ "/", "/pci" ]
+	},
+	
+	"file_server" : {
+		"enable": true,
 		"document_root" : "www"
 	}
 }
