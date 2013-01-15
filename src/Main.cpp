@@ -1,11 +1,6 @@
 
 // Includes
-#include "Server.h"
-#include <cppcms/application.h>
-#include <cppcms/applications_pool.h>
-#include <cppcms/http_response.h>
-#include <cppcms/service.h>
-#include <iostream>
+#include "Main.h"
 
 // Namespaces
 using namespace cppcms;
@@ -16,7 +11,6 @@ int main(int argc, char **argv) {
 
 		service service(argc, argv);
 		service.applications_pool().mount(applications_factory<Server>());
-
 		cerr << "Server started!" << endl;
 		service.run();
 

@@ -1,15 +1,19 @@
-{
-	"service" : {
-		"api" : "http",
-		"port" : 8080
+{	
+	"file_server" : {
+		"document_root" : "www",
+		"enable": true
 	},
 	
 	"http" : {
 		"script_names" : [ "/", "/pci" ]
 	},
 	
-	"file_server" : {
-		"enable": true,
-		"document_root" : "www"
+	"service" : {
+		"api" : "http",
+		"port" : 8080
+	},
+	
+	"views" : {
+		"default_skin" : [ "test_skin" ]
 	}
 }

@@ -1,0 +1,17 @@
+
+div.big_button {
+	height:200px;
+	line-height:200px;
+	text-align:center;
+	width:200px;
+}
+
+
+#welcome_problems_big_button {
+	float:left;
+}
+
+
+#welcome_ideas_big_button {
+	float:right;
+}

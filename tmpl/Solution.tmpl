@@ -1,0 +1,33 @@
+
+<% c++ #include "ViewContent.h" %>
+
+<% skin test_skin %>
+	<% view solution_view uses ViewContent::SolutionContent extends template_view %>
+	
+		<% template head_links() %>
+			<% include template_view::head_links() %>
+			<link href="/css/solution.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+		<% template body_content() %>
+			<h1>Solucion <%= solution->id %></h1>
+			<div class = "button_wrapper">
+				<div class = "publication">
+					Descripcion: <%= solution->description %>
+				</div>
+			</div>
+			<h2>Aclaraciones</h2>
+			<% foreach clarification in *clarifications %>
+				<% item %>
+					<div class = "publication">
+						ID: <%= clarification->id %> Pregunta: <%= clarification->question %>
+						Respuesta: <%= clarification->answer %>
+					</div>
+				<% end %>
+				<% empty %>
+				No hay aclaraciones
+			<% end %>
+		<% end template %>
+	
+	<% end view %>
+<% end skin %>

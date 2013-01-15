@@ -1,0 +1,51 @@
+
+<% c++ #include "ViewContent.h" %>
+
+<% skin test_skin %>
+	<% view problem_view uses ViewContent::ProblemContent extends template_view %>
+	
+		<% template head_links() %>
+			<% include template_view::head_links() %>
+			<link href="/css/problem.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+		<% template body_content() %>
+			<h1>Problem <%= problem->id %></h1>
+			<div class = "button_wrapper">
+				<div class = "publication">
+					Descripcion: <%= problem->description %>
+				</div>
+			</div>
+			<h2>Aclaraciones</h2>
+			<% foreach clarification in *clarifications %>
+				<% item %>
+					<div class = "publication">
+						ID: <%= clarification->id %> Pregunta: <%= clarification->question %>
+						Respuesta: <%= clarification->answer %>
+					</div>
+				<% end %>
+				<% empty %>
+				No hay aclaraciones
+			<% end %>
+			<h2>Solucion</h2>
+			<% if problem->is_solved %>
+				<div class= "publication" onclick="location.href='/pci/solution/<%= accepted_solution->id %>'">
+					Descripcion: <%= accepted_solution->description %>
+				</div>
+			<% else %>
+				<p>No hay una solucion aceptada</p>
+			<% end %>
+			<h2>Soluciones Propuestas</h2>
+			<% foreach solution in *solutions %>
+				<% item %>
+					<div class = "publication" onclick="location.href='/pci/solution/<%= solution->id %>'">
+						ID: <%= solution->id %> Descripcion: <%= solution->description %>
+					</div>
+				<% end %>
+				<% empty %>
+				No hay soluciones propuestas
+			<% end %>
+		<% end template %>
+	
+	<% end view %>
+<% end skin %>

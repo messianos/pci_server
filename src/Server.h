@@ -3,6 +3,8 @@
 #define SERVER_H_
 
 // Includes
+#include "DatabaseInterface.h"
+#include "Problem.h"
 #include "ViewContent.h"
 #include <cppcms/application.h>
 #include <cppcms/applications_pool.h>
@@ -10,13 +12,18 @@
 #include <cppcms/service.h>
 #include <cppcms/url_dispatcher.h>
 #include <cppcms/url_mapper.h>
+#include <string>
 
-class Server {
+class Server : public cppcms::application {
 
 public:
 	Server(cppcms::service &service);
 	virtual ~Server();
 	void welcome();
+	void problems();
+	void problem(std::string id);
+	void solution(std::string id);
+	void ideas();
 };
 
 #endif /* SERVER_H_ */
