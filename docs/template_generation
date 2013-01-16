@@ -1,1 +1,1 @@
-cppcms_tmpl_cc Template.tmpl Welcome.tmpl Problems.tmpl Problem.tmpl Solution.tmpl Ideas.tmpl -o ../src/Rendering.cpp
+cppcms_tmpl_cc Template.tmpl Welcome.tmpl SignIn.tmpl Problems.tmpl Problem.tmpl Solution.tmpl Ideas.tmpl -o ../src/Rendering.cpp

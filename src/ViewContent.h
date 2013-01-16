@@ -19,6 +19,9 @@ namespace ViewContent {
 	struct WelcomeContent : TemplateContent {
 	};
 
+	struct SignInContent : TemplateContent {
+	};
+
 	struct ProblemsContent : TemplateContent {
 		std::list<Problem *> *problems;
 	};

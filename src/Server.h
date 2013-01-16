@@ -20,6 +20,7 @@ public:
 	Server(cppcms::service &service);
 	virtual ~Server();
 	void welcome();
+	void signIn();
 	void problems();
 	void problem(std::string id);
 	void solution(std::string id);

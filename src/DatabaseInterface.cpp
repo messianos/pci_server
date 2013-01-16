@@ -62,7 +62,7 @@ Problem *DatabaseInterface::searchProblem(string id) {
 	"		is_solved,"
 	"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
 	"	FROM Problem"
-	"	WHERE id LIKE UNHEX('?')"
+	"	WHERE id LIKE UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -183,7 +183,7 @@ Solution *DatabaseInterface::searchSolution(string id) {
 	"		is_anonymous,"
 	"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
 	"	FROM Solution"
-	"	WHERE id LIKE UNHEX('?')"
+	"	WHERE id LIKE UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -220,7 +220,7 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 	"		JOIN"
 	"		Solution"
 	"	ON Problem.accepted_solution_id LIKE Solution.id"
-	"	WHERE Problem.id LIKE UNHEX('?')"
+	"	WHERE Problem.id LIKE UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << problem_id;
@@ -262,7 +262,7 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 	"		Problem.id LIKE problem_solutions.problem_id"
 	"		AND"
 	"		Solution.id LIKE problem_solutions.solution_id"
-	"	WHERE Problem.id LIKE UNHEX('?')";
+	"	WHERE Problem.id LIKE UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
@@ -277,7 +277,7 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 		result.fetch("creator_user_name", solution->creator_user_name);
 		result.fetch("description", solution->description);
 		result.fetch("id", solution->id);
-		result.fetch("is_anonymous", solution->id);
+		result.fetch("is_anonymous", solution->is_anonymous);
 		result.fetch("last_edition_datetime", solution->last_edition_datetime);
 
 		solution_list->push_back(solution);
@@ -332,7 +332,7 @@ Clarification *DatabaseInterface::searchClarification(string id) {
 	"		HEX(id) AS id,"
 	"		question"
 	"	FROM Clarification"
-	"	WHERE id LIKE UNHEX('?')"
+	"	WHERE id LIKE UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -361,7 +361,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	"		HEX(id) AS id,"
 	"		question"
 	"	FROM Clarification"
-	"	WHERE associated_publication_id LIKE UNHEX('?')";
+	"	WHERE associated_publication_id LIKE UNHEX(?)";
 
 	result result = database_handler << query << associated_publication_id;
 
@@ -386,14 +386,14 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query =
 	"	CALL sign_up_user("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?'"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
 	"	)";
 
 	database_handler
@@ -412,10 +412,10 @@ void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 void DatabaseInterface::insertProblem(Problem *problem) {
 	string query =
 	"	CALL insert_problem("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
 	"		?"
 	"	)";
 
@@ -430,19 +430,19 @@ void DatabaseInterface::insertProblem(Problem *problem) {
 }
 
 void DatabaseInterface::deleteProblem(string id) {
-	string query = "CALL delete_problem('?')";
+	string query = "CALL delete_problem(?)";
 	database_handler << query << id << exec;
 }
 
 void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 	string query =
 	"	CALL insert_solution("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
 	"		?"
 	"	)";
 
@@ -458,17 +458,17 @@ void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 }
 
 void DatabaseInterface::deleteSolution(string id) {
-	string query = "CALL delete_solution('?')";
+	string query = "CALL delete_solution(?)";
 	database_handler << query << id << exec;
 }
 
 void DatabaseInterface::insertClarification(Clarification *clarification) {
 	string query =
 	"	CALL insert_clarification("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?'"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
 	"	)";
 
 	database_handler
@@ -481,6 +481,6 @@ void DatabaseInterface::insertClarification(Clarification *clarification) {
 }
 
 void DatabaseInterface::deleteClarification(string id) {
-	string query = "CALL delete_clarification('?')";
+	string query = "CALL delete_clarification(?)";
 	database_handler << query << id << exec;
 }

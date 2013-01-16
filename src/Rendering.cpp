@@ -130,27 +130,74 @@ namespace test_skin {
 		} // end of template head_links
 		#line 12 "Welcome.tmpl"
 		virtual void body_content() {
-			#line 26 "Welcome.tmpl"
+			#line 19 "Welcome.tmpl"
 			out()<<"\n"
 				"\t\t\t<h1>Bienvenido!</h1>\n"
-				"\t\t\t<div>\n"
-				"\t\t\t\t<div class=\"big_button\" id=\"welcome_problems_big_button\">\n"
-				"\t\t\t\t\t<a href=\"/pci/problems\">\n"
-				"\t\t\t\t\t\tProblems\n"
-				"\t\t\t\t\t</a>\n"
-				"\t\t\t\t</div>\n"
-				"\t\t\t\t<div class=\"big_button\" id=\"welcome_ideas_big_button\">\n"
-				"\t\t\t\t\t<a href=\"/pci/ideas\">\n"
-				"\t\t\t\t\t\tIdeas\n"
-				"\t\t\t\t\t</a>\n"
-				"\t\t\t\t</div>\n"
-				"\t\t\t</div>\n"
+				"\t\t\t<a href=\"/pci/sign_in\">Sign in</a>\n"
+				"\t\t\t<br />\n"
+				"\t\t\t<a href=\"/pci/problems\">Problems</a>\n"
+				"\t\t\t<br />\n"
+				"\t\t\t<a href=\"/pci/ideas\">Ideas</a>\n"
 				"\t\t";
-		#line 26 "Welcome.tmpl"
+		#line 19 "Welcome.tmpl"
 		} // end of template body_content
-	#line 28 "Welcome.tmpl"
+	#line 21 "Welcome.tmpl"
 	}; // end of class welcome_view
-#line 29 "Welcome.tmpl"
+#line 22 "Welcome.tmpl"
+} // end of namespace test_skin
+#line 2 "SignIn.tmpl"
+#include "ViewContent.h" 
+#line 4 "SignIn.tmpl"
+namespace test_skin {
+	#line 5 "SignIn.tmpl"
+	struct sign_in_view :public template_view
+	#line 5 "SignIn.tmpl"
+	{
+	#line 5 "SignIn.tmpl"
+		ViewContent::SignInContent &content;
+	#line 5 "SignIn.tmpl"
+		sign_in_view(std::ostream &_s,ViewContent::SignInContent &_content): template_view(_s,_content),content(_content)
+	#line 5 "SignIn.tmpl"
+		{
+	#line 5 "SignIn.tmpl"
+		}
+		#line 7 "SignIn.tmpl"
+		virtual void head_links() {
+			#line 8 "SignIn.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 8 "SignIn.tmpl"
+			template_view::head_links();
+			#line 10 "SignIn.tmpl"
+			out()<<"\n"
+				"\t\t\t<link href=\"/css/sign_in.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
+				"\t\t";
+		#line 10 "SignIn.tmpl"
+		} // end of template head_links
+		#line 12 "SignIn.tmpl"
+		virtual void body_content() {
+			#line 27 "SignIn.tmpl"
+			out()<<"\n"
+				"\t\t\t<h1>Sign in</h1>\n"
+				"\t\t\t<div>\n"
+				"\t\t\t\tUser\n"
+				"\t\t\t</div>\n"
+				"\t\t\t<div>\n"
+				"\t\t\t\t<input type=\"text\" />\n"
+				"\t\t\t</div>\n"
+				"\t\t\t<div>\n"
+				"\t\t\t\tPassword\n"
+				"\t\t\t</div>\n"
+				"\t\t\t<div>\n"
+				"\t\t\t\t<input type=\"password\" />\n"
+				"\t\t\t</div>\n"
+				"\t\t\t<input type=\"submit\" value=\"Sign in\" />\n"
+				"\t\t";
+		#line 27 "SignIn.tmpl"
+		} // end of template body_content
+	#line 29 "SignIn.tmpl"
+	}; // end of class sign_in_view
+#line 30 "SignIn.tmpl"
 } // end of namespace test_skin
 #line 2 "Problems.tmpl"
 #include "ViewContent.h" 
@@ -563,6 +610,8 @@ namespace {
    my_generator.add_view<test_skin::template_view,ViewContent::TemplateContent>("template_view",true);
 #line 18 "Ideas.tmpl"
    my_generator.add_view<test_skin::welcome_view,ViewContent::WelcomeContent>("welcome_view",true);
+#line 18 "Ideas.tmpl"
+   my_generator.add_view<test_skin::sign_in_view,ViewContent::SignInContent>("sign_in_view",true);
 #line 18 "Ideas.tmpl"
    my_generator.add_view<test_skin::problems_view,ViewContent::ProblemsContent>("problems_view",true);
 #line 18 "Ideas.tmpl"

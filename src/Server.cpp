@@ -12,13 +12,16 @@ Server::Server(cppcms::service &service) : application(service) {
 	dispatcher().assign("", &Server::welcome, this);
 	mapper().assign("");
 
+	dispatcher().assign("/sign_in", &Server::signIn, this);
+	mapper().assign("sign_in", "/sign_in");
+
 	dispatcher().assign("/problems", &Server::problems, this);
 	mapper().assign("problems", "/problems");
 
-	dispatcher().assign("/problem/(\\d+)", &Server::problem, this, 1);
+	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
 	mapper().assign("problem", "/problem/{1}");
 
-	dispatcher().assign("/solution/(\\d+)", &Server::solution, this, 1);
+	dispatcher().assign("/solution/(53\\w{32,32})", &Server::solution, this, 1);
 	mapper().assign("solution", "/solution/{1}");
 
 	dispatcher().assign("/ideas", &Server::ideas, this);
@@ -33,6 +36,12 @@ void Server::welcome() {
 	WelcomeContent content;
 	content.page_title = "Welcome";
 	render("welcome_view", content);
+}
+
+void Server::signIn() {
+	SignInContent content;
+	content.page_title = "Sign in";
+	render("sign_in_view", content);
 }
 
 void Server::problems() {
