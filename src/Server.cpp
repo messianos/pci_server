@@ -39,9 +39,41 @@ void Server::welcome() {
 }
 
 void Server::signIn() {
-	SignInContent content;
-	content.page_title = "Sign in";
-	render("sign_in_view", content);
+
+	// TODO: check session security and config options http://cppcms.com/wikipp/en/page/cppcms_1x_sessions
+
+	if (session().is_set("signed_in"))
+
+		welcome(); // TODO: deberia redireccionar
+
+	else {
+
+		SignInContent content;
+		content.page_title = "Sign in";
+		SignInFormInfo form_info = content.form_info;
+
+		if(request().request_method() == "POST") {
+
+			// POST message received
+			form_info.load(context());
+
+			if (form_info.validate()) {
+
+				// Input validated
+				string user_name = form_info.user_name.value();
+				string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
+
+				if (DatabaseInterface::signInUser(user_name, encrypted_password)) {
+					// User name and password are valid
+					session()["signed_in"] = "";
+					welcome();  // TODO: deberia redireccionar, no solo renderizar
+					return;
+				}
+			} // TODO: else ---> deberia mostrar mensaje especial de invalidez
+		}
+
+		render("sign_in_view", content);
+	}
 }
 
 void Server::problems() {

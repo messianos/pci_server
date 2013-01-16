@@ -4,6 +4,7 @@
 
 // Includes
 #include "DatabaseInterface.h"
+#include "PasswordManager.h"
 #include "Problem.h"
 #include "ViewContent.h"
 #include <cppcms/application.h>

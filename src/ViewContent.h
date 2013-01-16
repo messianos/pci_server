@@ -6,6 +6,7 @@
 #include "Clarification.h"
 #include "Problem.h"
 #include "Solution.h"
+#include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
 #include <string>
@@ -19,7 +20,28 @@ namespace ViewContent {
 	struct WelcomeContent : TemplateContent {
 	};
 
+	struct SignInFormInfo : public cppcms::form {
+		cppcms::widgets::text user_name;
+		cppcms::widgets::password password;
+		cppcms::widgets::submit submit;
+
+		SignInFormInfo() {
+			user_name.message("User name");
+			password.message("Password");
+			submit.value("Sign in");
+
+			add(user_name);
+			add(password);
+			add(submit);
+
+			// Restrictions
+			user_name.limits(1, 31);
+			password.non_empty();
+		}
+	};
+
 	struct SignInContent : TemplateContent {
+		SignInFormInfo form_info;
 	};
 
 	struct ProblemsContent : TemplateContent {

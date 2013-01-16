@@ -48,6 +48,37 @@ User *DatabaseInterface::searchUser(string user_name) {
 	return user;
 }
 
+bool DatabaseInterface::signInUser(string user_name, string encrypted_password) {
+	// TODO
+	return true;
+}
+
+void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
+	string query =
+	"	CALL sign_up_user("
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
+	"	)";
+
+	database_handler
+		<< query
+		<< user->birth_date->toString("%Y-%M-%D")
+		<< user->email
+		<< user->first_name
+		<< user->genre
+		<< user->last_name
+		<< user->location
+		<< user->user_name
+		<< encrypted_password
+		<< exec;
+}
+
 Problem *DatabaseInterface::searchProblem(string id) {
 
 	string query =
@@ -169,6 +200,31 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 	}
 
 	return problem_list;
+}
+
+void DatabaseInterface::insertProblem(Problem *problem) {
+	string query =
+	"	CALL insert_problem("
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
+	"	)";
+
+	database_handler
+		<< query
+		<< problem->content
+		<< problem->creator_user_name
+		<< problem->description
+		<< problem->id
+		<< problem->is_anonymous
+		<< exec;
+}
+
+void DatabaseInterface::deleteProblem(string id) {
+	string query = "CALL delete_problem(?)";
+	database_handler << query << id << exec;
 }
 
 Solution *DatabaseInterface::searchSolution(string id) {
@@ -322,6 +378,34 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 	return solution_list;
 }
 
+void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
+	string query =
+	"	CALL insert_solution("
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
+	"	)";
+
+	database_handler
+		<< query
+		<< problem_id
+		<< solution->content
+		<< solution->creator_user_name
+		<< solution->description
+		<< solution->id
+		<< solution->is_anonymous
+		<< exec;
+}
+
+void DatabaseInterface::deleteSolution(string id) {
+	string query = "CALL delete_solution(?)";
+	database_handler << query << id << exec;
+}
+
 Clarification *DatabaseInterface::searchClarification(string id) {
 
 	string query =
@@ -381,85 +465,6 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	}
 
 	return clarification_list;
-}
-
-void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
-	string query =
-	"	CALL sign_up_user("
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?"
-	"	)";
-
-	database_handler
-		<< query
-		<< user->birth_date->toString("%Y-%M-%D")
-		<< user->email
-		<< user->first_name
-		<< user->genre
-		<< user->last_name
-		<< user->location
-		<< user->user_name
-		<< encrypted_password
-		<< exec;
-}
-
-void DatabaseInterface::insertProblem(Problem *problem) {
-	string query =
-	"	CALL insert_problem("
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?"
-	"	)";
-
-	database_handler
-		<< query
-		<< problem->content
-		<< problem->creator_user_name
-		<< problem->description
-		<< problem->id
-		<< problem->is_anonymous
-		<< exec;
-}
-
-void DatabaseInterface::deleteProblem(string id) {
-	string query = "CALL delete_problem(?)";
-	database_handler << query << id << exec;
-}
-
-void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
-	string query =
-	"	CALL insert_solution("
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?,"
-	"		?"
-	"	)";
-
-	database_handler
-		<< query
-		<< problem_id
-		<< solution->content
-		<< solution->creator_user_name
-		<< solution->description
-		<< solution->id
-		<< solution->is_anonymous
-		<< exec;
-}
-
-void DatabaseInterface::deleteSolution(string id) {
-	string query = "CALL delete_solution(?)";
-	database_handler << query << id << exec;
 }
 
 void DatabaseInterface::insertClarification(Clarification *clarification) {

@@ -176,28 +176,22 @@ namespace test_skin {
 		} // end of template head_links
 		#line 12 "SignIn.tmpl"
 		virtual void body_content() {
-			#line 27 "SignIn.tmpl"
+			#line 15 "SignIn.tmpl"
 			out()<<"\n"
 				"\t\t\t<h1>Sign in</h1>\n"
-				"\t\t\t<div>\n"
-				"\t\t\t\tUser\n"
-				"\t\t\t</div>\n"
-				"\t\t\t<div>\n"
-				"\t\t\t\t<input type=\"text\" />\n"
-				"\t\t\t</div>\n"
-				"\t\t\t<div>\n"
-				"\t\t\t\tPassword\n"
-				"\t\t\t</div>\n"
-				"\t\t\t<div>\n"
-				"\t\t\t\t<input type=\"password\" />\n"
-				"\t\t\t</div>\n"
-				"\t\t\t<input type=\"submit\" value=\"Sign in\" />\n"
+				"\t\t\t<form action=\"\" method=\"post\">\n"
+				"\t\t\t\t";
+			#line 15 "SignIn.tmpl"
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.form_info).render(_form_context); }
+			#line 17 "SignIn.tmpl"
+			out()<<"\n"
+				"\t\t\t</form>\n"
 				"\t\t";
-		#line 27 "SignIn.tmpl"
+		#line 17 "SignIn.tmpl"
 		} // end of template body_content
-	#line 29 "SignIn.tmpl"
+	#line 19 "SignIn.tmpl"
 	}; // end of class sign_in_view
-#line 30 "SignIn.tmpl"
+#line 20 "SignIn.tmpl"
 } // end of namespace test_skin
 #line 2 "Problems.tmpl"
 #include "ViewContent.h" 
