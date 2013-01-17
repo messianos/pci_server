@@ -196,6 +196,32 @@ DELIMITER ! -- Changes the current sentence delimiter
 
 
 /*
+ * Checks whether the user name and password entered are valid.
+ * Notes:
+ * 		At this point, the received password must already be encrypted.
+ *		in_encrypted_password must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE sign_in_user(
+	IN in_user_name VARCHAR(31),
+	IN in_encrypted_password BINARY(128),
+	OUT out_success BOOLEAN
+)
+BEGIN
+	DECLARE v_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
+	
+	SELECT EXISTS (
+		SELECT *
+		FROM user_password
+		WHERE
+			user_name LIKE BINARY in_user_name
+			AND
+			password = v_encrypted_password_binary
+		LIMIT 1
+	) INTO out_success;
+END; !
+
+
+/*
  * Signs up a new user.
  * Notes:
  * 		This procedure doesn't validate the received parameters.
@@ -249,32 +275,6 @@ BEGIN
 	);
 	
 	COMMIT;
-END; !
-
-
-/*
- * Checks whether the user name and password entered are valid.
- * Notes:
- * 		At this point, the received password must already be encrypted.
- *		in_encrypted_password must be a string representing an hexadecimal number.
- */
-CREATE PROCEDURE sign_in_user(
-	IN in_user_name VARCHAR(31),
-	IN in_encrypted_password BINARY(128),
-	OUT out_success BOOLEAN
-)
-BEGIN
-	DECLARE v_encrypted_password_binary BINARY(64) DEFAULT UNHEX(in_encrypted_password);
-	
-	SELECT *
-	FROM user_password
-	WHERE
-		user_name LIKE BINARY in_user_name
-		AND
-		password LIKE v_encrypted_password_binary
-	LIMIT 1;
-	
-	SET out_success = FOUND_ROWS() = 1;
 END; !
 
 
@@ -334,14 +334,14 @@ BEGIN
 	-- Searches the value of the accepted_solution_id column
 	SELECT accepted_solution_id
 	FROM Problem
-	WHERE id LIKE v_id_binary
+	WHERE id = v_id_binary
 	LIMIT 1
 	INTO v_found_accepted_solution_id;
 	
 	IF v_found_accepted_solution_id IS NOT NULL THEN
 		-- Deletes the accepted Solution row
 		DELETE FROM Solution
-		WHERE id LIKE v_found_accepted_solution_id
+		WHERE id = v_found_accepted_solution_id
 		LIMIT 1;
 	END IF;
 	
@@ -349,17 +349,17 @@ BEGIN
 	DELETE FROM Solution
 	USING Solution, problem_solutions
 	WHERE
-		problem_solutions.problem_id LIKE v_id_binary
+		problem_solutions.problem_id = v_id_binary
 		AND
-		problem_solutions.solution_id LIKE Solution.id;
+		problem_solutions.solution_id = Solution.id;
 	
 	-- Deletes the associated problem_solutions rows
 	DELETE FROM problem_solutions
-	WHERE problem_id LIKE v_id_binary;
+	WHERE problem_id = v_id_binary;
 	
 	-- Deletes the Problem row
 	DELETE FROM Problem
-	WHERE id LIKE v_id_binary
+	WHERE id = v_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -384,7 +384,7 @@ BEGIN
 	-- Searches the current accepted solution
 	SELECT accepted_solution_id
 	FROM Problem
-	WHERE id LIKE v_problem_id_binary
+	WHERE id = v_problem_id_binary
 	LIMIT 1
 	INTO v_found_accepted_solution_id;
 	
@@ -403,7 +403,7 @@ BEGIN
 	-- Updates the Problem row
 	UPDATE Problem
 	SET accepted_solution_id = v_solution_id_binary
-	WHERE id LIKE v_problem_id_binary
+	WHERE id = v_problem_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -426,7 +426,7 @@ BEGIN
 	-- Searches the current accepted solution
 	SELECT accepted_solution_id
 	FROM Problem
-	WHERE id LIKE v_problem_id_binary
+	WHERE id = v_problem_id_binary
 	LIMIT 1
 	INTO v_found_accepted_solution_id;
 	
@@ -445,7 +445,7 @@ BEGIN
 	-- Updates the Problem row
 	UPDATE Problem
 	SET accepted_solution_id = NULL
-	WHERE id LIKE v_problem_id_binary
+	WHERE id = v_problem_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -524,13 +524,13 @@ BEGIN
 	-- If no rows were affected, a problem_solutions row must be deleted
 	IF ROW_COUNT() = 0 THEN
 		DELETE FROM problem_solutions
-		WHERE solution_id LIKE v_id_binary
+		WHERE solution_id = v_id_binary
 		LIMIT 1;
 	END IF;
 	
 	-- Deletes the Solution row
 	DELETE FROM Solution
-	WHERE id LIKE v_id_binary
+	WHERE id = v_id_binary
 	LIMIT 1;
 	
 	COMMIT;
@@ -579,7 +579,7 @@ BEGIN
 	DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
 	
 	DELETE FROM Clarification
-	WHERE id LIKE v_id_binary
+	WHERE id = v_id_binary
 	LIMIT 1;
 END; !
 
@@ -602,7 +602,7 @@ FOR EACH ROW
 BEGIN
 	-- Deletes the associated Clarification rows
 	DELETE FROM Clarification
-	WHERE associated_publication_id LIKE OLD.id;
+	WHERE associated_publication_id = OLD.id;
 END; !
 
 
@@ -615,7 +615,7 @@ FOR EACH ROW
 BEGIN
 	-- Deletes the associated Clarification rows
 	DELETE FROM Clarification
-	WHERE associated_publication_id LIKE OLD.id;
+	WHERE associated_publication_id = OLD.id;
 END; !
 
 
@@ -652,11 +652,11 @@ ON TABLE pci_database.Clarification
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
-ON PROCEDURE pci_database.sign_up_user
+ON PROCEDURE pci_database.sign_in_user
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE
-ON PROCEDURE pci_database.sign_in_user
+ON PROCEDURE pci_database.sign_up_user
 TO 'pci_user'@'localhost';
 
 GRANT EXECUTE

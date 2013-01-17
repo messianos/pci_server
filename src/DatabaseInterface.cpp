@@ -49,8 +49,29 @@ User *DatabaseInterface::searchUser(string user_name) {
 }
 
 bool DatabaseInterface::signInUser(string user_name, string encrypted_password) {
-	// TODO
-	return true;
+	string query;
+
+	query =
+	"	CALL sign_in_user("
+	"		?,"
+	"		?,"
+	"		@out_success"
+	"	)";
+
+	database_handler
+		<< query
+		<< user_name
+		<< encrypted_password
+		<< exec;
+
+	query = "SELECT @out_success";
+
+	result result = database_handler << query;
+	result.next();
+
+	short int sign_in_success;
+	result.fetch("@out_success", sign_in_success);
+	return sign_in_success;
 }
 
 void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
@@ -93,7 +114,7 @@ Problem *DatabaseInterface::searchProblem(string id) {
 	"		is_solved,"
 	"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
 	"	FROM Problem"
-	"	WHERE id LIKE UNHEX(?)"
+	"	WHERE id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -239,7 +260,7 @@ Solution *DatabaseInterface::searchSolution(string id) {
 	"		is_anonymous,"
 	"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
 	"	FROM Solution"
-	"	WHERE id LIKE UNHEX(?)"
+	"	WHERE id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -275,8 +296,8 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 	"		Problem"
 	"		JOIN"
 	"		Solution"
-	"	ON Problem.accepted_solution_id LIKE Solution.id"
-	"	WHERE Problem.id LIKE UNHEX(?)"
+	"	ON Problem.accepted_solution_id = Solution.id"
+	"	WHERE Problem.id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << problem_id;
@@ -315,10 +336,10 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 	"		JOIN"
 	"		Solution"
 	"	ON"
-	"		Problem.id LIKE problem_solutions.problem_id"
+	"		Problem.id = problem_solutions.problem_id"
 	"		AND"
-	"		Solution.id LIKE problem_solutions.solution_id"
-	"	WHERE Problem.id LIKE UNHEX(?)";
+	"		Solution.id = problem_solutions.solution_id"
+	"	WHERE Problem.id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
@@ -416,7 +437,7 @@ Clarification *DatabaseInterface::searchClarification(string id) {
 	"		HEX(id) AS id,"
 	"		question"
 	"	FROM Clarification"
-	"	WHERE id LIKE UNHEX(?)"
+	"	WHERE id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -445,7 +466,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	"		HEX(id) AS id,"
 	"		question"
 	"	FROM Clarification"
-	"	WHERE associated_publication_id LIKE UNHEX(?)";
+	"	WHERE associated_publication_id = UNHEX(?)";
 
 	result result = database_handler << query << associated_publication_id;
 
