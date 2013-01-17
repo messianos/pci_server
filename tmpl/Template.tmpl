@@ -1,0 +1,49 @@
+
+<% c++ #include "ViewContent.h" %>
+
+<% skin test_skin %>
+	<% view template_view uses ViewContent::TemplateContent %>
+	
+		<% template head_links() %>
+			<link href="/css/template.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+		<% template body_header() %>
+			Header content
+		<% end template %>
+		
+		<% template body_content() %>
+		<% end template %>
+		
+		<% template body_footer() %>
+			Footer content
+		<% end template %>
+		
+		<% template render() %>
+			<html>
+				<head>
+					<% include head_links() %>
+					
+			    	<title>
+			    		<%= page_title %>
+			    	</title>
+				</head>
+				
+				<body>
+					<div id="template_header">
+						<% include body_header() %>
+					</div>
+					
+					<div id="template_content">
+						<% include body_content() %>
+					</div>
+					
+					<div id="template_footer">
+						<% include body_footer() %>
+					</div>
+				</body>
+			</html>
+		<% end template %>
+	
+	<% end view %>
+<% end skin %>

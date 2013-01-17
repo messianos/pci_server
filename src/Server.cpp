@@ -1,95 +1,116 @@
-/*
- * Server.cpp
- *
- *  Created on: 02/01/2013
- *      Author: nico
- */
 
+// Includes
 #include "Server.h"
-#include "main_screen_content.h"
-#include <string>
+
+// Namespaces
+using namespace ViewContent;
+using namespace cppcms;
 using namespace std;
 
-Server::Server(cppcms::service &srv) :
-		cppcms::application(srv) {
-	db = new DatabaseInterface();
+Server::Server(cppcms::service &service) : application(service) {
 
 	dispatcher().assign("", &Server::welcome, this);
 	mapper().assign("");
 
-	dispatcher().assign("/problemsHome", &Server::problems_home, this);
-	mapper().assign("problemsHome", "/problemsHome");
+	dispatcher().assign("/sign_in", &Server::signIn, this);
+	mapper().assign("sign_in", "/sign_in");
 
-	dispatcher().assign("/ideasHome", &Server::ideas_home, this);
-	mapper().assign("ideasHome", "/ideasHome");
+	dispatcher().assign("/problems", &Server::problems, this);
+	mapper().assign("problems", "/problems");
 
-	dispatcher().assign("/problem/(\\d+)", &Server::problem, this, 1);
+	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
 	mapper().assign("problem", "/problem/{1}");
 
-	dispatcher().assign("/solution/(\\d+)", &Server::solution, this, 1);
+	dispatcher().assign("/solution/(53\\w{32,32})", &Server::solution, this, 1);
 	mapper().assign("solution", "/solution/{1}");
+
+	dispatcher().assign("/ideas", &Server::ideas, this);
+	mapper().assign("ideas", "/ideas");
 
 	mapper().root("/pci");
 }
 
-Server::~Server() {
-	// TODO Auto-generated destructor stub
-}
+Server::~Server() {}
 
 void Server::welcome() {
-	main_screen_content::content c;
-	c.user_id = "Anonimo";
-	render("welcome", c);
+	WelcomeContent content;
+	content.page_title = "Welcome";
+	render("welcome_view", content);
 }
 
-void Server::problems_home() {
-	main_screen_content::problemsHome problems_home;
+void Server::signIn() {
 
-	problems_home.problems = db->searchProblemsRandom(10);
+	// TODO: check session security and config options http://cppcms.com/wikipp/en/page/cppcms_1x_sessions
 
-	render("problemsHome", problems_home);
-}
+	if (session().is_set("signed_in"))
 
-void Server::ideas_home() {
-	response().out() << "Ideas Home";
-}
+		welcome(); // TODO: deberia redireccionar
 
-void Server::problem(string problem_id) {
-	main_screen_content::problemInfo problem_info;
+	else {
 
-	Problem* problem = db->searchProblem(problem_id);
-	problem_info.problem = problem;
-	if (problem->is_solved) {
-		problem_info.accepted_solution = db->searchSolution(
-				problem->accepted_solution_id);
-	}
+		SignInContent content;
+		content.page_title = "Sign in";
+		SignInFormInfo form_info = content.form_info;
 
-	problem_info.solutions = db->searchSolutions(problem_id);
+		if(request().request_method() == "POST") {
 
-	problem_info.clarifications = db->searchClarifications(problem_id);
+			// POST message received
+			form_info.load(context());
 
-	render("problemInfo", problem_info);
-}
+			if (form_info.validate()) {
 
-void Server::solution(string solution_id) {
-	main_screen_content::solutionInfo solution_info;
+				// Input validated
+				string user_name = form_info.user_name.value();
+				string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
 
-	solution_info.solution = db->searchSolution(solution_id);
+				if (DatabaseInterface::signInUser(user_name, encrypted_password)) {
+					// User name and password are valid
+					session()["signed_in"] = "";
+					welcome();  // TODO: deberia redireccionar, no solo renderizar
+					return;
+				}
+			} // TODO: else ---> deberia mostrar mensaje especial de invalidez
+		}
 
-	solution_info.clarifications = db->searchClarifications(solution_id);
-
-	render("solutionInfo", solution_info);
-}
-
-int main(int argc, char ** argv) {
-	try {
-		cppcms::service srv(argc, argv);
-		srv.applications_pool().mount(cppcms::applications_factory<Server>());
-
-		cerr << "Server started!" << endl;
-		srv.run();
-	} catch (std::exception const &e) {
-		cerr << e.what() << std::endl;
+		render("sign_in_view", content);
 	}
 }
 
+void Server::problems() {
+	ProblemsContent content;
+	content.page_title = "Problems";
+	content.problems = DatabaseInterface::searchProblemsRandom(10);
+	render("problems_view", content);
+}
+
+void Server::problem(string id) {
+	ProblemContent content;
+
+	content.page_title = "Problem " + id;
+	Problem *problem = DatabaseInterface::searchProblem(id);
+	content.problem = problem;
+	if (problem->is_solved)
+		content.accepted_solution = DatabaseInterface::searchSolution(problem->accepted_solution_id);
+	else
+		content.accepted_solution = NULL;
+	content.solutions = DatabaseInterface::searchSolutions(id);
+	content.clarifications = DatabaseInterface::searchClarifications(id);
+
+	render("problem_view", content);
+}
+
+void Server::solution(string id) {
+	SolutionContent content;
+
+	content.page_title = "Solution " + id;
+	content.solution = DatabaseInterface::searchSolution(id);
+	content.clarifications = DatabaseInterface::searchClarifications(id);
+
+	render("solution_view", content);
+}
+
+void Server::ideas() {
+	IdeasContent content;
+	content.page_title = "Ideas";
+	render("ideas_view", content);
+}

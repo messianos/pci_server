@@ -1,0 +1,17 @@
+
+<% c++ #include "ViewContent.h" %>
+
+<% skin test_skin %>
+	<% view ideas_view uses ViewContent::IdeasContent extends template_view %>
+	
+		<% template head_links() %>
+			<% include template_view::head_links() %>
+			<link href="/css/ideas.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+		<% template body_content() %>
+			<h1>Ideas</h1>
+		<% end template %>
+	
+	<% end view %>
+<% end skin %>

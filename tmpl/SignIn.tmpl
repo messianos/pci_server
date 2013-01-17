@@ -1,0 +1,20 @@
+
+<% c++ #include "ViewContent.h" %>
+
+<% skin test_skin %>
+	<% view sign_in_view uses ViewContent::SignInContent extends template_view %>
+	
+		<% template head_links() %>
+			<% include template_view::head_links() %>
+			<link href="/css/sign_in.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+		<% template body_content() %>
+			<h1>Sign in</h1>
+			<form action="" method="post">
+				<% form as_p form_info %>
+			</form>
+		<% end template %>
+	
+	<% end view %>
+<% end skin %>
