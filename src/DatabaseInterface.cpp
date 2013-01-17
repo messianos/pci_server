@@ -48,6 +48,58 @@ User *DatabaseInterface::searchUser(string user_name) {
 	return user;
 }
 
+bool DatabaseInterface::signInUser(string user_name, string encrypted_password) {
+	string query;
+
+	query =
+	"	CALL sign_in_user("
+	"		?,"
+	"		?,"
+	"		@out_success"
+	"	)";
+
+	database_handler
+		<< query
+		<< user_name
+		<< encrypted_password
+		<< exec;
+
+	query = "SELECT @out_success";
+
+	result result = database_handler << query;
+	result.next();
+
+	short int sign_in_success;
+	result.fetch("@out_success", sign_in_success);
+	return sign_in_success;
+}
+
+void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
+	string query =
+	"	CALL sign_up_user("
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
+	"	)";
+
+	database_handler
+		<< query
+		<< user->birth_date->toString("%Y-%M-%D")
+		<< user->email
+		<< user->first_name
+		<< user->genre
+		<< user->last_name
+		<< user->location
+		<< user->user_name
+		<< encrypted_password
+		<< exec;
+}
+
 Problem *DatabaseInterface::searchProblem(string id) {
 
 	string query =
@@ -62,7 +114,7 @@ Problem *DatabaseInterface::searchProblem(string id) {
 	"		is_solved,"
 	"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
 	"	FROM Problem"
-	"	WHERE id LIKE UNHEX('?')"
+	"	WHERE id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -171,6 +223,31 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 	return problem_list;
 }
 
+void DatabaseInterface::insertProblem(Problem *problem) {
+	string query =
+	"	CALL insert_problem("
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
+	"	)";
+
+	database_handler
+		<< query
+		<< problem->content
+		<< problem->creator_user_name
+		<< problem->description
+		<< problem->id
+		<< problem->is_anonymous
+		<< exec;
+}
+
+void DatabaseInterface::deleteProblem(string id) {
+	string query = "CALL delete_problem(?)";
+	database_handler << query << id << exec;
+}
+
 Solution *DatabaseInterface::searchSolution(string id) {
 
 	string query =
@@ -183,7 +260,7 @@ Solution *DatabaseInterface::searchSolution(string id) {
 	"		is_anonymous,"
 	"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
 	"	FROM Solution"
-	"	WHERE id LIKE UNHEX('?')"
+	"	WHERE id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -219,8 +296,8 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 	"		Problem"
 	"		JOIN"
 	"		Solution"
-	"	ON Problem.accepted_solution_id LIKE Solution.id"
-	"	WHERE Problem.id LIKE UNHEX('?')"
+	"	ON Problem.accepted_solution_id = Solution.id"
+	"	WHERE Problem.id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << problem_id;
@@ -259,10 +336,10 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 	"		JOIN"
 	"		Solution"
 	"	ON"
-	"		Problem.id LIKE problem_solutions.problem_id"
+	"		Problem.id = problem_solutions.problem_id"
 	"		AND"
-	"		Solution.id LIKE problem_solutions.solution_id"
-	"	WHERE Problem.id LIKE UNHEX('?')";
+	"		Solution.id = problem_solutions.solution_id"
+	"	WHERE Problem.id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
@@ -277,7 +354,7 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 		result.fetch("creator_user_name", solution->creator_user_name);
 		result.fetch("description", solution->description);
 		result.fetch("id", solution->id);
-		result.fetch("is_anonymous", solution->id);
+		result.fetch("is_anonymous", solution->is_anonymous);
 		result.fetch("last_edition_datetime", solution->last_edition_datetime);
 
 		solution_list->push_back(solution);
@@ -322,6 +399,34 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 	return solution_list;
 }
 
+void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
+	string query =
+	"	CALL insert_solution("
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
+	"	)";
+
+	database_handler
+		<< query
+		<< problem_id
+		<< solution->content
+		<< solution->creator_user_name
+		<< solution->description
+		<< solution->id
+		<< solution->is_anonymous
+		<< exec;
+}
+
+void DatabaseInterface::deleteSolution(string id) {
+	string query = "CALL delete_solution(?)";
+	database_handler << query << id << exec;
+}
+
 Clarification *DatabaseInterface::searchClarification(string id) {
 
 	string query =
@@ -332,7 +437,7 @@ Clarification *DatabaseInterface::searchClarification(string id) {
 	"		HEX(id) AS id,"
 	"		question"
 	"	FROM Clarification"
-	"	WHERE id LIKE UNHEX('?')"
+	"	WHERE id = UNHEX(?)"
 	"	LIMIT 1";
 
 	result result = database_handler << query << id;
@@ -361,7 +466,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	"		HEX(id) AS id,"
 	"		question"
 	"	FROM Clarification"
-	"	WHERE associated_publication_id LIKE UNHEX('?')";
+	"	WHERE associated_publication_id = UNHEX(?)";
 
 	result result = database_handler << query << associated_publication_id;
 
@@ -383,92 +488,13 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	return clarification_list;
 }
 
-void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
-	string query =
-	"	CALL sign_up_user("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?'"
-	"	)";
-
-	database_handler
-		<< query
-		<< user->birth_date->toString("%Y-%M-%D")
-		<< user->email
-		<< user->first_name
-		<< user->genre
-		<< user->last_name
-		<< user->location
-		<< user->user_name
-		<< encrypted_password
-		<< exec;
-}
-
-void DatabaseInterface::insertProblem(Problem *problem) {
-	string query =
-	"	CALL insert_problem("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		?"
-	"	)";
-
-	database_handler
-		<< query
-		<< problem->content
-		<< problem->creator_user_name
-		<< problem->description
-		<< problem->id
-		<< problem->is_anonymous
-		<< exec;
-}
-
-void DatabaseInterface::deleteProblem(string id) {
-	string query = "CALL delete_problem('?')";
-	database_handler << query << id << exec;
-}
-
-void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
-	string query =
-	"	CALL insert_solution("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		?"
-	"	)";
-
-	database_handler
-		<< query
-		<< problem_id
-		<< solution->content
-		<< solution->creator_user_name
-		<< solution->description
-		<< solution->id
-		<< solution->is_anonymous
-		<< exec;
-}
-
-void DatabaseInterface::deleteSolution(string id) {
-	string query = "CALL delete_solution('?')";
-	database_handler << query << id << exec;
-}
-
 void DatabaseInterface::insertClarification(Clarification *clarification) {
 	string query =
 	"	CALL insert_clarification("
-	"		'?',"
-	"		'?',"
-	"		'?',"
-	"		'?'"
+	"		?,"
+	"		?,"
+	"		?,"
+	"		?"
 	"	)";
 
 	database_handler
@@ -481,6 +507,6 @@ void DatabaseInterface::insertClarification(Clarification *clarification) {
 }
 
 void DatabaseInterface::deleteClarification(string id) {
-	string query = "CALL delete_clarification('?')";
+	string query = "CALL delete_clarification(?)";
 	database_handler << query << id << exec;
 }

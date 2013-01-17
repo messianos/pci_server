@@ -1,0 +1,38 @@
+
+/* Debugging */
+
+div, ul, ol {
+	border-color:Red;
+	border-style:solid;
+	border-width:1px;
+}
+
+
+* {
+	margin:0px;
+	outline-style:none;
+	outline-width:0px;
+	padding:0px;
+}
+
+
+#template_header {
+	height:128px;
+	margin:0px auto;
+	width:1000px;
+}
+
+
+#template_content {
+	height:256px;
+	margin:48px auto;
+	overflow:visible;
+	width:1000px;
+}
+
+
+#template_footer {
+	height:128px;
+	margin:0px auto;
+	width:1000px;
+}

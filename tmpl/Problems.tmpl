@@ -1,0 +1,28 @@
+
+<% c++ #include "ViewContent.h" %>
+
+<% skin test_skin %>
+	<% view problems_view uses ViewContent::ProblemsContent extends template_view %>
+	
+		<% template head_links() %>
+			<% include template_view::head_links() %>
+			<link href="/css/problems.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+		<% template body_content() %>
+			<h1>Problems</h1>
+			<div>
+				<% foreach problem in *problems %>
+ 					<% item %>
+						<div onclick="location.href='/pci/problem/<%= problem->id %>'">
+							<%= problem->id %>: <%= problem->description %>
+						</div>
+  					<% end %>
+				<% empty %>
+					No problems found
+				<% end %>
+			</div>
+		<% end template %>
+	
+	<% end view %>
+<% end skin %>
