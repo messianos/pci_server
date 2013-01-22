@@ -1,0 +1,39 @@
+
+/*
+----------------------------------------------------------------------------------------------
+	Clarifications
+----------------------------------------------------------------------------------------------
+*/
+
+#pci_clarifications {
+	width:100%;
+}
+
+#pci_clarifications_main_container {
+	clear:both;
+	margin:0px auto;
+	width:1024px;
+}
+
+div.pci_clarifications_row_container {
+	clear:both;
+}
+
+div.pci_clarifications_question_container {
+	float:left;
+	width:504px;
+}
+
+div.pci_clarifications_answer_container {
+	float:right;
+	width:504px;
+}
+
+div.pci_clarifications_column_header {
+	margin:8px 0px;
+	text-align:center;
+}
+
+div.pci_clarifications_content {
+	margin:8px 0px;
+}

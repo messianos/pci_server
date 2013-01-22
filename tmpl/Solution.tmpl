@@ -1,33 +1,24 @@
 
 <% c++ #include "ViewContent.h" %>
 
-<% skin test_skin %>
+<% skin pci_skin %>
 	<% view solution_view uses ViewContent::SolutionContent extends template_view %>
 	
-		<% template head_links() %>
-			<% include template_view::head_links() %>
+	
+		<% template css_links() %>
+			<% include template_view::css_links() %>
+			<link href="/css/clarifications.css" rel="stylesheet" type="text/css" />
+			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
 			<link href="/css/solution.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
-		<% template body_content() %>
-			<h1>Solucion <%= solution->id %></h1>
-			<div class = "button_wrapper">
-				<div class = "publication">
-					Descripcion: <%= solution->description %>
-				</div>
-			</div>
-			<h2>Aclaraciones</h2>
-			<% foreach clarification in *clarifications %>
-				<% item %>
-					<div class = "publication">
-						ID: <%= clarification->id %> Pregunta: <%= clarification->question %>
-						Respuesta: <%= clarification->answer %>
-					</div>
-				<% end %>
-				<% empty %>
-				No hay aclaraciones
-			<% end %>
+	
+		<% template page_content() %>
+			<% include template_view::header_bar() %>
+			<% include template_view::solution(solution) %>
+			<% include template_view::clarifications(clarifications) %>
 		<% end template %>
+	
 	
 	<% end view %>
 <% end skin %>

@@ -1,51 +1,26 @@
 
 <% c++ #include "ViewContent.h" %>
 
-<% skin test_skin %>
+<% skin pci_skin %>
 	<% view problem_view uses ViewContent::ProblemContent extends template_view %>
 	
-		<% template head_links() %>
-			<% include template_view::head_links() %>
+	
+		<% template css_links() %>
+			<% include template_view::css_links() %>
+			<link href="/css/clarifications.css" rel="stylesheet" type="text/css" />
+			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
+			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
 			<link href="/css/problem.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
-		<% template body_content() %>
-			<h1>Problem <%= problem->id %></h1>
-			<div class = "button_wrapper">
-				<div class = "publication">
-					Descripcion: <%= problem->description %>
-				</div>
-			</div>
-			<h2>Aclaraciones</h2>
-			<% foreach clarification in *clarifications %>
-				<% item %>
-					<div class = "publication">
-						ID: <%= clarification->id %> Pregunta: <%= clarification->question %>
-						Respuesta: <%= clarification->answer %>
-					</div>
-				<% end %>
-				<% empty %>
-				No hay aclaraciones
-			<% end %>
-			<h2>Solucion</h2>
-			<% if problem->is_solved %>
-				<div class= "publication" onclick="location.href='/pci/solution/<%= accepted_solution->id %>'">
-					Descripcion: <%= accepted_solution->description %>
-				</div>
-			<% else %>
-				<p>No hay una solucion aceptada</p>
-			<% end %>
-			<h2>Soluciones Propuestas</h2>
-			<% foreach solution in *solutions %>
-				<% item %>
-					<div class = "publication" onclick="location.href='/pci/solution/<%= solution->id %>'">
-						ID: <%= solution->id %> Descripcion: <%= solution->description %>
-					</div>
-				<% end %>
-				<% empty %>
-				No hay soluciones propuestas
-			<% end %>
+	
+		<% template page_content() %>
+			<% include template_view::header_bar() %>
+			<% include template_view::navigation_menu() %>
+			<% include template_view::problem(problem, accepted_solution, solutions) %>
+			<% include template_view::clarifications(clarifications) %>
 		<% end template %>
+		
 	
 	<% end view %>
 <% end skin %>

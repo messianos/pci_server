@@ -20,12 +20,12 @@ class Server : public cppcms::application {
 public:
 	Server(cppcms::service &service);
 	virtual ~Server();
-	void welcome();
-	void signIn();
-	void problems();
-	void problem(std::string id);
-	void solution(std::string id);
 	void ideas();
+	void index();
+	void problem(std::string id);
+	void problems();
+	//void signIn();
+	void solution(std::string id);
 };
 
 #endif /* SERVER_H_ */

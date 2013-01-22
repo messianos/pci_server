@@ -1,0 +1,38 @@
+
+/*
+----------------------------------------------------------------------------------------------
+	Problem
+----------------------------------------------------------------------------------------------
+*/
+
+#pci_problem {
+	width:100%;
+}
+
+#pci_problem_main_container {
+	clear:both;
+	margin:0px auto;
+	width:1280px;
+}
+
+#pci_problem_problem_container {
+	float:left;
+	width:790px;
+}
+
+#pci_problem_problem_header_container {
+	/* TO DEFINE */
+}
+
+#pci_problem_problem_content {
+	margin-top:8px;
+}
+
+#pci_problem_solution_container {
+	float:right;
+	width:474px;
+}
+
+div.pci_problem_solution_content {
+	margin:16px 0px;
+}

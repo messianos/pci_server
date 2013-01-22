@@ -6,10 +6,16 @@
 #include "Clarification.h"
 #include "Problem.h"
 #include "Solution.h"
-#include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
 #include <string>
+
+// Type definitions
+typedef Problem *ProblemPointer;
+typedef Solution *SolutionPointer;
+typedef std::list<Problem *> *ProblemList;
+typedef std::list<Solution *> *SolutionList;
+typedef std::list<Clarification *> *ClarificationList;
 
 namespace ViewContent {
 
@@ -17,10 +23,24 @@ namespace ViewContent {
 		std::string page_title;
 	};
 
-	struct WelcomeContent : TemplateContent {
+	struct IdeasContent : TemplateContent {
 	};
 
-	struct SignInFormInfo : public cppcms::form {
+	struct IndexContent : TemplateContent {
+	};
+
+	struct ProblemContent : TemplateContent {
+		Problem *problem;
+		Solution *accepted_solution;
+		std::list<Solution *> *solutions;
+		std::list<Clarification *> *clarifications;
+	};
+
+	struct ProblemsContent : TemplateContent {
+		ProblemList problems;
+	};
+
+	/*struct SignInFormInfo : public cppcms::form {
 		cppcms::widgets::text user_name;
 		cppcms::widgets::password password;
 		cppcms::widgets::submit submit;
@@ -42,25 +62,11 @@ namespace ViewContent {
 
 	struct SignInContent : TemplateContent {
 		SignInFormInfo form_info;
-	};
-
-	struct ProblemsContent : TemplateContent {
-		std::list<Problem *> *problems;
-	};
-
-	struct ProblemContent : TemplateContent {
-		Problem *problem;
-		Solution *accepted_solution;
-		std::list<Solution *> *solutions;
-		std::list<Clarification *> *clarifications;
-	};
+	};*/
 
 	struct SolutionContent : TemplateContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
-	};
-
-	struct IdeasContent : TemplateContent {
 	};
 }
 

@@ -24,6 +24,6 @@
 	},
 	
 	"views" : {
-		"default_skin" : [ "test_skin" ]
+		"default_skin" : [ "pci_skin" ]
 	}
 }

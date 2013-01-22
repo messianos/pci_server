@@ -1,0 +1,72 @@
+
+/*
+----------------------------------------------------------------------------------------------
+	Navigation menu
+----------------------------------------------------------------------------------------------
+*/
+
+#pci_navigation_menu {
+	width:100%;
+}
+
+#pci_navigation_menu_main_container {
+	clear:both;
+	margin:0px auto;
+	width:1280px;
+}
+
+#pci_navigation_menu_service_container {
+	float:left;
+}
+
+#pci_navigation_menu_option_container {
+	float:right;
+}
+
+div.pci_navigation_menu_service_button {
+	float:left;
+	margin:8px 8px 8px 0px;
+}
+
+div.pci_navigation_menu_service_button:hover {
+	box-shadow:0px 0px 64px 0px #EAE1B5 inset;
+}
+
+#pci_navigation_menu_problems_button_image {
+	background-image:url('../img/problems_grayscale.png');
+	background-position:center center;
+	background-repeat:no-repeat;
+}
+
+div.pci_navigation_menu_service_button:hover #pci_navigation_menu_problems_button_image {
+	background-image:url('../img/problems_color.png');
+}
+
+#pci_navigation_menu_ideas_button_image {
+	background-image:url('../img/ideas_grayscale.png');
+	background-position:center center;
+	background-repeat:no-repeat;
+}
+
+div.pci_navigation_menu_service_button:hover #pci_navigation_menu_ideas_button_image {
+	background-image:url('../img/ideas_color.png');
+}
+
+div.pci_navigation_menu_option_button {
+	float:right;
+	margin:8px 0px 8px 8px;
+}
+
+div.pci_navigation_menu_option_button:hover {
+	box-shadow:0px 0px 64px 0px #CCEACD inset;
+}
+
+#pci_navigation_menu_profile_button_image {
+	background-image:url('../img/profile_grayscale.png');
+	background-position:center center;
+	background-repeat:no-repeat;
+}
+
+div.pci_navigation_menu_option_button:hover #pci_navigation_menu_profile_button_image {
+	background-image:url('../img/profile_color.png');
+}
