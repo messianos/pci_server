@@ -6,6 +6,7 @@
 #include "Clarification.h"
 #include "Problem.h"
 #include "Solution.h"
+#include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
 #include <string>
@@ -40,8 +41,7 @@ namespace ViewContent {
 		ProblemList problems;
 	};
 
-	/*struct SignInFormInfo : public cppcms::form {
-		cppcms::widgets::text user_name;
+	/*	cppcms::widgets::text user_name;
 		cppcms::widgets::password password;
 		cppcms::widgets::submit submit;
 
