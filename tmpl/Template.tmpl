@@ -24,12 +24,12 @@
 	 					<% item %>
 							<div class="pci_clarifications_row_container">
 								<div class="pci_clarifications_question_container">
-									<div class="pci_clarifications_content pci_text_box_0">
+									<div class="pci_box_0 pci_clarifications_content">
 										<%= clarification->question %>
 									</div>
 								</div>
 								<div class="pci_clarifications_answer_container">
-									<div class="pci_clarifications_content pci_text_box_0">
+									<div class="pci_box_0 pci_clarifications_content">
 										<%= clarification->answer %>
 									</div>
 								</div>
@@ -50,12 +50,12 @@
 						PCI Logo
 					</div>
 					<div id="pci_header_bar_button_container">
-						<a class="pci_button_0" href="">
+						<a class="pci_button_0" href="<% url "" %>">
 							<div class="pci_button_0 pci_header_bar_button">
 								Button 1
 							</div>
 						</a>
-						<a class="pci_button_0" href="">
+						<a class="pci_button_0" href="<% url "" %>">
 							<div class="pci_button_0 pci_header_bar_button">
 								Button 2
 							</div>
@@ -63,6 +63,7 @@
 					</div>
 				</div>
 			</div>
+			<div id="pci_header_bar_offset_container"></div>
 		<% end template %>
 		
 		
@@ -104,17 +105,17 @@
 								Header 1
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 1
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 2
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
@@ -124,17 +125,17 @@
 								Header 2
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 1
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 2
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
@@ -144,17 +145,17 @@
 								Header 3
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 1
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 2
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
@@ -164,17 +165,17 @@
 								Header 4
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 1
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 2
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
-								<a class="pci_link_0" href="">
+								<a class="pci_link_0" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
@@ -189,7 +190,7 @@
 			<div id="pci_navigation_menu">
 				<div id="pci_navigation_menu_main_container">
 					<div id="pci_navigation_menu_service_container">
-						<a href="">
+						<a href="<% url "/problems" %>">
 							<div class="pci_button_1 pci_navigation_menu_service_button">
 								<div class="pci_button_1_image" id="pci_navigation_menu_problems_button_image"></div>
 								<div class="pci_button_1_text">
@@ -197,7 +198,7 @@
 								</div>
 							</div>
 						</a>
-						<a href="">
+						<a href="<% url "/ideas" %>">
 							<div class="pci_button_1 pci_navigation_menu_service_button">
 								<div class="pci_button_1_image" id="pci_navigation_menu_ideas_button_image"></div>
 								<div class="pci_button_1_text">
@@ -207,7 +208,7 @@
 						</a>
 					</div>
 					<div id="pci_navigation_menu_option_container">
-						<a href="">
+						<a href="<% url "" %>">
 							<div class="pci_button_1 pci_navigation_menu_option_button">
 								<div class="pci_button_1_image" id="pci_navigation_menu_profile_button_image"></div>
 								<div class="pci_button_1_text">
@@ -226,18 +227,20 @@
 				<div id="pci_problem_main_container">
 					<div id="pci_problem_problem_container">
 						<div id="pci_problem_problem_header_container">
-							Header
+							Header (extra info about the Problem)
 						</div>
-						<div class="pci_text_box_0" id="pci_problem_problem_content">
-							Content
+						<div class="pci_box_0" id="pci_problem_problem_content">
+							<%= problem->content %>
 						</div>
 					</div>
 					<div id="pci_problem_solution_container">
 						<% foreach solution in *solutions %>
 		 					<% item %>
-								<div class="pci_problem_solution_content pci_text_box_0">
-									<%= solution->description %>
-								</div>
+		 						<a class="pci_box_0" href="<% url "/solution" using solution->id %>">
+									<div class="pci_box_0 pci_problem_solution_description">
+										<%= solution->description %>
+									</div>
+								</a>
 		  					<% end %>
 						<% empty %>
 							There are are no solutions
@@ -253,20 +256,23 @@
 			<br />
 			<br />
 			<br />
-			Problems content
-			<br />
-			<br />
-			<br />
-			<br />
-			<% foreach problem in *problems %>
-				<% item %>
-					<div onclick="location.href='/pci/problem/<%= problem->id %>'">
-						<%= problem->id %>: <%= problem->description %>
+			<div id="pci_problems">
+				<div id="pci_problems_main_container">
+					<div class="pci_box_2" id="pci_problems_problem_container">
+						<% foreach problem in *problems %>
+							<% item %>
+								<a class="pci_box_1" href="<% url "/problem" using problem->id %>">
+									<div class="pci_box_1 pci_problems_problem_description">
+										<%= problem->description %>
+									</div>
+								</a>
+							<% end %>
+						<% empty %>
+							No problems found
+						<% end %>
 					</div>
-				<% end %>
-			<% empty %>
-				No problems found
-			<% end %>
+				</div>
+			</div>
 		<% end template %>
 		
 		
@@ -275,7 +281,7 @@
 			<br />
 			<br />
 			<br />
-			Solution content
+			<%= solution->content %>
 			<br />
 			<br />
 			<br />

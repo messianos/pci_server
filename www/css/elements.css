@@ -5,6 +5,48 @@
 ----------------------------------------------------------------------------------------------
 */
 
+div.pci_box_0 {
+	background-color:#FFFFFF;
+	border-color:#D0D0D0;
+	border-radius:8px;
+	border-style:solid;
+	border-width:1px;
+	padding:8px;
+}
+
+div.pci_box_0:hover {
+	border-color:#B5B5B5;
+}
+
+a.pci_box_0 {
+	/* TO DEFINE */
+}
+
+div.pci_box_1 {
+	background-color:#EADBDB;
+	border-radius:8px;
+	border-width:0px;
+	box-shadow:0px 0px 16px 0px #EAB1B1 inset;
+	padding:8px;
+}
+
+div.pci_box_1:hover {
+	background-color:#F2E4E4;
+}
+
+a.pci_box_1 {
+	/* TO DEFINE */
+}
+
+div.pci_box_2 {
+	background-color:#FFFFFF;
+	border-color:#D0D0D0;
+	border-radius:8px;
+	border-style:solid;
+	border-width:1px;
+	padding:4px;
+}
+
 div.pci_button_0 {
 	background-color:#FFFFFF;
 	border-color:#C2C2C2;
@@ -55,17 +97,4 @@ div.pci_button_1:hover div.pci_button_1_text {
 
 a.pci_link_0 {
 	/* TO DEFINE */
-}
-
-div.pci_text_box_0 {
-	background-color:#FFFFFF;
-	border-color:#D0D0D0;
-	border-radius:8px;
-	border-style:solid;
-	border-width:1px;
-	padding:8px;
-}
-
-div.pci_text_box_0:hover {
-	border-color:#B5B5B5;
 }

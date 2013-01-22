@@ -32,3 +32,8 @@ div.pci_header_bar_button {
 	float:right;
 	margin:10px 0px 10px 8px;
 }
+
+#pci_header_bar_offset_container {
+	height:48px;
+	width:100%;
+}

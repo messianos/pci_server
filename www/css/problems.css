@@ -1,0 +1,25 @@
+
+/*
+----------------------------------------------------------------------------------------------
+	Problems
+----------------------------------------------------------------------------------------------
+*/
+
+#pci_problems {
+	width:100%;
+}
+
+#pci_problems_main_container {
+	clear:both;
+	margin:0px auto;
+	width:1280px;
+}
+
+#pci_problems_problem_container {
+	overflow:hidden;
+}
+
+div.pci_problems_problem_description {
+	float:left;
+	margin:4px;
+}

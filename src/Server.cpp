@@ -63,7 +63,7 @@ void Server::problem(string id) {
 void Server::problems() {
 	ProblemsContent content;
 	content.page_title = "Problems";
-	content.problems = DatabaseInterface::searchProblemsRandom(10);
+	content.problems = DatabaseInterface::searchProblemsRandom(40);
 	render("problems_view", content);
 }
 
