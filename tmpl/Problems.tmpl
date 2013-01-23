@@ -16,6 +16,11 @@
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
+			
+			<script type="text/javascript">
+				$('#pci_navigation_menu_problems_button').addClass('active');
+			</script>
+			
 			<div id="pci_problems_main_container">
 				<div class="pci_box_2" id="pci_problems_problem_container">
 					<% foreach problem in *problems %>

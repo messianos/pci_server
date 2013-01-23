@@ -25,7 +25,11 @@ div.pci_navigation_menu_button {
 	background-repeat:no-repeat;
 }
 
-div.pci_navigation_menu_button:hover #pci_navigation_menu_problems_button_image, #pci_navigation_menu_problems_button_image.active {
+div.pci_navigation_menu_button:hover #pci_navigation_menu_problems_button_image {
+	background-image:url('../img/problems_color.png');
+}
+
+div.pci_navigation_menu_button.active #pci_navigation_menu_problems_button_image {
 	background-image:url('../img/problems_color.png');
 }
 
@@ -39,7 +43,11 @@ div.pci_navigation_menu_button:hover #pci_navigation_menu_problems_button_image,
 	background-repeat:no-repeat;
 }
 
-div.pci_navigation_menu_button:hover  #pci_navigation_menu_ideas_button_image, #pci_navigation_menu_ideas_button_image.active {
+div.pci_navigation_menu_button:hover  #pci_navigation_menu_ideas_button_image{
+	background-image:url('../img/ideas_color.png');
+}
+
+div.pci_navigation_menu_button.active  #pci_navigation_menu_ideas_button_image{
 	background-image:url('../img/ideas_color.png');
 }
 
