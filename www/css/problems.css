@@ -5,14 +5,13 @@
 ----------------------------------------------------------------------------------------------
 */
 
-#pci_problems {
-	width:100%;
+body {
+	background-color:#F1F1F1;
 }
 
 #pci_problems_main_container {
-	clear:both;
-	margin:0px auto;
-	width:1280px;
+	min-width:912px;
+	padding:64px 128px 0px 240px;
 }
 
 #pci_problems_problem_container {

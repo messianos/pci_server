@@ -21,8 +21,8 @@ Server::Server(cppcms::service &service) : application(service) {
 	dispatcher().assign("/problems", &Server::problems, this);
 	mapper().assign("problems", "/problems");
 
-	/*dispatcher().assign("/sign_in", &Server::signIn, this);
-	mapper().assign("sign_in", "/sign_in");*/
+	dispatcher().assign("/sign_in", &Server::signIn, this);
+	mapper().assign("sign_in", "/sign_in");
 
 	dispatcher().assign("/solution/(53\\w{32,32})", &Server::solution, this, 1);
 	mapper().assign("solution", "/solution/{1}");
@@ -67,35 +67,39 @@ void Server::problems() {
 	render("problems_view", content);
 }
 
-/*void Server::signIn() {
+void Server::signIn() {
 
 	// TODO: check session security and config options http://cppcms.com/wikipp/en/page/cppcms_1x_sessions
 
 	if (session().is_set("signed_in"))
 
-		welcome(); // TODO: deberia redireccionar
+		;//welcome(); // TODO: deberia redireccionar
 
 	else {
 
 		SignInContent content;
 		content.page_title = "Sign in";
-		SignInFormInfo form_info = content.form_info;
+
+		// This lead to the major error of the forms
+		// SignInFormInfo form_info = content.form_info;
+		// This is the correct way, because forms are non-copyable
+		SignInFormInfo* form_info = &content.form_info;
 
 		if(request().request_method() == "POST") {
 
 			// POST message received
-			form_info.load(context());
+			form_info->load(context());
 
-			if (form_info.validate()) {
+			if (form_info->validate()) {
 
 				// Input validated
-				string user_name = form_info.user_name.value();
-				string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
+				string user_name = form_info->user_name.value();
+				string encrypted_password = PasswordManager::encryptPassword(form_info->password.value());
 
 				if (DatabaseInterface::signInUser(user_name, encrypted_password)) {
 					// User name and password are valid
 					session()["signed_in"] = "";
-					welcome();  // TODO: deberia redireccionar, no solo renderizar
+					//welcome();  // TODO: deberia redireccionar, no solo renderizar
 					return;
 				}
 			} // TODO: else ---> deberia mostrar mensaje especial de invalidez
@@ -103,7 +107,7 @@ void Server::problems() {
 
 		render("sign_in_view", content);
 	}
-}*/
+}
 
 void Server::solution(string id) {
 	SolutionContent content;

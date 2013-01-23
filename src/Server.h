@@ -24,7 +24,7 @@ public:
 	void index();
 	void problem(std::string id);
 	void problems();
-	//void signIn();
+	void signIn();
 	void solution(std::string id);
 };
 

@@ -5,7 +5,7 @@
 ----------------------------------------------------------------------------------------------
 */
 
-#pci_header_bar {
+#pci_header_bar_main_container {
 	background-color:#6CA4C8;
 	box-shadow:0px 1px 4px 0px #000000, 0px -4px 16px 0px #3D6A87 inset;
 	height:48px;
@@ -14,17 +14,19 @@
 	width:100%;
 }
 
-#pci_header_bar_main_container {
-	clear:both;
-	margin:0px auto;
-	width:1280px;
+#pci_header_bar_central_container {
+	margin:0px 128px;
+	min-width:1024px;
 }
 
 #pci_header_bar_logo_container {
-	background-image:url('../img/logo.png');
-	background-position:center center;
-	background-repeat:no-repeat;
 	float:left;
+}
+
+#pci_header_bar_logo {
+	background-image:url('../img/logo.png');
+	background-position:left center;
+	background-repeat:no-repeat;
 	height:48px;
 	width:103px;
 }
@@ -36,9 +38,4 @@
 div.pci_header_bar_button {
 	float:right;
 	margin:10px 0px 10px 8px;
-}
-
-#pci_header_bar_offset_container {
-	height:48px;
-	width:100%;
 }

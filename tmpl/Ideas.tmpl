@@ -9,12 +9,16 @@
 			<% include template_view::css_links() %>
 			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
 			<link href="/css/ideas.css" rel="stylesheet" type="text/css" />
+			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::ideas() %>
+			<% include template_view::navigation_menu() %>
+			<div id="pci_ideas_main_container">
+				Ideas content
+			</div>
 		<% end template %>
 	
 	

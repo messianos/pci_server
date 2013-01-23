@@ -16,7 +16,21 @@
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
-			<% include template_view::problems(problems) %>
+			<div id="pci_problems_main_container">
+				<div class="pci_box_2" id="pci_problems_problem_container">
+					<% foreach problem in *problems %>
+						<% item %>
+							<a class="pci_box_1" href="<% url "/problem" using problem->id %>">
+								<div class="pci_box_1 pci_problems_problem_description">
+									<%= problem->description %>
+								</div>
+							</a>
+						<% end %>
+					<% empty %>
+						No problems found
+					<% end %>
+				</div>
+			</div>
 		<% end template %>
 	
 	

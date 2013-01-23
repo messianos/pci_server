@@ -5,34 +5,35 @@
 ----------------------------------------------------------------------------------------------
 */
 
-#pci_problem {
-	width:100%;
+body {
+	background-color:#F1F1F1;
 }
 
 #pci_problem_main_container {
+	min-width:912px;
+	padding:64px 128px 0px 240px;
+}
+
+#pci_problem_header_container {
 	clear:both;
-	margin:0px auto;
-	width:1280px;
+	float:left;
+	width:544px;
 }
 
 #pci_problem_problem_container {
 	float:left;
-	width:790px;
-}
-
-#pci_problem_problem_header_container {
-	/* TO DEFINE */
+	width:60%;
 }
 
 #pci_problem_problem_content {
-	margin-top:8px;
+	margin:16px 8px 0px 0px;
 }
 
 #pci_problem_solution_container {
 	float:right;
-	width:474px;
+	width:40%;
 }
 
 div.pci_problem_solution_description {
-	margin:16px 0px;
+	margin:16px 0px 0px 8px;
 }
