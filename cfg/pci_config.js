@@ -9,8 +9,10 @@
 	},
 	
 	"service" : {
-		"api" : "http",
-		"port" : 8080
+		"list" : [
+		          { "api" : "http" , "port" : 8080, "ip" : "127.0.0.1" },
+		          { "api" : "http" , "port" : 8000, "ip" : "192.168.1.6" }
+		          ]
 	},
 	
 	"session" : {

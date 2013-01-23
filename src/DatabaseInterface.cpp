@@ -1,6 +1,7 @@
 
 // Includes
 #include "DatabaseInterface.h"
+#include <iostream>
 
 // Namespaces
 using namespace cppdb;
@@ -15,13 +16,13 @@ User *DatabaseInterface::searchUser(string user_name) {
 
 	string query =
 	"	SELECT"
-	"		birth_date"
-	"		email"
-	"		first_name"
-	"		genre"
-	"		last_name"
-	"		location"
-	"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime"
+	"		birth_date,"
+	"		email,"
+	"		first_name,"
+	"		genre,"
+	"		last_name,"
+	"		location,"
+	"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime,"
 	"		user_name"
 	"	FROM User"
 	"	WHERE user_name LIKE BINARY ?"

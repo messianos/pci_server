@@ -25,7 +25,10 @@ public:
 	void problem(std::string id);
 	void problems();
 	void signIn();
+	void signOut();
 	void solution(std::string id);
+
+	void set_header_properties(ViewContent::TemplateContent& content);
 };
 
 #endif /* SERVER_H_ */

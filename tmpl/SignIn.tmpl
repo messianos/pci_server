@@ -7,17 +7,21 @@
 	
 		<% template css_links() %>
 			<% include template_view::css_links() %>
-			<link href="/css/sign_in.css" rel="stylesheet" type="text/css" />
+			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
+			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
+			<link href="/css/problems.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
-			<h1>Sign in</h1>
-			<form action="" method="post">
-				<% form as_p form_info %>
-			</form>
+			<div id="pci_problems_main_container">
+				<h1>Sign in</h1>
+				<form action="" method="post">
+					<% form as_p form_info %>
+				</form>
+			</div>
 		<% end template %>
 		
 		

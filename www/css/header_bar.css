@@ -39,3 +39,14 @@ div.pci_header_bar_button {
 	float:right;
 	margin:10px 0px 10px 8px;
 }
+
+.pci_button_0 {
+	float:left;
+}
+
+#user_name_box {
+	font-size: 28px;
+	font-weight: bold;
+	float: left;
+	line-height: 50px;
+}

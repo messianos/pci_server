@@ -1,5 +1,6 @@
 
 <% c++ #include "ViewContent.h" %>
+<% c++ #include "Server.h" %>
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
@@ -49,11 +50,20 @@
 						<div id="pci_header_bar_logo"></div>
 					</div>
 					<div id="pci_header_bar_button_container">
-						<a class="pci_button_0" href="<% url "/sign_in" %>">
-							<div class="pci_button_0 pci_header_bar_button">
-								Ingresar
-							</div>
-						</a>
+					 	<% if user_logged %>
+					 		<div id="user_name_box">Hola, <%= user_name %>!</div>
+							<a class="pci_button_0" href="<% url "/sign_out" %>">
+								<div class="pci_button_0 pci_header_bar_button">
+									Salir
+								</div>
+							</a>
+						<% else %>
+							<a class="pci_button_0" href="<% url "/sign_in" %>">
+								<div class="pci_button_0 pci_header_bar_button">
+									Ingresar
+								</div>
+							</a>
+						<% end %>
 					</div>
 				</div>
 			</div>
