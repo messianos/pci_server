@@ -96,7 +96,7 @@ namespace pci_skin {
 				"\t\t\t\t\t<div id=\"pci_header_bar_button_container\">\n"
 				"\t\t\t\t\t\t<a class=\"pci_button_0\" href=\"";
 			#line 52 "Template.tmpl"
-			content.app().mapper().map(out(),"");
+			content.app().mapper().map(out(),"/sign_in");
 			#line 60 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_button_0 pci_header_bar_button\">\n"
@@ -264,7 +264,7 @@ namespace pci_skin {
 			#line 166 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t<div class=\"pci_button_1 pci_navigation_menu_button\" id=\"pci_navigation_menu_problems_button\">\n"
-				"\t\t\t\t\t\t<div class=\"pci_button_1_image\" id=\"pci_navigation_menu_problems_button_image\"></div>\n"
+				"\t\t\t\t\t\t<div class=\"pci_button_1_image color\" id=\"pci_navigation_menu_problems_button_image\"></div>\n"
 				"\t\t\t\t\t\t<div class=\"pci_button_1_text\">\n"
 				"\t\t\t\t\t\t\tProblems\n"
 				"\t\t\t\t\t\t</div>\n"

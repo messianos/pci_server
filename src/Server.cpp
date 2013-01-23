@@ -1,4 +1,3 @@
-
 // Includes
 #include "Server.h"
 
@@ -7,7 +6,8 @@ using namespace ViewContent;
 using namespace cppcms;
 using namespace std;
 
-Server::Server(cppcms::service &service) : application(service) {
+Server::Server(cppcms::service &service) :
+		application(service) {
 
 	dispatcher().assign("/ideas", &Server::ideas, this);
 	mapper().assign("ideas", "/ideas");
@@ -30,7 +30,8 @@ Server::Server(cppcms::service &service) : application(service) {
 	mapper().root("/pci");
 }
 
-Server::~Server() {}
+Server::~Server() {
+}
 
 void Server::ideas() {
 	IdeasContent content;
@@ -51,7 +52,8 @@ void Server::problem(string id) {
 	Problem *problem = DatabaseInterface::searchProblem(id);
 	content.problem = problem;
 	if (problem->is_solved)
-		content.accepted_solution = DatabaseInterface::searchSolution(problem->accepted_solution_id);
+		content.accepted_solution = DatabaseInterface::searchSolution(
+				problem->accepted_solution_id);
 	else
 		content.accepted_solution = NULL;
 	content.solutions = DatabaseInterface::searchSolutions(id);
@@ -73,7 +75,7 @@ void Server::signIn() {
 
 	if (session().is_set("signed_in"))
 
-		;//welcome(); // TODO: deberia redireccionar
+		;// welcome(); // TODO: deberia redireccionar
 
 	else {
 
@@ -85,7 +87,7 @@ void Server::signIn() {
 		// This is the correct way, because forms are non-copyable
 		SignInFormInfo* form_info = &content.form_info;
 
-		if(request().request_method() == "POST") {
+		if (request().request_method() == "POST") {
 
 			// POST message received
 			form_info->load(context());
@@ -94,11 +96,14 @@ void Server::signIn() {
 
 				// Input validated
 				string user_name = form_info->user_name.value();
-				string encrypted_password = PasswordManager::encryptPassword(form_info->password.value());
+				string encrypted_password = PasswordManager::encryptPassword(
+						form_info->password.value());
 
-				if (DatabaseInterface::signInUser(user_name, encrypted_password)) {
+				if (DatabaseInterface::signInUser(user_name,
+						encrypted_password)) {
 					// User name and password are valid
 					session()["signed_in"] = "";
+					cerr << "successful login!" << endl;
 					//welcome();  // TODO: deberia redireccionar, no solo renderizar
 					return;
 				}
