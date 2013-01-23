@@ -5,6 +5,14 @@
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
 
+		<% template css_links() %>
+			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
+			<link href="/css/global.css" rel="stylesheet" type="text/css" />
+			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
+			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
+			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
+		<% end template %>
+		
 
 		<% template clarifications(ClarificationList clarifications) %>
 			<div id="pci_clarifications_main_container">
@@ -61,6 +69,11 @@
 							<a class="pci_button_0" href="<% url "/sign_in" %>">
 								<div class="pci_button_0 pci_header_bar_button">
 									Ingresar
+								</div>
+							</a>
+							<a class="pci_button_0" href="<% url "/sign_up" %>">
+								<div class="pci_button_0 pci_header_bar_button">
+									Registrar
 								</div>
 							</a>
 						<% end %>
@@ -191,14 +204,6 @@
 				</a>
 			</div>
 		<% end template %>
-
-
-		<% template css_links() %>
-			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
-			<link href="/css/global.css" rel="stylesheet" type="text/css" />
-			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
-		<% end template %>
-		
 		
 		<% template page_content() %>
 		<% end template %>

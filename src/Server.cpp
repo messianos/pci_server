@@ -12,7 +12,8 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/ideas", &Server::ideas, this);
 	mapper().assign("ideas", "/ideas");
 
-	dispatcher().assign("", &Server::index, this);
+	// FIXME: Index removed, until it has content
+	dispatcher().assign("", &Server::problems, this);
 	mapper().assign("");
 
 	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
@@ -23,6 +24,9 @@ Server::Server(cppcms::service &service) :
 
 	dispatcher().assign("/sign_in", &Server::signIn, this);
 	mapper().assign("sign_in", "/sign_in");
+
+	dispatcher().assign("/sign_up", &Server::signUp, this);
+	mapper().assign("sign_up", "/sign_up");
 
 	dispatcher().assign("/sign_out", &Server::signOut, this);
 	mapper().assign("sign_out", "/sign_out");
@@ -103,9 +107,9 @@ void Server::signIn() {
 		SignInContent content;
 		content.page_title = "Sign in";
 
-		// This lead to the major error of the forms
+		// This lead to the major error of the forms:
 		// SignInFormInfo form_info = content.form_info;
-		// This is the correct way, because forms are non-copyable
+		// This is the correct way, because forms are non-copyable:
 		SignInFormInfo* form_info = &content.form_info;
 
 		if (request().request_method() == "POST") {
@@ -148,6 +152,59 @@ void Server::signOut() {
 	session().erase("signed_in");
 	session().erase("user_name");
 	response().set_redirect_header(url(""));
+}
+
+void Server::signUp() {
+	SignUpContent content;
+
+	set_header_properties(content);
+	content.page_title = "Registrar";
+
+	SignUpFormInfo* form_info = &content.form_info;
+
+	if (request().request_method() == "POST") {
+
+		// POST message received
+		form_info->load(context());
+
+		if (form_info->validate()) {
+
+			// TODO: Make deeper validation: email correctness, etc.
+
+			// Input validated
+			string user_name = form_info->user_name.value();
+			string encrypted_password = PasswordManager::encryptPassword(
+					form_info->password.value());
+
+			User* new_user = new User();
+
+			// TODO: Should we use Boost's lib date?
+			stringstream out;
+			out << form_info->year.selected() << "-"
+					<< form_info->month.selected() << "-"
+					<< form_info->day.selected();
+			new_user->birth_date = new Date("%Y-%M-%D", out.str());
+
+			new_user->email = form_info->email.value();
+			new_user->first_name = form_info->first_name.value();
+			new_user->genre = "M"; // TODO: Ask for it
+			new_user->last_name = form_info->last_name.value();
+			new_user->location = "bahia"; // TODO: Ask for it
+			new_user->sign_up_datetime = time(NULL);
+			new_user->user_name = user_name;
+
+			DatabaseInterface::signUpUser(new_user, encrypted_password);
+
+			cerr << "successful registration!" << endl;
+			response().set_redirect_header(url(""));
+			return;
+
+		} else {
+			cerr << "unsuccessful registration !!" << endl; // TODO: else ---> deberia mostrar mensaje especial de invalidez
+		}
+	}
+
+	render("sign_up_view", content);
 }
 
 void Server::solution(string id) {

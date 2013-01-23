@@ -75,6 +75,7 @@ bool DatabaseInterface::signInUser(string user_name, string encrypted_password) 
 	return sign_in_success;
 }
 
+// FIXME: This may return success or fail
 void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query =
 	"	CALL sign_up_user("

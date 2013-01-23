@@ -26,6 +26,7 @@ public:
 	void problems();
 	void signIn();
 	void signOut();
+	void signUp();
 	void solution(std::string id);
 
 	void set_header_properties(ViewContent::TemplateContent& content);
