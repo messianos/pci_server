@@ -19,6 +19,6 @@ body {
 }
 
 div.pci_problems_problem_description {
-	float:left;
+	/*float:left;*/
 	margin:4px;
 }

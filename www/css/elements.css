@@ -23,15 +23,15 @@ a.pci_box_0 {
 }
 
 div.pci_box_1 {
-	background-color:#EADBDB;
+	background-color:#9fa2a4;
 	border-radius:8px;
 	border-width:0px;
-	box-shadow:0px 0px 16px 0px #EAB1B1 inset;
+	box-shadow:0px 0px 16px 0px #366380 inset;
 	padding:8px;
 }
 
 div.pci_box_1:hover {
-	background-color:#F2E4E4;
+	background-color:#abbbc6;
 }
 
 a.pci_box_1 {
