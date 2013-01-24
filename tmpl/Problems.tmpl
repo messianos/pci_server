@@ -19,13 +19,13 @@
 				$('#pci_navigation_menu_problems_button').addClass('active');
 			</script>
 			
-			<div id="pci_problems_main_container">
+			<div id="main_content_container">
 				<div class="pci_box_2" id="pci_problems_problem_container">
 					<% foreach problem in *problems %>
 						<% item %>
 							<a class="pci_box_1" href="<% url "/problem" using problem->id %>">
 								<div class="pci_box_1 pci_problems_problem_description">
-									<%= problem->description %>
+									<%= problem->description %><br /><%= problem->creation_datetime %>
 								</div>
 							</a>
 						<% end %>

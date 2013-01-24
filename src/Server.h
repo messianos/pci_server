@@ -24,6 +24,7 @@ public:
 	void index();
 	void problem(std::string id);
 	void problems();
+	void profile();
 	void signIn();
 	void signOut();
 	void signUp();

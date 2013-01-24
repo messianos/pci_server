@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.base.190875518.281319125.1162971244" name="Debug" parent="org.eclipse.cdt.build.core.emptycfg" prebuildStep="killall pci_server &amp;&amp; cd ../tmpl &amp;&amp; sh build_templates.sh">
+				<configuration artifactName="${ProjName}" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.base.190875518.281319125.1162971244" name="Debug" parent="org.eclipse.cdt.build.core.emptycfg" prebuildStep="cd ../tmpl &amp;&amp; sh build_templates.sh &amp;&amp; killall pci_server">
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.base.190875518.281319125.1162971244." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.base.86342140" name="cdt.managedbuild.toolchain.gnu.base" resourceTypeBasedDiscovery="true" superClass="cdt.managedbuild.toolchain.gnu.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.base.1537862331" name="Debug Platform" osList="linux,hpux,aix,qnx" superClass="cdt.managedbuild.target.gnu.platform.base"/>

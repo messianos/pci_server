@@ -2,7 +2,7 @@
 <% c++ #include "ViewContent.h" %>
 
 <% skin pci_skin %>
-	<% view sign_in_view uses ViewContent::SignInContent extends template_view %>
+	<% view profile_view uses ViewContent::ProfileContent extends template_view %>
 	
 	
 		<% template css_links() %>
@@ -15,12 +15,20 @@
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
+			
+			<script type="text/javascript">
+				$('#pci_navigation_menu_profile_button').addClass('active');
+			</script>
+			
 			<div id="main_content_container">
 				<div class="pci_box_2" >
-					<h1>Sign in</h1>
-					<form action="" method="post">
-						<% form as_p form_info %>
-					</form>
+					Nombre de Usuario: <%= user->user_name %><br />
+					Nombre: <%= user->first_name %><br />
+					Apellido: <%= user->last_name %><br />
+					Sexo: <%= user->genre %><br />
+					Fecha de Nacimiento: <%= user->birth_date->day %>/<%= user->birth_date->month %>/<%= user->birth_date->year %><br />
+					E-mail: <%= user->email %><br />
+					Fecha de registro: <%= user->sign_up_datetime %><br />
 				</div>
 			</div>
 		<% end template %>

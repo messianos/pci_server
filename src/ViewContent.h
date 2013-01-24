@@ -5,6 +5,7 @@
 #include "Clarification.h"
 #include "Problem.h"
 #include "Solution.h"
+#include "User.h"
 #include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
@@ -43,6 +44,10 @@ struct ProblemContent: TemplateContent {
 
 struct ProblemsContent: TemplateContent {
 	ProblemList problems;
+};
+
+struct ProfileContent : TemplateContent {
+	User* user;
 };
 
 struct SignInFormInfo: public cppcms::form {

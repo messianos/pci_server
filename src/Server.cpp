@@ -22,6 +22,9 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/problems", &Server::problems, this);
 	mapper().assign("problems", "/problems");
 
+	dispatcher().assign("/profile", &Server::profile, this);
+	mapper().assign("profile", "/profile");
+
 	dispatcher().assign("/sign_in", &Server::signIn, this);
 	mapper().assign("sign_in", "/sign_in");
 
@@ -85,6 +88,24 @@ void Server::problems() {
 	content.page_title = "Problems";
 	content.problems = DatabaseInterface::searchProblemsRandom(40);
 	render("problems_view", content);
+}
+
+void Server::profile() {
+	ProfileContent content;
+
+	set_header_properties(content);
+
+	// FIXME: Store user somewhere and use real data here
+	content.user = new User();
+	content.user->first_name = "yo";
+	content.user->last_name = "mi apellido";
+	content.user->birth_date = new Date("%Y-%M-%D", "1990-11-14");
+	content.user->genre = "M";
+	content.user->email = "nicoalbo90@gmail.com";
+	//content.user->user_name = "nombre de user";
+	content.user->sign_up_datetime = time(NULL);
+
+	render("profile_view", content);
 }
 
 void Server::set_header_properties(TemplateContent& content) {

@@ -14,9 +14,20 @@ div {
 */
 
 * {
-  margin:0px;
-  outline-style:none;
-  outline-width:0px;
-  padding:0px;
-  text-decoration: none;
+ 	margin:0px;
+  	outline-style:none;
+  	outline-width:0px;
+  	padding:0px;
+  	text-decoration: none;
+	font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", sans serif;
+	text-shadow: 1px 1px #DDD;
+	color: #333;
+}
+
+body {
+	background-color:#F1F1F1;
+}
+
+a, a.active, a:visited {
+	color: #333;
 }

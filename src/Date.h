@@ -18,12 +18,14 @@ private:
 	static const char MONTH_LONG_INDICATOR;
 	static const char YEAR_SHORT_INDICATOR;
 	static const char YEAR_LONG_INDICATOR;
-	int day;
-	int month;
-	int year;
 	int parseInt(std::string formatted_date, size_t initial_position, size_t *final_position);
 
 public:
+	// TODO: moved for simplicity, why should be private?
+	int day;
+	int month;
+	int year;
+	/////
 	Date();
 	Date(std::string format, std::string formatted_date);
 	virtual ~Date();
