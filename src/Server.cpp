@@ -93,6 +93,8 @@ void Server::problems() {
 void Server::profile() {
 	ProfileContent content;
 
+	content.page_title = "Profile";
+
 	set_header_properties(content);
 
 	// FIXME: Store user somewhere and use real data here

@@ -26,6 +26,12 @@
 	},
 	
 	"views" : {
-		"default_skin" : [ "pci_skin" ]
+		"paths" : [ "tmpl/lib" ],
+		"skins" : [ "pci_skin" ],
+		"default_skin" : [ "pci_skin" ],
+		"auto_reload" : true
+		// The application auto reloads the libraries so it isn't necesary
+		// to restart the server to test templates.
+		// TODO: Slows down the application performance.
 	}
 }
