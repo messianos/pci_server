@@ -1,94 +1,92 @@
 
 <% c++ #include "ViewContent.h" %>
+<% c++ #include "Server.h" %>
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
 
+		<% template css_links() %>
+			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
+			<link href="/css/global.css" rel="stylesheet" type="text/css" />
+			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
+			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
+			<link href="/css/toolbar.css" rel="stylesheet" type="text/css" />
+			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
+		<% end template %>
+		
 
 		<% template clarifications(ClarificationList clarifications) %>
-			<div id="pci_clarifications">
-				<div id="pci_clarifications_main_container">
-					<div class="pci_clarifications_row_container">
-						<div class="pci_clarifications_question_container">
-							<div class="pci_clarifications_column_header" id="pci_clarifications_question_column_header">
-								Question
-							</div>
-						</div>
-						<div class="pci_clarifications_answer_container">
-							<div class="pci_clarifications_column_header" id="pci_clarifications_answer_column_header">
-								Answer
-							</div>
+			<div id="pci_clarifications_main_container">
+				<div class="pci_horizontal_line"></div>
+				<div class="pci_clarifications_row_container">
+					<div class="pci_clarifications_question_container">
+						<div class="pci_clarifications_column_header pci_clarifications_question_content">
+							Question
 						</div>
 					</div>
-					<% foreach clarification in *clarifications %>
-	 					<% item %>
-							<div class="pci_clarifications_row_container">
-								<div class="pci_clarifications_question_container">
-									<div class="pci_box_0 pci_clarifications_content">
-										<%= clarification->question %>
-									</div>
-								</div>
-								<div class="pci_clarifications_answer_container">
-									<div class="pci_box_0 pci_clarifications_content">
-										<%= clarification->answer %>
-									</div>
+					<div class="pci_clarifications_answer_container">
+						<div class="pci_clarifications_answer_content pci_clarifications_column_header">
+							Answer
+						</div>
+					</div>
+				</div>
+				<% foreach clarification in *clarifications %>
+ 					<% item %>
+						<div class="pci_clarifications_row_container">
+							<div class="pci_clarifications_question_container">
+								<div class="pci_box_3 pci_clarifications_question_content">
+									<%= clarification->question %>
 								</div>
 							</div>
-	  					<% end %>
-					<% empty %>
-						There are are no clarifications
-					<% end %>
-				</div>
+							<div class="pci_clarifications_answer_container">
+								<div class="pci_box_5 pci_clarifications_answer_content">
+									<%= clarification->answer %>
+								</div>
+							</div>
+						</div>
+  					<% end %>
+				<% empty %>
+					There are are no clarifications
+				<% end %>
 			</div>
 		<% end template %>
 
 
 		<% template header_bar() %>
-			<div id="pci_header_bar">
-				<div id="pci_header_bar_main_container">
-					<div id="pci_header_bar_logo_container"></div>
+			<div id="pci_header_bar_main_container">
+				<div id="pci_header_bar_central_container">
+					<div id="pci_header_bar_logo_container">
+						<div id="pci_header_bar_logo"></div>
+					</div>
 					<div id="pci_header_bar_button_container">
-						<a class="pci_button_0" href="<% url "" %>">
-							<div class="pci_button_0 pci_header_bar_button">
-								Ingresar
-							</div>
-						</a>
+					 	<% if user_logged %>
+					 		<div id="user_name_box">Hola, <%= user_name %>!</div>
+							<a class="pci_button_0" href="<% url "/sign_out" %>">
+								<div class="pci_button_0 pci_header_bar_button">
+									Salir
+								</div>
+							</a>
+						<% else %>
+							<a class="pci_button_0" href="<% url "/sign_in" %>">
+								<div class="pci_button_0 pci_header_bar_button">
+									Ingresar
+								</div>
+							</a>
+							<a class="pci_button_0" href="<% url "/sign_up" %>">
+								<div class="pci_button_0 pci_header_bar_button">
+									Registrar
+								</div>
+							</a>
+						<% end %>
 					</div>
 				</div>
 			</div>
-			<div id="pci_header_bar_offset_container"></div>
-		<% end template %>
-		
-		
-		<% template ideas() %>
-			<br />
-			<br />
-			<br />
-			<br />
-			Ideas content
-			<br />
-			<br />
-			<br />
-			<br />
-		<% end template %>
-		
-		
-		<% template index() %>
-			<br />
-			<br />
-			<br />
-			<br />
-			Index content
-			<br />
-			<br />
-			<br />
-			<br />
 		<% end template %>
 		
 		
 		<% template information_footer() %>
-			<div id="pci_information_footer">
-				<div id="pci_information_footer_main_container">
+			<div id="pci_information_footer_main_container">
+				<div id="pci_information_footer_central_container">
 					<div id="pci_information_footer_TO_DEFINE_container">
 						Some information
 					</div>
@@ -180,113 +178,35 @@
 
 
 		<% template navigation_menu() %>
-			<div id="pci_navigation_menu">
-				<div id="pci_navigation_menu_main_container">
-					<div id="pci_navigation_menu_service_container">
-						<a href="<% url "/problems" %>">
-							<div class="pci_button_1 pci_navigation_menu_service_button">
-								<div class="pci_button_1_image" id="pci_navigation_menu_problems_button_image"></div>
-								<div class="pci_button_1_text">
-									Problems
-								</div>
-							</div>
-						</a>
-						<a href="<% url "/ideas" %>">
-							<div class="pci_button_1 pci_navigation_menu_service_button">
-								<div class="pci_button_1_image" id="pci_navigation_menu_ideas_button_image"></div>
-								<div class="pci_button_1_text">
-									Ideas
-								</div>
-							</div>
-						</a>
-					</div>
-					<div id="pci_navigation_menu_option_container">
-						<a href="<% url "" %>">
-							<div class="pci_button_1 pci_navigation_menu_option_button">
-								<div class="pci_button_1_image" id="pci_navigation_menu_profile_button_image"></div>
-								<div class="pci_button_1_text">
-									Profile
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-		<% end template %>
-		
-		
-		<% template problem(ProblemPointer problem, SolutionPointer accepted_solution, SolutionList solutions) %>
-			<div id="pci_problem">
-				<div id="pci_problem_main_container">
-					<div id="pci_problem_problem_container">
-						<div id="pci_problem_problem_header_container">
-							Header (extra info about the Problem)
-						</div>
-						<div class="pci_box_0" id="pci_problem_problem_content">
-							<%= problem->content %>
+			<div id="pci_navigation_menu_main_container">
+				<a href="<% url "/problems" %>">
+					<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_problems_button">
+						<div class="pci_button_1_image" id="pci_navigation_menu_problems_button_image"></div>
+						<div class="pci_button_1_text">
+							Problems
 						</div>
 					</div>
-					<div id="pci_problem_solution_container">
-						<% foreach solution in *solutions %>
-		 					<% item %>
-		 						<a class="pci_box_0" href="<% url "/solution" using solution->id %>">
-									<div class="pci_box_0 pci_problem_solution_description">
-										<%= solution->description %>
-									</div>
-								</a>
-		  					<% end %>
-						<% empty %>
-							There are are no solutions
-						<% end %>
+				</a>
+				<a href="<% url "/ideas" %>">
+					<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_ideas_button">
+						<div class="pci_button_1_image" id="pci_navigation_menu_ideas_button_image"></div>
+						<div class="pci_button_1_text">
+							Ideas
+						</div>
 					</div>
-				</div>
+				</a>
+				<% if user_logged %>
+					<a href="<% url "/profile" %>">
+						<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_profile_button">
+							<div class="pci_button_1_image" id="pci_navigation_menu_profile_button_image"></div>
+							<div class="pci_button_1_text">
+								Profile
+							</div>
+						</div>
+					</a>
+				<% end %>
 			</div>
 		<% end template %>
-		
-		
-		<% template problems(ProblemList problems) %>
-			<br />
-			<br />
-			<br />
-			<br />
-			<div id="pci_problems">
-				<div id="pci_problems_main_container">
-					<div class="pci_box_2" id="pci_problems_problem_container">
-						<% foreach problem in *problems %>
-							<% item %>
-								<a class="pci_box_1" href="<% url "/problem" using problem->id %>">
-									<div class="pci_box_1 pci_problems_problem_description">
-										<%= problem->description %>
-									</div>
-								</a>
-							<% end %>
-						<% empty %>
-							No problems found
-						<% end %>
-					</div>
-				</div>
-			</div>
-		<% end template %>
-		
-		
-		<% template solution(SolutionPointer solution) %>
-			<br />
-			<br />
-			<br />
-			<br />
-			<%= solution->content %>
-			<br />
-			<br />
-			<br />
-			<br />
-		<% end template %>
-
-
-		<% template css_links() %>
-			<link href="/css/global.css" rel="stylesheet" type="text/css" />
-			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
-		<% end template %>
-		
 		
 		<% template page_content() %>
 		<% end template %>
@@ -308,6 +228,21 @@
 					<% include page_content() %>
 				</body>
 			</html>
+		<% end template %>
+		
+		<% template toolbar() %>
+			<div class="pci_box_2" >
+				<% if user_logged %>
+					<a href="<% url "/ideas" %>" >
+						<div class="pci_button_1" id="add_problem_button" >
+							<div class="pci_button_1_image" id="add_problem_button_image"></div>
+							<div class="pci_button_1_text" >
+								Nuevo problema
+							</div>
+						</div>
+					</a>
+				<% end %>
+			</div>
 		<% end template %>
 
 

@@ -8,7 +8,6 @@ using namespace std;
 
 int main(int argc, char **argv) {
 	try {
-
 		service service(argc, argv);
 		service.applications_pool().mount(applications_factory<Server>());
 		cerr << "Server started!" << endl;
