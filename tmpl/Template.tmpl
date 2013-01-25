@@ -10,6 +10,7 @@
 			<link href="/css/global.css" rel="stylesheet" type="text/css" />
 			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
 			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
+			<link href="/css/toolbar.css" rel="stylesheet" type="text/css" />
 			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
 		<% end template %>
 		
@@ -227,6 +228,21 @@
 					<% include page_content() %>
 				</body>
 			</html>
+		<% end template %>
+		
+		<% template toolbar() %>
+			<div class="pci_box_2" >
+				<% if user_logged %>
+					<a href="<% url "/ideas" %>" >
+						<div class="pci_button_1" id="add_problem_button" >
+							<div class="pci_button_1_image" id="add_problem_button_image"></div>
+							<div class="pci_button_1_text" >
+								Nuevo problema
+							</div>
+						</div>
+					</a>
+				<% end %>
+			</div>
 		<% end template %>
 
 

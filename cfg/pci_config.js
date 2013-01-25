@@ -17,7 +17,7 @@
 	
 	"session" : {
 		"expire" : "browser",
-		"timeout" : 100,
+		"timeout" : 500,
 		"location" : "client",
 		"client" : {
 			"hmac" : "sha1",
