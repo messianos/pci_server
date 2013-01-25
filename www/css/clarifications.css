@@ -5,14 +5,9 @@
 ----------------------------------------------------------------------------------------------
 */
 
-#pci_clarifications {
-	width:100%;
-}
-
 #pci_clarifications_main_container {
-	clear:both;
-	margin:0px auto;
-	width:1024px;
+	min-width:912px;
+	padding:0px 128px 0px 240px;
 }
 
 div.pci_clarifications_row_container {
@@ -21,19 +16,22 @@ div.pci_clarifications_row_container {
 
 div.pci_clarifications_question_container {
 	float:left;
-	width:504px;
+	width:50%;
 }
 
 div.pci_clarifications_answer_container {
 	float:right;
-	width:504px;
+	width:50%;
 }
 
 div.pci_clarifications_column_header {
-	margin:8px 0px;
 	text-align:center;
 }
 
-div.pci_clarifications_content {
-	margin:8px 0px;
+div.pci_clarifications_question_content {
+	margin:16px 8px 0px 0px;
+}
+
+div.pci_clarifications_answer_content {
+	margin:16px 0px 0px 8px;
 }

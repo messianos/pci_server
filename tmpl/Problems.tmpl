@@ -7,8 +7,6 @@
 	
 		<% template css_links() %>
 			<% include template_view::css_links() %>
-			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
-			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
 			<link href="/css/problems.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
@@ -16,7 +14,27 @@
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
-			<% include template_view::problems(problems) %>
+			
+			<script type="text/javascript">
+				$('#pci_navigation_menu_problems_button').addClass('active');
+			</script>
+			
+			<div id="main_content_container">
+				<% include template_view::toolbar() %>
+				<div class="pci_box_2" id="pci_problems_problem_container">
+					<% foreach problem in *problems %>
+						<% item %>
+							<a class="pci_box_1" href="<% url "/problem" using problem->id %>">
+								<div class="pci_box_1 pci_problems_problem_description">
+									<%= problem->description %><br /><%= problem->creation_datetime %>
+								</div>
+							</a>
+						<% end %>
+					<% empty %>
+						No problems found
+					<% end %>
+				</div>
+			</div>
 		<% end template %>
 	
 	

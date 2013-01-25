@@ -1,15 +1,12 @@
 
 /*
 ----------------------------------------------------------------------------------------------
-	Solution
+	Toolbar
 ----------------------------------------------------------------------------------------------
 */
 
-body {
-	background-color:#F1F1F1;
-}
-
-#pci_solution_main_container {
-	min-width:912px;
-	padding:64px 128px 0px 240px;
+#add_problem_button_image{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-image:url('../img/add_problem_icon.png'); 
 }

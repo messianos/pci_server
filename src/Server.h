@@ -24,8 +24,13 @@ public:
 	void index();
 	void problem(std::string id);
 	void problems();
-	//void signIn();
+	void profile();
+	void signIn();
+	void signOut();
+	void signUp();
 	void solution(std::string id);
+
+	void set_header_properties(ViewContent::TemplateContent& content);
 };
 
 #endif /* SERVER_H_ */
