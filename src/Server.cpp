@@ -19,6 +19,9 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
 	mapper().assign("problem", "/problem/{1}");
 
+	dispatcher().assign("/new_problem", &Server::newProblem, this);
+	mapper().assign("new_problem", "/new_problem");
+
 	dispatcher().assign("/problems", &Server::problems, this);
 	mapper().assign("problems", "/problems");
 
@@ -80,6 +83,27 @@ void Server::problem(string id) {
 	render("problem_view", content);
 }
 
+void Server::newProblem() {
+	NewProblemContent content;
+
+	set_header_properties(content);
+	content.page_title = "New problem";
+
+	NewProblemFormInfo* form_info = &content.form_info;
+
+	if (request().request_method() == "POST") {
+
+		// POST message received
+		form_info->load(context());
+
+		if (form_info->validate()) {
+			cout << "problem posted" << endl;
+		}
+	}
+
+	render("new_problem_view", content);
+}
+
 void Server::problems() {
 	ProblemsContent content;
 
@@ -111,7 +135,6 @@ void Server::profile() {
 }
 
 void Server::set_header_properties(TemplateContent& content) {
-
 	content.user_logged = session().is_set("signed_in");
 	content.user_name = session()["user_name"];
 }

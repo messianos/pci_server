@@ -23,6 +23,7 @@ public:
 	void ideas();
 	void index();
 	void problem(std::string id);
+	void newProblem();
 	void problems();
 	void profile();
 	void signIn();

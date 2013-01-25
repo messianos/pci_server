@@ -4,15 +4,6 @@
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
-
-		<% template css_links() %>
-			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
-			<link href="/css/global.css" rel="stylesheet" type="text/css" />
-			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
-			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
-			<link href="/css/toolbar.css" rel="stylesheet" type="text/css" />
-			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
-		<% end template %>
 		
 
 		<% template clarifications(ClarificationList clarifications) %>
@@ -93,11 +84,11 @@
 					<div id="pci_information_footer_link_container">
 						<div class="pci_information_footer_column_container">
 							<div class="pci_information_footer_column_header">
-								Header 1
+								PCI
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_0" href="<% url "" %>">
-									Link 1
+									Acerca de
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
@@ -153,21 +144,21 @@
 						</div>
 						<div class="pci_information_footer_column_container">
 							<div class="pci_information_footer_column_header">
-								Header 4
+								Soporte
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_0" href="<% url "" %>">
-									Link 1
+									Ayuda
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_0" href="<% url "" %>">
-									Link 2
+									Condiciones de servicio
 								</a>
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_0" href="<% url "" %>">
-									Link 3
+									Copyright
 								</a>
 							</div>
 						</div>
@@ -181,32 +172,47 @@
 			<div id="pci_navigation_menu_main_container">
 				<a href="<% url "/problems" %>">
 					<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_problems_button">
-						<div class="pci_button_1_image" id="pci_navigation_menu_problems_button_image"></div>
-						<div class="pci_button_1_text">
-							Problems
-						</div>
+						Problemas
 					</div>
 				</a>
 				<a href="<% url "/ideas" %>">
 					<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_ideas_button">
-						<div class="pci_button_1_image" id="pci_navigation_menu_ideas_button_image"></div>
-						<div class="pci_button_1_text">
-							Ideas
-						</div>
+						Ideas
 					</div>
 				</a>
 				<% if user_logged %>
 					<a href="<% url "/profile" %>">
 						<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_profile_button">
-							<div class="pci_button_1_image" id="pci_navigation_menu_profile_button_image"></div>
-							<div class="pci_button_1_text">
-								Profile
-							</div>
+							Perfil
 						</div>
 					</a>
 				<% end %>
 			</div>
 		<% end template %>
+		
+		
+		<% template toolbar() %>
+			<% if user_logged %>
+				<div class="pci_box_2 pci_toolbar_main_container">
+					<a href="<% url "/new_problem" %>">
+						<div class="pci_button_1 pci_toolbar_button" id="pci_toolbar_new_problem_button">
+							Nuevo problema
+						</div>
+					</a>
+				</div>
+			<% end %>
+		<% end template %>
+
+
+		<% template css_links() %>
+			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
+			<link href="/css/global.css" rel="stylesheet" type="text/css" />
+			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
+			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
+			<link href="/css/toolbar.css" rel="stylesheet" type="text/css" />
+			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
+		<% end template %>
+		
 		
 		<% template page_content() %>
 		<% end template %>
@@ -228,21 +234,6 @@
 					<% include page_content() %>
 				</body>
 			</html>
-		<% end template %>
-		
-		<% template toolbar() %>
-			<div class="pci_box_2" >
-				<% if user_logged %>
-					<a href="<% url "/ideas" %>" >
-						<div class="pci_button_1" id="add_problem_button" >
-							<div class="pci_button_1_image" id="add_problem_button_image"></div>
-							<div class="pci_button_1_text" >
-								Nuevo problema
-							</div>
-						</div>
-					</a>
-				<% end %>
-			</div>
 		<% end template %>
 
 

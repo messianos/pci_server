@@ -42,6 +42,33 @@ struct ProblemContent: TemplateContent {
 	list<Clarification *> *clarifications;
 };
 
+struct NewProblemFormInfo: public cppcms::form {
+	widgets::textarea description;
+	widgets::textarea content;
+	widgets::checkbox is_anonymous;
+	widgets::submit submit;
+
+	NewProblemFormInfo() {
+		description.message("Breve descripción");
+		content.message("Contenido");
+		is_anonymous.message("Publicar anónimamente");
+		submit.value("Publicar");
+
+		add(description);
+		add(content);
+		add(is_anonymous);
+		add(submit);
+
+		// Restrictions
+		description.limits(1, 280);
+		content.non_empty();
+	}
+};
+
+struct NewProblemContent: TemplateContent {
+	NewProblemFormInfo form_info;
+};
+
 struct ProblemsContent: TemplateContent {
 	ProblemList problems;
 };
@@ -56,9 +83,9 @@ struct SignInFormInfo: public cppcms::form {
 	widgets::submit submit;
 
 	SignInFormInfo() {
-		user_name.message("User name");
-		password.message("Password");
-		submit.value("Sign in");
+		user_name.message("Nombre de usuario");
+		password.message("Contraseña");
+		submit.value("Ingresar");
 
 		add(user_name);
 		add(password);
