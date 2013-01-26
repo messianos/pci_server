@@ -11,27 +11,29 @@
 		<% end template %>
 	
 	
+		<% template javascript_code() %>
+			$(document).ready(function() {
+				$('#pci_navigation_menu_problems_button').addClass('active');
+			});
+		<% end template %>
+	
+	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
-			
-			<script type="text/javascript">
-				$('#pci_navigation_menu_problems_button').addClass('active');
-			</script>
-			
-			<div id="main_content_container">
+			<div id="pci_problems_main_container">
 				<% include template_view::toolbar() %>
 				<div class="pci_box_2" id="pci_problems_problem_container">
 					<% foreach problem in *problems %>
 						<% item %>
 							<a class="pci_box_1" href="<% url "/problem" using problem->id %>">
 								<div class="pci_box_1 pci_problems_problem_description">
-									<%= problem->description %><br /><%= problem->creation_datetime %>
+									<%= problem->description %><br /><%= problem->creation_datetime->toString("%d/%m/%Y %H:%M:%S") %>
 								</div>
 							</a>
 						<% end %>
 					<% empty %>
-						No problems found
+						No se encontraron problemas
 					<% end %>
 				</div>
 			</div>

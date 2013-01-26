@@ -1,7 +1,7 @@
 
 // Includes
 #include "DatabaseInterface.h"
-#include <iostream>
+#include <iostream> // TODO: remove (debugging purposes)
 
 // Namespaces
 using namespace cppdb;
@@ -34,22 +34,24 @@ User *DatabaseInterface::searchUser(string user_name) {
 		return NULL;
 
 	User *user = new User();
-
 	string formatted_date;
+	time_t timestamp;
+
 	result.fetch("birth_date", formatted_date);
-	user->birth_date = new Date("%Y-%M-%D", formatted_date);
+	user->birth_date = new Date("%Y-%m-%d", formatted_date);
 	result.fetch("email", user->email);
 	result.fetch("first_name", user->first_name);
 	result.fetch("genre", user->genre);
 	result.fetch("last_name", user->last_name);
 	result.fetch("location", user->location);
-	result.fetch("sign_up_datetime", user->sign_up_datetime);
+	result.fetch("sign_up_datetime", timestamp);
+	user->sign_up_datetime = new Datetime(timestamp);
 	result.fetch("user_name", user->user_name);
 
 	return user;
 }
 
-bool DatabaseInterface::signInUser(string user_name, string encrypted_password) {
+ErrorCode *DatabaseInterface::signInUser(string user_name, string encrypted_password) {
 	string query;
 
 	query =
@@ -72,11 +74,14 @@ bool DatabaseInterface::signInUser(string user_name, string encrypted_password) 
 
 	short int sign_in_success;
 	result.fetch("@out_success", sign_in_success);
-	return sign_in_success;
+	if (! sign_in_success)
+		return new ErrorCode(ErrorCode::CODE_INVALID_SIGN_IN);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 // FIXME: This may return success or fail
-void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
+ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query =
 	"	CALL sign_up_user("
 	"		?,"
@@ -91,7 +96,7 @@ void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 
 	database_handler
 		<< query
-		<< user->birth_date->toString("%Y-%M-%D")
+		<< user->birth_date->toString("%Y-%m-%d")
 		<< user->email
 		<< user->first_name
 		<< user->genre
@@ -100,6 +105,9 @@ void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 		<< user->user_name
 		<< encrypted_password
 		<< exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 Problem *DatabaseInterface::searchProblem(string id) {
@@ -125,16 +133,19 @@ Problem *DatabaseInterface::searchProblem(string id) {
 		return NULL;
 
 	Problem *problem = new Problem();
+	time_t timestamp;
 
 	result.fetch("accepted_solution_id", problem->accepted_solution_id);
 	result.fetch("content", problem->content);
-	result.fetch("creation_datetime", problem->creation_datetime);
+	result.fetch("creation_datetime", timestamp);
+	problem->creation_datetime = new Datetime(timestamp);
 	result.fetch("creator_user_name", problem->creator_user_name);
 	result.fetch("description", problem->description);
 	result.fetch("id", problem->id);
 	result.fetch("is_anonymous", problem->is_anonymous);
 	result.fetch("is_solved", problem->is_solved);
-	result.fetch("last_edition_datetime", problem->last_edition_datetime);
+	result.fetch("last_edition_datetime", timestamp);
+	problem->last_edition_datetime = new Datetime(timestamp);
 
 	return problem;
 }
@@ -167,16 +178,19 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 	while (result.next()) {
 
 		Problem *problem = new Problem();
+		time_t timestamp;
 
 		result.fetch("accepted_solution_id", problem->accepted_solution_id);
 		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", problem->creation_datetime);
+		result.fetch("creation_datetime", timestamp);
+		problem->creation_datetime = new Datetime(timestamp);
 		result.fetch("creator_user_name", problem->creator_user_name);
 		result.fetch("description", problem->description);
 		result.fetch("id", problem->id);
 		result.fetch("is_anonymous", problem->is_anonymous);
 		result.fetch("is_solved", problem->is_solved);
-		result.fetch("last_edition_datetime", problem->last_edition_datetime);
+		result.fetch("last_edition_datetime", timestamp);
+		problem->last_edition_datetime = new Datetime(timestamp);
 
 		problem_list->push_back(problem);
 	}
@@ -208,16 +222,19 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 	while (result.next()) {
 
 		Problem *problem = new Problem();
+		time_t timestamp;
 
 		result.fetch("accepted_solution_id", problem->accepted_solution_id);
 		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", problem->creation_datetime);
+		result.fetch("creation_datetime", timestamp);
+		problem->creation_datetime = new Datetime(timestamp);
 		result.fetch("creator_user_name", problem->creator_user_name);
 		result.fetch("description", problem->description);
 		result.fetch("id", problem->id);
 		result.fetch("is_anonymous", problem->is_anonymous);
 		result.fetch("is_solved", problem->is_solved);
-		result.fetch("last_edition_datetime", problem->last_edition_datetime);
+		result.fetch("last_edition_datetime", timestamp);
+		problem->last_edition_datetime = new Datetime(timestamp);
 
 		problem_list->push_back(problem);
 	}
@@ -225,7 +242,7 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 	return problem_list;
 }
 
-void DatabaseInterface::insertProblem(Problem *problem) {
+ErrorCode * DatabaseInterface::insertProblem(Problem *problem) {
 	string query =
 	"	CALL insert_problem("
 	"		?,"
@@ -243,11 +260,17 @@ void DatabaseInterface::insertProblem(Problem *problem) {
 		<< problem->id
 		<< problem->is_anonymous
 		<< exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-void DatabaseInterface::deleteProblem(string id) {
+ErrorCode * DatabaseInterface::deleteProblem(string id) {
 	string query = "CALL delete_problem(?)";
 	database_handler << query << id << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 Solution *DatabaseInterface::searchSolution(string id) {
@@ -271,14 +294,17 @@ Solution *DatabaseInterface::searchSolution(string id) {
 		return NULL;
 
 	Solution *solution = new Solution();
+	time_t timestamp;
 
 	result.fetch("content", solution->content);
-	result.fetch("creation_datetime", solution->creation_datetime);
+	result.fetch("creation_datetime", timestamp);
+	solution->creation_datetime = new Datetime(timestamp);
 	result.fetch("creator_user_name", solution->creator_user_name);
 	result.fetch("description", solution->description);
 	result.fetch("id", solution->id);
 	result.fetch("is_anonymous", solution->is_anonymous);
-	result.fetch("last_edition_datetime", solution->last_edition_datetime);
+	result.fetch("last_edition_datetime", timestamp);
+	solution->last_edition_datetime = new Datetime(timestamp);
 
 	return solution;
 }
@@ -308,14 +334,17 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 		return NULL;
 
 	Solution *solution = new Solution();
+	time_t timestamp;
 
 	result.fetch("content", solution->content);
-	result.fetch("creation_datetime", solution->creation_datetime);
+	result.fetch("creation_datetime", timestamp);
+	solution->creation_datetime = new Datetime(timestamp);
 	result.fetch("creator_user_name", solution->creator_user_name);
 	result.fetch("description", solution->description);
 	result.fetch("id", solution->id);
 	result.fetch("is_anonymous", solution->is_anonymous);
-	result.fetch("last_edition_datetime", solution->last_edition_datetime);
+	result.fetch("last_edition_datetime", timestamp);
+	solution->last_edition_datetime = new Datetime(timestamp);
 
 	return solution;
 }
@@ -350,14 +379,17 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 	while (result.next()) {
 
 		Solution *solution = new Solution();
+		time_t timestamp;
 
 		result.fetch("content", solution->content);
-		result.fetch("creation_datetime", solution->creation_datetime);
+		result.fetch("creation_datetime", timestamp);
+		solution->creation_datetime = new Datetime(timestamp);
 		result.fetch("creator_user_name", solution->creator_user_name);
 		result.fetch("description", solution->description);
 		result.fetch("id", solution->id);
 		result.fetch("is_anonymous", solution->is_anonymous);
-		result.fetch("last_edition_datetime", solution->last_edition_datetime);
+		result.fetch("last_edition_datetime", timestamp);
+		solution->last_edition_datetime = new Datetime(timestamp);
 
 		solution_list->push_back(solution);
 	}
@@ -386,14 +418,17 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 	while (result.next()) {
 
 		Solution *solution = new Solution();
+		time_t timestamp;
 
 		result.fetch("content", solution->content);
-		result.fetch("creation_datetime", solution->creation_datetime);
+		result.fetch("creation_datetime", timestamp);
+		solution->creation_datetime = new Datetime(timestamp);
 		result.fetch("creator_user_name", solution->creator_user_name);
 		result.fetch("description", solution->description);
 		result.fetch("id", solution->id);
 		result.fetch("is_anonymous", solution->is_anonymous);
-		result.fetch("last_edition_datetime", solution->last_edition_datetime);
+		result.fetch("last_edition_datetime", timestamp);
+		solution->last_edition_datetime = new Datetime(timestamp);
 
 		solution_list->push_back(solution);
 	}
@@ -401,7 +436,7 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 	return solution_list;
 }
 
-void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
+ErrorCode * DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 	string query =
 	"	CALL insert_solution("
 	"		?,"
@@ -422,11 +457,17 @@ void DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 		<< solution->id
 		<< solution->is_anonymous
 		<< exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-void DatabaseInterface::deleteSolution(string id) {
+ErrorCode * DatabaseInterface::deleteSolution(string id) {
 	string query = "CALL delete_solution(?)";
 	database_handler << query << id << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 Clarification *DatabaseInterface::searchClarification(string id) {
@@ -490,7 +531,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	return clarification_list;
 }
 
-void DatabaseInterface::insertClarification(Clarification *clarification) {
+ErrorCode * DatabaseInterface::insertClarification(Clarification *clarification) {
 	string query =
 	"	CALL insert_clarification("
 	"		?,"
@@ -506,9 +547,15 @@ void DatabaseInterface::insertClarification(Clarification *clarification) {
 		<< clarification->id
 		<< clarification->question
 		<< exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-void DatabaseInterface::deleteClarification(string id) {
+ErrorCode * DatabaseInterface::deleteClarification(string id) {
 	string query = "CALL delete_clarification(?)";
 	database_handler << query << id << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }

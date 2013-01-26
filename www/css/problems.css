@@ -1,15 +1,17 @@
 
-/*
-----------------------------------------------------------------------------------------------
-	Problems
-----------------------------------------------------------------------------------------------
-*/
+body {
+	background-color:#F1F1F1;
+}
+
+#pci_problems_main_container {
+	min-width:912px;
+	padding:64px 128px 0px 240px;
+}
 
 #pci_problems_problem_container {
 	overflow:hidden;
 }
 
 div.pci_problems_problem_description {
-	/*float:left;*/
-	margin:4px;
+	margin:16px;
 }

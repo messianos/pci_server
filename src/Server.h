@@ -4,6 +4,8 @@
 
 // Includes
 #include "DatabaseInterface.h"
+#include "IDManager.h"
+#include "InputValidator.h"
 #include "PasswordManager.h"
 #include "Problem.h"
 #include "ViewContent.h"
@@ -20,18 +22,17 @@ class Server : public cppcms::application {
 public:
 	Server(cppcms::service &service);
 	virtual ~Server();
+	void setSessionProperties(ViewContent::TemplateContent& content);
 	void ideas();
 	void index();
-	void problem(std::string id);
 	void newProblem();
+	void problem(std::string id);
 	void problems();
-	void profile();
 	void signIn();
 	void signOut();
 	void signUp();
 	void solution(std::string id);
-
-	void set_header_properties(ViewContent::TemplateContent& content);
+	void user(std::string user_name);
 };
 
 #endif /* SERVER_H_ */

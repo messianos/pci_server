@@ -4,7 +4,7 @@
 
 // Includes
 #include "Date.h"
-#include <ctime>
+#include "Datetime.h"
 #include <string>
 
 class User {
@@ -16,7 +16,7 @@ public:
 	std::string genre;
 	std::string last_name;
 	std::string location;
-	time_t sign_up_datetime;
+	Datetime *sign_up_datetime;
 	std::string user_name;
 	User();
 	virtual ~User();

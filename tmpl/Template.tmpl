@@ -1,10 +1,9 @@
 
 <% c++ #include "ViewContent.h" %>
-<% c++ #include "Server.h" %>
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
-		
+
 
 		<% template clarifications(ClarificationList clarifications) %>
 			<div id="pci_clarifications_main_container">
@@ -50,13 +49,17 @@
 						<div id="pci_header_bar_logo"></div>
 					</div>
 					<div id="pci_header_bar_button_container">
-					 	<% if user_logged %>
-					 		<div id="user_name_box">Hola, <%= user_name %>!</div>
+					 	<% if user_signed_in %>
 							<a class="pci_button_0" href="<% url "/sign_out" %>">
 								<div class="pci_button_0 pci_header_bar_button">
 									Salir
 								</div>
 							</a>
+					 		<div id="pci_header_bar_user_name_container">
+					 			<span id="pci_header_bar_user_name">
+					 				<%= user_first_name %> <%= user_last_name %>
+					 			</span>
+				 			</div>
 						<% else %>
 							<a class="pci_button_0" href="<% url "/sign_in" %>">
 								<div class="pci_button_0 pci_header_bar_button">
@@ -180,8 +183,8 @@
 						Ideas
 					</div>
 				</a>
-				<% if user_logged %>
-					<a href="<% url "/profile" %>">
+				<% if user_signed_in %>
+					<a href="<% url "/user" using user_name %>">
 						<div class="pci_button_1 pci_navigation_menu_button" id="pci_navigation_menu_profile_button">
 							Perfil
 						</div>
@@ -192,10 +195,10 @@
 		
 		
 		<% template toolbar() %>
-			<% if user_logged %>
-				<div class="pci_box_2 pci_toolbar_main_container">
+			<% if user_signed_in %>
+				<div class="pci_box_7 pci_toolbar_main_container">
 					<a href="<% url "/new_problem" %>">
-						<div class="pci_button_1 pci_toolbar_button" id="pci_toolbar_new_problem_button">
+						<div class="pci_button_2 pci_toolbar_button" id="pci_toolbar_new_problem_button">
 							Nuevo problema
 						</div>
 					</a>
@@ -205,12 +208,11 @@
 
 
 		<% template css_links() %>
-			<link href="/css/elements.css" rel="stylesheet" type="text/css" />
-			<link href="/css/global.css" rel="stylesheet" type="text/css" />
-			<link href="/css/header_bar.css" rel="stylesheet" type="text/css" />
-			<link href="/css/navigation_menu.css" rel="stylesheet" type="text/css" />
-			<link href="/css/toolbar.css" rel="stylesheet" type="text/css" />
-			<script type="text/javascript" src="/js/jquery-1.9.0.min.js"></script>
+			<link href="/css/template.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+		
+		
+		<% template javascript_code() %>
 		<% end template %>
 		
 		
@@ -220,16 +222,17 @@
 
 		<% template render() %>
 			<!DOCTYPE html>
-			
 			<html>
 				<head>
 					<% include css_links() %>
-					
+					<script src="/js/jquery-1.9.0.min.js"></script>
+					<script>
+						<% include javascript_code() %>
+					</script>
 			    	<title>
 			    		<%= page_title %>
 			    	</title>
 				</head>
-				
 				<body>
 					<% include page_content() %>
 				</body>

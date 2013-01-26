@@ -7,7 +7,6 @@
 	
 		<% template css_links() %>
 			<% include template_view::css_links() %>
-			<link href="/css/clarifications.css" rel="stylesheet" type="text/css" />
 			<link href="/css/solution.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
@@ -16,7 +15,9 @@
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
 			<div id="pci_solution_main_container">
-				<%= solution->content %>
+				<div class="pci_box_0">
+					<%= solution->content %>
+				</div>
 			</div>
 			<% include template_view::clarifications(clarifications) %>
 		<% end template %>

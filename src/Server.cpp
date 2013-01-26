@@ -1,3 +1,4 @@
+
 // Includes
 #include "Server.h"
 
@@ -6,75 +7,118 @@ using namespace ViewContent;
 using namespace cppcms;
 using namespace std;
 
-Server::Server(cppcms::service &service) :
-		application(service) {
+Server::Server(cppcms::service &service) : application(service) {
 
 	dispatcher().assign("/ideas", &Server::ideas, this);
 	mapper().assign("ideas", "/ideas");
 
-	// FIXME: Index removed, until it has content
-	dispatcher().assign("", &Server::problems, this);
+	dispatcher().assign("", &Server::index, this);
 	mapper().assign("");
-
-	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
-	mapper().assign("problem", "/problem/{1}");
 
 	dispatcher().assign("/new_problem", &Server::newProblem, this);
 	mapper().assign("new_problem", "/new_problem");
 
+	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
+	mapper().assign("problem", "/problem/{1}");
+
 	dispatcher().assign("/problems", &Server::problems, this);
 	mapper().assign("problems", "/problems");
-
-	dispatcher().assign("/profile", &Server::profile, this);
-	mapper().assign("profile", "/profile");
 
 	dispatcher().assign("/sign_in", &Server::signIn, this);
 	mapper().assign("sign_in", "/sign_in");
 
-	dispatcher().assign("/sign_up", &Server::signUp, this);
-	mapper().assign("sign_up", "/sign_up");
-
 	dispatcher().assign("/sign_out", &Server::signOut, this);
 	mapper().assign("sign_out", "/sign_out");
+
+	dispatcher().assign("/sign_up", &Server::signUp, this);
+	mapper().assign("sign_up", "/sign_up");
 
 	dispatcher().assign("/solution/(53\\w{32,32})", &Server::solution, this, 1);
 	mapper().assign("solution", "/solution/{1}");
 
+	dispatcher().assign("/user/(\\w+)", &Server::user, this, 1);
+	mapper().assign("user", "/user/{1}");
+
 	mapper().root("/pci");
 }
 
-Server::~Server() {
+Server::~Server() {}
+
+void Server::setSessionProperties(TemplateContent& content) {
+	content.user_signed_in = session().is_set("signed_in");
+	content.user_name = session()["user_name"];
+	content.user_first_name = session()["user_first_name"];
+	content.user_last_name = session()["user_last_name"];
 }
 
 void Server::ideas() {
 	IdeasContent content;
-	content.page_title = "Ideas";
 
-	set_header_properties(content);
+	setSessionProperties(content);
+	content.page_title = "PCI - Ideas";
 
 	render("ideas_view", content);
 }
 
 void Server::index() {
 	IndexContent content;
+
+	setSessionProperties(content);
 	content.page_title = "PCI";
 
-	set_header_properties(content);
-
 	render("index_view", content);
+}
+
+void Server::newProblem() {
+	NewProblemContent content;
+
+	setSessionProperties(content);
+	content.page_title = "Nuevo problema";
+
+	NewProblemFormInfo* form_info = &content.form_info;
+	if (request().request_method() == "POST") {
+		// POST message received
+		form_info->load(context());
+
+		ErrorCode *error_code;
+
+		error_code = InputValidator::validateNewProblemInput(form_info);
+		if (error_code->isAnError()) {
+			// Invalid input
+			content.successful_submit = false;
+			content.error_description = error_code->getErrorDescription();
+		} else {
+			// Valid input
+
+			Problem *problem = new Problem();
+			problem->content = form_info->content.value();
+			problem->creator_user_name = session()["user_name"];
+			problem->description = form_info->description.value();
+			problem->id = IDManager::generateProblemID();
+			problem->is_anonymous = form_info->is_anonymous.value();
+
+			error_code = DatabaseInterface::insertProblem(problem);
+			if (error_code->isAnError()) {
+				content.successful_submit = false;
+				content.error_description = error_code->getErrorDescription();
+			} else
+				content.successful_submit = true;
+		}
+	}
+
+	render("new_problem_view", content);
 }
 
 void Server::problem(string id) {
 	ProblemContent content;
 
-	set_header_properties(content);
+	setSessionProperties(content);
+	content.page_title = "PCI - Problema " + id;
 
-	content.page_title = "Problem " + id;
 	Problem *problem = DatabaseInterface::searchProblem(id);
 	content.problem = problem;
 	if (problem->is_solved)
-		content.accepted_solution = DatabaseInterface::searchSolution(
-				problem->accepted_solution_id);
+		content.accepted_solution = DatabaseInterface::searchSolution(problem->accepted_solution_id);
 	else
 		content.accepted_solution = NULL;
 	content.solutions = DatabaseInterface::searchSolutions(id);
@@ -83,60 +127,14 @@ void Server::problem(string id) {
 	render("problem_view", content);
 }
 
-void Server::newProblem() {
-	NewProblemContent content;
-
-	set_header_properties(content);
-	content.page_title = "New problem";
-
-	NewProblemFormInfo* form_info = &content.form_info;
-
-	if (request().request_method() == "POST") {
-
-		// POST message received
-		form_info->load(context());
-
-		if (form_info->validate()) {
-			cout << "problem posted" << endl;
-		}
-	}
-
-	render("new_problem_view", content);
-}
-
 void Server::problems() {
 	ProblemsContent content;
 
-	set_header_properties(content);
-
-	content.page_title = "Problems";
+	setSessionProperties(content);
+	content.page_title = "Problemas";
 	content.problems = DatabaseInterface::searchProblemsRandom(40);
+
 	render("problems_view", content);
-}
-
-void Server::profile() {
-	ProfileContent content;
-
-	content.page_title = "Profile";
-
-	set_header_properties(content);
-
-	// FIXME: Store user somewhere and use real data here
-	content.user = new User();
-	content.user->first_name = "yo";
-	content.user->last_name = "mi apellido";
-	content.user->birth_date = new Date("%Y-%M-%D", "1990-11-14");
-	content.user->genre = "M";
-	content.user->email = "nicoalbo90@gmail.com";
-	//content.user->user_name = "nombre de user";
-	content.user->sign_up_datetime = time(NULL);
-
-	render("profile_view", content);
-}
-
-void Server::set_header_properties(TemplateContent& content) {
-	content.user_logged = session().is_set("signed_in");
-	content.user_name = session()["user_name"];
 }
 
 void Server::signIn() {
@@ -144,48 +142,48 @@ void Server::signIn() {
 	// TODO: check session security and config options http://cppcms.com/wikipp/en/page/cppcms_1x_sessions
 
 	if (session().is_set("signed_in")) {
-
 		response().set_redirect_header(url(""));
 		return;
-
 	} else {
+		// User not signed in
 
 		SignInContent content;
-		content.page_title = "Sign in";
+		content.page_title = "PCI - Ingresar";
 
-		// This lead to the major error of the forms:
-		// SignInFormInfo form_info = content.form_info;
-		// This is the correct way, because forms are non-copyable:
 		SignInFormInfo* form_info = &content.form_info;
-
 		if (request().request_method() == "POST") {
-
 			// POST message received
 			form_info->load(context());
 
-			if (form_info->validate()) {
+			ErrorCode *error_code;
 
-				// Input validated
+			error_code = InputValidator::validateSignInInput(form_info);
+			if (error_code->isAnError()) {
+				// Invalid input
+				content.successful_submit = false;
+				content.error_description = error_code->getErrorDescription();
+			} else {
+				// Valid input
+
 				string user_name = form_info->user_name.value();
-				string encrypted_password = PasswordManager::encryptPassword(
-						form_info->password.value());
+				string encrypted_password = PasswordManager::encryptPassword(form_info->password.value());
 
-				if (DatabaseInterface::signInUser(user_name,
-						encrypted_password)) {
-					// User name and password are valid
+				error_code = DatabaseInterface::signInUser(user_name, encrypted_password);
+				if (error_code->isAnError()) {
+					content.successful_submit = false;
+					content.error_description = error_code->getErrorDescription();
+				} else {
+					// User and password are valid
+					content.successful_submit = true;
+
+					User *user = DatabaseInterface::searchUser(user_name);
 					session()["signed_in"] = "";
+					session()["user_name"] = user_name;
+					session()["user_first_name"] = user->first_name;
+					session()["user_last_name"] = user->last_name;
 
-					// TODO: Store the user object in some place
-					User* user = DatabaseInterface::searchUser(user_name);
-
-					session()["user_name"] = user->first_name;
-
-					cerr << "successful login!" << endl;
 					response().set_redirect_header(url(""));
 					return;
-
-				} else {
-					cerr << "unsuccessful login !!" << endl; // TODO: else ---> deberia mostrar mensaje especial de invalidez
 				}
 			}
 		}
@@ -203,50 +201,48 @@ void Server::signOut() {
 void Server::signUp() {
 	SignUpContent content;
 
-	set_header_properties(content);
-	content.page_title = "Registrar";
+	setSessionProperties(content);
+	content.page_title = "PCI - Registrar";
 
 	SignUpFormInfo* form_info = &content.form_info;
-
 	if (request().request_method() == "POST") {
-
 		// POST message received
 		form_info->load(context());
 
-		if (form_info->validate()) {
+		ErrorCode *error_code;
 
-			// TODO: Make deeper validation: email correctness, etc.
-
-			// Input validated
-			string user_name = form_info->user_name.value();
-			string encrypted_password = PasswordManager::encryptPassword(
-					form_info->password.value());
-
-			User* new_user = new User();
-
-			// TODO: Should we use Boost's lib date?
-			stringstream out;
-			out << form_info->year.selected() << "-"
-					<< form_info->month.selected() << "-"
-					<< form_info->day.selected();
-			new_user->birth_date = new Date("%Y-%M-%D", out.str());
-
-			new_user->email = form_info->email.value();
-			new_user->first_name = form_info->first_name.value();
-			new_user->genre = "M"; // TODO: Ask for it
-			new_user->last_name = form_info->last_name.value();
-			new_user->location = "bahia"; // TODO: Ask for it
-			new_user->sign_up_datetime = time(NULL);
-			new_user->user_name = user_name;
-
-			DatabaseInterface::signUpUser(new_user, encrypted_password);
-
-			cerr << "successful registration!" << endl;
-			response().set_redirect_header(url(""));
-			return;
-
+		error_code = InputValidator::validateSignUpInput(form_info);
+		if (error_code->isAnError()) {
+			// Invalid input
+			content.successful_submit = false;
+			content.error_description = error_code->getErrorDescription();
 		} else {
-			cerr << "unsuccessful registration !!" << endl; // TODO: else ---> deberia mostrar mensaje especial de invalidez
+			// Valid input
+
+			short int day = form_info->day.selected();
+			short int month = form_info->month.selected();
+			int current_year = 2013; // TODO: auto calculate it
+			short int year = current_year - form_info->year.selected() + 1;
+			User* user = new User();
+			user->birth_date = new Date(day, month, year);
+			user->email = form_info->email.value();
+			user->first_name = form_info->first_name.value();
+			user->genre = form_info->genre.selected() == 0? "F" : "M";
+			user->last_name = form_info->last_name.value();
+			user->location = ""; // TODO: add location widget to form
+			user->user_name = form_info->user_name.value();
+			string encrypted_password = PasswordManager::encryptPassword(form_info->password.value());
+
+			error_code = DatabaseInterface::signUpUser(user, encrypted_password);
+			if (error_code->isAnError()) {
+				content.successful_submit = false;
+				content.error_description = error_code->getErrorDescription();
+			} else {
+				content.successful_submit = true;
+
+				response().set_redirect_header(url(""));
+				return;
+			}
 		}
 	}
 
@@ -256,11 +252,22 @@ void Server::signUp() {
 void Server::solution(string id) {
 	SolutionContent content;
 
-	set_header_properties(content);
-
-	content.page_title = "Solution " + id;
+	setSessionProperties(content);
+	content.page_title = "PCI - Solución " + id;
 	content.solution = DatabaseInterface::searchSolution(id);
 	content.clarifications = DatabaseInterface::searchClarifications(id);
 
 	render("solution_view", content);
+}
+
+void Server::user(string user_name) {
+	UserContent content;
+
+	setSessionProperties(content);
+	content.page_title = "PCI - Perfil de " + user_name;
+	content.user = DatabaseInterface::searchUser(user_name);
+
+	// TODO: si el usuario no fue encontrado, enviar a pagina especial
+
+	render("user_view", content);
 }

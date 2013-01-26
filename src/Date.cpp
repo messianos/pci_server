@@ -7,14 +7,12 @@ using namespace std;
 
 // Initializations
 const char Date::FORMAT_INDICATOR = '%';
-const char Date::DAY_SHORT_INDICATOR = 'd';
-const char Date::DAY_LONG_INDICATOR = 'D';
-const char Date::MONTH_SHORT_INDICATOR = 'm';
-const char Date::MONTH_LONG_INDICATOR = 'M';
-const char Date::YEAR_SHORT_INDICATOR = 'y';
-const char Date::YEAR_LONG_INDICATOR = 'Y';
+const char Date::DAY_INDICATOR = 'd';
+const char Date::MONTH_INDICATOR = 'm';
+const char Date::YEAR_LAST_TWO_DIGITS_INDICATOR = 'y';
+const char Date::YEAR_INDICATOR = 'Y';
 
-int Date::parseInt(string formatted_date, size_t initial_position, size_t *final_position) {
+short int Date::parseShortInt(string formatted_date, size_t initial_position, size_t *final_position) {
 
 	char character;
 	stringstream stream;
@@ -34,16 +32,16 @@ int Date::parseInt(string formatted_date, size_t initial_position, size_t *final
 
 	*final_position = current_position;
 
-	int number;
+	short int number;
 	stream >> number;
 	return number;
 }
 
-Date::Date() {
+Date::Date(short int day, short int month, short int year) {
 	// Initializes the attributes with a default value
-	day = 0;
-	month = 0;
-	year = 0;
+	this->day = day;
+	this->month = month;
+	this->year = year;
 }
 
 Date::Date(string format, string formatted_date) {
@@ -65,23 +63,21 @@ Date::Date(string format, string formatted_date) {
 
 			switch (format[i]) {
 
-				case DAY_SHORT_INDICATOR :
-				case DAY_LONG_INDICATOR : {
-					day = parseInt(formatted_date, i - 1 + offset, &final_position);
+				case DAY_INDICATOR : {
+					day = parseShortInt(formatted_date, i - 1 + offset, &final_position);
 					offset = final_position - i - 1;
 					break;
 				}
 
-				case MONTH_SHORT_INDICATOR :
-				case MONTH_LONG_INDICATOR : {
-					month = parseInt(formatted_date, i - 1 + offset, &final_position);
+				case MONTH_INDICATOR : {
+					month = parseShortInt(formatted_date, i - 1 + offset, &final_position);
 					offset = final_position - i - 1;
 					break;
 				}
 
-				case YEAR_SHORT_INDICATOR :
-				case YEAR_LONG_INDICATOR : {
-					year = parseInt(formatted_date, i - 1 + offset, &final_position);
+				case YEAR_LAST_TWO_DIGITS_INDICATOR :
+				case YEAR_INDICATOR : {
+					year = parseShortInt(formatted_date, i - 1 + offset, &final_position);
 					offset = final_position - i - 1;
 					break;
 				}
@@ -112,39 +108,29 @@ string Date::toString(string format) {
 
 			stringstream stream;
 			string value_string;
-			int value = -1;
+			short int value = -1;
 
 			switch (format[i]) {
 
-				case DAY_SHORT_INDICATOR : {
-					value = day;
-					break;
-				}
-
-				case DAY_LONG_INDICATOR : {
+				case DAY_INDICATOR : {
 					stream << setfill('0') << setw(2);
 					value = day;
 					break;
 				}
 
-				case MONTH_SHORT_INDICATOR : {
-					value = month;
-					break;
-				}
-
-				case MONTH_LONG_INDICATOR : {
+				case MONTH_INDICATOR : {
 					stream << setfill('0') << setw(2);
 					value = month;
 					break;
 				}
 
-				case YEAR_SHORT_INDICATOR : {
+				case YEAR_LAST_TWO_DIGITS_INDICATOR : {
 					stream << setfill('0') << setw(2);
 					value = year % 100;
 					break;
 				}
 
-				case YEAR_LONG_INDICATOR : {
+				case YEAR_INDICATOR : {
 					value = year;
 					break;
 				}

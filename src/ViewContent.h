@@ -9,6 +9,7 @@
 #include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
+#include <sstream>
 #include <string>
 
 // Type definitions
@@ -18,172 +19,91 @@ typedef std::list<Problem *> *ProblemList;
 typedef std::list<Solution *> *SolutionList;
 typedef std::list<Clarification *> *ClarificationList;
 
-using namespace cppcms; // TODO: Is this correct?
-using namespace std;
-
 namespace ViewContent {
 
-struct TemplateContent: public cppcms::base_content {
-	string page_title;
-	bool user_logged = 0;
-	string user_name;
-};
+	struct NewProblemFormInfo : public cppcms::form {
+		cppcms::widgets::textarea description;
+		cppcms::widgets::textarea content;
+		cppcms::widgets::checkbox is_anonymous;
+		cppcms::widgets::submit submit;
 
-struct IdeasContent: TemplateContent {
-};
+		NewProblemFormInfo();
+	};
 
-struct IndexContent: TemplateContent {
-};
+	struct SignInFormInfo : public cppcms::form {
+		cppcms::widgets::text user_name;
+		cppcms::widgets::password password;
+		cppcms::widgets::submit submit;
 
-struct ProblemContent: TemplateContent {
-	Problem *problem;
-	Solution *accepted_solution;
-	list<Solution *> *solutions;
-	list<Clarification *> *clarifications;
-};
+		SignInFormInfo();
+	};
 
-struct NewProblemFormInfo: public cppcms::form {
-	widgets::textarea description;
-	widgets::textarea content;
-	widgets::checkbox is_anonymous;
-	widgets::submit submit;
+	struct SignUpFormInfo : public cppcms::form {
+		cppcms::widgets::text first_name;
+		cppcms::widgets::text last_name;
+		cppcms::widgets::text user_name;
+		cppcms::widgets::text email;
+		cppcms::widgets::password password;
+		cppcms::widgets::password password_verification;
+		cppcms::widgets::select day;
+		cppcms::widgets::select month;
+		cppcms::widgets::select year;
+		cppcms::widgets::radio genre;
+		cppcms::widgets::submit submit;
 
-	NewProblemFormInfo() {
-		description.message("Breve descripción");
-		content.message("Contenido");
-		is_anonymous.message("Publicar anónimamente");
-		submit.value("Publicar");
+		SignUpFormInfo();
+	};
 
-		add(description);
-		add(content);
-		add(is_anonymous);
-		add(submit);
+	struct TemplateContent: public cppcms::base_content {
+		std::string page_title;
+		bool user_signed_in;
+		std::string user_name;
+		std::string user_first_name;
+		std::string user_last_name;
+	};
 
-		// Restrictions
-		description.limits(1, 280);
-		content.non_empty();
-	}
-};
+	struct FormContent : public TemplateContent {
+		bool successful_submit;
+		std::string error_description;
+	};
 
-struct NewProblemContent: TemplateContent {
-	NewProblemFormInfo form_info;
-};
+	struct IdeasContent : TemplateContent {
+	};
 
-struct ProblemsContent: TemplateContent {
-	ProblemList problems;
-};
+	struct IndexContent : TemplateContent {
+	};
 
-struct ProfileContent : TemplateContent {
-	User* user;
-};
+	struct ProblemContent : TemplateContent {
+		Problem *problem;
+		Solution *accepted_solution;
+		std::list<Solution *> *solutions;
+		std::list<Clarification *> *clarifications;
+	};
 
-struct SignInFormInfo: public cppcms::form {
-	widgets::text user_name;
-	widgets::password password;
-	widgets::submit submit;
+	struct NewProblemContent : FormContent {
+		NewProblemFormInfo form_info;
+	};
 
-	SignInFormInfo() {
-		user_name.message("Nombre de usuario");
-		password.message("Contraseña");
-		submit.value("Ingresar");
+	struct ProblemsContent : TemplateContent {
+		ProblemList problems;
+	};
 
-		add(user_name);
-		add(password);
-		add(submit);
+	struct SignInContent : FormContent {
+		SignInFormInfo form_info;
+	};
 
-		// Restrictions
-		user_name.limits(1, 31);
-		password.non_empty();
-	}
-};
+	struct SignUpContent : FormContent{
+		SignUpFormInfo form_info;
+	};
 
-struct SignInContent: TemplateContent {
-	SignInFormInfo form_info;
-};
+	struct SolutionContent: TemplateContent {
+		Solution *solution;
+		std::list<Clarification *> *clarifications;
+	};
 
-struct SignUpFormInfo : public cppcms::form {
-	widgets::text first_name;
-	widgets::text last_name;
-	widgets::text user_name;
-	widgets::text email;
-	widgets::password password;
-	widgets::password password_verification;
-	// Birth date
-	widgets::select day;
-	widgets::select month;
-	widgets::select year;
-	// //
-	widgets::submit submit;
-
-	SignUpFormInfo(){
-		first_name.message("Nombre");
-		last_name.message("Apellido");
-		user_name.message("Nombre de usuario");
-		email.message("E-mail");
-		password.message("Nueva Contraseña");
-		password_verification.message("Repita la contraseña");
-
-		// FIXME: All months with 30 days!!!
-		for (int i = 1; i < 30; ++i) {
-			stringstream s;
-			s << i;
-			day.add(s.str());
-		}
-		day.message("");
-
-		// FIXME: Add all months
-		const int MONTHS_NUMBER = 3;
-		string months_names []= {"Enero", "Febrero", "Marzo" };
-
-		for (int i = 0; i < MONTHS_NUMBER; ++i) {
-			month.add(months_names[i]);
-		}
-		month.message("");
-
-		// FIXME: Check max year
-		for (int i = 2013; i > 1905; --i) {
-			stringstream s;
-			s << i;
-			year.add(s.str());
-		}
-		month.message("");
-
-		submit.value("Registrar");
-
-
-		add(first_name);
-		add(last_name);
-		add(user_name);
-		add(email);
-		add(password);
-		add(password_verification);
-		add(day);
-		add(month);
-		add(year);
-		add(submit);
-
-		// Restrictions
-		// TODO: Revise
-		first_name.non_empty();
-		last_name.non_empty();
-		user_name.non_empty();
-		email.non_empty();
-		password.non_empty();
-		password_verification.non_empty();
-		day.non_empty();
-		month.non_empty();
-		year.non_empty();
-	}
-};
-
-struct SignUpContent : TemplateContent{
-	SignUpFormInfo form_info;
-};
-
-struct SolutionContent: TemplateContent {
-	Solution *solution;
-	list<Clarification *> *clarifications;
-};
+	struct UserContent : TemplateContent {
+		User* user;
+	};
 }
 
 #endif /* VIEWCONTENT_H_ */

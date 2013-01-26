@@ -11,16 +11,18 @@
 		<% end template %>
 	
 	
+		<% template javascript_code() %>
+			$(document).ready(function() {
+				$('#pci_navigation_menu_ideas_button').addClass('active');
+			});
+		<% end template %>
+	
+	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
-			
-			<script type="text/javascript">
-				$('#pci_navigation_menu_ideas_button').addClass('active');
-			</script>
-			
-			<div id="main_content_container">
-				<div class="pci_box_2" >
+			<div id="pci_ideas_main_container">
+				<div class="pci_box_9">
 					Ideas content
 				</div>
 			</div>

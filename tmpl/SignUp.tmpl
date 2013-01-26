@@ -7,14 +7,15 @@
 	
 		<% template css_links() %>
 			<% include template_view::css_links() %>
+			<link href="/css/sign_up.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
-			<div id="main_content_container">
-				<div class="pci_box_2" >
+			<div id="pci_sign_up_main_container">
+				<div class="pci_box_9">
 					<h1>Registrar</h1>
 					<form action="" method="post">
 						<% form as_p form_info %>
@@ -23,10 +24,6 @@
 			</div>
 		<% end template %>
 		
-		
-		<% template render_input() %>
-	
-		<% end template %>
 	
 	<% end view %>
 <% end skin %>
