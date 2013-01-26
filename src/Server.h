@@ -26,6 +26,7 @@ public:
 	void ideas();
 	void index();
 	void newProblem();
+	void newSolution(std::string problem_id);
 	void problem(std::string id);
 	void problems();
 	void signIn();

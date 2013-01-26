@@ -1,4 +1,3 @@
-
 // Includes
 #include "Server.h"
 
@@ -7,16 +6,21 @@ using namespace ViewContent;
 using namespace cppcms;
 using namespace std;
 
-Server::Server(cppcms::service &service) : application(service) {
+Server::Server(cppcms::service &service) :
+		application(service) {
 
 	dispatcher().assign("/ideas", &Server::ideas, this);
 	mapper().assign("ideas", "/ideas");
 
-	dispatcher().assign("", &Server::index, this);
+	// TODO: NO BORRES LO QUE HICE SI LO VAS A DEJAR IGUAL
+	dispatcher().assign("", &Server::problems, this);
 	mapper().assign("");
 
 	dispatcher().assign("/new_problem", &Server::newProblem, this);
 	mapper().assign("new_problem", "/new_problem");
+
+	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::newSolution, this, 1);
+	mapper().assign("new_solution", "/new_solution/{1}");
 
 	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
 	mapper().assign("problem", "/problem/{1}");
@@ -42,7 +46,8 @@ Server::Server(cppcms::service &service) : application(service) {
 	mapper().root("/pci");
 }
 
-Server::~Server() {}
+Server::~Server() {
+}
 
 void Server::setSessionProperties(TemplateContent& content) {
 	content.user_signed_in = session().is_set("signed_in");
@@ -103,22 +108,69 @@ void Server::newProblem() {
 				content.error_description = error_code->getErrorDescription();
 			} else
 				content.successful_submit = true;
+
+			// TODO: Redirect
 		}
 	}
 
 	render("new_problem_view", content);
 }
 
+void Server::newSolution(string problem_id) {
+	NewSolutionContent content;
+
+	setSessionProperties(content);
+	content.page_title = "Nueva Solucion";
+
+	NewSolutionFormInfo* form_info = &content.form_info;
+	if (request().request_method() == "POST") {
+		// POST message received
+		form_info->load(context());
+
+		ErrorCode *error_code;
+
+		error_code = InputValidator::validateNewSolutionInput(form_info);
+		if (error_code->isAnError()) {
+			// Invalid input
+			content.successful_submit = false;
+			content.error_description = error_code->getErrorDescription();
+		} else {
+			// Valid input
+
+			Solution *solution = new Solution();
+			solution->content = form_info->content.value();
+			solution->creator_user_name = session()["user_name"];
+			solution->description = form_info->description.value();
+			solution->id = IDManager::generateSolutionID();
+			solution->is_anonymous = form_info->is_anonymous.value();
+
+			error_code = DatabaseInterface::insertSolution(solution, problem_id);
+			if (error_code->isAnError()) {
+				content.successful_submit = false;
+				content.error_description = error_code->getErrorDescription();
+			} else
+				content.successful_submit = true;
+
+			// TODO: Redirect to problem
+		}
+	}
+
+	render("new_solution_view", content);
+}
+
 void Server::problem(string id) {
 	ProblemContent content;
 
 	setSessionProperties(content);
-	content.page_title = "PCI - Problema " + id;
 
 	Problem *problem = DatabaseInterface::searchProblem(id);
 	content.problem = problem;
+
+	content.page_title = "PCI - " + problem->description;
+
 	if (problem->is_solved)
-		content.accepted_solution = DatabaseInterface::searchSolution(problem->accepted_solution_id);
+		content.accepted_solution = DatabaseInterface::searchSolution(
+				problem->accepted_solution_id);
 	else
 		content.accepted_solution = NULL;
 	content.solutions = DatabaseInterface::searchSolutions(id);
@@ -166,12 +218,15 @@ void Server::signIn() {
 				// Valid input
 
 				string user_name = form_info->user_name.value();
-				string encrypted_password = PasswordManager::encryptPassword(form_info->password.value());
+				string encrypted_password = PasswordManager::encryptPassword(
+						form_info->password.value());
 
-				error_code = DatabaseInterface::signInUser(user_name, encrypted_password);
+				error_code = DatabaseInterface::signInUser(user_name,
+						encrypted_password);
 				if (error_code->isAnError()) {
 					content.successful_submit = false;
-					content.error_description = error_code->getErrorDescription();
+					content.error_description =
+							error_code->getErrorDescription();
 				} else {
 					// User and password are valid
 					content.successful_submit = true;
@@ -227,13 +282,15 @@ void Server::signUp() {
 			user->birth_date = new Date(day, month, year);
 			user->email = form_info->email.value();
 			user->first_name = form_info->first_name.value();
-			user->genre = form_info->genre.selected() == 0? "F" : "M";
+			user->genre = form_info->genre.selected() == 0 ? "F" : "M";
 			user->last_name = form_info->last_name.value();
 			user->location = ""; // TODO: add location widget to form
 			user->user_name = form_info->user_name.value();
-			string encrypted_password = PasswordManager::encryptPassword(form_info->password.value());
+			string encrypted_password = PasswordManager::encryptPassword(
+					form_info->password.value());
 
-			error_code = DatabaseInterface::signUpUser(user, encrypted_password);
+			error_code = DatabaseInterface::signUpUser(user,
+					encrypted_password);
 			if (error_code->isAnError()) {
 				content.successful_submit = false;
 				content.error_description = error_code->getErrorDescription();

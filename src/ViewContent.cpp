@@ -18,6 +18,18 @@ NewProblemFormInfo::NewProblemFormInfo() {
 	add(submit);
 }
 
+NewSolutionFormInfo::NewSolutionFormInfo() {
+	description.message("Breve descripción");
+	content.message("Contenido");
+	is_anonymous.message("Publicar anónimamente");
+	submit.value("Publicar");
+
+	add(description);
+	add(content);
+	add(is_anonymous);
+	add(submit);
+}
+
 SignInFormInfo::SignInFormInfo() {
 	user_name.message("Nombre de usuario");
 	password.message("Contraseña");

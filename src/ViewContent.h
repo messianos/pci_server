@@ -21,6 +21,7 @@ typedef std::list<Clarification *> *ClarificationList;
 
 namespace ViewContent {
 
+
 	struct NewProblemFormInfo : public cppcms::form {
 		cppcms::widgets::textarea description;
 		cppcms::widgets::textarea content;
@@ -28,6 +29,15 @@ namespace ViewContent {
 		cppcms::widgets::submit submit;
 
 		NewProblemFormInfo();
+	};
+
+	struct NewSolutionFormInfo : public cppcms::form {
+		cppcms::widgets::textarea description;
+		cppcms::widgets::textarea content;
+		cppcms::widgets::checkbox is_anonymous;
+		cppcms::widgets::submit submit;
+
+		NewSolutionFormInfo();
 	};
 
 	struct SignInFormInfo : public cppcms::form {
@@ -99,6 +109,10 @@ namespace ViewContent {
 	struct SolutionContent: TemplateContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
+	};
+
+	struct NewSolutionContent : FormContent {
+		NewSolutionFormInfo form_info;
 	};
 
 	struct UserContent : TemplateContent {

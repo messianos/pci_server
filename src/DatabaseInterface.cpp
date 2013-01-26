@@ -444,7 +444,6 @@ ErrorCode * DatabaseInterface::insertSolution(Solution *solution, string problem
 	"		?,"
 	"		?,"
 	"		?,"
-	"		?,"
 	"		?"
 	"	)";
 

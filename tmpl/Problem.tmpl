@@ -16,7 +16,9 @@
 			<% include template_view::navigation_menu() %>
 			<div id="pci_problem_main_container">
 				<div id="pci_problem_header_container">
-					Header (extra info about the Problem)
+					<h2>
+						<%= problem->description %>
+					</h2>
 				</div>
 				<div id="pci_problem_problem_container">
 					<div class="pci_box_0" id="pci_problem_problem_content">
@@ -31,6 +33,15 @@
 							</div>
 						</a>
 					<% end %>
+					<% if user_signed_in %>
+						<a href="<% url "/new_solution" using problem->id %>" >
+							<div class="pci_box_7">
+								<div class="pci_button_2" >
+									Plantear solucion
+								</div>
+							</div>
+						</a>
+					<% end %>
 					<% foreach solution in *solutions %>
 	 					<% item %>
 	 						<a class="pci_box_4" href="<% url "/solution" using solution->id %>">
@@ -40,7 +51,7 @@
 							</a>
 	  					<% end %>
 					<% empty %>
-						There are are no solutions
+						Aún no hay soluciones
 					<% end %>
 				</div>
 			</div>

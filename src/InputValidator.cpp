@@ -30,3 +30,8 @@ ErrorCode *InputValidator::validateNewProblemInput(NewProblemFormInfo* form_info
 	// TODO: chequea los campos
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
+
+ErrorCode *InputValidator::validateNewSolutionInput(NewSolutionFormInfo* form_info) {
+	// TODO: chequea los campos
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}

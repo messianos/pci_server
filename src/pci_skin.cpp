@@ -23,12 +23,12 @@ namespace pci_skin {
 				"\t\t\t\t<div class=\"pci_clarifications_row_container\">\n"
 				"\t\t\t\t\t<div class=\"pci_clarifications_question_container\">\n"
 				"\t\t\t\t\t\t<div class=\"pci_clarifications_column_header pci_clarifications_question_content\">\n"
-				"\t\t\t\t\t\t\tQuestion\n"
+				"\t\t\t\t\t\t\tPregunta\n"
 				"\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t<div class=\"pci_clarifications_answer_container\">\n"
 				"\t\t\t\t\t\t<div class=\"pci_clarifications_answer_content pci_clarifications_column_header\">\n"
-				"\t\t\t\t\t\t\tAnswer\n"
+				"\t\t\t\t\t\t\tRespuesta\n"
 				"\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t</div>\n"
@@ -74,7 +74,7 @@ namespace pci_skin {
 			 } else {
 				#line 40 "Template.tmpl"
 				out()<<"\n"
-					"\t\t\t\t\tThere are are no clarifications\n"
+					"\t\t\t\t\tAún no hay aclaraciones\n"
 					"\t\t\t\t";
 			#line 40 "Template.tmpl"
 			} // end of empty
@@ -785,99 +785,126 @@ namespace pci_skin {
 				"\t\t\t";
 			#line 16 "Problem.tmpl"
 			template_view::navigation_menu();
-			#line 23 "Problem.tmpl"
+			#line 20 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_problem_main_container\">\n"
 				"\t\t\t\t<div id=\"pci_problem_header_container\">\n"
-				"\t\t\t\t\tHeader (extra info about the Problem)\n"
+				"\t\t\t\t\t<h2>\n"
+				"\t\t\t\t\t\t";
+			#line 20 "Problem.tmpl"
+			out()<<cppcms::filters::escape(content.problem->description);
+			#line 25 "Problem.tmpl"
+			out()<<"\n"
+				"\t\t\t\t\t</h2>\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t\t<div id=\"pci_problem_problem_container\">\n"
 				"\t\t\t\t\t<div class=\"pci_box_0\" id=\"pci_problem_problem_content\">\n"
 				"\t\t\t\t\t\t";
-			#line 23 "Problem.tmpl"
+			#line 25 "Problem.tmpl"
 			out()<<cppcms::filters::escape(content.problem->content);
-			#line 27 "Problem.tmpl"
+			#line 29 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t\t<div id=\"pci_problem_solution_container\">\n"
 				"\t\t\t\t\t";
-			#line 27 "Problem.tmpl"
+			#line 29 "Problem.tmpl"
 			if(content.problem->is_solved) {
-				#line 28 "Problem.tmpl"
+				#line 30 "Problem.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t<a class=\"pci_box_6\" href=\"";
-				#line 28 "Problem.tmpl"
-				content.app().mapper().map(out(),"/solution", cppcms::filters::urlencode(content.accepted_solution->id));
 				#line 30 "Problem.tmpl"
+				content.app().mapper().map(out(),"/solution", cppcms::filters::urlencode(content.accepted_solution->id));
+				#line 32 "Problem.tmpl"
 				out()<<"\">\n"
 					"\t\t\t\t\t\t\t<div class=\"pci_box_6 pci_problem_solution_description\">\n"
 					"\t\t\t\t\t\t\t\t";
-				#line 30 "Problem.tmpl"
+				#line 32 "Problem.tmpl"
 				out()<<cppcms::filters::escape(content.accepted_solution->description);
-				#line 33 "Problem.tmpl"
+				#line 35 "Problem.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t\t</div>\n"
 					"\t\t\t\t\t\t</a>\n"
 					"\t\t\t\t\t";
-			#line 33 "Problem.tmpl"
+			#line 35 "Problem.tmpl"
 			} // endif
-			#line 34 "Problem.tmpl"
+			#line 36 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t";
-			#line 34 "Problem.tmpl"
+			#line 36 "Problem.tmpl"
+			if(content.user_signed_in) {
+				#line 37 "Problem.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t<a href=\"";
+				#line 37 "Problem.tmpl"
+				content.app().mapper().map(out(),"/new_solution", cppcms::filters::urlencode(content.problem->id));
+				#line 44 "Problem.tmpl"
+				out()<<"\" >\n"
+					"\t\t\t\t\t\t\t<div class=\"pci_box_7\">\n"
+					"\t\t\t\t\t\t\t\t<div class=\"pci_button_2\" >\n"
+					"\t\t\t\t\t\t\t\t\tPlantear solucion\n"
+					"\t\t\t\t\t\t\t\t</div>\n"
+					"\t\t\t\t\t\t\t</div>\n"
+					"\t\t\t\t\t\t</a>\n"
+					"\t\t\t\t\t";
+			#line 44 "Problem.tmpl"
+			} // endif
+			#line 45 "Problem.tmpl"
+			out()<<"\n"
+				"\t\t\t\t\t";
+			#line 45 "Problem.tmpl"
 			if((*content.solutions).begin()!=(*content.solutions).end()) {
-				#line 35 "Problem.tmpl"
+				#line 46 "Problem.tmpl"
 				out()<<"\n"
 					"\t \t\t\t\t\t";
-				#line 35 "Problem.tmpl"
+				#line 46 "Problem.tmpl"
 				for(CPPCMS_TYPEOF((*content.solutions).begin()) solution_ptr=(*content.solutions).begin(),solution_ptr_end=(*content.solutions).end();solution_ptr!=solution_ptr_end;++solution_ptr) {
-				#line 35 "Problem.tmpl"
+				#line 46 "Problem.tmpl"
 				CPPCMS_TYPEOF(*solution_ptr) &solution=*solution_ptr;
-					#line 36 "Problem.tmpl"
+					#line 47 "Problem.tmpl"
 					out()<<"\n"
 						"\t \t\t\t\t\t\t<a class=\"pci_box_4\" href=\"";
-					#line 36 "Problem.tmpl"
+					#line 47 "Problem.tmpl"
 					content.app().mapper().map(out(),"/solution", cppcms::filters::urlencode(solution->id));
-					#line 38 "Problem.tmpl"
+					#line 49 "Problem.tmpl"
 					out()<<"\">\n"
 						"\t\t\t\t\t\t\t\t<div class=\"pci_box_4 pci_problem_solution_description\">\n"
 						"\t\t\t\t\t\t\t\t\t";
-					#line 38 "Problem.tmpl"
+					#line 49 "Problem.tmpl"
 					out()<<cppcms::filters::escape(solution->description);
-					#line 41 "Problem.tmpl"
+					#line 52 "Problem.tmpl"
 					out()<<"\n"
 						"\t\t\t\t\t\t\t\t</div>\n"
 						"\t\t\t\t\t\t\t</a>\n"
 						"\t  \t\t\t\t\t";
-				#line 41 "Problem.tmpl"
+				#line 52 "Problem.tmpl"
 				} // end of item
-				#line 42 "Problem.tmpl"
+				#line 53 "Problem.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t";
-			#line 42 "Problem.tmpl"
+			#line 53 "Problem.tmpl"
 			 } else {
-				#line 44 "Problem.tmpl"
+				#line 55 "Problem.tmpl"
 				out()<<"\n"
-					"\t\t\t\t\t\tThere are are no solutions\n"
+					"\t\t\t\t\t\tAún no hay soluciones\n"
 					"\t\t\t\t\t";
-			#line 44 "Problem.tmpl"
+			#line 55 "Problem.tmpl"
 			} // end of empty
-			#line 47 "Problem.tmpl"
+			#line 58 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t\t";
-			#line 47 "Problem.tmpl"
+			#line 58 "Problem.tmpl"
 			template_view::clarifications(content.clarifications);
-			#line 48 "Problem.tmpl"
+			#line 59 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t";
-		#line 48 "Problem.tmpl"
+		#line 59 "Problem.tmpl"
 		} // end of template page_content
-	#line 51 "Problem.tmpl"
+	#line 62 "Problem.tmpl"
 	}; // end of class problem_view
-#line 52 "Problem.tmpl"
+#line 63 "Problem.tmpl"
 } // end of namespace pci_skin
 #line 2 "NewProblem.tmpl"
 #include "ViewContent.h" 
@@ -1101,6 +1128,69 @@ namespace pci_skin {
 	}; // end of class solution_view
 #line 27 "Solution.tmpl"
 } // end of namespace pci_skin
+#line 2 "NewSolution.tmpl"
+#include "ViewContent.h" 
+#line 4 "NewSolution.tmpl"
+namespace pci_skin {
+	#line 5 "NewSolution.tmpl"
+	struct new_solution_view :public template_view
+	#line 5 "NewSolution.tmpl"
+	{
+	#line 5 "NewSolution.tmpl"
+		ViewContent::NewSolutionContent &content;
+	#line 5 "NewSolution.tmpl"
+		new_solution_view(std::ostream &_s,ViewContent::NewSolutionContent &_content): template_view(_s,_content),content(_content)
+	#line 5 "NewSolution.tmpl"
+		{
+	#line 5 "NewSolution.tmpl"
+		}
+		#line 8 "NewSolution.tmpl"
+		virtual void css_links() {
+			#line 9 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 9 "NewSolution.tmpl"
+			template_view::css_links();
+			#line 15 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t\n"
+				"\t\t\t// TODO: make css if distinct from new problem\n"
+				"\t\t\t<!-- <link href=\"/css/new_solution.css\" rel=\"stylesheet\" type=\"text/css\" /> -->\n"
+				"\t\t\t\n"
+				"\t\t\t<link href=\"/css/new_problem.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
+				"\t\t";
+		#line 15 "NewSolution.tmpl"
+		} // end of template css_links
+		#line 18 "NewSolution.tmpl"
+		virtual void page_content() {
+			#line 19 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 19 "NewSolution.tmpl"
+			template_view::header_bar();
+			#line 20 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 20 "NewSolution.tmpl"
+			template_view::navigation_menu();
+			#line 23 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t<div id=\"pci_new_problem_main_container\">\n"
+				"\t\t\t\t<form action=\"\" method=\"post\">\n"
+				"\t\t\t\t\t";
+			#line 23 "NewSolution.tmpl"
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.form_info).render(_form_context); }
+			#line 26 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t\t</form>\n"
+				"\t\t\t</div>\n"
+				"\t\t";
+		#line 26 "NewSolution.tmpl"
+		} // end of template page_content
+	#line 29 "NewSolution.tmpl"
+	}; // end of class new_solution_view
+#line 30 "NewSolution.tmpl"
+} // end of namespace pci_skin
 #line 2 "Ideas.tmpl"
 #include "ViewContent.h" 
 #line 4 "Ideas.tmpl"
@@ -1194,6 +1284,8 @@ namespace {
    my_generator.add_view<pci_skin::user_view,ViewContent::UserContent>("user_view",true);
 #line 34 "Ideas.tmpl"
    my_generator.add_view<pci_skin::solution_view,ViewContent::SolutionContent>("solution_view",true);
+#line 34 "Ideas.tmpl"
+   my_generator.add_view<pci_skin::new_solution_view,ViewContent::NewSolutionContent>("new_solution_view",true);
 #line 34 "Ideas.tmpl"
    my_generator.add_view<pci_skin::ideas_view,ViewContent::IdeasContent>("ideas_view",true);
 #line 34 "Ideas.tmpl"
