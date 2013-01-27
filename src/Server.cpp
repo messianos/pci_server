@@ -119,7 +119,7 @@ void Server::newSolution(string problem_id) {
 	NewSolutionContent content;
 
 	setSessionProperties(content);
-	content.page_title = "Nueva Solucion";
+	content.page_title = "Nueva solución";
 
 	NewSolutionFormInfo* form_info = &content.form_info;
 	if (request().request_method() == "POST") {

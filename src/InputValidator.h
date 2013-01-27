@@ -14,10 +14,10 @@ private:
 	static bool validUserName(std::string user_name);
 
 public:
-	static ErrorCode *validateSignInInput(ViewContent::SignInFormInfo* form_info);
-	static ErrorCode *validateSignUpInput(ViewContent::SignUpFormInfo* form_info);
 	static ErrorCode *validateNewProblemInput(ViewContent::NewProblemFormInfo* form_info);
 	static ErrorCode *validateNewSolutionInput(ViewContent::NewSolutionFormInfo* form_info);
+	static ErrorCode *validateSignInInput(ViewContent::SignInFormInfo* form_info);
+	static ErrorCode *validateSignUpInput(ViewContent::SignUpFormInfo* form_info);
 };
 
 #endif /* INPUTVALIDATOR_H_ */
