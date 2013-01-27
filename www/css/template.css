@@ -343,7 +343,7 @@ div.pci_clarifications_answer_content {
 	background-position:left center;
 	background-repeat:no-repeat;
 	height:48px;
-	width:103px;
+	width:98px;
 }
 
 #pci_header_bar_button_container {
@@ -383,8 +383,16 @@ div.pci_header_bar_button {
 	overflow:hidden;
 }
 
-#pci_information_footer_TO_DEFINE_container { /* TO DEFINE : name */
+#pci_information_footer_logo_extended_container {
 	float:left;
+}
+
+#pci_information_footer_logo_extended {
+	background-image:url('../img/logo_extended.png');
+	background-position:left center;
+	background-repeat:no-repeat;
+	height:206px;
+	width:416px;
 }
 
 #pci_information_footer_link_container {

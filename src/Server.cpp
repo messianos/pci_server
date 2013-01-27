@@ -12,8 +12,7 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/ideas", &Server::ideas, this);
 	mapper().assign("ideas", "/ideas");
 
-	// TODO: NO BORRES LO QUE HICE SI LO VAS A DEJAR IGUAL
-	dispatcher().assign("", &Server::problems, this);
+	dispatcher().assign("", &Server::index, this);
 	mapper().assign("");
 
 	dispatcher().assign("/new_problem", &Server::newProblem, this);
