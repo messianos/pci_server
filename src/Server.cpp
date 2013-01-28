@@ -21,8 +21,8 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::newSolution, this, 1);
 	mapper().assign("new_solution", "/new_solution/{1}");
 
-	dispatcher().assign("/problem/(50\\w{32,32})", &Server::problem, this, 1);
-	mapper().assign("problem", "/problem/{1}");
+	dispatcher().assign("/publication/(50\\w{32,32})", &Server::problem, this, 1);
+	mapper().assign("publication", "/publication/{1}");
 
 	dispatcher().assign("/problems", &Server::problems, this);
 	mapper().assign("problems", "/problems");
@@ -36,8 +36,8 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/sign_up", &Server::signUp, this);
 	mapper().assign("sign_up", "/sign_up");
 
-	dispatcher().assign("/solution/(53\\w{32,32})", &Server::solution, this, 1);
-	mapper().assign("solution", "/solution/{1}");
+	dispatcher().assign("/publication/(53\\w{32,32})", &Server::solution, this, 1);
+	mapper().assign("publication", "/publication/{1}");
 
 	dispatcher().assign("/user/(\\w+)", &Server::user, this, 1);
 	mapper().assign("user", "/user/{1}");

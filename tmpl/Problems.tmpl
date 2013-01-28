@@ -24,22 +24,14 @@
 			<div id="pci_problems_main_container">
 				<div class="pci_box_container">
 					<% if user_signed_in %>
-						<div id="pci_problems_toolbar_container">
-							<a href="<% url "/new_problem" %>">
-								<div class="pci_button_icon pci_problems_toolbar_button" id="pci_problems_toolbar_new_problem_button">
-									Nuevo problema
-								</div>
-							</a>
-						</div>
+						<% include template_view::toolbar_problems() %>
 						<div class="pci_horizontal_line"></div>
 					<% end %>
 					<% foreach problem in *problems %>
 						<% item %>
-							<a class="pci_box_description" href="<% url "/problem" using problem->id %>">
-								<div class="pci_box_description pci_problems_problem_description">
-									<%= problem->description %><br /><%= problem->creation_datetime->toString("%d/%m/%Y %H:%M:%S") %>
-								</div>
-							</a>
+							<div class="pci_box_description pci_problems_problem_description">
+								<% include template_view::publication_description(problem) %>
+							</div>
 						<% end %>
 					<% empty %>
 						No se encontraron problemas

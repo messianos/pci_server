@@ -8,25 +8,6 @@ body {
 	padding:64px 128px 0px 240px;
 }
 
-#pci_solution_toolbar_container {
-	
-}
-
-div.pci_solution_toolbar_button {
-	float:left;
-	margin-right:16px;
-}
-
-#pci_solution_toolbar_go_back_button {
-	background-image:url('../img/go_back_grayscale.png');
-	background-position:left center;
-	background-repeat:no-repeat;
-}
-
-#pci_solution_toolbar_go_back_button:hover {
-	background-image:url('../img/go_back_color.png');
-}
-
 #pci_solution_header_container {
 	clear:both;
 }

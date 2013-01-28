@@ -6,39 +6,43 @@
 
 
 		<% template clarifications(ClarificationList clarifications) %>
-			<div id="pci_clarifications_main_container">
-				<div class="pci_horizontal_line"></div>
-				<div class="pci_clarifications_row_container">
-					<div class="pci_clarifications_question_container">
-						<div class="pci_clarifications_column_header pci_clarifications_question_content">
-							Pregunta
+			<% if (! clarifications->empty()) %>
+				<div id="pci_clarifications_main_container">
+					<div class="pci_horizontal_line"></div>
+					<div class="pci_clarifications_row_container">
+						<div class="pci_clarifications_question_container">
+							<div class="pci_clarifications_column_header pci_clarifications_question_content">
+								Pregunta
+							</div>
+						</div>
+						<div class="pci_clarifications_answer_container">
+							<div class="pci_clarifications_answer_content pci_clarifications_column_header">
+								Respuesta
+							</div>
 						</div>
 					</div>
-					<div class="pci_clarifications_answer_container">
-						<div class="pci_clarifications_answer_content pci_clarifications_column_header">
-							Respuesta
-						</div>
-					</div>
+					<% foreach clarification in *clarifications %>
+	 					<% item %>
+							<div class="pci_clarifications_row_container">
+								<div class="pci_clarifications_question_container">
+									<div class="pci_box_content pci_clarifications_question_content">
+										<%= clarification->question %>
+									</div>
+								</div>
+								<div class="pci_clarifications_answer_container">
+									<% if (! clarification->answer.empty()) %>
+										<div class="pci_box_content pci_clarifications_answer_content">
+											<%= clarification->answer %>
+										</div>
+									<% end %>
+								</div>
+							</div>
+	  					<% end %>
+					<% empty %>
+						Aún no hay aclaraciones
+					<% end %>
 				</div>
-				<% foreach clarification in *clarifications %>
- 					<% item %>
-						<div class="pci_clarifications_row_container">
-							<div class="pci_clarifications_question_container">
-								<div class="pci_box_content pci_clarifications_question_content">
-									<%= clarification->question %>
-								</div>
-							</div>
-							<div class="pci_clarifications_answer_container">
-								<div class="pci_box_content pci_clarifications_answer_content">
-									<%= clarification->answer %>
-								</div>
-							</div>
-						</div>
-  					<% end %>
-				<% empty %>
-					Aún no hay aclaraciones
-				<% end %>
-			</div>
+			<% end %>
 		<% end template %>
 
 
@@ -50,7 +54,7 @@
 					</div>
 					<div id="pci_header_bar_button_container">
 					 	<% if user_signed_in %>
-							<a class="pci_button_classic" href="<% url "/sign_out" %>">
+							<a href="<% url "/sign_out" %>">
 								<div class="pci_button_classic pci_header_bar_button">
 									Salir
 								</div>
@@ -61,12 +65,12 @@
 					 			</span>
 				 			</div>
 						<% else %>
-							<a class="pci_button_classic" href="<% url "/sign_in" %>">
+							<a href="<% url "/sign_in" %>">
 								<div class="pci_button_classic pci_header_bar_button">
 									Ingresar
 								</div>
 							</a>
-							<a class="pci_button_classic" href="<% url "/sign_up" %>">
+							<a href="<% url "/sign_up" %>">
 								<div class="pci_button_classic pci_header_bar_button">
 									Registrar
 								</div>
@@ -87,7 +91,9 @@
 					<div id="pci_information_footer_link_container">
 						<div class="pci_information_footer_column_container">
 							<div class="pci_information_footer_column_header">
-								PCI
+								<span class="pci_text_footer">
+									PCI
+								</span>
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_footer" href="<% url "" %>">
@@ -107,7 +113,9 @@
 						</div>
 						<div class="pci_information_footer_column_container">
 							<div class="pci_information_footer_column_header">
-								Header 2
+								<span class="pci_text_footer">
+									Header 2
+								</span>
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_footer" href="<% url "" %>">
@@ -127,27 +135,9 @@
 						</div>
 						<div class="pci_information_footer_column_container">
 							<div class="pci_information_footer_column_header">
-								Header 3
-							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
-									Link 1
-								</a>
-							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
-									Link 2
-								</a>
-							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
-									Link 3
-								</a>
-							</div>
-						</div>
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								Soporte
+								<span class="pci_text_footer">
+									Soporte
+								</span>
 							</div>
 							<div class="pci_information_footer_link">
 								<a class="pci_link_footer" href="<% url "" %>">
@@ -190,6 +180,50 @@
 						</div>
 					</a>
 				<% end %>
+			</div>
+		<% end template %>
+		
+		
+		<% template publication_description(PublicationPointer publication) %>
+			<a class="pci_link_description" href="<% url "/publication" using publication->id %>">
+				<%= publication->description %>
+			</a>
+			<span class="pci_text_description">
+				<i>Por <a class="pci_link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
+				- <%= publication->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+			</span>
+		<% end template %>
+		
+		
+		<% template toolbar_problems() %>
+			<div id="pci_toolbar_problems_container">
+				<a href="<% url "/new_problem" %>">
+					<div class="pci_button_icon pci_toolbar_problems_button" id="pci_toolbar_problems_new_problem_button">
+						Nuevo problema
+					</div>
+				</a>
+			</div>
+		<% end template %>
+		
+		
+		<% template toolbar_problem(std::string problem_id) %>
+			<div id="pci_toolbar_problem_container">
+				<a href="<% url "/new_solution" using problem_id %>">
+					<div class="pci_button_icon pci_toolbar_problem_button" id="pci_toolbar_problem_new_solution_button">
+						Plantear solución
+					</div>
+				</a>
+			</div>
+		<% end template %>
+		
+		
+		<% template toolbar_solution() %>
+			<div id="pci_toolbar_solution_container">
+				<a href="<% url "/publication" %>">
+					<div class="pci_button_icon pci_toolbar_solution_button" id="pci_toolbar_solution_go_back_button">
+						Volver al problema
+					</div>
+				</a>
 			</div>
 		<% end template %>
 

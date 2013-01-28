@@ -17,13 +17,7 @@
 			<div id="pci_problem_main_container">
 				<div class="pci_box_container">
 					<% if user_signed_in %>
-						<div id="pci_problem_toolbar_container">
-							<a href="<% url "/new_solution" using problem->id %>">
-								<div class="pci_button_icon pci_problem_toolbar_button" id="pci_problem_toolbar_new_solution_button">
-									Plantear solución
-								</div>
-							</a>
-						</div>
+						<% include template_view::toolbar_problem(problem->id) %>
 						<div class="pci_horizontal_line"></div>
 					<% end %>
 					<div id="pci_problem_header_container">
@@ -38,22 +32,20 @@
 					</div>
 					<div id="pci_problem_solution_container">
 						<% if problem->is_solved  %>
-							<a class="pci_box_description" href="<% url "/solution" using accepted_solution->id %>">
+							<a href="<% url "/publication" using accepted_solution->id %>">
 								<div class="pci_box_description pci_problem_solution_description">
-									<%= accepted_solution->description %>
+									<% include template_view::publication_description(accepted_solution) %>
 								</div>
 							</a>
 						<% end %>
 						<% foreach solution in *solutions %>
 		 					<% item %>
-		 						<a class="pci_box_description" href="<% url "/solution" using solution->id %>">
+		 						<a href="<% url "/publication" using solution->id %>">
 									<div class="pci_box_description pci_problem_solution_description">
-										<%= solution->description %>
+										<% include template_view::publication_description(solution) %>
 									</div>
 								</a>
 		  					<% end %>
-						<% empty %>
-							Aún no hay soluciones
 						<% end %>
 					</div>
 					<% include template_view::clarifications(clarifications) %>

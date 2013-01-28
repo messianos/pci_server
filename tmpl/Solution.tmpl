@@ -16,13 +16,7 @@
 			<% include template_view::navigation_menu() %>
 			<div id="pci_solution_main_container">
 				<div class="pci_box_container">
-					<div id="pci_solution_toolbar_container">
-						<a href="<% url "/problem" %>">
-							<div class="pci_button_icon pci_solution_toolbar_button" id="pci_solution_toolbar_go_back_button">
-								Volver al problema
-							</div>
-						</a>
-					</div>
+					<% include template_view::toolbar_solution() %>
 					<div class="pci_horizontal_line"></div>
 					<div id="pci_solution_header_container">
 						<h2>

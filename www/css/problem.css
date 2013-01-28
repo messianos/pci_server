@@ -8,25 +8,6 @@ body {
 	padding:64px 128px 0px 240px;
 }
 
-#pci_problem_toolbar_container {
-	
-}
-
-div.pci_problem_toolbar_button {
-	float:left;
-	margin-right:16px;
-}
-
-#pci_problem_toolbar_new_solution_button {
-	background-image:url('../img/new_solution_grayscale.png');
-	background-position:left center;
-	background-repeat:no-repeat;
-}
-
-#pci_problem_toolbar_new_solution_button:hover {
-	background-image:url('../img/new_solution_color.png');
-}
-
 #pci_problem_header_container {
 	clear:both;
 }

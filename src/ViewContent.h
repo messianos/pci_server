@@ -13,6 +13,7 @@
 #include <string>
 
 // Type definitions
+typedef Publication *PublicationPointer;
 typedef Problem *ProblemPointer;
 typedef Solution *SolutionPointer;
 typedef std::list<Problem *> *ProblemList;
