@@ -56,9 +56,7 @@ namespace ViewContent {
 		cppcms::widgets::text email;
 		cppcms::widgets::password password;
 		cppcms::widgets::password password_verification;
-		cppcms::widgets::select day;
-		cppcms::widgets::select month;
-		cppcms::widgets::select year;
+		cppcms::widgets::text date;
 		cppcms::widgets::radio genre;
 		cppcms::widgets::submit submit;
 

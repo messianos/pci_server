@@ -10,6 +10,19 @@
 			<link href="/css/sign_up.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
+		<% template javascript_code() %>
+			$(function() {
+				$("#datepicker").datepicker({
+				    showOn: "both",
+			    	buttonImage: "/css/ui-lightness/images/calendar.gif",
+			    	buttonImageOnly: true,
+			    	yearRange: '1920:2010',
+			    	dateFormat: 'dd-mm-yy',
+			    	changeMonth: true,
+			    	changeYear: true
+				});
+			});
+		<% end template %>
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>

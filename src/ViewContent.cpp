@@ -49,36 +49,9 @@ SignUpFormInfo::SignUpFormInfo() {
 	password.message("Contraseña");
 	password_verification.message("Repita la contraseña");
 
-	// FIXME: All months with 31 days!!!
-	day.add("Día");
-	for (int i = 1; i < 31; i++) {
-		stringstream stream;
-		stream << i;
-		day.add(stream.str());
-	}
-
-	month.add("Mes");
-	month.add("Enero");
-	month.add("Febrero");
-	month.add("Marzo");
-	month.add("Abril");
-	month.add("Mayo");
-	month.add("Junio");
-	month.add("Julio");
-	month.add("Agosto");
-	month.add("Septiembre");
-	month.add("Octubre");
-	month.add("Noviembre");
-	month.add("Diciembre");
-
-	int current_year = 2013; // TODO: auto calculate it
-	int oldest_year = 2013 - 121;
-	year.add("Año");
-	for (int i = current_year; i > oldest_year; i--) {
-		stringstream stream;
-		stream << i;
-		year.add(stream.str());
-	}
+	date.message("Nacimiento");
+	date.id("datepicker");
+	date.attributes_string("readonly = 'true'");
 
 	genre.add("Mujer");
 	genre.add("Hombre");
@@ -90,9 +63,7 @@ SignUpFormInfo::SignUpFormInfo() {
 	add(email);
 	add(password);
 	add(password_verification);
-	add(day);
-	add(month);
-	add(year);
+	add(date);
 	add(genre);
 	add(submit);
 }

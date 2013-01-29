@@ -18,10 +18,12 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/new_problem", &Server::newProblem, this);
 	mapper().assign("new_problem", "/new_problem");
 
-	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::newSolution, this, 1);
+	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::newSolution,
+			this, 1);
 	mapper().assign("new_solution", "/new_solution/{1}");
 
-	dispatcher().assign("/publication/(50\\w{32,32})", &Server::problem, this, 1);
+	dispatcher().assign("/publication/(50\\w{32,32})", &Server::problem, this,
+			1);
 	mapper().assign("publication", "/publication/{1}");
 
 	dispatcher().assign("/problems", &Server::problems, this);
@@ -36,7 +38,8 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/sign_up", &Server::signUp, this);
 	mapper().assign("sign_up", "/sign_up");
 
-	dispatcher().assign("/publication/(53\\w{32,32})", &Server::solution, this, 1);
+	dispatcher().assign("/publication/(53\\w{32,32})", &Server::solution, this,
+			1);
 	mapper().assign("publication", "/publication/{1}");
 
 	dispatcher().assign("/user/(\\w+)", &Server::user, this, 1);
@@ -143,7 +146,8 @@ void Server::newSolution(string problem_id) {
 			solution->id = IDManager::generateSolutionID();
 			solution->is_anonymous = form_info->is_anonymous.value();
 
-			error_code = DatabaseInterface::insertSolution(solution, problem_id);
+			error_code = DatabaseInterface::insertSolution(solution,
+					problem_id);
 			if (error_code->isAnError()) {
 				content.successful_submit = false;
 				content.error_description = error_code->getErrorDescription();
@@ -273,12 +277,9 @@ void Server::signUp() {
 		} else {
 			// Valid input
 
-			short int day = form_info->day.selected();
-			short int month = form_info->month.selected();
-			int current_year = 2013; // TODO: auto calculate it
-			short int year = current_year - form_info->year.selected() + 1;
 			User* user = new User();
-			user->birth_date = new Date(day, month, year);
+			user->birth_date = new Date("%d-%m-%Y",
+					form_info->date.value().c_str());
 			user->email = form_info->email.value();
 			user->first_name = form_info->first_name.value();
 			user->genre = form_info->genre.selected() == 0 ? "F" : "M";
