@@ -1,7 +1,6 @@
 
 // Includes
 #include "DatabaseInterface.h"
-#include <iostream> // TODO: remove (debugging purposes)
 
 // Namespaces
 using namespace cppdb;

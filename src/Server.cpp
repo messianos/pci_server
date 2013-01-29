@@ -108,10 +108,10 @@ void Server::newProblem() {
 			if (error_code->isAnError()) {
 				content.successful_submit = false;
 				content.error_description = error_code->getErrorDescription();
-			} else
+			} else {
 				content.successful_submit = true;
-
-			// TODO: Redirect
+				response().set_redirect_header(url("/publication", problem->id));
+			}
 		}
 	}
 
@@ -151,10 +151,11 @@ void Server::newSolution(string problem_id) {
 			if (error_code->isAnError()) {
 				content.successful_submit = false;
 				content.error_description = error_code->getErrorDescription();
-			} else
+			} else{
 				content.successful_submit = true;
 
-			// TODO: Redirect to problem
+				response().set_redirect_header(url("/publication", problem_id));
+			}
 		}
 	}
 
@@ -193,6 +194,10 @@ void Server::problems() {
 }
 
 void Server::signIn() {
+	SignInContent content;
+
+	setSessionProperties(content);
+	content.page_title = "PCI - Ingresar";
 
 	// TODO: check session security and config options http://cppcms.com/wikipp/en/page/cppcms_1x_sessions
 
@@ -201,9 +206,6 @@ void Server::signIn() {
 		return;
 	} else {
 		// User not signed in
-
-		SignInContent content;
-		content.page_title = "PCI - Ingresar";
 
 		SignInFormInfo* form_info = &content.form_info;
 		if (request().request_method() == "POST") {

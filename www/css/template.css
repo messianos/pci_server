@@ -422,7 +422,7 @@ div.pci_navigation_menu_button {
 }
 
 #pci_navigation_menu_problems_button {
-	background-image:url('../img/problems_grayscale.png');
+	background-image:url('../img/problems_color.png');
 	background-position:center center;
 	background-repeat:no-repeat;
 }
@@ -440,7 +440,7 @@ div.pci_navigation_menu_button {
 }
 
 #pci_navigation_menu_ideas_button {
-	background-image:url('../img/ideas_grayscale.png');
+	background-image:url('../img/ideas_color.png');
 	background-position:center center;
 	background-repeat:no-repeat;
 }
@@ -458,7 +458,7 @@ div.pci_navigation_menu_button {
 }
 
 #pci_navigation_menu_profile_button {
-	background-image:url('../img/profile_grayscale.png');
+	background-image:url('../img/profile_color.png');
 	background-position:center center;
 	background-repeat:no-repeat;
 }
@@ -491,7 +491,7 @@ div.pci_toolbar_problems_button {
 }
 
 #pci_toolbar_problems_new_problem_button {
-	background-image:url('../img/new_problem_grayscale.png');
+	background-image:url('../img/new_problem_color.png');
 	background-position:left center;
 	background-repeat:no-repeat;
 }
@@ -517,7 +517,7 @@ div.pci_toolbar_problem_button {
 }
 
 #pci_toolbar_problem_new_solution_button {
-	background-image:url('../img/new_solution_grayscale.png');
+	background-image:url('../img/new_solution_color.png');
 	background-position:left center;
 	background-repeat:no-repeat;
 }
@@ -543,7 +543,7 @@ div.pci_toolbar_solution_button {
 }
 
 #pci_toolbar_solution_go_back_button {
-	background-image:url('../img/go_back_grayscale.png');
+	background-image:url('../img/go_back_color.png');
 	background-position:left center;
 	background-repeat:no-repeat;
 }

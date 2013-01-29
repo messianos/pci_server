@@ -69,6 +69,8 @@ namespace ViewContent {
 		std::string user_name;
 		std::string user_first_name;
 		std::string user_last_name;
+
+		TemplateContent();
 	};
 
 	struct FormContent : public TemplateContent {
