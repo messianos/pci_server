@@ -32,19 +32,15 @@
 					</div>
 					<div id="pci_problem_solution_container">
 						<% if problem->is_solved  %>
-							<a href="<% url "/publication" using accepted_solution->id %>">
-								<div class="pci_box_description pci_problem_solution_description">
-									<% include template_view::publication_description(accepted_solution) %>
-								</div>
-							</a>
+							<div class="pci_box_description pci_problem_solution_description">
+								<% include template_view::solution_description(problem, accepted_solution) %>
+							</div>
 						<% end %>
 						<% foreach solution in *solutions %>
 		 					<% item %>
-		 						<a href="<% url "/publication" using solution->id %>">
-									<div class="pci_box_description pci_problem_solution_description">
-										<% include template_view::publication_description(solution) %>
-									</div>
-								</a>
+								<div class="pci_box_description pci_problem_solution_description">
+									<% include template_view::solution_description(problem, solution) %>
+								</div>
 		  					<% end %>
 						<% end %>
 					</div>

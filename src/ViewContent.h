@@ -108,6 +108,7 @@ namespace ViewContent {
 	struct SolutionContent: TemplateContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
+		std::string problem_id;
 	};
 
 	struct NewSolutionContent : FormContent {

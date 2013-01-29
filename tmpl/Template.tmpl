@@ -188,17 +188,28 @@
 		<% end template %>
 		
 		
-		<% template publication_description(PublicationPointer publication) %>
-			<a class="pci_link_description" href="<% url "/publication" using publication->id %>">
-				<%= publication->description %>
+		<% template problem_description(ProblemPointer problem) %>
+			<a class="pci_link_description" href="<% url "/publication" using problem->id %>">
+				<%= problem->description %>
 			</a>
 			<span class="pci_text_description">
-				<i>Por <a class="pci_link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
-				- <%= publication->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+				<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+				- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
 		<% end template %>
 		
 		
+		<% template solution_description(ProblemPointer problem, SolutionPointer solution) %>
+			<a class="pci_link_description" href="<% url "/publication" using problem->id, solution->id %>">
+				<%= solution->description %>
+			</a>
+			<span class="pci_text_description">
+				<i>Por <a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>"><%= solution->creator_user_name %></a></i>
+				- <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+			</span>
+		<% end template %>
+		
+				
 		<% template toolbar_problems() %>
 			<div id="pci_toolbar_problems_container">
 				<a href="<% url "/new_problem" %>">
@@ -221,9 +232,9 @@
 		<% end template %>
 		
 		
-		<% template toolbar_solution() %>
+		<% template toolbar_solution(std::string problem_id) %>
 			<div id="pci_toolbar_solution_container">
-				<a href="<% url "/publication" %>">
+				<a href="<% url "/publication" using problem_id %>">
 					<div class="pci_button_icon pci_toolbar_solution_button" id="pci_toolbar_solution_go_back_button">
 						Volver al problema
 					</div>

@@ -38,9 +38,9 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/sign_up", &Server::signUp, this);
 	mapper().assign("sign_up", "/sign_up");
 
-	dispatcher().assign("/publication/(53\\w{32,32})", &Server::solution, this,
-			1);
-	mapper().assign("publication", "/publication/{1}");
+	dispatcher().assign("/publication/(50\\w{32,32})/(53\\w{32,32})",
+			&Server::solution, this, 1, 2);
+	mapper().assign("publication", "/publication/{1}/{2}");
 
 	dispatcher().assign("/user/(\\w+)", &Server::user, this, 1);
 	mapper().assign("user", "/user/{1}");
@@ -306,13 +306,15 @@ void Server::signUp() {
 	render("sign_up_view", content);
 }
 
-void Server::solution(string id) {
+void Server::solution(string problem_id, string solution_id) {
 	SolutionContent content;
 
 	setSessionProperties(content);
-	content.page_title = "PCI - Solución " + id;
-	content.solution = DatabaseInterface::searchSolution(id);
-	content.clarifications = DatabaseInterface::searchClarifications(id);
+	content.page_title = "PCI - Solución " + solution_id;
+	content.solution = DatabaseInterface::searchSolution(solution_id);
+	content.clarifications = DatabaseInterface::searchClarifications(
+			solution_id);
+	content.problem_id = problem_id;
 
 	render("solution_view", content);
 }

@@ -32,7 +32,7 @@ public:
 	void signIn();
 	void signOut();
 	void signUp();
-	void solution(std::string id);
+	void solution(std::string problem_id, std::string solution_id);
 	void user(std::string user_name);
 };
 
