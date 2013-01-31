@@ -193,7 +193,11 @@
 				<%= problem->description %>
 			</a>
 			<span class="pci_text_description">
-				<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+				<% if problem->is_anonymous %>
+					<i>Publicado Anónimamente</i>
+				<% else %>
+					<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+				<% end %>
 				- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
 		<% end template %>
@@ -204,7 +208,11 @@
 				<%= solution->description %>
 			</a>
 			<span class="pci_text_description">
-				<i>Por <a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>"><%= solution->creator_user_name %></a></i>
+				<% if solution->is_anonymous %>
+					<i>Publicado Anónimamente</i>
+				<% else %>
+					<i>Por <a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>"><%= solution->creator_user_name %></a></i>
+				<% end %>
 				- <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
 		<% end template %>
@@ -268,6 +276,8 @@
 					<% include css_links() %>
 					<script src="/js/jquery-1.9.0.min.js"></script>
 					<script src="/js/jquery-ui-1.9.2.custom.js"></script>
+					<script src="/lib/ckeditor/ckeditor.js"></script>
+					<script src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 					<script>
 						<% include javascript_code() %>
 					</script>

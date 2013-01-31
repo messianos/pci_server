@@ -7,3 +7,14 @@ body {
 	min-width:912px;
 	padding:64px 128px 0px 240px;
 }
+
+input.pci_textfield_sign_up {
+	margin-top:8px;
+	width:320px;
+}
+
+select.pci_dropdownlist_sign_up {
+	margin-top:8px;
+	width:336px;
+}
+

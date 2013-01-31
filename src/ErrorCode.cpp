@@ -17,7 +17,9 @@ const string ErrorCode::ERROR_DESCRIPTIONS[] = {
 	"Contraseña muy corta,debe tener más de 6 caracteres o números",
 	"Apellido muy corto",
 	"Email invalido",
-	"La contraseña ingresada no es la misma que la de la verificación"
+	"La contraseña ingresada no es la misma que la de la verificación",
+	"El nombre de usuario es invalido",
+	"La contraseña es invalida."
 	// TODO: completar las descripciones
 };
 const short int ErrorCode::CODE_NONE = 0;
@@ -31,6 +33,9 @@ const short int ErrorCode::CODE_SHORT_PASSWORD = 7;
 const short int ErrorCode::CODE_SHORT_LASTNAME = 8;
 const short int ErrorCode::CODE_EMAIL_INVALID = 9;
 const short int ErrorCode::CODE_INVALID_PASSWORD_VERIFICATION = 10;
+const short int ErrorCode::CODE_INVALID_USERNAME = 11;
+const short int ErrorCode::CODE_INVALID_PASSWORD = 12;
+
 // TODO: completar esta lista
 
 ErrorCode::ErrorCode(short int code) {

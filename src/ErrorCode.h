@@ -23,6 +23,8 @@ public:
 	static const short int CODE_SHORT_LASTNAME;
 	static const short int CODE_EMAIL_INVALID;
 	static const short int CODE_INVALID_PASSWORD_VERIFICATION;
+	static const short int CODE_INVALID_USERNAME;
+	static const short int CODE_INVALID_PASSWORD;
 	ErrorCode(short int code);
 	virtual ~ErrorCode();
 	bool isAnError();

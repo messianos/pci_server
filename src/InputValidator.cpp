@@ -1,9 +1,16 @@
 // Includes
 #include "InputValidator.h"
+#include "ErrorCode.h"
 
 // Namespaces
 using namespace ViewContent;
 using namespace std;
+
+bool validChars(char c){
+	if ((c>='a' && c<='z') || (c>='A' && c<='Z') || c == '_')
+		return true;
+	return false;
+}
 
 bool isCharacter(const char Character) {
 	return ((Character >= 'a' && Character <= 'z')
@@ -11,6 +18,15 @@ bool isCharacter(const char Character) {
 }
 bool isNumber(const char Character) {
 	return (Character >= '0' && Character <= '9');
+}
+
+bool InputValidator::validUserName(string username){
+	int i;
+	for (i= 0; i< username.size();i++){
+		if (!validChars(username.at(i)))
+			return false;
+	}
+	return true;
 }
 
 bool InputValidator::validEmail(string email) {
@@ -34,11 +50,6 @@ bool InputValidator::validEmail(string email) {
 		}
 	}
 	return false;
-}
-
-bool InputValidator::validUserName(string user_name) {
-	// TODO
-	return true;
 }
 
 ErrorCode *InputValidator::validateNewProblemInput(
@@ -73,15 +84,27 @@ ErrorCode *InputValidator::validateSignInInput(SignInFormInfo* form_info) {
 ErrorCode *InputValidator::validateSignUpInput(SignUpFormInfo* form_info) {
 	if (form_info->user_name.value().size() < 4)
 		return new ErrorCode(ErrorCode::CODE_SHORT_USERNAME);
+
+	if (!validUserName(form_info->user_name.value()))
+		return new ErrorCode(ErrorCode::CODE_INVALID_USERNAME);
+
 	if (form_info->password.value().size() < 6)
 		return new ErrorCode(ErrorCode::CODE_SHORT_PASSWORD);
+
+	if (!validUserName(form_info->password.value()))
+			return new ErrorCode(ErrorCode::CODE_INVALID_PASSWORD);
+
 	if (form_info->last_name.value().size() < 4)
 		return new ErrorCode(ErrorCode::CODE_SHORT_LASTNAME);
+
 	if (!validEmail(form_info->email.value()))
 		return new ErrorCode(ErrorCode::CODE_EMAIL_INVALID);
+
 	if (strcmp(form_info->password.value().c_str(),
 			form_info->password_verification.value().c_str()) != 0)
 		return new ErrorCode(ErrorCode::CODE_INVALID_PASSWORD_VERIFICATION);
+
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
+
 

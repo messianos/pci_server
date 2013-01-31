@@ -15,6 +15,10 @@ NewProblemFormInfo::NewProblemFormInfo() {
 	is_anonymous.message("Publicar anónimamente");
 	submit.value("Publicar");
 
+	content.name("pci_text_editor");
+
+	submit.attributes_string("class='submit'");
+
 	add(description);
 	add(content);
 	add(is_anonymous);
@@ -27,6 +31,10 @@ NewSolutionFormInfo::NewSolutionFormInfo() {
 	is_anonymous.message("Publicar anónimamente");
 	submit.value("Publicar");
 
+	content.name("pci_text_editor");
+
+	submit.attributes_string("class='submit'");
+
 	add(description);
 	add(content);
 	add(is_anonymous);
@@ -38,6 +46,8 @@ SignInFormInfo::SignInFormInfo() {
 	password.message("Contraseña");
 	submit.value("Ingresar");
 
+	submit.attributes_string("class='submit'");
+
 	add(user_name);
 	add(password);
 	add(submit);
@@ -45,19 +55,31 @@ SignInFormInfo::SignInFormInfo() {
 
 SignUpFormInfo::SignUpFormInfo() {
 
-	first_name.message("Nombre");
-	last_name.message("Apellido");
-	user_name.message("Nombre de usuario");
-	email.message("E-mail");
-	password.message("Contraseña");
-	password_verification.message("Repita la contraseña");
+	password.name("password");
+	password_verification.name("password_verification");
 
-	date.message("Nacimiento");
-	date.id("datepicker");
-	date.attributes_string("readonly = 'true'");
+	first_name.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_first_name'");
+	last_name.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_last_name'");
+	user_name.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_user_name'");
+	email.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required email' id='pci_textfield_sign_up_email'");
+	password.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_password'");
+	password_verification.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_password_verification'");
+	date.attributes_string(
+			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_date' readonly");
+	genre.attributes_string(
+			"class='pci_dropdownlist pci_dropdownlist_sign_up' id='pci_dropdownlist_sign_up_genre'");
+	submit.attributes_string("class='submit'");
 
-	genre.add("Mujer");
-	genre.add("Hombre");
+	genre.add("Seleccione el sexo", "U");
+	genre.add("Mujer", "F");
+	genre.add("Hombre", "M");
+
 	submit.value("Registrar");
 
 	add(first_name);

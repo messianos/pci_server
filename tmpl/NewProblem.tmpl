@@ -9,6 +9,28 @@
 			<% include template_view::css_links() %>
 			<link href="/css/new_problem.css" rel="stylesheet" type="text/css" />
 		<% end template %>
+		
+		<% template javascript_code() %>
+			$(document).ready(function(){
+				CKEDITOR.replace('pci_text_editor', {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					],
+					uiColor: '#6CA4C8'
+				});
+			});
+		<% end template %>
 	
 	
 		<% template page_content() %>

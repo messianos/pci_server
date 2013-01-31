@@ -6,6 +6,7 @@
 #include "Problem.h"
 #include "Solution.h"
 #include "User.h"
+#include "ErrorCode.h"
 #include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
@@ -57,7 +58,7 @@ namespace ViewContent {
 		cppcms::widgets::password password;
 		cppcms::widgets::password password_verification;
 		cppcms::widgets::text date;
-		cppcms::widgets::radio genre;
+		cppcms::widgets::select genre;
 		cppcms::widgets::submit submit;
 
 		SignUpFormInfo();
@@ -74,8 +75,7 @@ namespace ViewContent {
 	};
 
 	struct FormContent : public TemplateContent {
-		bool successful_submit;
-		std::string error_description;
+		ErrorCode* error_code;
 	};
 
 	struct IdeasContent : TemplateContent {

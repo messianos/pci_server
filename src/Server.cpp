@@ -92,8 +92,7 @@ void Server::newProblem() {
 		error_code = InputValidator::validateNewProblemInput(form_info);
 		if (error_code->isAnError()) {
 			// Invalid input
-			content.successful_submit = false;
-			content.error_description = error_code->getErrorDescription();
+			content.error_code = error_code;
 		} else {
 			// Valid input
 
@@ -106,10 +105,11 @@ void Server::newProblem() {
 
 			error_code = DatabaseInterface::insertProblem(problem);
 			if (error_code->isAnError()) {
-				content.successful_submit = false;
-				content.error_description = error_code->getErrorDescription();
+
+				content.error_code = error_code;
 			} else {
-				content.successful_submit = true;
+
+				content.error_code = error_code;
 				response().set_redirect_header(url("/publication", problem->id));
 			}
 		}
@@ -134,8 +134,8 @@ void Server::newSolution(string problem_id) {
 		error_code = InputValidator::validateNewSolutionInput(form_info);
 		if (error_code->isAnError()) {
 			// Invalid input
-			content.successful_submit = false;
-			content.error_description = error_code->getErrorDescription();
+
+			content.error_code = error_code;
 		} else {
 			// Valid input
 
@@ -149,10 +149,9 @@ void Server::newSolution(string problem_id) {
 			error_code = DatabaseInterface::insertSolution(solution,
 					problem_id);
 			if (error_code->isAnError()) {
-				content.successful_submit = false;
-				content.error_description = error_code->getErrorDescription();
+				content.error_code = error_code;
 			} else{
-				content.successful_submit = true;
+				content.error_code = error_code;
 
 				response().set_redirect_header(url("/publication", problem_id));
 			}
@@ -217,8 +216,7 @@ void Server::signIn() {
 			error_code = InputValidator::validateSignInInput(form_info);
 			if (error_code->isAnError()) {
 				// Invalid input
-				content.successful_submit = false;
-				content.error_description = error_code->getErrorDescription();
+				content.error_code = error_code;
 			} else {
 				// Valid input
 
@@ -229,12 +227,10 @@ void Server::signIn() {
 				error_code = DatabaseInterface::signInUser(user_name,
 						encrypted_password);
 				if (error_code->isAnError()) {
-					content.successful_submit = false;
-					content.error_description =
-							error_code->getErrorDescription();
+					content.error_code = error_code;
 				} else {
 					// User and password are valid
-					content.successful_submit = true;
+					content.error_code = error_code;
 
 					User *user = DatabaseInterface::searchUser(user_name);
 					session()["signed_in"] = "";
@@ -274,8 +270,7 @@ void Server::signUp() {
 		error_code = InputValidator::validateSignUpInput(form_info);
 		if (error_code->isAnError()) {
 			// Invalid input
-			content.successful_submit = false;
-			content.error_description = error_code->getErrorDescription();
+			content.error_code = error_code;
 		} else {
 			// Valid input
 
@@ -294,10 +289,9 @@ void Server::signUp() {
 			error_code = DatabaseInterface::signUpUser(user,
 					encrypted_password);
 			if (error_code->isAnError()) {
-				content.successful_submit = false;
-				content.error_description = error_code->getErrorDescription();
+				content.error_code = error_code;
 			} else {
-				content.successful_submit = true;
+				content.error_code = error_code;
 
 				response().set_redirect_header(url(""));
 				return;
