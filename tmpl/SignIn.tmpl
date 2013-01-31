@@ -10,6 +10,104 @@
 			<link href="/css/sign_in.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 	
+		<% template javascript_code() %>
+				function addTextfieldLabel(textfieldId, labelText) {
+					var textfield = $('#' + textfieldId);
+					var label = $('<label>' + labelText + '</label>');
+					label.attr('id', textfieldId + '_label');
+					label.attr('for', textfieldId);
+					label.css('position', 'absolute');
+					label.offset(textfield.offset());
+					label.addClass('pci_label_textfield');
+					
+					textfield.blur(function() {
+						if ($(this).val().length == 0) {
+							var label = $('#' + $(this).attr('id') + '_label');
+							label.removeClass('focus');
+							label.css('display', 'inline');
+						}
+					});
+					
+					textfield.change(function() {
+						hideErrorBox($(this).attr('id'));
+						if ($(this).val().length > 0)
+							$('#' + $(this).attr('id') + '_label').css('display', 'none');
+					});
+					
+					textfield.focus(function() {
+						if ($(this).val().length == 0)
+							$('#' + $(this).attr('id') + '_label').addClass('focus');
+					});
+					
+					textfield.keydown(function() {
+						$('#' + $(this).attr('id') + '_label').css('display', 'none');
+					});
+					
+					textfield.parent().prepend(label);
+				}
+				
+				function showErrorBox(elementId, errorDescription) {
+					var element = $('#' + elementId);
+					var box = $('<div>' + errorDescription + '</div>');
+					box.attr('id', elementId + '_error_box');
+					box.css('position', 'absolute');
+					var offset = element.offset();
+					offset.left += element.outerWidth() + 8;
+					box.offset(offset);
+					box.addClass('pci_box_error');
+					element.addClass('error');
+					element.parent().append(box);
+				}
+				
+				function hideErrorBox(elementId) {
+					$('#' + elementId).removeClass('error');
+					$('#' + elementId + '_error_box').remove();
+				}
+				
+				function hideErrorBoxes() {
+					$('.error').removeClass('error');
+					$('div.pci_box_error').remove();
+				}
+				
+				$(document).ready(function() {
+					addTextfieldLabel('pci_textfield_sign_in_user_name', 'Nombre de usuario');
+					addTextfieldLabel('pci_textfield_sign_in_password', 'Contraseña');
+					
+					$("#signInForm").validate(
+	   				 	{  rules: {
+	    							password: {
+	    										required: true,
+	    										minlength: 6,
+	    										}
+	    							},
+	  					  errorPlacement: function(error, element){
+	  					  		showErrorBox(element.attr('id'), error.html());
+	  					  }
+	                   }
+	   				 
+	   				 );
+				});
+				
+				jQuery.extend(jQuery.validator.messages, {
+					required: "Campo requerido.",
+					email: "La dirección de correo es inválida. ",
+					url: "Please enter a valid URL.",
+					date: "Please enter a valid date.",
+					dateISO: "Please enter a valid date (ISO).",
+					number: "Please enter a valid number.",
+					digits: "Please enter only digits.",
+					creditcard: "Please enter a valid credit card number.",
+					equalTo: "Las contraseñas no coinciden.",
+					accept: "Please enter a value with a valid extension.",
+					maxlength: jQuery.validator.format("Please enter no more than {0} characters."),
+					minlength: jQuery.validator.format("La contraseña debe tener al menos {0} caracters."),
+					rangelength: jQuery.validator.format("Please enter a value between {0} and {1} characters long."),
+					range: jQuery.validator.format("Please enter a value between {0} and {1}."),
+					max: jQuery.validator.format("Please enter a value less than or equal to {0}."),
+					min: jQuery.validator.format("Please enter a value greater than or equal to {0}.")
+				});
+				
+		<% end template %>
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
@@ -17,8 +115,8 @@
 			<div id="pci_sign_in_main_container">
 				<div class="pci_box_container">
 					<h1>Ingrese sus datos</h1>
-					<form action="" method="post">
-						<% form as_p form_info %>
+					<form id="signInForm" action="" method="post">
+						<% form as_p sign_in_form_info %>
 					</form>
 				</div>
 			</div>

@@ -206,7 +206,7 @@ void Server::signIn() {
 	} else {
 		// User not signed in
 
-		SignInFormInfo* form_info = &content.form_info;
+		SignInFormInfo* form_info = &content.sign_form_info;
 		if (request().request_method() == "POST") {
 			// POST message received
 			form_info->load(context());

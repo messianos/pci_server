@@ -20,8 +20,8 @@ div {
 	padding:0px;
 
 /* Remove this */
-/*font-family:pci_font_global;
-text-shadow: 1px 1px #DDD;
+	font-family:pci_font_global;
+/*text-shadow: 1px 1px #DDD;
 color: #333;*/
 }
 
@@ -45,7 +45,7 @@ h2 {
 @font-face {
 	font-family:pci_font_global;
 	src:
-		local(Impact),
+		local(Arial),
 		local(Haettenschweiler),
 		local("Franklin Gothic Bold"),
 		local(Charcoal),

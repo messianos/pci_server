@@ -67,8 +67,13 @@
 					 			</span>
 				 			</div>
 						<% else %>
-							<div id="pci_sign_in_floating_form"></div>
-							<!-- onclick="javascript:show_sign_in_form()" > --><a href="<% url "/sign_in" %>">
+							<div id="pci_sign_in_floating_form">
+								<form id="signInForm" action="" method="post">
+									<% form as_p sign_in_form_info %>
+								</form>
+							</div>
+							<!-- href="<% url "/sign_in" %>" -->
+							<a onclick="javascript:show_sign_in_form()">
 								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
 									Ingresar
 								</div>
@@ -277,7 +282,7 @@
 					<script src="/js/jquery-1.9.0.min.js"></script>
 					<script src="/js/jquery-ui-1.9.2.custom.js"></script>
 					<script src="/lib/ckeditor/ckeditor.js"></script>
-					<script src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+					<script src="/js/jquery.validate.js"></script>
 					<script>
 						<% include javascript_code() %>
 					</script>

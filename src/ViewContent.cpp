@@ -42,11 +42,15 @@ NewSolutionFormInfo::NewSolutionFormInfo() {
 }
 
 SignInFormInfo::SignInFormInfo() {
-	user_name.message("Nombre de usuario");
-	password.message("Contraseña");
-	submit.value("Ingresar");
+	password.name("password");
+
+	user_name.attributes_string(
+			"class='pci_textfield pci_textfield_sign_in required' id='pci_textfield_sign_in_user_name'");
+	password.attributes_string(
+			"class='pci_textfield pci_textfield_sign_in required' id='pci_textfield_sign_in_password'");
 
 	submit.attributes_string("class='submit'");
+	submit.value("Ingresar");
 
 	add(user_name);
 	add(password);

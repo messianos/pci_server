@@ -1,0 +1,13 @@
+Bal = Sum(vot) > X
+
+Rango
+	-->	Part = Sum( publ )	--> probl (8)	--> bal +
+											--> vot B (tiene q tener priv para usarlo)
+							--> sol (12)	--> bal +
+											--> vot B
+	--> Sum (votos) + y - (1)
+	--> # sol acept (40)	--> bal +
+							--> vot B
+							
+Privilegios
+- Vot B			

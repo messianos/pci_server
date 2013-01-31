@@ -70,6 +70,7 @@ namespace ViewContent {
 		std::string user_name;
 		std::string user_first_name;
 		std::string user_last_name;
+		SignInFormInfo sign_in_form_info;
 
 		TemplateContent();
 	};
@@ -100,7 +101,7 @@ namespace ViewContent {
 	};
 
 	struct SignInContent : FormContent {
-		SignInFormInfo form_info;
+		SignInFormInfo sign_form_info;
 	};
 
 	struct SignUpContent : FormContent{
