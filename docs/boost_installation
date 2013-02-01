@@ -1,0 +1,9 @@
+Instalación:
+
+- Descomprimir en /opt/
+- Ejecutar ./bootstrap.sh
+- ./b2 install
+
+Nota: tarda bastante cada paso
+
+Si tienen algún problema: http://www.boost.org/doc/libs/1_52_0/more/getting_started/unix-variants.html#easy-build-and-install
