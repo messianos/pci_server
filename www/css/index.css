@@ -6,5 +6,20 @@ body {
 #pci_index_main_container {
 	background-color:#FFFFFF;
 	min-width:1024px;
-	padding:64px 128px 0px 128px;
+	overflow:hidden;
+	padding:64px 128px 16px 128px;
+}
+
+#pci_index_TO_DEFINE_container {
+	float:left;
+}
+
+#pci_index_sign_up_container {
+	background-color:#F1F1F1;
+	border-color:#D0D0D0;
+	border-radius:4px;
+	border-style:solid;
+	border-width:1px;
+	float:right;
+	padding:0px 16px 8px 16px;
 }

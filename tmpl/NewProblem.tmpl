@@ -10,37 +10,27 @@
 			<link href="/css/new_problem.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 		
+		
+		<% template js_links() %>
+			<% include template_view::js_links() %>
+			<script src="/lib/ckeditor/ckeditor.js"></script>
+		<% end template %>
+		
+		
 		<% template javascript_code() %>
+			<% include template_view::javascript_code() %>
 			$(document).ready(function(){
-				CKEDITOR.replace('pci_text_editor', {
-					customConfig: '',
-					extraPlugins: 'bbcode',
-					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
-					language: 'es',
-					removePlugins: 'elementspath, colordialog',
-					resize_enabled: false,
-					toolbar: [
-						[ 'Undo', '-', 'Redo' ],
-						[ 'FontSize' ],
-						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
-						[ 'RemoveFormat' ],
-						[ 'Link', '-', 'Unlink' ],
-						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
-					],
-					uiColor: '#6CA4C8'
-				});
+				configureTexteditor('pci_texteditor');
 			});
 		<% end template %>
-	
-	
+		
+		
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<% include template_view::navigation_menu() %>
 			<div id="pci_new_problem_main_container">
 				<div class="pci_box_container">
-					<form action="" method="post">
-						<% form as_p form_info %>
-					</form>
+					<% include template_view::new_problem_form(new_problem_form_info) %>
 				</div>
 			</div>
 		<% end template %>

@@ -13,18 +13,10 @@
 #include <sstream>
 #include <string>
 
-// Type definitions
-typedef Publication *PublicationPointer;
-typedef Problem *ProblemPointer;
-typedef Solution *SolutionPointer;
-typedef std::list<Problem *> *ProblemList;
-typedef std::list<Solution *> *SolutionList;
-typedef std::list<Clarification *> *ClarificationList;
-
 namespace ViewContent {
 
-
 	struct NewProblemFormInfo : public cppcms::form {
+		cppcms::widgets::hidden form_name;
 		cppcms::widgets::textarea description;
 		cppcms::widgets::textarea content;
 		cppcms::widgets::checkbox is_anonymous;
@@ -34,6 +26,7 @@ namespace ViewContent {
 	};
 
 	struct NewSolutionFormInfo : public cppcms::form {
+		cppcms::widgets::hidden form_name;
 		cppcms::widgets::textarea description;
 		cppcms::widgets::textarea content;
 		cppcms::widgets::checkbox is_anonymous;
@@ -43,6 +36,7 @@ namespace ViewContent {
 	};
 
 	struct SignInFormInfo : public cppcms::form {
+		cppcms::widgets::hidden form_name;
 		cppcms::widgets::text user_name;
 		cppcms::widgets::password password;
 		cppcms::widgets::submit submit;
@@ -51,13 +45,14 @@ namespace ViewContent {
 	};
 
 	struct SignUpFormInfo : public cppcms::form {
+		cppcms::widgets::hidden form_name;
 		cppcms::widgets::text first_name;
 		cppcms::widgets::text last_name;
 		cppcms::widgets::text user_name;
 		cppcms::widgets::text email;
 		cppcms::widgets::password password;
 		cppcms::widgets::password password_verification;
-		cppcms::widgets::text date;
+		cppcms::widgets::text birth_date;
 		cppcms::widgets::select genre;
 		cppcms::widgets::submit submit;
 
@@ -70,7 +65,7 @@ namespace ViewContent {
 		std::string user_name;
 		std::string user_first_name;
 		std::string user_last_name;
-		SignInFormInfo sign_in_form_info;
+		SignInFormInfo *sign_in_form_info;
 
 		TemplateContent();
 	};
@@ -82,7 +77,8 @@ namespace ViewContent {
 	struct IdeasContent : TemplateContent {
 	};
 
-	struct IndexContent : TemplateContent {
+	struct IndexContent : FormContent {
+		SignUpFormInfo *sign_up_form_info;
 	};
 
 	struct ProblemContent : TemplateContent {
@@ -93,19 +89,11 @@ namespace ViewContent {
 	};
 
 	struct NewProblemContent : FormContent {
-		NewProblemFormInfo form_info;
+		NewProblemFormInfo *new_problem_form_info;
 	};
 
 	struct ProblemsContent : TemplateContent {
-		ProblemList problems;
-	};
-
-	struct SignInContent : FormContent {
-		SignInFormInfo sign_form_info;
-	};
-
-	struct SignUpContent : FormContent{
-		SignUpFormInfo form_info;
+		std::list<Problem *> *problems;
 	};
 
 	struct SolutionContent: TemplateContent {
@@ -115,12 +103,24 @@ namespace ViewContent {
 	};
 
 	struct NewSolutionContent : FormContent {
-		NewSolutionFormInfo form_info;
+		NewSolutionFormInfo *new_solution_form_info;
 	};
 
 	struct UserContent : TemplateContent {
 		User* user;
 	};
 }
+
+// Type definitions
+typedef Publication *PublicationPointer;
+typedef Problem *ProblemPointer;
+typedef Solution *SolutionPointer;
+typedef std::list<Problem *> *ProblemList;
+typedef std::list<Solution *> *SolutionList;
+typedef std::list<Clarification *> *ClarificationList;
+typedef ViewContent::NewProblemFormInfo *NewProblemFormInfoPointer;
+typedef ViewContent::NewSolutionFormInfo *NewSolutionFormInfoPointer;
+typedef ViewContent::SignInFormInfo *SignInFormInfoPointer;
+typedef ViewContent::SignUpFormInfo *SignUpFormInfoPointer;
 
 #endif /* VIEWCONTENT_H_ */

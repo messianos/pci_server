@@ -8,22 +8,63 @@
 		<% template css_links() %>
 			<% include template_view::css_links() %>
 			<link href="/css/index.css" rel="stylesheet" type="text/css" />
+			<link href="/lib/jquery-ui/ui-lightness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+		
+		
+		<% template js_links() %>
+			<% include template_view::js_links() %>
+			<script src="/js/sign_up.js"></script>
+			<script src="/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js"></script>
+		<% end template %>
+		
+	
+		<% template javascript_code() %>
+			<% include template_view::javascript_code() %>
+			$(document).ready(function() {
+				configureTextfield('pci_sign_up_textfield_first_name', 'Nombre');
+				configureTextfield('pci_sign_up_textfield_last_name', 'Apellido');
+				configureTextfield('pci_sign_up_textfield_user_name', 'Nombre de usuario');
+				configureTextfield('pci_sign_up_textfield_email', 'E-Mail');
+				configureTextfield('pci_sign_up_textfield_password', 'Contraseña');
+				configureTextfield('pci_sign_up_textfield_password_verification', 'Confirmar contraseña');
+				configureTextfield('pci_sign_up_textfield_birth_date', 'Fecha de nacimiento');
+				configureDropdownlist('pci_sign_up_dropdownlist_genre');
+				configureDatepicker('pci_sign_up_textfield_birth_date');
+				configureValidator([
+					{ elementId: 'pci_sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },
+					{ elementId: 'pci_sign_up_textfield_last_name', onChangeFunction: lastNameOnChange },
+					{ elementId: 'pci_sign_up_textfield_user_name', onChangeFunction: userNameOnChange },
+					{ elementId: 'pci_sign_up_textfield_email', onChangeFunction: emailOnChange },
+					{ elementId: 'pci_sign_up_textfield_password', onChangeFunction: passwordOnChange },
+					{ elementId: 'pci_sign_up_textfield_password_verification', onChangeFunction: passwordVerificationOnChange },
+					{ elementId: 'pci_sign_up_dropdownlist_genre', onChangeFunction: genreOnChange }
+				]);
+			});
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
 			<div id="pci_index_main_container">
-			
-				<a href="<% url "/problems" %>" ><h2>Problemas</h2></a>
-				Comienzo content
-				<br />
-				<br />
-				<br />
-				Index content
-				<br />
-				<br />
-				<br />
+				<div id="pci_index_TO_DEFINE_container">
+					<a href="<% url "/problems" %>">
+						<h2>
+							Problemas
+						</h2>
+					</a>
+					Comienzo content
+					<br />
+					<br />
+					<br />
+					Index content
+					<br />
+					<br />
+					<br />
+				</div>
+				<div id="pci_index_sign_up_container">
+					<% include template_view::sign_up_form(sign_up_form_info) %>
+				</div>
 			</div>
 			<% include template_view::information_footer() %>
 		<% end template %>

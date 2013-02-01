@@ -1,3 +1,4 @@
+
 // Includes
 #include "ViewContent.h"
 
@@ -10,15 +11,16 @@ TemplateContent::TemplateContent() {
 }
 
 NewProblemFormInfo::NewProblemFormInfo() {
+	form_name.name("form_name");
+	form_name.value("new_problem_form");
+
 	description.message("Breve descripción");
-	content.message("Contenido");
+	content.name("pci_texteditor");
 	is_anonymous.message("Publicar anónimamente");
+	submit.attributes_string("class='pci_submit'");
 	submit.value("Publicar");
 
-	content.name("pci_text_editor");
-
-	submit.attributes_string("class='submit'");
-
+	add(form_name);
 	add(description);
 	add(content);
 	add(is_anonymous);
@@ -26,15 +28,16 @@ NewProblemFormInfo::NewProblemFormInfo() {
 }
 
 NewSolutionFormInfo::NewSolutionFormInfo() {
+	form_name.name("form_name");
+	form_name.value("new_solution_form");
+
 	description.message("Breve descripción");
-	content.message("Contenido");
+	content.name("pci_texteditor");
 	is_anonymous.message("Publicar anónimamente");
+	submit.attributes_string("class='pci_submit'");
 	submit.value("Publicar");
 
-	content.name("pci_text_editor");
-
-	submit.attributes_string("class='submit'");
-
+	add(form_name);
 	add(description);
 	add(content);
 	add(is_anonymous);
@@ -42,57 +45,46 @@ NewSolutionFormInfo::NewSolutionFormInfo() {
 }
 
 SignInFormInfo::SignInFormInfo() {
-	password.name("password");
-
-	user_name.attributes_string(
-			"class='pci_textfield pci_textfield_sign_in required' id='pci_textfield_sign_in_user_name'");
-	password.attributes_string(
-			"class='pci_textfield pci_textfield_sign_in required' id='pci_textfield_sign_in_password'");
-
-	submit.attributes_string("class='submit'");
+	form_name.name("form_name");
+	form_name.value("sign_in_form");
+	user_name.attributes_string("class='pci_sign_in_textfield pci_textfield' id='pci_sign_in_textfield_user_name'");
+	password.attributes_string("class='pci_sign_in_textfield pci_textfield' id='pci_sign_in_textfield_password'");
+	submit.attributes_string("class='pci_submit' id='pci_sign_in_submit'");
 	submit.value("Ingresar");
 
+	add(form_name);
 	add(user_name);
 	add(password);
 	add(submit);
 }
 
 SignUpFormInfo::SignUpFormInfo() {
+	form_name.name("form_name");
+	form_name.value("sign_up_form");
 
-	password.name("password");
-	password_verification.name("password_verification");
-
-	first_name.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_first_name'");
-	last_name.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_last_name'");
-	user_name.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_user_name'");
-	email.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required email' id='pci_textfield_sign_up_email'");
-	password.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_password'");
-	password_verification.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_password_verification'");
-	date.attributes_string(
-			"class='pci_textfield pci_textfield_sign_up required' id='pci_textfield_sign_up_date' readonly");
-	genre.attributes_string(
-			"class='pci_dropdownlist pci_dropdownlist_sign_up' id='pci_dropdownlist_sign_up_genre'");
-	submit.attributes_string("class='submit'");
+	first_name.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_first_name'");
+	last_name.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_last_name'");
+	user_name.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_user_name'");
+	email.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_email'");
+	password.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_password'");
+	password_verification.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_password_verification'");
+	birth_date.attributes_string("class='pci_sign_up_textfield pci_textfield' id='pci_sign_up_textfield_birth_date' readonly");
+	genre.attributes_string("class='pci_dropdownlist pci_sign_up_dropdownlist' id='pci_sign_up_dropdownlist_genre'");
+	submit.attributes_string("class='pci_submit' id='pci_sign_up_submit'");
+	submit.value("Registrar");
 
 	genre.add("Seleccione el sexo", "U");
 	genre.add("Mujer", "F");
 	genre.add("Hombre", "M");
 
-	submit.value("Registrar");
-
+	add(form_name);
 	add(first_name);
 	add(last_name);
 	add(user_name);
 	add(email);
 	add(password);
 	add(password_verification);
-	add(date);
+	add(birth_date);
 	add(genre);
 	add(submit);
 }

@@ -119,7 +119,7 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t<div id=\"pci_header_bar_logo\"></div>\n"
 				"\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t</div>\n"
-				"\t\t\t\t\t<div id=\"pci_header_bar_button_container\">\n"
+				"\t\t\t\t\t<div id=\"pci_header_bar_sign_container\">\n"
 				"\t\t\t\t\t \t";
 			#line 58 "Template.tmpl"
 			if(content.user_signed_in) {
@@ -150,50 +150,34 @@ namespace pci_skin {
 					"\t\t\t\t\t\t";
 			#line 69 "Template.tmpl"
 			}else{
-				#line 72 "Template.tmpl"
+				#line 76 "Template.tmpl"
 				out()<<"\n"
-					"\t\t\t\t\t\t\t<div id=\"pci_sign_in_floating_form\">\n"
-					"\t\t\t\t\t\t\t\t<form id=\"signInForm\" action=\"\" method=\"post\">\n"
-					"\t\t\t\t\t\t\t\t\t";
-				#line 72 "Template.tmpl"
-				{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.sign_in_form_info).render(_form_context); }
-				#line 75 "Template.tmpl"
-				out()<<"\n"
-					"\t\t\t\t\t\t\t\t</form>\n"
-					"\t\t\t\t\t\t\t</div>\n"
-					"\t\t\t\t\t\t\t<!-- href=\"";
-				#line 75 "Template.tmpl"
-				content.app().mapper().map(out(),"/sign_in");
-				#line 81 "Template.tmpl"
-				out()<<"\" -->\n"
-					"\t\t\t\t\t\t\t<a onclick=\"javascript:show_sign_in_form()\">\n"
+					"\t\t\t\t\t\t\t<a href=\"javascript:void(0)\">\n"
 					"\t\t\t\t\t\t\t\t<div class=\"pci_button_classic pci_header_bar_button\" id=\"pci_header_bar_button_sign_in\">\n"
 					"\t\t\t\t\t\t\t\t\tIngresar\n"
 					"\t\t\t\t\t\t\t\t</div>\n"
 					"\t\t\t\t\t\t\t</a>\n"
-					"\t\t\t\t\t\t\t<a href=\"";
-				#line 81 "Template.tmpl"
-				content.app().mapper().map(out(),"/sign_up");
-				#line 86 "Template.tmpl"
-				out()<<"\">\n"
-					"\t\t\t\t\t\t\t\t<div class=\"pci_button_classic pci_header_bar_button\">\n"
-					"\t\t\t\t\t\t\t\t\tRegistrar\n"
-					"\t\t\t\t\t\t\t\t</div>\n"
-					"\t\t\t\t\t\t\t</a>\n"
+					"\t\t\t\t\t\t\t<div id=\"pci_header_bar_sign_in_container\">\n"
+					"\t\t\t\t\t\t\t\t";
+				#line 76 "Template.tmpl"
+				sign_in_form(content.sign_in_form_info);
+				#line 78 "Template.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t</div>\n"
 					"\t\t\t\t\t\t";
-			#line 86 "Template.tmpl"
+			#line 78 "Template.tmpl"
 			}
-			#line 90 "Template.tmpl"
+			#line 82 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 90 "Template.tmpl"
+		#line 82 "Template.tmpl"
 		} // end of template header_bar
-		#line 93 "Template.tmpl"
+		#line 85 "Template.tmpl"
 		virtual void information_footer() {
-			#line 107 "Template.tmpl"
+			#line 99 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_information_footer_main_container\">\n"
 				"\t\t\t\t<div id=\"pci_information_footer_central_container\">\n"
@@ -209,27 +193,27 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 107 "Template.tmpl"
+			#line 99 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 112 "Template.tmpl"
+			#line 104 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tAcerca de\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 112 "Template.tmpl"
+			#line 104 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 117 "Template.tmpl"
+			#line 109 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tFilosofía\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 117 "Template.tmpl"
+			#line 109 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 129 "Template.tmpl"
+			#line 121 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tLink 3\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
@@ -243,27 +227,27 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 129 "Template.tmpl"
+			#line 121 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 134 "Template.tmpl"
+			#line 126 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tLink 1\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 134 "Template.tmpl"
+			#line 126 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 139 "Template.tmpl"
+			#line 131 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tLink 2\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 139 "Template.tmpl"
+			#line 131 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 151 "Template.tmpl"
+			#line 143 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tLink 3\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
@@ -277,27 +261,27 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 151 "Template.tmpl"
+			#line 143 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 156 "Template.tmpl"
+			#line 148 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tAyuda\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 156 "Template.tmpl"
+			#line 148 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 161 "Template.tmpl"
+			#line 153 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tCondiciones de servicio\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t<div class=\"pci_information_footer_link\">\n"
 				"\t\t\t\t\t\t\t\t<a class=\"pci_link_footer\" href=\"";
-			#line 161 "Template.tmpl"
+			#line 153 "Template.tmpl"
 			content.app().mapper().map(out(),"");
-			#line 169 "Template.tmpl"
+			#line 161 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t\t\t\t\tCopyright\n"
 				"\t\t\t\t\t\t\t\t</a>\n"
@@ -307,164 +291,220 @@ namespace pci_skin {
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 169 "Template.tmpl"
+		#line 161 "Template.tmpl"
 		} // end of template information_footer
-		#line 172 "Template.tmpl"
+		#line 164 "Template.tmpl"
 		virtual void navigation_menu() {
-			#line 174 "Template.tmpl"
+			#line 166 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_navigation_menu_main_container\">\n"
 				"\t\t\t\t<a href=\"";
-			#line 174 "Template.tmpl"
+			#line 166 "Template.tmpl"
 			content.app().mapper().map(out(),"/problems");
-			#line 179 "Template.tmpl"
+			#line 171 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t<div class=\"pci_button_square pci_navigation_menu_button\" id=\"pci_navigation_menu_problems_button\">\n"
 				"\t\t\t\t\t\tProblemas\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t</a>\n"
 				"\t\t\t\t<a href=\"";
-			#line 179 "Template.tmpl"
+			#line 171 "Template.tmpl"
 			content.app().mapper().map(out(),"/ideas");
-			#line 184 "Template.tmpl"
+			#line 176 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t<div class=\"pci_button_square pci_navigation_menu_button\" id=\"pci_navigation_menu_ideas_button\">\n"
 				"\t\t\t\t\t\tIdeas\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t</a>\n"
 				"\t\t\t\t";
-			#line 184 "Template.tmpl"
+			#line 176 "Template.tmpl"
 			if(content.user_signed_in) {
-				#line 186 "Template.tmpl"
+				#line 178 "Template.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t<div class=\"pci_horizontal_line\" ></div>\n"
 					"\t\t\t\t\t<a href=\"";
-				#line 186 "Template.tmpl"
+				#line 178 "Template.tmpl"
 				content.app().mapper().map(out(),"/user", cppcms::filters::urlencode(content.user_name));
-				#line 191 "Template.tmpl"
+				#line 183 "Template.tmpl"
 				out()<<"\">\n"
 					"\t\t\t\t\t\t<div class=\"pci_button_square pci_navigation_menu_button\" id=\"pci_navigation_menu_profile_button\">\n"
 					"\t\t\t\t\t\t\tPerfil\n"
 					"\t\t\t\t\t\t</div>\n"
 					"\t\t\t\t\t</a>\n"
 					"\t\t\t\t";
-			#line 191 "Template.tmpl"
+			#line 183 "Template.tmpl"
 			} // endif
-			#line 193 "Template.tmpl"
+			#line 185 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 193 "Template.tmpl"
+		#line 185 "Template.tmpl"
 		} // end of template navigation_menu
-		#line 196 "Template.tmpl"
+		#line 188 "Template.tmpl"
+		virtual void new_problem_form(NewProblemFormInfoPointer new_problem_form_info) {
+			#line 190 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t<form action=\"\" method=\"post\">\n"
+				"\t\t\t\t";
+			#line 190 "Template.tmpl"
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*new_problem_form_info).render(_form_context); }
+			#line 192 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t</form>\n"
+				"\t\t";
+		#line 192 "Template.tmpl"
+		} // end of template new_problem_form
+		#line 195 "Template.tmpl"
+		virtual void new_solution_form(NewSolutionFormInfoPointer new_solution_form_info) {
+			#line 197 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t<form action=\"\" method=\"post\">\n"
+				"\t\t\t\t";
+			#line 197 "Template.tmpl"
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*new_solution_form_info).render(_form_context); }
+			#line 199 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t</form>\n"
+				"\t\t";
+		#line 199 "Template.tmpl"
+		} // end of template new_solution_form
+		#line 202 "Template.tmpl"
 		virtual void problem_description(ProblemPointer problem) {
-			#line 197 "Template.tmpl"
-			out()<<"\n"
-				"\t\t\t<a class=\"pci_link_description\" href=\"";
-			#line 197 "Template.tmpl"
-			content.app().mapper().map(out(),"/publication", cppcms::filters::urlencode(problem->id));
-			#line 198 "Template.tmpl"
-			out()<<"\">\n"
-				"\t\t\t\t";
-			#line 198 "Template.tmpl"
-			out()<<cppcms::filters::escape(problem->description);
-			#line 201 "Template.tmpl"
-			out()<<"\n"
-				"\t\t\t</a>\n"
-				"\t\t\t<span class=\"pci_text_description\">\n"
-				"\t\t\t\t";
-			#line 201 "Template.tmpl"
-			if(problem->is_anonymous) {
-				#line 203 "Template.tmpl"
-				out()<<"\n"
-					"\t\t\t\t\t<i>Publicado Anónimamente</i>\n"
-					"\t\t\t\t";
 			#line 203 "Template.tmpl"
-			}else{
-				#line 204 "Template.tmpl"
-				out()<<"\n"
-					"\t\t\t\t\t<i>Por <a class=\"pci_link_user_name\" href=\"";
-				#line 204 "Template.tmpl"
-				content.app().mapper().map(out(),"/user", cppcms::filters::urlencode(problem->creator_user_name));
-				#line 204 "Template.tmpl"
-				out()<<"\">";
-				#line 204 "Template.tmpl"
-				out()<<cppcms::filters::escape(problem->creator_user_name);
-				#line 205 "Template.tmpl"
-				out()<<"</a></i>\n"
-					"\t\t\t\t";
-			#line 205 "Template.tmpl"
-			}
-			#line 206 "Template.tmpl"
-			out()<<"\n"
-				"\t\t\t\t- ";
-			#line 206 "Template.tmpl"
-			out()<<cppcms::filters::escape(problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs."));
-			#line 208 "Template.tmpl"
-			out()<<"\n"
-				"\t\t\t</span>\n"
-				"\t\t";
-		#line 208 "Template.tmpl"
-		} // end of template problem_description
-		#line 211 "Template.tmpl"
-		virtual void solution_description(ProblemPointer problem,SolutionPointer solution) {
-			#line 212 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<a class=\"pci_link_description\" href=\"";
-			#line 212 "Template.tmpl"
-			content.app().mapper().map(out(),"/publication", cppcms::filters::urlencode(problem->id), cppcms::filters::urlencode(solution->id));
-			#line 213 "Template.tmpl"
+			#line 203 "Template.tmpl"
+			content.app().mapper().map(out(),"/publication", cppcms::filters::urlencode(problem->id));
+			#line 204 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t";
-			#line 213 "Template.tmpl"
-			out()<<cppcms::filters::escape(solution->description);
-			#line 216 "Template.tmpl"
+			#line 204 "Template.tmpl"
+			out()<<cppcms::filters::escape(problem->description);
+			#line 207 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</a>\n"
 				"\t\t\t<span class=\"pci_text_description\">\n"
 				"\t\t\t\t";
-			#line 216 "Template.tmpl"
-			if(solution->is_anonymous) {
-				#line 218 "Template.tmpl"
+			#line 207 "Template.tmpl"
+			if(problem->is_anonymous) {
+				#line 209 "Template.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t<i>Publicado Anónimamente</i>\n"
 					"\t\t\t\t";
-			#line 218 "Template.tmpl"
+			#line 209 "Template.tmpl"
 			}else{
-				#line 219 "Template.tmpl"
+				#line 210 "Template.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t<i>Por <a class=\"pci_link_user_name\" href=\"";
-				#line 219 "Template.tmpl"
-				content.app().mapper().map(out(),"/user", cppcms::filters::urlencode(solution->creator_user_name));
-				#line 219 "Template.tmpl"
+				#line 210 "Template.tmpl"
+				content.app().mapper().map(out(),"/user", cppcms::filters::urlencode(problem->creator_user_name));
+				#line 210 "Template.tmpl"
 				out()<<"\">";
-				#line 219 "Template.tmpl"
-				out()<<cppcms::filters::escape(solution->creator_user_name);
-				#line 220 "Template.tmpl"
+				#line 210 "Template.tmpl"
+				out()<<cppcms::filters::escape(problem->creator_user_name);
+				#line 211 "Template.tmpl"
 				out()<<"</a></i>\n"
 					"\t\t\t\t";
-			#line 220 "Template.tmpl"
+			#line 211 "Template.tmpl"
 			}
-			#line 221 "Template.tmpl"
+			#line 212 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t- ";
-			#line 221 "Template.tmpl"
-			out()<<cppcms::filters::escape(solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs."));
-			#line 223 "Template.tmpl"
+			#line 212 "Template.tmpl"
+			out()<<cppcms::filters::escape(problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs."));
+			#line 214 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</span>\n"
 				"\t\t";
-		#line 223 "Template.tmpl"
-		} // end of template solution_description
-		#line 226 "Template.tmpl"
-		virtual void toolbar_problems() {
+		#line 214 "Template.tmpl"
+		} // end of template problem_description
+		#line 217 "Template.tmpl"
+		virtual void sign_in_form(SignInFormInfoPointer sign_in_form_info) {
+			#line 219 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t<form action=\"\" method=\"post\">\n"
+				"\t\t\t\t";
+			#line 219 "Template.tmpl"
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*sign_in_form_info).render(_form_context); }
+			#line 221 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t</form>\n"
+				"\t\t";
+		#line 221 "Template.tmpl"
+		} // end of template sign_in_form
+		#line 224 "Template.tmpl"
+		virtual void sign_up_form(SignUpFormInfoPointer sign_up_form_info) {
+			#line 226 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t<form action=\"\" method=\"post\">\n"
+				"\t\t\t\t";
+			#line 226 "Template.tmpl"
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*sign_up_form_info).render(_form_context); }
 			#line 228 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t</form>\n"
+				"\t\t";
+		#line 228 "Template.tmpl"
+		} // end of template sign_up_form
+		#line 231 "Template.tmpl"
+		virtual void solution_description(ProblemPointer problem,SolutionPointer solution) {
+			#line 232 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t<a class=\"pci_link_description\" href=\"";
+			#line 232 "Template.tmpl"
+			content.app().mapper().map(out(),"/publication", cppcms::filters::urlencode(problem->id), cppcms::filters::urlencode(solution->id));
+			#line 233 "Template.tmpl"
+			out()<<"\">\n"
+				"\t\t\t\t";
+			#line 233 "Template.tmpl"
+			out()<<cppcms::filters::escape(solution->description);
+			#line 236 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t</a>\n"
+				"\t\t\t<span class=\"pci_text_description\">\n"
+				"\t\t\t\t";
+			#line 236 "Template.tmpl"
+			if(solution->is_anonymous) {
+				#line 238 "Template.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t<i>Publicado Anónimamente</i>\n"
+					"\t\t\t\t";
+			#line 238 "Template.tmpl"
+			}else{
+				#line 239 "Template.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t<i>Por <a class=\"pci_link_user_name\" href=\"";
+				#line 239 "Template.tmpl"
+				content.app().mapper().map(out(),"/user", cppcms::filters::urlencode(solution->creator_user_name));
+				#line 239 "Template.tmpl"
+				out()<<"\">";
+				#line 239 "Template.tmpl"
+				out()<<cppcms::filters::escape(solution->creator_user_name);
+				#line 240 "Template.tmpl"
+				out()<<"</a></i>\n"
+					"\t\t\t\t";
+			#line 240 "Template.tmpl"
+			}
+			#line 241 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t\t- ";
+			#line 241 "Template.tmpl"
+			out()<<cppcms::filters::escape(solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs."));
+			#line 243 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t</span>\n"
+				"\t\t";
+		#line 243 "Template.tmpl"
+		} // end of template solution_description
+		#line 246 "Template.tmpl"
+		virtual void toolbar_problems() {
+			#line 248 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_toolbar_problems_container\">\n"
 				"\t\t\t\t<a href=\"";
-			#line 228 "Template.tmpl"
+			#line 248 "Template.tmpl"
 			content.app().mapper().map(out(),"/new_problem");
-			#line 234 "Template.tmpl"
+			#line 254 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t<div class=\"pci_button_icon pci_toolbar_problems_button\" id=\"pci_toolbar_problems_new_problem_button\">\n"
 				"\t\t\t\t\t\tNuevo problema\n"
@@ -472,17 +512,17 @@ namespace pci_skin {
 				"\t\t\t\t</a>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 234 "Template.tmpl"
+		#line 254 "Template.tmpl"
 		} // end of template toolbar_problems
-		#line 237 "Template.tmpl"
+		#line 257 "Template.tmpl"
 		virtual void toolbar_problem(std::string problem_id) {
-			#line 239 "Template.tmpl"
+			#line 259 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_toolbar_problem_container\">\n"
 				"\t\t\t\t<a href=\"";
-			#line 239 "Template.tmpl"
+			#line 259 "Template.tmpl"
 			content.app().mapper().map(out(),"/new_solution", cppcms::filters::urlencode(problem_id));
-			#line 245 "Template.tmpl"
+			#line 265 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t<div class=\"pci_button_icon pci_toolbar_problem_button\" id=\"pci_toolbar_problem_new_solution_button\">\n"
 				"\t\t\t\t\t\tPlantear solución\n"
@@ -490,17 +530,17 @@ namespace pci_skin {
 				"\t\t\t\t</a>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 245 "Template.tmpl"
+		#line 265 "Template.tmpl"
 		} // end of template toolbar_problem
-		#line 248 "Template.tmpl"
+		#line 268 "Template.tmpl"
 		virtual void toolbar_solution(std::string problem_id) {
-			#line 250 "Template.tmpl"
+			#line 270 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_toolbar_solution_container\">\n"
 				"\t\t\t\t<a href=\"";
-			#line 250 "Template.tmpl"
+			#line 270 "Template.tmpl"
 			content.app().mapper().map(out(),"/publication", cppcms::filters::urlencode(problem_id));
-			#line 256 "Template.tmpl"
+			#line 276 "Template.tmpl"
 			out()<<"\">\n"
 				"\t\t\t\t\t<div class=\"pci_button_icon pci_toolbar_solution_button\" id=\"pci_toolbar_solution_go_back_button\">\n"
 				"\t\t\t\t\t\tVolver al problema\n"
@@ -508,80 +548,91 @@ namespace pci_skin {
 				"\t\t\t\t</a>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 256 "Template.tmpl"
+		#line 276 "Template.tmpl"
 		} // end of template toolbar_solution
-		#line 259 "Template.tmpl"
+		#line 279 "Template.tmpl"
 		virtual void css_links() {
-			#line 262 "Template.tmpl"
+			#line 281 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<link href=\"/css/template.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
-				"\t\t\t<link href=\"/css/ui-lightness/jquery-ui-1.9.2.custom.css\" rel=\"stylesheet\">\n"
 				"\t\t";
-		#line 262 "Template.tmpl"
+		#line 281 "Template.tmpl"
 		} // end of template css_links
-		#line 265 "Template.tmpl"
+		#line 284 "Template.tmpl"
+		virtual void js_links() {
+			#line 288 "Template.tmpl"
+			out()<<"\n"
+				"\t\t\t<script src=\"/js/sign_in.js\"></script>\n"
+				"\t\t\t<script src=\"/js/utilities.js\"></script>\n"
+				"\t\t\t<script src=\"/lib/jquery/jquery-1.9.0.min.js\"></script>\n"
+				"\t\t";
+		#line 288 "Template.tmpl"
+		} // end of template js_links
+		#line 291 "Template.tmpl"
 		virtual void javascript_code() {
-			#line 270 "Template.tmpl"
+			#line 297 "Template.tmpl"
 			out()<<"\n"
-				"\t\t\tfunction show_sign_in_form(){\n"
-				"\t\t\t\t$(\"#pci_sign_in_floating_form\").toggle(300);\n"
-				"\t\t\t\t$(\"#pci_header_bar_button_sign_in\").toggleClass('floating_form_visible');\n"
-				"\t\t\t}\n"
+				"\t\t\t$(document).ready(function() {\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_in_textfield_user_name', 'Nombre de usuario');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_in_textfield_password', 'Contraseña');\n"
+				"\t\t\t\tconfigureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');\n"
+				"\t\t\t});\n"
 				"\t\t";
-		#line 270 "Template.tmpl"
+		#line 297 "Template.tmpl"
 		} // end of template javascript_code
-		#line 273 "Template.tmpl"
+		#line 300 "Template.tmpl"
 		virtual void page_content() {
-			#line 274 "Template.tmpl"
+			#line 301 "Template.tmpl"
 			out()<<"\n"
 				"\t\t";
-		#line 274 "Template.tmpl"
+		#line 301 "Template.tmpl"
 		} // end of template page_content
-		#line 277 "Template.tmpl"
+		#line 304 "Template.tmpl"
 		virtual void render() {
-			#line 281 "Template.tmpl"
+			#line 308 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<!DOCTYPE html>\n"
 				"\t\t\t<html>\n"
 				"\t\t\t\t<head>\n"
 				"\t\t\t\t\t";
-			#line 281 "Template.tmpl"
+			#line 308 "Template.tmpl"
 			css_links();
-			#line 287 "Template.tmpl"
+			#line 309 "Template.tmpl"
 			out()<<"\n"
-				"\t\t\t\t\t<script src=\"/js/jquery-1.9.0.min.js\"></script>\n"
-				"\t\t\t\t\t<script src=\"/js/jquery-ui-1.9.2.custom.js\"></script>\n"
-				"\t\t\t\t\t<script src=\"/lib/ckeditor/ckeditor.js\"></script>\n"
-				"\t\t\t\t\t<script src=\"/js/jquery.validate.js\"></script>\n"
+				"\t\t\t\t\t";
+			#line 309 "Template.tmpl"
+			js_links();
+			#line 311 "Template.tmpl"
+			out()<<"\n"
 				"\t\t\t\t\t<script>\n"
 				"\t\t\t\t\t\t";
-			#line 287 "Template.tmpl"
+			#line 311 "Template.tmpl"
 			javascript_code();
-			#line 290 "Template.tmpl"
+			#line 314 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t</script>\n"
 				"\t\t\t    \t<title>\n"
 				"\t\t\t    \t\t";
-			#line 290 "Template.tmpl"
+			#line 314 "Template.tmpl"
 			out()<<cppcms::filters::escape(content.page_title);
-			#line 294 "Template.tmpl"
+			#line 318 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t    \t</title>\n"
 				"\t\t\t\t</head>\n"
 				"\t\t\t\t<body>\n"
 				"\t\t\t\t\t";
-			#line 294 "Template.tmpl"
+			#line 318 "Template.tmpl"
 			page_content();
-			#line 297 "Template.tmpl"
+			#line 321 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t</body>\n"
 				"\t\t\t</html>\n"
 				"\t\t";
-		#line 297 "Template.tmpl"
+		#line 321 "Template.tmpl"
 		} // end of template render
-	#line 300 "Template.tmpl"
+	#line 324 "Template.tmpl"
 	}; // end of class template_view
-#line 301 "Template.tmpl"
+#line 325 "Template.tmpl"
 } // end of namespace pci_skin
 #line 2 "Index.tmpl"
 #include "ViewContent.h" 
@@ -606,408 +657,107 @@ namespace pci_skin {
 				"\t\t\t";
 			#line 9 "Index.tmpl"
 			template_view::css_links();
-			#line 11 "Index.tmpl"
+			#line 12 "Index.tmpl"
 			out()<<"\n"
 				"\t\t\t<link href=\"/css/index.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
+				"\t\t\t<link href=\"/lib/jquery-ui/ui-lightness/jquery-ui-1.10.0.custom.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
 				"\t\t";
-		#line 11 "Index.tmpl"
+		#line 12 "Index.tmpl"
 		} // end of template css_links
-		#line 14 "Index.tmpl"
-		virtual void page_content() {
-			#line 15 "Index.tmpl"
+		#line 15 "Index.tmpl"
+		virtual void js_links() {
+			#line 16 "Index.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 15 "Index.tmpl"
+			#line 16 "Index.tmpl"
+			template_view::js_links();
+			#line 19 "Index.tmpl"
+			out()<<"\n"
+				"\t\t\t<script src=\"/js/sign_up.js\"></script>\n"
+				"\t\t\t<script src=\"/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js\"></script>\n"
+				"\t\t";
+		#line 19 "Index.tmpl"
+		} // end of template js_links
+		#line 22 "Index.tmpl"
+		virtual void javascript_code() {
+			#line 23 "Index.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 23 "Index.tmpl"
+			template_view::javascript_code();
+			#line 44 "Index.tmpl"
+			out()<<"\n"
+				"\t\t\t$(document).ready(function() {\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_first_name', 'Nombre');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_last_name', 'Apellido');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_user_name', 'Nombre de usuario');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_email', 'E-Mail');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_password', 'Contraseña');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_password_verification', 'Confirmar contraseña');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_birth_date', 'Fecha de nacimiento');\n"
+				"\t\t\t\tconfigureDropdownlist('pci_sign_up_dropdownlist_genre');\n"
+				"\t\t\t\tconfigureDatepicker('pci_sign_up_textfield_birth_date');\n"
+				"\t\t\t\tconfigureValidator([\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_last_name', onChangeFunction: lastNameOnChange },\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_user_name', onChangeFunction: userNameOnChange },\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_email', onChangeFunction: emailOnChange },\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_password', onChangeFunction: passwordOnChange },\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_password_verification', onChangeFunction: passwordVerificationOnChange },\n"
+				"\t\t\t\t\t{ elementId: 'pci_sign_up_dropdownlist_genre', onChangeFunction: genreOnChange }\n"
+				"\t\t\t\t]);\n"
+				"\t\t\t});\n"
+				"\t\t";
+		#line 44 "Index.tmpl"
+		} // end of template javascript_code
+		#line 47 "Index.tmpl"
+		virtual void page_content() {
+			#line 48 "Index.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 48 "Index.tmpl"
 			template_view::header_bar();
-			#line 18 "Index.tmpl"
+			#line 51 "Index.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_index_main_container\">\n"
-				"\t\t\t\n"
-				"\t\t\t\t<a href=\"";
-			#line 18 "Index.tmpl"
+				"\t\t\t\t<div id=\"pci_index_TO_DEFINE_container\">\n"
+				"\t\t\t\t\t<a href=\"";
+			#line 51 "Index.tmpl"
 			content.app().mapper().map(out(),"/problems");
-			#line 28 "Index.tmpl"
-			out()<<"\" ><h2>Problemas</h2></a>\n"
-				"\t\t\t\tComienzo content\n"
-				"\t\t\t\t<br />\n"
-				"\t\t\t\t<br />\n"
-				"\t\t\t\t<br />\n"
-				"\t\t\t\tIndex content\n"
-				"\t\t\t\t<br />\n"
-				"\t\t\t\t<br />\n"
-				"\t\t\t\t<br />\n"
+			#line 66 "Index.tmpl"
+			out()<<"\">\n"
+				"\t\t\t\t\t\t<h2>\n"
+				"\t\t\t\t\t\t\tProblemas\n"
+				"\t\t\t\t\t\t</h2>\n"
+				"\t\t\t\t\t</a>\n"
+				"\t\t\t\t\tComienzo content\n"
+				"\t\t\t\t\t<br />\n"
+				"\t\t\t\t\t<br />\n"
+				"\t\t\t\t\t<br />\n"
+				"\t\t\t\t\tIndex content\n"
+				"\t\t\t\t\t<br />\n"
+				"\t\t\t\t\t<br />\n"
+				"\t\t\t\t\t<br />\n"
+				"\t\t\t\t</div>\n"
+				"\t\t\t\t<div id=\"pci_index_sign_up_container\">\n"
+				"\t\t\t\t\t";
+			#line 66 "Index.tmpl"
+			template_view::sign_up_form(content.sign_up_form_info);
+			#line 69 "Index.tmpl"
+			out()<<"\n"
+				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t\t";
-			#line 28 "Index.tmpl"
+			#line 69 "Index.tmpl"
 			template_view::information_footer();
-			#line 29 "Index.tmpl"
+			#line 70 "Index.tmpl"
 			out()<<"\n"
 				"\t\t";
-		#line 29 "Index.tmpl"
+		#line 70 "Index.tmpl"
 		} // end of template page_content
-	#line 32 "Index.tmpl"
+	#line 73 "Index.tmpl"
 	}; // end of class index_view
-#line 33 "Index.tmpl"
-} // end of namespace pci_skin
-#line 2 "SignIn.tmpl"
-#include "ViewContent.h" 
-#line 4 "SignIn.tmpl"
-namespace pci_skin {
-	#line 5 "SignIn.tmpl"
-	struct sign_in_view :public template_view
-	#line 5 "SignIn.tmpl"
-	{
-	#line 5 "SignIn.tmpl"
-		ViewContent::SignInContent &content;
-	#line 5 "SignIn.tmpl"
-		sign_in_view(std::ostream &_s,ViewContent::SignInContent &_content): template_view(_s,_content),content(_content)
-	#line 5 "SignIn.tmpl"
-		{
-	#line 5 "SignIn.tmpl"
-		}
-		#line 8 "SignIn.tmpl"
-		virtual void css_links() {
-			#line 9 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t";
-			#line 9 "SignIn.tmpl"
-			template_view::css_links();
-			#line 11 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t<link href=\"/css/sign_in.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
-				"\t\t";
-		#line 11 "SignIn.tmpl"
-		} // end of template css_links
-		#line 13 "SignIn.tmpl"
-		virtual void javascript_code() {
-			#line 110 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t\tfunction addTextfieldLabel(textfieldId, labelText) {\n"
-				"\t\t\t\t\tvar textfield = $('#' + textfieldId);\n"
-				"\t\t\t\t\tvar label = $('<label>' + labelText + '</label>');\n"
-				"\t\t\t\t\tlabel.attr('id', textfieldId + '_label');\n"
-				"\t\t\t\t\tlabel.attr('for', textfieldId);\n"
-				"\t\t\t\t\tlabel.css('position', 'absolute');\n"
-				"\t\t\t\t\tlabel.offset(textfield.offset());\n"
-				"\t\t\t\t\tlabel.addClass('pci_label_textfield');\n"
-				"\t\t\t\t\t\n"
-				"\t\t\t\t\ttextfield.blur(function() {\n"
-				"\t\t\t\t\t\tif ($(this).val().length == 0) {\n"
-				"\t\t\t\t\t\t\tvar label = $('#' + $(this).attr('id') + '_label');\n"
-				"\t\t\t\t\t\t\tlabel.removeClass('focus');\n"
-				"\t\t\t\t\t\t\tlabel.css('display', 'inline');\n"
-				"\t\t\t\t\t\t}\n"
-				"\t\t\t\t\t});\n"
-				"\t\t\t\t\t\n"
-				"\t\t\t\t\ttextfield.change(function() {\n"
-				"\t\t\t\t\t\thideErrorBox($(this).attr('id'));\n"
-				"\t\t\t\t\t\tif ($(this).val().length > 0)\n"
-				"\t\t\t\t\t\t\t$('#' + $(this).attr('id') + '_label').css('display', 'none');\n"
-				"\t\t\t\t\t});\n"
-				"\t\t\t\t\t\n"
-				"\t\t\t\t\ttextfield.focus(function() {\n"
-				"\t\t\t\t\t\tif ($(this).val().length == 0)\n"
-				"\t\t\t\t\t\t\t$('#' + $(this).attr('id') + '_label').addClass('focus');\n"
-				"\t\t\t\t\t});\n"
-				"\t\t\t\t\t\n"
-				"\t\t\t\t\ttextfield.keydown(function() {\n"
-				"\t\t\t\t\t\t$('#' + $(this).attr('id') + '_label').css('display', 'none');\n"
-				"\t\t\t\t\t});\n"
-				"\t\t\t\t\t\n"
-				"\t\t\t\t\ttextfield.parent().prepend(label);\n"
-				"\t\t\t\t}\n"
-				"\t\t\t\t\n"
-				"\t\t\t\tfunction showErrorBox(elementId, errorDescription) {\n"
-				"\t\t\t\t\tvar element = $('#' + elementId);\n"
-				"\t\t\t\t\tvar box = $('<div>' + errorDescription + '</div>');\n"
-				"\t\t\t\t\tbox.attr('id', elementId + '_error_box');\n"
-				"\t\t\t\t\tbox.css('position', 'absolute');\n"
-				"\t\t\t\t\tvar offset = element.offset();\n"
-				"\t\t\t\t\toffset.left += element.outerWidth() + 8;\n"
-				"\t\t\t\t\tbox.offset(offset);\n"
-				"\t\t\t\t\tbox.addClass('pci_box_error');\n"
-				"\t\t\t\t\telement.addClass('error');\n"
-				"\t\t\t\t\telement.parent().append(box);\n"
-				"\t\t\t\t}\n"
-				"\t\t\t\t\n"
-				"\t\t\t\tfunction hideErrorBox(elementId) {\n"
-				"\t\t\t\t\t$('#' + elementId).removeClass('error');\n"
-				"\t\t\t\t\t$('#' + elementId + '_error_box').remove();\n"
-				"\t\t\t\t}\n"
-				"\t\t\t\t\n"
-				"\t\t\t\tfunction hideErrorBoxes() {\n"
-				"\t\t\t\t\t$('.error').removeClass('error');\n"
-				"\t\t\t\t\t$('div.pci_box_error').remove();\n"
-				"\t\t\t\t}\n"
-				"\t\t\t\t\n"
-				"\t\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\t\taddTextfieldLabel('pci_textfield_sign_in_user_name', 'Nombre de usuario');\n"
-				"\t\t\t\t\taddTextfieldLabel('pci_textfield_sign_in_password', 'Contraseña');\n"
-				"\t\t\t\t\t\n"
-				"\t\t\t\t\t$(\"#signInForm\").validate(\n"
-				"\t   \t\t\t\t \t{  rules: {\n"
-				"\t    \t\t\t\t\t\t\tpassword: {\n"
-				"\t    \t\t\t\t\t\t\t\t\t\trequired: true,\n"
-				"\t    \t\t\t\t\t\t\t\t\t\tminlength: 6,\n"
-				"\t    \t\t\t\t\t\t\t\t\t\t}\n"
-				"\t    \t\t\t\t\t\t\t},\n"
-				"\t  \t\t\t\t\t  errorPlacement: function(error, element){\n"
-				"\t  \t\t\t\t\t  \t\tshowErrorBox(element.attr('id'), error.html());\n"
-				"\t  \t\t\t\t\t  }\n"
-				"\t                   }\n"
-				"\t   \t\t\t\t \n"
-				"\t   \t\t\t\t );\n"
-				"\t\t\t\t});\n"
-				"\t\t\t\t\n"
-				"\t\t\t\tjQuery.extend(jQuery.validator.messages, {\n"
-				"\t\t\t\t\trequired: \"Campo requerido.\",\n"
-				"\t\t\t\t\temail: \"La dirección de correo es inválida. \",\n"
-				"\t\t\t\t\turl: \"Please enter a valid URL.\",\n"
-				"\t\t\t\t\tdate: \"Please enter a valid date.\",\n"
-				"\t\t\t\t\tdateISO: \"Please enter a valid date (ISO).\",\n"
-				"\t\t\t\t\tnumber: \"Please enter a valid number.\",\n"
-				"\t\t\t\t\tdigits: \"Please enter only digits.\",\n"
-				"\t\t\t\t\tcreditcard: \"Please enter a valid credit card number.\",\n"
-				"\t\t\t\t\tequalTo: \"Las contraseñas no coinciden.\",\n"
-				"\t\t\t\t\taccept: \"Please enter a value with a valid extension.\",\n"
-				"\t\t\t\t\tmaxlength: jQuery.validator.format(\"Please enter no more than {0} characters.\"),\n"
-				"\t\t\t\t\tminlength: jQuery.validator.format(\"La contraseña debe tener al menos {0} caracters.\"),\n"
-				"\t\t\t\t\trangelength: jQuery.validator.format(\"Please enter a value between {0} and {1} characters long.\"),\n"
-				"\t\t\t\t\trange: jQuery.validator.format(\"Please enter a value between {0} and {1}.\"),\n"
-				"\t\t\t\t\tmax: jQuery.validator.format(\"Please enter a value less than or equal to {0}.\"),\n"
-				"\t\t\t\t\tmin: jQuery.validator.format(\"Please enter a value greater than or equal to {0}.\")\n"
-				"\t\t\t\t});\n"
-				"\t\t\t\t\n"
-				"\t\t";
-		#line 110 "SignIn.tmpl"
-		} // end of template javascript_code
-		#line 112 "SignIn.tmpl"
-		virtual void page_content() {
-			#line 113 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t";
-			#line 113 "SignIn.tmpl"
-			template_view::header_bar();
-			#line 114 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t";
-			#line 114 "SignIn.tmpl"
-			template_view::navigation_menu();
-			#line 119 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t<div id=\"pci_sign_in_main_container\">\n"
-				"\t\t\t\t<div class=\"pci_box_container\">\n"
-				"\t\t\t\t\t<h1>Ingrese sus datos</h1>\n"
-				"\t\t\t\t\t<form id=\"signInForm\" action=\"\" method=\"post\">\n"
-				"\t\t\t\t\t\t";
-			#line 119 "SignIn.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.sign_in_form_info).render(_form_context); }
-			#line 123 "SignIn.tmpl"
-			out()<<"\n"
-				"\t\t\t\t\t</form>\n"
-				"\t\t\t\t</div>\n"
-				"\t\t\t</div>\n"
-				"\t\t";
-		#line 123 "SignIn.tmpl"
-		} // end of template page_content
-	#line 125 "SignIn.tmpl"
-	}; // end of class sign_in_view
-#line 126 "SignIn.tmpl"
-} // end of namespace pci_skin
-#line 2 "SignUp.tmpl"
-#include "ViewContent.h" 
-#line 4 "SignUp.tmpl"
-namespace pci_skin {
-	#line 5 "SignUp.tmpl"
-	struct sign_up_view :public template_view
-	#line 5 "SignUp.tmpl"
-	{
-	#line 5 "SignUp.tmpl"
-		ViewContent::SignUpContent &content;
-	#line 5 "SignUp.tmpl"
-		sign_up_view(std::ostream &_s,ViewContent::SignUpContent &_content): template_view(_s,_content),content(_content)
-	#line 5 "SignUp.tmpl"
-		{
-	#line 5 "SignUp.tmpl"
-		}
-		#line 8 "SignUp.tmpl"
-		virtual void css_links() {
-			#line 9 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\t";
-			#line 9 "SignUp.tmpl"
-			template_view::css_links();
-			#line 11 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\t<link href=\"/css/sign_up.css\" rel=\"stylesheet\" type=\"text/css\" />\n"
-				"\t\t";
-		#line 11 "SignUp.tmpl"
-		} // end of template css_links
-		#line 13 "SignUp.tmpl"
-		virtual void javascript_code() {
-			#line 140 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\tfunction addTextfieldLabel(textfieldId, labelText) {\n"
-				"\t\t\t\tvar textfield = $('#' + textfieldId);\n"
-				"\t\t\t\tvar label = $('<label>' + labelText + '</label>');\n"
-				"\t\t\t\tlabel.attr('id', textfieldId + '_label');\n"
-				"\t\t\t\tlabel.attr('for', textfieldId);\n"
-				"\t\t\t\tlabel.css('position', 'absolute');\n"
-				"\t\t\t\tlabel.offset(textfield.offset());\n"
-				"\t\t\t\tlabel.addClass('pci_label_textfield');\n"
-				"\t\t\t\t\n"
-				"\t\t\t\ttextfield.blur(function() {\n"
-				"\t\t\t\t\tif ($(this).val().length == 0) {\n"
-				"\t\t\t\t\t\tvar label = $('#' + $(this).attr('id') + '_label');\n"
-				"\t\t\t\t\t\tlabel.removeClass('focus');\n"
-				"\t\t\t\t\t\tlabel.css('display', 'inline');\n"
-				"\t\t\t\t\t}\n"
-				"\t\t\t\t});\n"
-				"\t\t\t\t\n"
-				"\t\t\t\ttextfield.change(function() {\n"
-				"\t\t\t\t\thideErrorBox($(this).attr('id'));\n"
-				"\t\t\t\t\tif ($(this).val().length > 0)\n"
-				"\t\t\t\t\t\t$('#' + $(this).attr('id') + '_label').css('display', 'none');\n"
-				"\t\t\t\t});\n"
-				"\t\t\t\t\n"
-				"\t\t\t\ttextfield.focus(function() {\n"
-				"\t\t\t\t\tif ($(this).val().length == 0)\n"
-				"\t\t\t\t\t\t$('#' + $(this).attr('id') + '_label').addClass('focus');\n"
-				"\t\t\t\t});\n"
-				"\t\t\t\t\n"
-				"\t\t\t\ttextfield.keydown(function() {\n"
-				"\t\t\t\t\t$('#' + $(this).attr('id') + '_label').css('display', 'none');\n"
-				"\t\t\t\t});\n"
-				"\t\t\t\t\n"
-				"\t\t\t\ttextfield.parent().prepend(label);\n"
-				"\t\t\t}\n"
-				"\t\t\t\n"
-				"\t\t\tfunction configureDropdownlist(dropdownlistId) {\n"
-				"\t\t\t\t$('#' + dropdownlistId).change(function() {\n"
-				"\t\t\t\t\tif($(this).prop('selectedIndex') > 0) {\n"
-				"\t\t\t\t\t\t$(this).addClass('selected');\n"
-				"\t\t\t\t\t\thideErrorBox($(this).attr('id'));\n"
-				"\t\t\t\t\t} else\n"
-				"\t\t\t\t\t\t$(this).removeClass('selected');\n"
-				"\t\t\t\t});\n"
-				"\t\t\t}\n"
-				"\t\t\t\n"
-				"\t\t\tfunction configureDatepicker(elementId) {\n"
-				"\t\t\t\t$('#' + elementId).datepicker({\n"
-				"\t\t\t\t    showOn:'focus',\n"
-				"\t\t\t    \tyearRange:'1920:2010',\n"
-				"\t\t\t    \tdateFormat:'dd-mm-yy',\n"
-				"\t\t\t    \tchangeMonth:true,\n"
-				"\t\t\t    \tchangeYear:true\n"
-				"\t\t\t\t});\n"
-				"\t\t\t}\n"
-				"\t\t\t\n"
-				"\t\t\tfunction showErrorBox(elementId, errorDescription) {\n"
-				"\t\t\t\tvar element = $('#' + elementId);\n"
-				"\t\t\t\tvar box = $('<div>' + errorDescription + '</div>');\n"
-				"\t\t\t\tbox.attr('id', elementId + '_error_box');\n"
-				"\t\t\t\tbox.css('position', 'absolute');\n"
-				"\t\t\t\tvar offset = element.offset();\n"
-				"\t\t\t\toffset.left += element.outerWidth() + 8;\n"
-				"\t\t\t\tbox.offset(offset);\n"
-				"\t\t\t\tbox.addClass('pci_box_error');\n"
-				"\t\t\t\telement.addClass('error');\n"
-				"\t\t\t\telement.parent().append(box);\n"
-				"\t\t\t}\n"
-				"\t\t\t\n"
-				"\t\t\tfunction hideErrorBox(elementId) {\n"
-				"\t\t\t\t$('#' + elementId).removeClass('error');\n"
-				"\t\t\t\t$('#' + elementId + '_error_box').remove();\n"
-				"\t\t\t}\n"
-				"\t\t\t\n"
-				"\t\t\tfunction hideErrorBoxes() {\n"
-				"\t\t\t\t$('.error').removeClass('error');\n"
-				"\t\t\t\t$('div.pci_box_error').remove();\n"
-				"\t\t\t}\n"
-				"\t\t\t\n"
-				"\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_first_name', 'Nombre');\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_last_name', 'Apellido');\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_user_name', 'Nombre de usuario');\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_email', 'E-Mail');\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_password', 'Contraseña');\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_password_verification', 'Confirmar contraseña');\n"
-				"\t\t\t\taddTextfieldLabel('pci_textfield_sign_up_date', 'Fecha de nacimiento');\n"
-				"\t\t\t\tconfigureDropdownlist('pci_dropdownlist_sign_up_genre');\n"
-				"\t\t\t\tconfigureDatepicker('pci_textfield_sign_up_date');\n"
-				"\t\t\t\t\n"
-				"\t\t\t\t$(\"#signUpForm\").validate(\n"
-				"   \t\t\t\t \t{  rules: {\n"
-				"    \t\t\t\t\t\t\tpassword: {\n"
-				"    \t\t\t\t\t\t\t\t\t\trequired: true,\n"
-				"    \t\t\t\t\t\t\t\t\t\tminlength: 6,\n"
-				"    \t\t\t\t\t\t\t\t\t\t},\n"
-				"   \t\t\t\t\t\t\t\tpassword_verification: {\n"
-				"      \t\t\t\t\t\t\t\t\t\tequalTo: \"#pci_textfield_sign_up_password\"\n"
-				"    \t\t\t\t\t\t\t\t\t\t\t\t\t}\n"
-				"  \t\t\t\t\t\t\t\t},\n"
-				"  \t\t\t\t\t  errorPlacement: function(error, element){\n"
-				"  \t\t\t\t\t  \t\tshowErrorBox(element.attr('id'), error.html());\n"
-				"  \t\t\t\t\t  }\n"
-				"                   }\n"
-				"   \t\t\t\t \n"
-				"   \t\t\t\t );\n"
-				"\t\t\t});\n"
-				"\t\t\t\n"
-				"\t\t\tjQuery.extend(jQuery.validator.messages, {\n"
-				"\t\t\t\trequired: \"Campo requerido.\",\n"
-				"\t\t\t\temail: \"La dirección de correo es inválida. \",\n"
-				"\t\t\t\turl: \"Please enter a valid URL.\",\n"
-				"\t\t\t\tdate: \"Please enter a valid date.\",\n"
-				"\t\t\t\tdateISO: \"Please enter a valid date (ISO).\",\n"
-				"\t\t\t\tnumber: \"Please enter a valid number.\",\n"
-				"\t\t\t\tdigits: \"Please enter only digits.\",\n"
-				"\t\t\t\tcreditcard: \"Please enter a valid credit card number.\",\n"
-				"\t\t\t\tequalTo: \"Las contraseñas no coinciden.\",\n"
-				"\t\t\t\taccept: \"Please enter a value with a valid extension.\",\n"
-				"\t\t\t\tmaxlength: jQuery.validator.format(\"Please enter no more than {0} characters.\"),\n"
-				"\t\t\t\tminlength: jQuery.validator.format(\"La contraseña debe tener al menos {0} caracters.\"),\n"
-				"\t\t\t\trangelength: jQuery.validator.format(\"Please enter a value between {0} and {1} characters long.\"),\n"
-				"\t\t\t\trange: jQuery.validator.format(\"Please enter a value between {0} and {1}.\"),\n"
-				"\t\t\t\tmax: jQuery.validator.format(\"Please enter a value less than or equal to {0}.\"),\n"
-				"\t\t\t\tmin: jQuery.validator.format(\"Please enter a value greater than or equal to {0}.\")\n"
-				"\t\t\t});\n"
-				"\t\t\t\n"
-				"\t\t";
-		#line 140 "SignUp.tmpl"
-		} // end of template javascript_code
-		#line 142 "SignUp.tmpl"
-		virtual void page_content() {
-			#line 143 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\t";
-			#line 143 "SignUp.tmpl"
-			template_view::header_bar();
-			#line 144 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\t";
-			#line 144 "SignUp.tmpl"
-			template_view::navigation_menu();
-			#line 149 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\t<div id=\"pci_sign_up_main_container\">\n"
-				"\t\t\t\t<div class=\"pci_box_container\">\n"
-				"\t\t\t\t\t<h1>Registrar</h1>\n"
-				"\t\t\t\t\t<form id=\"signUpForm\" action=\"\" method=\"post\">\n"
-				"\t\t\t\t\t\t";
-			#line 149 "SignUp.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.form_info).render(_form_context); }
-			#line 153 "SignUp.tmpl"
-			out()<<"\n"
-				"\t\t\t\t\t</form>\n"
-				"\t\t\t\t</div>\n"
-				"\t\t\t</div>\n"
-				"\t\t";
-		#line 153 "SignUp.tmpl"
-		} // end of template page_content
-	#line 156 "SignUp.tmpl"
-	}; // end of class sign_up_view
-#line 157 "SignUp.tmpl"
+#line 74 "Index.tmpl"
 } // end of namespace pci_skin
 #line 2 "Problems.tmpl"
 #include "ViewContent.h" 
@@ -1040,89 +790,94 @@ namespace pci_skin {
 		} // end of template css_links
 		#line 14 "Problems.tmpl"
 		virtual void javascript_code() {
-			#line 18 "Problems.tmpl"
+			#line 15 "Problems.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 15 "Problems.tmpl"
+			template_view::javascript_code();
+			#line 19 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
 				"\t\t\t\t$('#pci_navigation_menu_problems_button').addClass('active');\n"
 				"\t\t\t});\n"
 				"\t\t";
-		#line 18 "Problems.tmpl"
+		#line 19 "Problems.tmpl"
 		} // end of template javascript_code
-		#line 21 "Problems.tmpl"
+		#line 22 "Problems.tmpl"
 		virtual void page_content() {
-			#line 22 "Problems.tmpl"
+			#line 23 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 22 "Problems.tmpl"
+			#line 23 "Problems.tmpl"
 			template_view::header_bar();
-			#line 23 "Problems.tmpl"
+			#line 24 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 23 "Problems.tmpl"
+			#line 24 "Problems.tmpl"
 			template_view::navigation_menu();
-			#line 26 "Problems.tmpl"
+			#line 27 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_problems_main_container\">\n"
 				"\t\t\t\t<div class=\"pci_box_container\">\n"
 				"\t\t\t\t\t";
-			#line 26 "Problems.tmpl"
+			#line 27 "Problems.tmpl"
 			if(content.user_signed_in) {
-				#line 27 "Problems.tmpl"
+				#line 28 "Problems.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t";
-				#line 27 "Problems.tmpl"
+				#line 28 "Problems.tmpl"
 				template_view::toolbar_problems();
-				#line 29 "Problems.tmpl"
+				#line 30 "Problems.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t<div class=\"pci_horizontal_line\"></div>\n"
 					"\t\t\t\t\t";
-			#line 29 "Problems.tmpl"
-			} // endif
 			#line 30 "Problems.tmpl"
+			} // endif
+			#line 31 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t";
-			#line 30 "Problems.tmpl"
+			#line 31 "Problems.tmpl"
 			if((*content.problems).begin()!=(*content.problems).end()) {
-				#line 31 "Problems.tmpl"
+				#line 32 "Problems.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t";
-				#line 31 "Problems.tmpl"
+				#line 32 "Problems.tmpl"
 				for(CPPCMS_TYPEOF((*content.problems).begin()) problem_ptr=(*content.problems).begin(),problem_ptr_end=(*content.problems).end();problem_ptr!=problem_ptr_end;++problem_ptr) {
-				#line 31 "Problems.tmpl"
+				#line 32 "Problems.tmpl"
 				CPPCMS_TYPEOF(*problem_ptr) &problem=*problem_ptr;
-					#line 33 "Problems.tmpl"
+					#line 34 "Problems.tmpl"
 					out()<<"\n"
 						"\t\t\t\t\t\t\t<div class=\"pci_box_description pci_problems_problem_description\">\n"
 						"\t\t\t\t\t\t\t\t";
-					#line 33 "Problems.tmpl"
+					#line 34 "Problems.tmpl"
 					template_view::problem_description(problem);
-					#line 35 "Problems.tmpl"
+					#line 36 "Problems.tmpl"
 					out()<<"\n"
 						"\t\t\t\t\t\t\t</div>\n"
 						"\t\t\t\t\t\t";
-				#line 35 "Problems.tmpl"
-				} // end of item
 				#line 36 "Problems.tmpl"
+				} // end of item
+				#line 37 "Problems.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t";
-			#line 36 "Problems.tmpl"
+			#line 37 "Problems.tmpl"
 			 } else {
-				#line 38 "Problems.tmpl"
+				#line 39 "Problems.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\tNo se encontraron problemas\n"
 					"\t\t\t\t\t";
-			#line 38 "Problems.tmpl"
+			#line 39 "Problems.tmpl"
 			} // end of empty
-			#line 41 "Problems.tmpl"
+			#line 42 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 41 "Problems.tmpl"
+		#line 42 "Problems.tmpl"
 		} // end of template page_content
-	#line 44 "Problems.tmpl"
+	#line 45 "Problems.tmpl"
 	}; // end of class problems_view
-#line 45 "Problems.tmpl"
+#line 46 "Problems.tmpl"
 } // end of namespace pci_skin
 #line 2 "Problem.tmpl"
 #include "ViewContent.h" 
@@ -1294,63 +1049,63 @@ namespace pci_skin {
 				"\t\t";
 		#line 11 "NewProblem.tmpl"
 		} // end of template css_links
-		#line 13 "NewProblem.tmpl"
+		#line 14 "NewProblem.tmpl"
+		virtual void js_links() {
+			#line 15 "NewProblem.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 15 "NewProblem.tmpl"
+			template_view::js_links();
+			#line 17 "NewProblem.tmpl"
+			out()<<"\n"
+				"\t\t\t<script src=\"/lib/ckeditor/ckeditor.js\"></script>\n"
+				"\t\t";
+		#line 17 "NewProblem.tmpl"
+		} // end of template js_links
+		#line 20 "NewProblem.tmpl"
 		virtual void javascript_code() {
-			#line 33 "NewProblem.tmpl"
+			#line 21 "NewProblem.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 21 "NewProblem.tmpl"
+			template_view::javascript_code();
+			#line 25 "NewProblem.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function(){\n"
-				"\t\t\t\tCKEDITOR.replace('pci_text_editor', {\n"
-				"\t\t\t\t\tcustomConfig: '',\n"
-				"\t\t\t\t\textraPlugins: 'bbcode',\n"
-				"\t\t\t\t\tfontSize_sizes: \"10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%\",\n"
-				"\t\t\t\t\tlanguage: 'es',\n"
-				"\t\t\t\t\tremovePlugins: 'elementspath, colordialog',\n"
-				"\t\t\t\t\tresize_enabled: false,\n"
-				"\t\t\t\t\ttoolbar: [\n"
-				"\t\t\t\t\t\t[ 'Undo', '-', 'Redo' ],\n"
-				"\t\t\t\t\t\t[ 'FontSize' ],\n"
-				"\t\t\t\t\t\t[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],\n"
-				"\t\t\t\t\t\t[ 'RemoveFormat' ],\n"
-				"\t\t\t\t\t\t[ 'Link', '-', 'Unlink' ],\n"
-				"\t\t\t\t\t\t[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]\n"
-				"\t\t\t\t\t],\n"
-				"\t\t\t\t\tuiColor: '#6CA4C8'\n"
-				"\t\t\t\t});\n"
+				"\t\t\t\tconfigureTexteditor('pci_texteditor');\n"
 				"\t\t\t});\n"
 				"\t\t";
-		#line 33 "NewProblem.tmpl"
+		#line 25 "NewProblem.tmpl"
 		} // end of template javascript_code
-		#line 36 "NewProblem.tmpl"
+		#line 28 "NewProblem.tmpl"
 		virtual void page_content() {
-			#line 37 "NewProblem.tmpl"
+			#line 29 "NewProblem.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 37 "NewProblem.tmpl"
+			#line 29 "NewProblem.tmpl"
 			template_view::header_bar();
-			#line 38 "NewProblem.tmpl"
+			#line 30 "NewProblem.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 38 "NewProblem.tmpl"
+			#line 30 "NewProblem.tmpl"
 			template_view::navigation_menu();
-			#line 42 "NewProblem.tmpl"
+			#line 33 "NewProblem.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_new_problem_main_container\">\n"
 				"\t\t\t\t<div class=\"pci_box_container\">\n"
-				"\t\t\t\t\t<form action=\"\" method=\"post\">\n"
-				"\t\t\t\t\t\t";
-			#line 42 "NewProblem.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.form_info).render(_form_context); }
-			#line 46 "NewProblem.tmpl"
+				"\t\t\t\t\t";
+			#line 33 "NewProblem.tmpl"
+			template_view::new_problem_form(content.new_problem_form_info);
+			#line 36 "NewProblem.tmpl"
 			out()<<"\n"
-				"\t\t\t\t\t</form>\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 46 "NewProblem.tmpl"
+		#line 36 "NewProblem.tmpl"
 		} // end of template page_content
-	#line 49 "NewProblem.tmpl"
+	#line 39 "NewProblem.tmpl"
 	}; // end of class new_problem_view
-#line 50 "NewProblem.tmpl"
+#line 40 "NewProblem.tmpl"
 } // end of namespace pci_skin
 #line 2 "User.tmpl"
 #include "ViewContent.h" 
@@ -1383,27 +1138,32 @@ namespace pci_skin {
 		} // end of template css_links
 		#line 14 "User.tmpl"
 		virtual void javascript_code() {
-			#line 18 "User.tmpl"
+			#line 15 "User.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 15 "User.tmpl"
+			template_view::javascript_code();
+			#line 19 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
 				"\t\t\t\t$('#pci_navigation_menu_profile_button').addClass('active');\n"
 				"\t\t\t});\n"
 				"\t\t";
-		#line 18 "User.tmpl"
+		#line 19 "User.tmpl"
 		} // end of template javascript_code
-		#line 21 "User.tmpl"
+		#line 22 "User.tmpl"
 		virtual void page_content() {
-			#line 22 "User.tmpl"
+			#line 23 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 22 "User.tmpl"
+			#line 23 "User.tmpl"
 			template_view::header_bar();
-			#line 23 "User.tmpl"
+			#line 24 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 23 "User.tmpl"
+			#line 24 "User.tmpl"
 			template_view::navigation_menu();
-			#line 31 "User.tmpl"
+			#line 32 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\n"
 				"\t\t\t<div id=\"pci_user_main_container\">\n"
@@ -1413,13 +1173,13 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t<div id=\"title_container\">\n"
 				"\t\t\t\t\t\t\t\t<div id=\"rank_icon\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div id=\"big_name\">";
-			#line 31 "User.tmpl"
+			#line 32 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->first_name);
-			#line 31 "User.tmpl"
+			#line 32 "User.tmpl"
 			out()<<" ";
-			#line 31 "User.tmpl"
+			#line 32 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->last_name);
-			#line 96 "User.tmpl"
+			#line 97 "User.tmpl"
 			out()<<"</div>\n"
 				"\t\t\t\t\t\t\t\t<div id=\"user_stats\">\n"
 				"\t\t\t\t\t\t\t\t\t<div class=\"stat_container\">\n"
@@ -1486,9 +1246,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 96 "User.tmpl"
+			#line 97 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->user_name);
-			#line 105 "User.tmpl"
+			#line 106 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1499,9 +1259,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 105 "User.tmpl"
+			#line 106 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->first_name);
-			#line 114 "User.tmpl"
+			#line 115 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1512,9 +1272,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 114 "User.tmpl"
+			#line 115 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->last_name);
-			#line 123 "User.tmpl"
+			#line 124 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1525,9 +1285,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 123 "User.tmpl"
+			#line 124 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->genre);
-			#line 132 "User.tmpl"
+			#line 133 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1538,9 +1298,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 132 "User.tmpl"
+			#line 133 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->birth_date->toString("%d/%m/%Y"));
-			#line 141 "User.tmpl"
+			#line 142 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1551,9 +1311,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 141 "User.tmpl"
+			#line 142 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->email);
-			#line 150 "User.tmpl"
+			#line 151 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1564,9 +1324,9 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t<div class=\"horizontal_line\"></div>\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_value\">\n"
 				"\t\t\t\t\t\t\t\t\t";
-			#line 150 "User.tmpl"
+			#line 151 "User.tmpl"
 			out()<<cppcms::filters::escape(content.user->sign_up_datetime->toString("%d/%m/%Y %H:%M:%S"));
-			#line 158 "User.tmpl"
+			#line 159 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t</div>\n"
@@ -1576,11 +1336,11 @@ namespace pci_skin {
 				"\t\t\t</div>\n"
 				"\t\t\n"
 				"\t\t";
-		#line 158 "User.tmpl"
+		#line 159 "User.tmpl"
 		} // end of template page_content
-	#line 161 "User.tmpl"
+	#line 162 "User.tmpl"
 	}; // end of class user_view
-#line 162 "User.tmpl"
+#line 163 "User.tmpl"
 } // end of namespace pci_skin
 #line 2 "Solution.tmpl"
 #include "ViewContent.h" 
@@ -1693,36 +1453,62 @@ namespace pci_skin {
 		#line 11 "NewSolution.tmpl"
 		} // end of template css_links
 		#line 14 "NewSolution.tmpl"
+		virtual void js_links() {
+			#line 15 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 15 "NewSolution.tmpl"
+			template_view::js_links();
+			#line 17 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t<script src=\"/lib/ckeditor/ckeditor.js\"></script>\n"
+				"\t\t";
+		#line 17 "NewSolution.tmpl"
+		} // end of template js_links
+		#line 20 "NewSolution.tmpl"
+		virtual void javascript_code() {
+			#line 21 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 21 "NewSolution.tmpl"
+			template_view::javascript_code();
+			#line 25 "NewSolution.tmpl"
+			out()<<"\n"
+				"\t\t\t$(document).ready(function(){\n"
+				"\t\t\t\tconfigureTexteditor('pci_texteditor');\n"
+				"\t\t\t});\n"
+				"\t\t";
+		#line 25 "NewSolution.tmpl"
+		} // end of template javascript_code
+		#line 28 "NewSolution.tmpl"
 		virtual void page_content() {
-			#line 15 "NewSolution.tmpl"
+			#line 29 "NewSolution.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 15 "NewSolution.tmpl"
+			#line 29 "NewSolution.tmpl"
 			template_view::header_bar();
-			#line 16 "NewSolution.tmpl"
+			#line 30 "NewSolution.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 16 "NewSolution.tmpl"
+			#line 30 "NewSolution.tmpl"
 			template_view::navigation_menu();
-			#line 20 "NewSolution.tmpl"
+			#line 33 "NewSolution.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_new_solution_main_container\">\n"
 				"\t\t\t\t<div class=\"pci_box_container\">\n"
-				"\t\t\t\t\t<form action=\"\" method=\"post\">\n"
-				"\t\t\t\t\t\t";
-			#line 20 "NewSolution.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (content.form_info).render(_form_context); }
-			#line 24 "NewSolution.tmpl"
+				"\t\t\t\t\t";
+			#line 33 "NewSolution.tmpl"
+			template_view::new_solution_form(content.new_solution_form_info);
+			#line 36 "NewSolution.tmpl"
 			out()<<"\n"
-				"\t\t\t\t\t</form>\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 24 "NewSolution.tmpl"
+		#line 36 "NewSolution.tmpl"
 		} // end of template page_content
-	#line 27 "NewSolution.tmpl"
+	#line 39 "NewSolution.tmpl"
 	}; // end of class new_solution_view
-#line 28 "NewSolution.tmpl"
+#line 40 "NewSolution.tmpl"
 } // end of namespace pci_skin
 #line 2 "Ideas.tmpl"
 #include "ViewContent.h" 
@@ -1755,27 +1541,32 @@ namespace pci_skin {
 		} // end of template css_links
 		#line 14 "Ideas.tmpl"
 		virtual void javascript_code() {
-			#line 18 "Ideas.tmpl"
+			#line 15 "Ideas.tmpl"
+			out()<<"\n"
+				"\t\t\t";
+			#line 15 "Ideas.tmpl"
+			template_view::javascript_code();
+			#line 19 "Ideas.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
 				"\t\t\t\t$('#pci_navigation_menu_ideas_button').addClass('active');\n"
 				"\t\t\t});\n"
 				"\t\t";
-		#line 18 "Ideas.tmpl"
+		#line 19 "Ideas.tmpl"
 		} // end of template javascript_code
-		#line 21 "Ideas.tmpl"
+		#line 22 "Ideas.tmpl"
 		virtual void page_content() {
-			#line 22 "Ideas.tmpl"
+			#line 23 "Ideas.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 22 "Ideas.tmpl"
+			#line 23 "Ideas.tmpl"
 			template_view::header_bar();
-			#line 23 "Ideas.tmpl"
+			#line 24 "Ideas.tmpl"
 			out()<<"\n"
 				"\t\t\t";
-			#line 23 "Ideas.tmpl"
+			#line 24 "Ideas.tmpl"
 			template_view::navigation_menu();
-			#line 29 "Ideas.tmpl"
+			#line 30 "Ideas.tmpl"
 			out()<<"\n"
 				"\t\t\t<div id=\"pci_ideas_main_container\">\n"
 				"\t\t\t\t<div class=\"pci_box_container\">\n"
@@ -1783,51 +1574,47 @@ namespace pci_skin {
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 29 "Ideas.tmpl"
+		#line 30 "Ideas.tmpl"
 		} // end of template page_content
-	#line 32 "Ideas.tmpl"
+	#line 33 "Ideas.tmpl"
 	}; // end of class ideas_view
-#line 33 "Ideas.tmpl"
+#line 34 "Ideas.tmpl"
 } // end of namespace pci_skin
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
 namespace {
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
  cppcms::views::generator my_generator; 
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
  struct loader { 
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
   loader() { 
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.name("pci_skin");
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::template_view,ViewContent::TemplateContent>("template_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::index_view,ViewContent::IndexContent>("index_view",true);
-#line 34 "Ideas.tmpl"
-   my_generator.add_view<pci_skin::sign_in_view,ViewContent::SignInContent>("sign_in_view",true);
-#line 34 "Ideas.tmpl"
-   my_generator.add_view<pci_skin::sign_up_view,ViewContent::SignUpContent>("sign_up_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::problems_view,ViewContent::ProblemsContent>("problems_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::problem_view,ViewContent::ProblemContent>("problem_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::new_problem_view,ViewContent::NewProblemContent>("new_problem_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::user_view,ViewContent::UserContent>("user_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::solution_view,ViewContent::SolutionContent>("solution_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::new_solution_view,ViewContent::NewSolutionContent>("new_solution_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
    my_generator.add_view<pci_skin::ideas_view,ViewContent::IdeasContent>("ideas_view",true);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
     cppcms::views::pool::instance().add(my_generator);
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
  }
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
  ~loader() {  cppcms::views::pool::instance().remove(my_generator); }
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
 } a_loader;
-#line 34 "Ideas.tmpl"
+#line 35 "Ideas.tmpl"
 } // anon 

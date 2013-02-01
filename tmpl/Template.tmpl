@@ -54,7 +54,7 @@
 							<div id="pci_header_bar_logo"></div>
 						</a>
 					</div>
-					<div id="pci_header_bar_button_container">
+					<div id="pci_header_bar_sign_container">
 					 	<% if user_signed_in %>
 							<a href="<% url "/sign_out" %>">
 								<div class="pci_button_classic pci_header_bar_button">
@@ -67,22 +67,14 @@
 					 			</span>
 				 			</div>
 						<% else %>
-							<div id="pci_sign_in_floating_form">
-								<form id="signInForm" action="" method="post">
-									<% form as_p sign_in_form_info %>
-								</form>
-							</div>
-							<!-- href="<% url "/sign_in" %>" -->
-							<a onclick="javascript:show_sign_in_form()">
+							<a href="javascript:void(0)">
 								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
 									Ingresar
 								</div>
 							</a>
-							<a href="<% url "/sign_up" %>">
-								<div class="pci_button_classic pci_header_bar_button">
-									Registrar
-								</div>
-							</a>
+							<div id="pci_header_bar_sign_in_container">
+								<% include sign_in_form(sign_in_form_info) %>
+							</div>
 						<% end %>
 					</div>
 				</div>
@@ -193,6 +185,20 @@
 		<% end template %>
 		
 		
+		<% template new_problem_form(NewProblemFormInfoPointer new_problem_form_info) %>
+			<form action="" method="post">
+				<% form as_p *new_problem_form_info %>
+			</form>
+		<% end template %>
+		
+		
+		<% template new_solution_form(NewSolutionFormInfoPointer new_solution_form_info) %>
+			<form action="" method="post">
+				<% form as_p *new_solution_form_info %>
+			</form>
+		<% end template %>
+		
+		
 		<% template problem_description(ProblemPointer problem) %>
 			<a class="pci_link_description" href="<% url "/publication" using problem->id %>">
 				<%= problem->description %>
@@ -205,6 +211,20 @@
 				<% end %>
 				- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
+		<% end template %>
+		
+		
+		<% template sign_in_form(SignInFormInfoPointer sign_in_form_info) %>
+			<form action="" method="post">
+				<% form as_p *sign_in_form_info %>
+			</form>
+		<% end template %>
+		
+		
+		<% template sign_up_form(SignUpFormInfoPointer sign_up_form_info) %>
+			<form action="" method="post">
+				<% form as_p *sign_up_form_info %>
+			</form>
 		<% end template %>
 		
 		
@@ -222,7 +242,7 @@
 			</span>
 		<% end template %>
 		
-				
+		
 		<% template toolbar_problems() %>
 			<div id="pci_toolbar_problems_container">
 				<a href="<% url "/new_problem" %>">
@@ -258,15 +278,22 @@
 
 		<% template css_links() %>
 			<link href="/css/template.css" rel="stylesheet" type="text/css" />
-			<link href="/css/ui-lightness/jquery-ui-1.9.2.custom.css" rel="stylesheet">
+		<% end template %>
+
+
+		<% template js_links() %>
+			<script src="/js/sign_in.js"></script>
+			<script src="/js/utilities.js"></script>
+			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
 		<% end template %>
 		
 		
 		<% template javascript_code() %>
-			function show_sign_in_form(){
-				$("#pci_sign_in_floating_form").toggle(300);
-				$("#pci_header_bar_button_sign_in").toggleClass('floating_form_visible');
-			}
+			$(document).ready(function() {
+				configureTextfield('pci_sign_in_textfield_user_name', 'Nombre de usuario');
+				configureTextfield('pci_sign_in_textfield_password', 'Contraseña');
+				configureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');
+			});
 		<% end template %>
 		
 		
@@ -279,10 +306,7 @@
 			<html>
 				<head>
 					<% include css_links() %>
-					<script src="/js/jquery-1.9.0.min.js"></script>
-					<script src="/js/jquery-ui-1.9.2.custom.js"></script>
-					<script src="/lib/ckeditor/ckeditor.js"></script>
-					<script src="/js/jquery.validate.js"></script>
+					<% include js_links() %>
 					<script>
 						<% include javascript_code() %>
 					</script>
