@@ -341,13 +341,13 @@ namespace pci_skin {
 		#line 185 "Template.tmpl"
 		} // end of template navigation_menu
 		#line 188 "Template.tmpl"
-		virtual void new_problem_form(NewProblemFormInfoPointer new_problem_form_info) {
+		virtual void new_problem_form(ViewContent::NewProblemFormInfo &new_problem_form_info) {
 			#line 190 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<form action=\"\" method=\"post\">\n"
 				"\t\t\t\t";
 			#line 190 "Template.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*new_problem_form_info).render(_form_context); }
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (new_problem_form_info).render(_form_context); }
 			#line 192 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</form>\n"
@@ -355,13 +355,13 @@ namespace pci_skin {
 		#line 192 "Template.tmpl"
 		} // end of template new_problem_form
 		#line 195 "Template.tmpl"
-		virtual void new_solution_form(NewSolutionFormInfoPointer new_solution_form_info) {
+		virtual void new_solution_form(ViewContent::NewSolutionFormInfo &new_solution_form_info) {
 			#line 197 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<form action=\"\" method=\"post\">\n"
 				"\t\t\t\t";
 			#line 197 "Template.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*new_solution_form_info).render(_form_context); }
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (new_solution_form_info).render(_form_context); }
 			#line 199 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</form>\n"
@@ -419,13 +419,13 @@ namespace pci_skin {
 		#line 214 "Template.tmpl"
 		} // end of template problem_description
 		#line 217 "Template.tmpl"
-		virtual void sign_in_form(SignInFormInfoPointer sign_in_form_info) {
+		virtual void sign_in_form(ViewContent::SignInFormInfo &sign_in_form_info) {
 			#line 219 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<form action=\"\" method=\"post\">\n"
 				"\t\t\t\t";
 			#line 219 "Template.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*sign_in_form_info).render(_form_context); }
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (sign_in_form_info).render(_form_context); }
 			#line 221 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</form>\n"
@@ -433,13 +433,13 @@ namespace pci_skin {
 		#line 221 "Template.tmpl"
 		} // end of template sign_in_form
 		#line 224 "Template.tmpl"
-		virtual void sign_up_form(SignUpFormInfoPointer sign_up_form_info) {
+		virtual void sign_up_form(ViewContent::SignUpFormInfo &sign_up_form_info) {
 			#line 226 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<form action=\"\" method=\"post\">\n"
 				"\t\t\t\t";
 			#line 226 "Template.tmpl"
-			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (*sign_up_form_info).render(_form_context); }
+			{ cppcms::form_context _form_context(out(),cppcms::form_flags::as_html,cppcms::form_flags::as_p); (sign_up_form_info).render(_form_context); }
 			#line 228 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t</form>\n"

@@ -185,16 +185,16 @@
 		<% end template %>
 		
 		
-		<% template new_problem_form(NewProblemFormInfoPointer new_problem_form_info) %>
+		<% template new_problem_form(ViewContent::NewProblemFormInfo &new_problem_form_info) %>
 			<form action="" method="post">
-				<% form as_p *new_problem_form_info %>
+				<% form as_p new_problem_form_info %>
 			</form>
 		<% end template %>
 		
 		
-		<% template new_solution_form(NewSolutionFormInfoPointer new_solution_form_info) %>
+		<% template new_solution_form(ViewContent::NewSolutionFormInfo &new_solution_form_info) %>
 			<form action="" method="post">
-				<% form as_p *new_solution_form_info %>
+				<% form as_p new_solution_form_info %>
 			</form>
 		<% end template %>
 		
@@ -214,16 +214,16 @@
 		<% end template %>
 		
 		
-		<% template sign_in_form(SignInFormInfoPointer sign_in_form_info) %>
+		<% template sign_in_form(ViewContent::SignInFormInfo &sign_in_form_info) %>
 			<form action="" method="post">
-				<% form as_p *sign_in_form_info %>
+				<% form as_p sign_in_form_info %>
 			</form>
 		<% end template %>
 		
 		
-		<% template sign_up_form(SignUpFormInfoPointer sign_up_form_info) %>
+		<% template sign_up_form(ViewContent::SignUpFormInfo &sign_up_form_info) %>
 			<form action="" method="post">
-				<% form as_p *sign_up_form_info %>
+				<% form as_p sign_up_form_info %>
 			</form>
 		<% end template %>
 		

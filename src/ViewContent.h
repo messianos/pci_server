@@ -1,12 +1,13 @@
+
 #ifndef VIEWCONTENT_H_
 #define VIEWCONTENT_H_
 
 // Includes
 #include "Clarification.h"
+#include "ErrorCode.h"
 #include "Problem.h"
 #include "Solution.h"
 #include "User.h"
-#include "ErrorCode.h"
 #include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
@@ -65,20 +66,17 @@ namespace ViewContent {
 		std::string user_name;
 		std::string user_first_name;
 		std::string user_last_name;
-		SignInFormInfo *sign_in_form_info;
+		ErrorCode* error_code;
+		SignInFormInfo sign_in_form_info;
 
 		TemplateContent();
-	};
-
-	struct FormContent : public TemplateContent {
-		ErrorCode* error_code;
 	};
 
 	struct IdeasContent : TemplateContent {
 	};
 
-	struct IndexContent : FormContent {
-		SignUpFormInfo *sign_up_form_info;
+	struct IndexContent : TemplateContent {
+		SignUpFormInfo sign_up_form_info;
 	};
 
 	struct ProblemContent : TemplateContent {
@@ -88,8 +86,8 @@ namespace ViewContent {
 		std::list<Clarification *> *clarifications;
 	};
 
-	struct NewProblemContent : FormContent {
-		NewProblemFormInfo *new_problem_form_info;
+	struct NewProblemContent : TemplateContent {
+		NewProblemFormInfo new_problem_form_info;
 	};
 
 	struct ProblemsContent : TemplateContent {
@@ -102,8 +100,8 @@ namespace ViewContent {
 		std::string problem_id;
 	};
 
-	struct NewSolutionContent : FormContent {
-		NewSolutionFormInfo *new_solution_form_info;
+	struct NewSolutionContent : TemplateContent {
+		NewSolutionFormInfo new_solution_form_info;
 	};
 
 	struct UserContent : TemplateContent {

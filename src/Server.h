@@ -5,6 +5,7 @@
 // Includes
 #include "DatabaseInterface.h"
 #include "Date.h"
+#include "ErrorCode.h"
 #include "IDManager.h"
 #include "InputValidator.h"
 #include "PasswordManager.h"
@@ -24,10 +25,10 @@ public:
 	Server(cppcms::service &service);
 	virtual ~Server();
 	void setSessionProperties(ViewContent::TemplateContent &content);
-	void processNewProblemPost(ViewContent::FormContent &content, ViewContent::NewProblemFormInfo &form_info);
-	void processNewSolutionPost(ViewContent::FormContent &content, ViewContent::NewSolutionFormInfo &form_info);
-	void processSignInPost(ViewContent::FormContent &content, ViewContent::SignInFormInfo &form_info);
-	void processSignUpPost(ViewContent::FormContent &content, ViewContent::SignUpFormInfo &form_info);
+	ErrorCode *processNewProblemPost(ViewContent::NewProblemFormInfo &form_info);
+	ErrorCode *processNewSolutionPost(ViewContent::NewSolutionFormInfo &form_info, std::string problem_id);
+	ErrorCode *processSignInPost(ViewContent::SignInFormInfo &form_info);
+	ErrorCode *processSignUpPost(ViewContent::SignUpFormInfo &form_info);
 	void ideas();
 	void index();
 	void newProblem();
