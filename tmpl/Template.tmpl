@@ -61,11 +61,13 @@
 									Salir
 								</div>
 							</a>
+							<a href="<% url "/user" using user_name %>">
 					 		<div id="pci_header_bar_user_name_container">
 					 			<span id="pci_header_bar_user_name">
 					 				<%= user_first_name %> <%= user_last_name %>
 					 			</span>
 				 			</div>
+				 			</a>
 						<% else %>
 							<a href="javascript:void(0)">
 								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">

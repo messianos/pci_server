@@ -105,13 +105,12 @@ body {
 }
 
 #user_personal_info{
-	padding:10px;
 }
 
 .feature_container{
- 	margin: 5px 0;
-	border-radius: 4px;
-	border: 1px solid #F0F0F0;
+	margin-top: 5px;
+	border-top: 1px solid #A0A0A0;
+	border-bottom: 1px solid #A0A0A0;
 }
 
 .feature_container:hover{
