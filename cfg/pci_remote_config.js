@@ -9,9 +9,8 @@
 	},
 	
 	"service" : {
-		"list" : [
-		          { "api" : "http" , "port" : 8080, "ip" : "127.0.0.1" }
-		          ]
+		"api" : "fastcgi" ,
+		"socket" : "stdin"
 	},
 	
 	"session" : {
@@ -25,12 +24,8 @@
 	},
 	
 	"views" : {
-		"paths" : [ "tmpl/lib" ],
+		"paths" : [ "lib" ],
 		"skins" : [ "pci_skin" ],
-		"default_skin" : [ "pci_skin" ],
-		"auto_reload" : true
-		// The application auto reloads the libraries so it isn't necesary
-		// to restart the server to test templates.
-		// TODO: Slows down the application performance.
+		"default_skin" : [ "pci_skin" ]
 	}
 }

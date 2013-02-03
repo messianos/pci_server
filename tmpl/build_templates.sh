@@ -1,5 +1,5 @@
 OUTPUT_FILE=../src/pci_skin.cpp
-OUTPUT_LIB=lib/libpci_skin.so
+OUTPUT_LIB=../lib/libpci_skin.so
 
 cd ../tmpl
 
