@@ -1,9 +1,4 @@
-{	
-	"file_server" : {
-		"document_root" : "www",
-		"enable": true
-	},
-	
+{		
 	"http" : {
 		"script_names" : [ "/", "/pci" ]
 	},
@@ -13,6 +8,14 @@
 		"socket" : "stdin"
 	},
 	
+    "logging" : {
+    	"level" : "debug",
+        "file" : {
+                "enable" : true,
+                "name" : "/var/log/lighttpd/pci_app_errors.log"
+        }
+    },
+    
 	"session" : {
 		"expire" : "browser",
 		"timeout" : 500,

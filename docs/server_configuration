@@ -1,0 +1,38 @@
+-----------------------------------------
+	SERVER CONFIGURATION
+
+CppCMS running with lighttpd webserver
+-----------------------------------------
+
+Lighttpd configuration file:
+	/etc/lighttpd/lighttpd.conf
+
+Server Deployment from GitHub script:
+	/home/messianos/deploy_server
+	Description:
+	The script downloads the zip of the entire project
+	from GitHub in master.zip, extracts to pci_deploy_temp,
+	builds templates, builds the project, and installs the
+	files in the following directories.
+	
+	Instalation directory:
+		/opt/pci_server (all the following relative to this)
+	Bin file name:
+		pci_server
+	Configuration files:
+		cfg/pci_remote_config.js (used)
+		cfg/pci_local_config.js (for local debugging)
+	Templates:
+		lib/libpci_skin.so
+	Static files directory:
+		/var/www/pci_server
+
+Aliases added for simplicity (in /etc/bash.bashrc):
+	pci_cd_install_dir	-> changes cwd to install dir
+	pci_restart_webserver	-> restarts lighttpd (with sudo)
+	pci_webserver_errors	-> prints lighttpd error log
+	edit_lighttpd_config	-> edits webserver config with nano
+				
+For debugging:
+	Runs the server logging out to 'log' file and returns to the shell
+		(./pci_server -c cfg/pci_config.js &>log) &
