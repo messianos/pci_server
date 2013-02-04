@@ -31,6 +31,7 @@ public:
 	ErrorCode *processSignUpPost(ViewContent::SignUpFormInfo &form_info);
 	void ideas();
 	void index();
+	void newClarificationAnswer();
 	void newProblem();
 	void newSolution(std::string problem_id);
 	void problem(std::string id);

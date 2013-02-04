@@ -99,7 +99,19 @@ h2 {
 }
 
 @font-face {
+	font-family:pci_font_text_clarification;
+	src:
+		local(Arial);
+}
+
+@font-face {
 	font-family:pci_font_text_footer;
+	src:
+		local(Arial);
+}
+
+@font-face {
+	font-family:pci_font_textarea;
 	src:
 		local(Arial);
 }
@@ -290,18 +302,6 @@ a.pci_link_user_name:hover {
 	text-decoration:underline;
 }
 
-span.pci_text_description {
-	color:#6F6F6F;
-	font-family:pci_font_text_description;
-	font-size:0.875em;
-}
-
-span.pci_text_footer {
-	color:#333333;
-	font-family:pci_font_text_footer;
-	font-size:0.875em;
-}
-
 input.pci_submit {
 	background-color:#FFFFFF;
 	border-color:#C2C2C2;
@@ -321,6 +321,47 @@ input.pci_submit {
 input.pci_submit:hover {
 	background-color:#F2F2F2;
 	border-color:#B5B5B5;
+}
+
+span.pci_text_description {
+	color:#6F6F6F;
+	font-family:pci_font_text_description;
+	font-size:0.875em;
+}
+
+span.pci_text_clarification {
+	color:#3F3F3F;
+	font-family:pci_font_text_clarification;
+	font-size:0.875em;
+}
+
+span.pci_text_footer {
+	color:#333333;
+	font-family:pci_font_text_footer;
+	font-size:0.875em;
+}
+
+textarea.pci_textarea_small {
+	background-color:#FFFFFF;
+	border-color:#D0D0D0;
+	border-style:solid;
+	border-width:1px;
+	color:#B5B5B5;
+	font-family:pci_font_textarea;
+	resize:none;
+}
+
+textarea.pci_textarea_small:focus {
+	border-color:#82C5F0;
+	box-shadow:0px 0px 8px 0px #82C5F0;
+}
+
+textarea.pci_textarea_small:hover {
+	border-color:#82C5F0;
+}
+
+textarea.pci_textarea_small.set {
+	color:#444444;
 }
 
 input.pci_textfield {
@@ -390,6 +431,25 @@ div.pci_clarifications_question_content {
 
 div.pci_clarifications_answer_content {
 	margin:16px 0px 0px 8px;
+}
+
+textarea.pci_clarifications_answer_textarea {
+	float:right;
+	font-size:0.875em;
+	height:19px;
+	line-height:16px;
+	max-width:96.2%;
+	padding:8px;
+	width:100%;
+}
+
+div.pci_clarifications_button_container {
+	
+}
+
+div.pci_clarifications_answer_button {
+	float:right;
+	margin-top:8px;
 }
 
 
@@ -488,7 +548,6 @@ div.pci_header_bar_button {
 #pci_information_footer_central_container {
 	margin:0px 128px;
 	min-width:1024px;
-	overflow:hidden;
 }
 
 #pci_information_footer_logo_extended_container {

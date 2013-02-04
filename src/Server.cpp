@@ -16,6 +16,9 @@ Server::Server(cppcms::service &service) : application(service) {
 	dispatcher().assign("", &Server::index, this);
 	mapper().assign("");
 
+	dispatcher().assign("/new_clarification_answer", &Server::newClarificationAnswer, this);
+	mapper().assign("new_clarification_answer", "/new_clarification_answer");
+
 	dispatcher().assign("/new_problem", &Server::newProblem, this);
 	mapper().assign("new_problem", "/new_problem");
 
@@ -182,6 +185,21 @@ void Server::index() {
 	render("index_view", content);
 }
 
+#include <iostream>
+// TODO
+void Server::newClarificationAnswer() {
+
+	// TODO: security measurements ---> only the creator can answer a question
+
+	if (request().request_method() == "POST") {
+		// TODO
+		cout << "Dumb method newClarificationAnswer() invoked with:" << endl;
+		cout << "Clarification ID: " << request().post("id") << endl;
+		cout << "Clarification answer: " << request().post("answer") << endl;
+		cout << "You need to actual implement this method" << endl;
+	}
+}
+
 void Server::newProblem() {
 	NewProblemContent content;
 
@@ -277,6 +295,8 @@ void Server::problems() {
 void Server::signOut() {
 	session().erase("user_signed_in");
 	session().erase("user_name");
+	session().erase("user_first_name");
+	session().erase("user_last_name");
 	response().set_redirect_header(url("/"));
 }
 

@@ -26,7 +26,7 @@
 					<div class="pci_box_content" id="pci_solution_solution_content">
 						<%= solution->content %>
 					</div>
-					<% include template_view::clarifications(clarifications) %>
+					<% include template_view::clarifications(clarifications, solution, user_signed_in, user_name) %>
 				</div>
 			</div>
 		<% end template %>

@@ -26,6 +26,67 @@ var templateConstants = {
 ----------------------------------------------------------------------------------------------
 */
 
+function configureClarificationTextarea(textareaId, answerButtonId, clarificationId) {
+	var textarea = $('#' + textareaId);
+	var answerButton = $('#' + answerButtonId);
+	textarea.attr('valueSet', '0');
+	textarea.attr('defaultHeight', textarea.height());
+	answerButton.css('display', 'none');
+
+	textarea.blur(function() {
+		var textarea = $(this);
+		if (textarea.val().length == 0) {
+			textarea.val(textarea.prop('defaultValue'));
+			textarea.removeClass(templateConstants.setClass);
+			textarea.height(textarea.attr('defaultHeight'));
+			answerButton.css('display', 'none');
+		}
+	});
+	
+	textarea.change(function() {
+		var textarea = $(this);
+		if (textarea.val().length == 0)
+			textarea.attr('valueSet', '0');
+		else
+			textarea.attr('valueSet', '1');
+	});
+	
+	textarea.focus(function() {
+		var textarea = $(this);
+		if (textarea.attr('valueSet') == '0') {
+			textarea.val('');
+			textarea.addClass(templateConstants.setClass);
+			textarea.animate({
+				height:textarea.attr('defaultHeight') * 2
+			}, 50);
+			answerButton.css('display', 'inline');
+		}
+	});
+	
+	answerButton.click({
+		textarea: textarea,
+		clarificationId: clarificationId
+	}, function(event) {
+		var request = $.ajax({
+			data: {
+				answer: event.data.textarea.val(),
+				id: event.data.clarificationId
+			},
+			type:'POST',
+			url:'/pci/new_clarification_answer'
+		})
+		
+		request.done({
+			textarea:event.data.textarea
+		}, function() {
+			var parent = textarea.parent();
+			parent.empty();
+			parent.addClass('pci_box_content');
+			parent.append($('<span class="pci_text_clarification">' + textarea.val() + '</span>'));
+		});
+	});
+}
+
 function configureDatepicker(textfieldId) {
 	$('#' + textfieldId).change(function() {
 		$(this).addClass(templateConstants.setClass);

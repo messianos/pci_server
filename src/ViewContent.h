@@ -110,6 +110,7 @@ namespace ViewContent {
 }
 
 // Type definitions
+typedef std::string String;
 typedef Publication *PublicationPointer;
 typedef Problem *ProblemPointer;
 typedef Solution *SolutionPointer;
