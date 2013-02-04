@@ -24,12 +24,12 @@ var signUpConstants = {
 
 function validateFirstName(firstName) {
 	return	validateMinLength(firstName, signUpConstants.firstNameMinLength) &&
-					validateMaxLength(firstName, signUpConstants.firstNameMaxLength);
+			validateMaxLength(firstName, signUpConstants.firstNameMaxLength);
 }
 
 function validateLastName(lastName) {
 	return 	validateMinLength(lastName, signUpConstants.lastNameMinLength) &&
-					validateMaxLength(lastName, signUpConstants.lastNameMaxLength);
+			validateMaxLength(lastName, signUpConstants.lastNameMaxLength);
 }
 
 function validateUserName(userName) {
@@ -41,8 +41,8 @@ function validateEmail(email) {
 }
 
 function validatePassword(password) {
-	return 	validateMinLength(password, signUpConstants.passwordMinLength) &&
-					validateMaxLength(password, signUpConstants.passwordMaxLength);
+	return	validateMinLength(password, signUpConstants.passwordMinLength) &&
+			validateMaxLength(password, signUpConstants.passwordMaxLength);
 }
 
 function validatePasswordVerification(password, passwordVerification) {

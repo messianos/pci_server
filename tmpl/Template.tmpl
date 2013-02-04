@@ -61,13 +61,13 @@
 									Salir
 								</div>
 							</a>
-							<a href="<% url "/user" using user_name %>">
 					 		<div id="pci_header_bar_user_name_container">
+							<a href="<% url "/user" using user_name %>">
 					 			<span id="pci_header_bar_user_name">
 					 				<%= user_first_name %> <%= user_last_name %>
 					 			</span>
-				 			</div>
 				 			</a>
+				 			</div>
 						<% else %>
 							<a href="javascript:void(0)">
 								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
@@ -284,7 +284,6 @@
 
 
 		<% template js_links() %>
-			<script src="/js/sign_in.js"></script>
 			<script src="/js/utilities.js"></script>
 			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
 		<% end template %>
@@ -292,8 +291,8 @@
 		
 		<% template javascript_code() %>
 			$(document).ready(function() {
-				configureTextfield('pci_sign_in_textfield_user_name', 'Nombre de usuario');
-				configureTextfield('pci_sign_in_textfield_password', 'Contraseña');
+				configureTextfield('pci_sign_in_textfield_user_name');
+				configurePasswordfield('pci_sign_in_textfield_password');
 				configureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');
 			});
 		<% end template %>

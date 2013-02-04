@@ -1,73 +1,38 @@
 
 /*
 ----------------------------------------------------------------------------------------------
-	Input
+	Constants
 ----------------------------------------------------------------------------------------------
 */
 
-var inputConstants = {
+var templateConstants = {
 	/* Customizable ------------------------------------------------------- */
-			elementFocusClass: 'focus',
-			elementSelectedClass: 'selected',
-			textfieldLabelClass: 'pci_label_textfield',
+		activeClass: 'active',
+		clickedClass: 'clicked',
+		errorBoxClass: 'pci_box_error',
+		errorBoxOffset: 8,
+		errorClass: 'error',
+		selectedClass: 'selected',
+		setClass: 'set',
 	/* -------------------------------------------------------------------- */
 	
-	labelIdSufix: '_label'
+	errorBoxIdSufix: '_error_box'
 };
-
-function configureTextfield(textfieldId, labelText) {
-	var textfield = $('#' + textfieldId);
-	var label = $('<label>' + labelText + '</label>');
-	label.attr('id', textfieldId + inputConstants.labelIdSufix);
-	label.attr('for', textfieldId);
-	label.css('position', 'absolute');
-	label.offset(textfield.offset());
-	label.addClass(inputConstants.textfieldLabelClass);
-	
-	textfield.blur(function() {
-		if ($(this).val().length == 0) {
-			var label = $('#' + $(this).attr('id') + inputConstants.labelIdSufix);
-			label.removeClass(inputConstants.elementFocusClass);
-			label.css('display', 'inline');
-		}
-	});
-	
-	textfield.change(function() {
-		if ($(this).val().length > 0)
-			$('#' + $(this).attr('id') + inputConstants.labelIdSufix).css('display', 'none');
-	});
-	
-	textfield.focus(function() {
-		if ($(this).val().length == 0)
-			$('#' + $(this).attr('id') + inputConstants.labelIdSufix).addClass(inputConstants.elementFocusClass);
-	});
-	
-	textfield.keydown(function() {
-		$('#' + $(this).attr('id') + inputConstants.labelIdSufix).css('display', 'none');
-	});
-	
-	textfield.parent().prepend(label);
-}
-
-function configureDropdownlist(dropdownlistId) {
-	$('#' + dropdownlistId).change(function() {
-		if ($(this).prop('selectedIndex') > 0)
-			$(this).addClass(inputConstants.elementSelectedClass);
-		else
-			$(this).removeClass(inputConstants.elementSelectedClass);
-	});
-}
 
 
 /*
 ----------------------------------------------------------------------------------------------
-	Datepicker
+	Input elements
 ----------------------------------------------------------------------------------------------
 */
 
-function configureDatepicker(elementId) {
+function configureDatepicker(textfieldId) {
+	$('#' + textfieldId).change(function() {
+		$(this).addClass(templateConstants.setClass);
+	});
+	
 	var currentYear = new Date().getFullYear();
-	$('#' + elementId).datepicker({
+	$('#' + textfieldId).datepicker({
 		showOn:'focus',
 		yearRange: (currentYear - 100) + ':' + currentYear,
 		dateFormat:'dd-mm-yy',
@@ -76,12 +41,54 @@ function configureDatepicker(elementId) {
 	});
 }
 
+function configureDropdownlist(dropdownlistId) {
+	var dropdownlist = $('#' + dropdownlistId);
+	
+	dropdownlist.blur(function() {
+		var dropdownlist = $(this);
+		if (dropdownlist.prop('selectedIndex') == 0)
+			dropdownlist.removeClass(templateConstants.setClass);
+	});
+	
+	dropdownlist.focus(function() {
+		var dropdownlist = $(this);
+		if (dropdownlist.prop('selectedIndex') == 0)
+			dropdownlist.addClass(templateConstants.setClass);
+	});
+}
 
-/*
-----------------------------------------------------------------------------------------------
-	Texteditor
-----------------------------------------------------------------------------------------------
-*/
+function configurePasswordfield(passwordfieldId) {
+	var passwordfield = $('#' + passwordfieldId);
+	var textfield = $('<input class="' + passwordfield.attr('class') + '" type="text" value="' + passwordfield.val() + '" />');
+	passwordfield.prop('defaultValue', '');
+	passwordfield.val('');
+	textfield.insertAfter(passwordfield);
+	passwordfield.detach();
+	
+	textfield.focus({
+		passwordfield: passwordfield
+	}, function(event) {
+		var passwordfield = event.data.passwordfield; 
+		var textfield = $(this);
+		passwordfield.insertAfter(textfield);
+		textfield.detach();
+		passwordfield.addClass(templateConstants.setClass);
+		passwordfield.trigger('focus');
+	});
+	
+	passwordfield.blur({
+		textfield: textfield
+	}, function(event) {
+		var passwordfield = $(this);
+		var textfield = event.data.textfield;
+		if (passwordfield.val().length == 0) {
+			passwordfield.removeClass(templateConstants.setClass);
+			textfield.insertAfter(passwordfield);
+			textfield.attr('class', passwordfield.attr('class'));
+			passwordfield.detach();
+		}
+	});
+}
 
 function configureTexteditor(texteditorName) {
 	CKEDITOR.replace(texteditorName, {
@@ -103,22 +110,68 @@ function configureTexteditor(texteditorName) {
 	});
 }
 
+function configureTextfield(textfieldId) {
+	var textfield = $('#' + textfieldId);
+	textfield.attr('valueSet', '0');
+	
+	textfield.blur(function() {
+		var textfield = $(this);
+		if (textfield.val().length == 0) {
+			textfield.val(textfield.prop('defaultValue'));
+			textfield.removeClass(templateConstants.setClass);
+		}
+	});
+	
+	textfield.change(function() {
+		var textfield = $(this);
+		if (textfield.val().length == 0)
+			textfield.attr('valueSet', '0');
+		else
+			textfield.attr('valueSet', '1');
+	});
+	
+	textfield.focus(function() {
+		var textfield = $(this);
+		if (textfield.attr('valueSet') == '0') {
+			textfield.val('');
+			textfield.addClass(templateConstants.setClass);
+		}
+	});
+}
+
+
+/*
+----------------------------------------------------------------------------------------------
+	Navigation menu
+----------------------------------------------------------------------------------------------
+*/
+
+function setActiveNavigationButton(buttonId) {
+	$('#' + buttonId).addClass(templateConstants.activeClass);
+}
+
+
+/*
+----------------------------------------------------------------------------------------------
+	Sign in
+----------------------------------------------------------------------------------------------
+*/
+
+function configureSignInFormContainer(containerId, buttonId) {
+	$('#' + buttonId).click({
+		containerId: containerId
+	}, function(event) {
+		$('#' + event.data.containerId).toggle();
+		$(this).toggleClass(templateConstants.clickedClass);
+	});
+}
+
 
 /*
 ----------------------------------------------------------------------------------------------
 	Validation
 ----------------------------------------------------------------------------------------------
 */
-
-var validationConstants = {
-	/* Customizable ------------------------------------------------------- */
-			elementErrorClass: 'error',
-			errorBoxClass: 'pci_box_error',
-			errorBoxOffset: 8,
-	/* -------------------------------------------------------------------- */
-	
-	errorBoxIdSufix: '_error_box'
-};
 
 function configureValidator(elementInfoArray) {
 	var length = elementInfoArray.length;
@@ -133,29 +186,29 @@ function configureValidator(elementInfoArray) {
 }
 
 function showErrorBox(elementId, errorDescription) {
-	var errorBoxId = elementId + validationConstants.errorBoxIdSufix;
+	var errorBoxId = elementId + templateConstants.errorBoxIdSufix;
 	if ($('#' + errorBoxId).length == 0) {
 		var element = $('#' + elementId);
 		var errorBox = $('<div>' + errorDescription + '</div>');
 		errorBox.attr('id', errorBoxId);
 		errorBox.css('position', 'absolute');
 		var offset = element.offset();
-		offset.left += element.outerWidth() + validationConstants.errorBoxOffset;
+		offset.left += element.outerWidth() + templateConstants.errorBoxOffset;
 		errorBox.offset(offset);
-		errorBox.addClass(validationConstants.errorBoxClass);
-		element.addClass(validationConstants.elementErrorClass);
+		errorBox.addClass(templateConstants.errorBoxClass);
+		element.addClass(templateConstants.errorClass);
 		element.parent().append(errorBox);
 	}
 }
 
 function hideErrorBox(elementId) {
-	$('#' + elementId).removeClass(validationConstants.elementErrorClass);
-	$('#' + elementId + validationConstants.errorBoxIdSufix).remove();
+	$('#' + elementId).removeClass(templateConstants.errorClass);
+	$('#' + elementId + templateConstants.errorBoxIdSufix).remove();
 }
 
 function hideErrorBoxes() {
-	$('.' + validationConstants.elementErrorClass).removeClass(validationConstants.elementErrorClass);
-	$('div.' + validationConstants.errorBoxClass).remove();
+	$('.' + templateConstants.errorClass).removeClass(templateConstants.errorClass);
+	$('div.' + templateConstants.errorBoxClass).remove();
 }
 
 function validateMaxLength(text, maxLength) {

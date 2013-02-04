@@ -14,7 +14,7 @@
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
 			$(document).ready(function() {
-				$('#pci_navigation_menu_profile_button').addClass('active');
+				setActiveNavigationButton('pci_navigation_menu_profile_button');
 			});
 		<% end template %>
 	

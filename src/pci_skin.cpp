@@ -128,18 +128,18 @@ namespace pci_skin {
 					"\t\t\t\t\t\t\t<a href=\"";
 				#line 59 "Template.tmpl"
 				content.app().mapper().map(out(),"/sign_out");
-				#line 64 "Template.tmpl"
+				#line 65 "Template.tmpl"
 				out()<<"\">\n"
 					"\t\t\t\t\t\t\t\t<div class=\"pci_button_classic pci_header_bar_button\">\n"
 					"\t\t\t\t\t\t\t\t\tSalir\n"
 					"\t\t\t\t\t\t\t\t</div>\n"
 					"\t\t\t\t\t\t\t</a>\n"
+					"\t\t\t\t\t \t\t<div id=\"pci_header_bar_user_name_container\">\n"
 					"\t\t\t\t\t\t\t<a href=\"";
-				#line 64 "Template.tmpl"
+				#line 65 "Template.tmpl"
 				content.app().mapper().map(out(),"/user", cppcms::filters::urlencode(content.user_name));
 				#line 67 "Template.tmpl"
 				out()<<"\">\n"
-					"\t\t\t\t\t \t\t<div id=\"pci_header_bar_user_name_container\">\n"
 					"\t\t\t\t\t \t\t\t<span id=\"pci_header_bar_user_name\">\n"
 					"\t\t\t\t\t \t\t\t\t";
 				#line 67 "Template.tmpl"
@@ -151,8 +151,8 @@ namespace pci_skin {
 				#line 71 "Template.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t \t\t\t</span>\n"
-					"\t\t\t\t \t\t\t</div>\n"
 					"\t\t\t\t \t\t\t</a>\n"
+					"\t\t\t\t \t\t\t</div>\n"
 					"\t\t\t\t\t\t";
 			#line 71 "Template.tmpl"
 			}else{
@@ -566,79 +566,78 @@ namespace pci_skin {
 		} // end of template css_links
 		#line 286 "Template.tmpl"
 		virtual void js_links() {
-			#line 290 "Template.tmpl"
+			#line 289 "Template.tmpl"
 			out()<<"\n"
-				"\t\t\t<script src=\"/js/sign_in.js\"></script>\n"
 				"\t\t\t<script src=\"/js/utilities.js\"></script>\n"
 				"\t\t\t<script src=\"/lib/jquery/jquery-1.9.0.min.js\"></script>\n"
 				"\t\t";
-		#line 290 "Template.tmpl"
+		#line 289 "Template.tmpl"
 		} // end of template js_links
-		#line 293 "Template.tmpl"
+		#line 292 "Template.tmpl"
 		virtual void javascript_code() {
-			#line 299 "Template.tmpl"
+			#line 298 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_in_textfield_user_name', 'Nombre de usuario');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_in_textfield_password', 'Contraseña');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_in_textfield_user_name');\n"
+				"\t\t\t\tconfigurePasswordfield('pci_sign_in_textfield_password');\n"
 				"\t\t\t\tconfigureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');\n"
 				"\t\t\t});\n"
 				"\t\t";
-		#line 299 "Template.tmpl"
+		#line 298 "Template.tmpl"
 		} // end of template javascript_code
-		#line 302 "Template.tmpl"
+		#line 301 "Template.tmpl"
 		virtual void page_content() {
-			#line 303 "Template.tmpl"
+			#line 302 "Template.tmpl"
 			out()<<"\n"
 				"\t\t";
-		#line 303 "Template.tmpl"
+		#line 302 "Template.tmpl"
 		} // end of template page_content
-		#line 306 "Template.tmpl"
+		#line 305 "Template.tmpl"
 		virtual void render() {
-			#line 310 "Template.tmpl"
+			#line 309 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t<!DOCTYPE html>\n"
 				"\t\t\t<html>\n"
 				"\t\t\t\t<head>\n"
 				"\t\t\t\t\t";
-			#line 310 "Template.tmpl"
+			#line 309 "Template.tmpl"
 			css_links();
-			#line 311 "Template.tmpl"
+			#line 310 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t";
-			#line 311 "Template.tmpl"
+			#line 310 "Template.tmpl"
 			js_links();
-			#line 313 "Template.tmpl"
+			#line 312 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t<script>\n"
 				"\t\t\t\t\t\t";
-			#line 313 "Template.tmpl"
+			#line 312 "Template.tmpl"
 			javascript_code();
-			#line 316 "Template.tmpl"
+			#line 315 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t</script>\n"
 				"\t\t\t    \t<title>\n"
 				"\t\t\t    \t\t";
-			#line 316 "Template.tmpl"
+			#line 315 "Template.tmpl"
 			out()<<cppcms::filters::escape(content.page_title);
-			#line 320 "Template.tmpl"
+			#line 319 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t    \t</title>\n"
 				"\t\t\t\t</head>\n"
 				"\t\t\t\t<body>\n"
 				"\t\t\t\t\t";
-			#line 320 "Template.tmpl"
+			#line 319 "Template.tmpl"
 			page_content();
-			#line 323 "Template.tmpl"
+			#line 322 "Template.tmpl"
 			out()<<"\n"
 				"\t\t\t\t</body>\n"
 				"\t\t\t</html>\n"
 				"\t\t";
-		#line 323 "Template.tmpl"
+		#line 322 "Template.tmpl"
 		} // end of template render
-	#line 326 "Template.tmpl"
+	#line 325 "Template.tmpl"
 	}; // end of class template_view
-#line 327 "Template.tmpl"
+#line 326 "Template.tmpl"
 } // end of namespace pci_skin
 #line 2 "Index.tmpl"
 #include "ViewContent.h" 
@@ -694,15 +693,6 @@ namespace pci_skin {
 			#line 44 "Index.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_first_name', 'Nombre');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_last_name', 'Apellido');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_user_name', 'Nombre de usuario');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_email', 'E-Mail');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_password', 'Contraseña');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_password_verification', 'Confirmar contraseña');\n"
-				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_birth_date', 'Fecha de nacimiento');\n"
-				"\t\t\t\tconfigureDropdownlist('pci_sign_up_dropdownlist_genre');\n"
-				"\t\t\t\tconfigureDatepicker('pci_sign_up_textfield_birth_date');\n"
 				"\t\t\t\tconfigureValidator([\n"
 				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },\n"
 				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_last_name', onChangeFunction: lastNameOnChange },\n"
@@ -712,6 +702,15 @@ namespace pci_skin {
 				"\t\t\t\t\t{ elementId: 'pci_sign_up_textfield_password_verification', onChangeFunction: passwordVerificationOnChange },\n"
 				"\t\t\t\t\t{ elementId: 'pci_sign_up_dropdownlist_genre', onChangeFunction: genreOnChange }\n"
 				"\t\t\t\t]);\n"
+				"\t\t\t\t\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_first_name');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_last_name');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_user_name');\n"
+				"\t\t\t\tconfigureTextfield('pci_sign_up_textfield_email');\n"
+				"\t\t\t\tconfigurePasswordfield('pci_sign_up_textfield_password');\n"
+				"\t\t\t\tconfigurePasswordfield('pci_sign_up_textfield_password_verification');\n"
+				"\t\t\t\tconfigureDatepicker('pci_sign_up_textfield_birth_date');\n"
+				"\t\t\t\tconfigureDropdownlist('pci_sign_up_dropdownlist_genre');\n"
 				"\t\t\t});\n"
 				"\t\t";
 		#line 44 "Index.tmpl"
@@ -804,7 +803,7 @@ namespace pci_skin {
 			#line 19 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\t$('#pci_navigation_menu_problems_button').addClass('active');\n"
+				"\t\t\t\tsetActiveNavigationButton('pci_navigation_menu_problems_button');\n"
 				"\t\t\t});\n"
 				"\t\t";
 		#line 19 "Problems.tmpl"
@@ -1152,7 +1151,7 @@ namespace pci_skin {
 			#line 19 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\t$('#pci_navigation_menu_profile_button').addClass('active');\n"
+				"\t\t\t\tsetActiveNavigationButton('pci_navigation_menu_profile_button');\n"
 				"\t\t\t});\n"
 				"\t\t";
 		#line 19 "User.tmpl"
@@ -1555,7 +1554,7 @@ namespace pci_skin {
 			#line 19 "Ideas.tmpl"
 			out()<<"\n"
 				"\t\t\t$(document).ready(function() {\n"
-				"\t\t\t\t$('#pci_navigation_menu_ideas_button').addClass('active');\n"
+				"\t\t\t\tsetActiveNavigationButton('pci_navigation_menu_ideas_button');\n"
 				"\t\t\t});\n"
 				"\t\t";
 		#line 19 "Ideas.tmpl"

@@ -239,18 +239,22 @@ select.pci_dropdownlist {
 	padding:10px 10px 10px 4px;
 }
 
+select.pci_dropdownlist:focus {
+	background-color:#FFFFFF;
+	border-color:#82C5F0;
+}
+
+select.pci_dropdownlist:hover {
+	background-color:#FFFFFF;
+	border-color:#82C5F0;
+}
+
 select.pci_dropdownlist.error {
-	background-color:#F8EFEF;
 	border-color:#FF4A19;
 }
 
-select.pci_dropdownlist.selected {
+select.pci_dropdownlist.set {
 	color:#444444;
-}
-
-select.pci_dropdownlist:hover, select.pci_dropdownlist:focus, select.pci_dropdownlist.error:hover, select.pci_dropdownlist.error:focus {
-	background-color:#FFFFFF;
-	border-color:#82C5F0;
 }
 
 div.pci_horizontal_line {
@@ -314,7 +318,7 @@ input.pci_submit {
 	text-shadow:1px 1px #DDDDDD;	
 }
 
-input.pci_submit:hover{
+input.pci_submit:hover {
 	background-color:#F2F2F2;
 	border-color:#B5B5B5;
 }
@@ -325,37 +329,31 @@ input.pci_textfield {
 	border-radius:4px;
 	border-style:solid;
 	border-width:1px;
-	color:#444444;
+	color:#B5B5B5;
 	font-family:pci_font_textfield;
 	font-size:0.9375em;
 	padding:10px 8px;
 }
 
-input.pci_textfield:focus, input.pci_textfield.error:focus {
-	background-color:#FFFFFF;
+input.pci_textfield:focus {
 	border-color:#82C5F0;
 	box-shadow:0px 0px 8px 0px #82C5F0;
 }
 
-input.pci_textfield:hover, input.pci_textfield.error:hover {
-	background-color:#FFFFFF;
+input.pci_textfield:hover {
 	border-color:#82C5F0;
 }
 
 input.pci_textfield.error {
-	background-color:#F8EFEF;
 	border-color:#FF4A19;
 }
 
-label.pci_label_textfield {
-	color:#B5B5B5;
-	font-family:pci_font_textfield;
-	font-size:0.9375em;
-	padding:11px 9px;
+input.pci_textfield.error:focus {
+	box-shadow:0px 0px 8px 0px #FF4A19;
 }
 
-label.pci_label_textfield.focus {
-	color:#D7D7D7;
+input.pci_textfield.set {
+	color:#444444;
 }
 
 
@@ -443,6 +441,7 @@ div.pci_header_bar_button {
 
 #pci_header_bar_user_name {
 	color:#FFFFFF;
+	display:block;
 	font-size:1.125em;
 	line-height:48px;
 }
@@ -467,11 +466,11 @@ div.pci_header_bar_button {
 	border-top-color:#F1F1F1;
 	border-style:solid;
 	border-width:1px;
+	clear:both;
 	display:none;
+	float:right;
+	margin-top:-10px;
 	padding:0px 16px 8px 16px;
-	position:absolute;
-	right:128px;
-	top:38px;
 }
 
 
