@@ -50,7 +50,7 @@ getSignOut()
 postSignIn()
 	URL: /sign_in
 	Argumentos:
-		-	user_name
+		- user_name
 		- password
 
 
@@ -215,3 +215,6 @@ getFetchProblemPage(problem_id)
 
 getFetchSolutionPage(solution_id)
 	URL: /solution/<solution_id>
+	
+getFetchUserPage()
+	URL: /user/<user_name>
