@@ -1,0 +1,167 @@
+	URL: /sign_in
+	Argumentos:
+		-	user_name
+		- password
+
+
+==============================================================================================
+	Consultas a la base de datos
+==============================================================================================
+
+
+
+
+==============================================================================================
+	Actualizaciones a la base de datos
+==============================================================================================
+
+	Su función es la de actualizar la base de datos.
+	Servicios ofrecidos:
+
+postCreateClarification()
+	URL: /create_clarification
+	Argumentos:
+		- associated_publication_id
+		- question
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postUpdateClarification()
+	URL: /update_clarification
+	Argumentos:
+		- clarification_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postDeleteClarification()
+	URL: /delete_clarification
+	Argumentos:
+		- clarification_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Verificar que la clarificación a eliminar haya sido creada por el usuario que está logueado
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postCreateProblem()
+	URL: /create_problem
+	Argumentos:
+		- content
+		- description
+		- is_anonymous
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postUpdateProblem()
+	URL: /update_problem
+	Argumentos:
+		- problem_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postDeleteProblem()
+	URL: /delete_problem
+	Argumentos:
+		- problem_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Verificar que el problema a eliminar haya sido creado por el usuario que está logueado
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postCreateSolution()
+	URL: /create_solution
+	Argumentos:
+		- content
+		- description
+		- is_anonymous
+		- problem_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postUpdateSolution()
+	URL: /update_solution
+	Argumentos:
+		- solution_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postDeleteSolution()
+	URL: /delete_solution
+	Argumentos:
+		- solution_id
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Verificar que la solución a eliminar haya sido creada por el usuario que está logueado
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postCreateUser()
+	URL: /create_user
+	Argumentos:
+		- birth_date
+		- email
+		- first_name
+		- genre
+		- last_name
+		- location
+		- password
+		- user_name
+	Controles:
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postUpdateUser()
+	URL: /update_user
+	Argumentos:
+		- user_name
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Verificar que el usuario a eliminar sea el que está logueado (session_user_name == user_name)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+postDeleteUser()
+	URL: /delete_user
+	Argumentos:
+		- user_name
+	Controles:
+		- Verificar que el usuario esté logueado (session_user_signed_in == true)
+		- Verificar que el usuario a eliminar sea el que está logueado (session_user_name == user_name)
+		- Validar la entrada
+		- Validar la consistencia a nivel de base de datos
+
+
+==============================================================================================
+	Solicitud de páginas
+==============================================================================================
+
+	Su función es la de obtener una página del servidor.
+	Servicios ofrecidos:
+
+getFetchIdeasPage()
+	URL: /ideas
+
+getFetchMainPage()
+	URL: /
+
+getFetchProblemsPage()
+	URL: /problems
+
+getFetchProblemPage(problem_id)
+	URL: /problem/<problem_id>
+
+getFetchSolutionPage(solution_id)
+	URL: /solution/<solution_id>
