@@ -1,0 +1,53 @@
+
+TENTATIVO: Agregar ID de imágenes
+
+Agregar tabla problems_solved
+	problem_id
+	solution_id
+
+Quitar de Problem
+	accepted_solution_id
+
+Agregar a User:
+	rank
+	profile_content
+
+Agregar a Problem
+	vote_balance
+
+Agregar a Solution
+	vote_balance
+
+Agregar tabla problem_votes
+	is_positive
+	problem_id
+	user_name
+
+Agregar tabla solution_votes
+	is_positive
+	solution_id
+	user_name
+
+Agregar tabla Proposal
+	content
+	creation_datetime
+	creator_user_name
+	id
+	is_anonymous
+	vote_balance
+
+Agregar tabla solution_proposals
+	solution_id
+	proposal_id
+
+Agregar tabla proposal_votes
+	is_positive
+	proposal_id
+	user_name
+
+Eliminar de la tabla Clarification:
+	creator_user_name
+
+
+NOTIFICACIONEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSSSSSSSSSSS
+
