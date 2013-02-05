@@ -1,3 +1,53 @@
+
+==============================================================================================
+	Introducción
+==============================================================================================
+
+Hay tres tipos de servicios ofrecidos por el servidor:
+
+	- Servicios de sesión
+	- Consultas a la base de datos
+	- Actualizaciones a la base de datos
+	- Solicitud de páginas
+
+Respetando el modelo cliente-servidor, cada solicitud debe ser autónoma. Esto implica que ante
+cada pedido de servicio se deben comprobar los permisos, validar los datos, etc. La única
+información de estado se guarda en la sesión.
+
+El objetivo del servidor no es mejorar la experiencia del usuario. Javascript puede usarse con
+este propósito. Como no se puede confiar en Javascript, el servidor debe siempre hacer todos
+los controles que correspondan (más allá de que Javascript puede también hacerlos).
+
+Los servicios se solicitan a través de URLs. Cuando se usa el método GET, los parámetros se
+envían codificados en ésta. Cuando el método es POST, los argumentos se envían adjuntados a la
+solicitud. En consecuencia, los métodos del servidor que se invocan a través de GET tienen
+parámetros de entrada, mientras que aquéllos solicitados con POST no lo tienen.
+
+
+==============================================================================================
+	Atributos de sesión
+==============================================================================================
+
+Necesarios:
+	- session_user_signed_in
+	- session_user_name
+
+Por eficiencia:
+	- session_user_first_name
+	- session_user_last_name
+
+
+==============================================================================================
+	Servicios de sesión
+==============================================================================================
+
+	Su función es la de administrar la sesión.
+	Servicios ofrecidos:
+
+getSignOut()
+	URL: /sign_out
+
+postSignIn()
 	URL: /sign_in
 	Argumentos:
 		-	user_name
