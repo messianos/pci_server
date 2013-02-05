@@ -7,14 +7,6 @@
 		"api" : "fastcgi" ,
 		"socket" : "stdin"
 	},
-	
-    "logging" : {
-    	"level" : "debug",
-        "file" : {
-                "enable" : true,
-                "name" : "/var/log/lighttpd/pci_app_errors.log"
-        }
-    },
     
 	"session" : {
 		"expire" : "browser",
