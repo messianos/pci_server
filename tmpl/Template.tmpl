@@ -5,7 +5,7 @@
 	<% view template_view uses ViewContent::TemplateContent %>
 
 
-		<% template clarifications(ClarificationList clarifications, PublicationPointer publication, bool user_signed_in, String user_name) %>
+		<% template clarifications(ClarificationList clarifications, PublicationPointer publication) %>
 			<% if (! clarifications->empty()) %>
 				<div id="pci_clarifications_main_container">
 					<div class="pci_horizontal_line"></div>
@@ -39,7 +39,7 @@
 											</span>
 										</div>
 									<% else %>
-										<% if (user_signed_in && user_name.compare(publication->creator_user_name) == 0) %>
+										<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
 											<div class="pci_clarifications_answer_content">
 												<textarea class="pci_clarifications_answer_textarea pci_textarea_small" id="textarea_<%= clarification->id %>">Responder</textarea>
 												<div class="pci_clarifications_button_container">

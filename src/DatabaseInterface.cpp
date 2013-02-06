@@ -438,9 +438,6 @@ list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string use
 		publication_list->pop_back();
 	}
 
-	//TODO: debug
-	cerr << publication_list->size();
-
 	return publication_list;
 }
 

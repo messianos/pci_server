@@ -65,9 +65,11 @@
 							<div id="recent_activity">
 								<% foreach activity in *recent_activity %>
 									<% item %>
-										<div class="pci_box_description pci_problems_problem_description">
-											<% include template_view::publication_description(activity) %>
-										</div>
+										<% if (!activity->is_anonymous || content.user_name.compare(content.user->user_name) == 0) %>
+											<div class="pci_box_description pci_problems_problem_description">
+												<% include template_view::publication_description(activity) %>
+											</div>
+										<% end %>
 									<% end %>
 								<% empty %>
 									No hay actividad reciente
