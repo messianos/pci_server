@@ -32,23 +32,24 @@
 								<div id="big_name"><%= user->first_name %> <%= user->last_name %></div>
 								<div id="user_stats">
 									<div class="stat_container">
-										<div class="stat_number">1000</div>
+										<div class="stat_number"><%= number_of_publications %></div>
 										<div class="stat_description">Publicaciones</div>
 									</div>
 									<div class="stat_container">
-										<div class="stat_number">400</div>
+										<div class="stat_number"><%= number_of_problems %></div>
 										<div class="stat_description">Problemas</div>
 									</div>
 									<div class="stat_container">
-										<div class="stat_number">900</div>
+										<div class="stat_number"><%= number_of_solutions %></div>
 										<div class="stat_description">Soluciones</div>
 									</div>
 									<div class="stat_container">
-										<div class="stat_number">600</div>
+										<div class="stat_number">N/A</div>
 										<div class="stat_description">Soluciones aceptadas</div>
 									</div>
 								</div>
-							</div>	
+							</div>
+							<h2>Descripcion personal</h2>
 							<div id="user_customizable_panel">
 								Messi nació el 24 de junio de 1987 en la ciudad de Rosario, en la
 								provincia de Santa Fe, Argentina. Es hijo de Jorge Horacio Messi, 
@@ -59,29 +60,18 @@
 								hermanos llamados Rodrigo y Matías, como también una hermana llamada
 								María Sol. Asimismo, dos de sus primos (Maximiliano y Emanuel Biancucchi)
 								son también futbolistas.<br>
-								Con apenas cinco años, Lionel Messi dio sus primeros pasos en Grandoli,
-								un club de barrio a pocas manzanas de su casa, al sur de la ciudad 
-								argentina de Rosario. El club era dirigido por su padre, Jorge.
-								Posteriormente jugó algunos partidos con el Club Atlético Central Córdoba.
-								 En 1995, Messi comenzó a entrenarse en las divisiones inferiores de 
-								Newell's Old Boys, club con el que obtuvo la Copa de la Amistad de Perú
-								en 1997. A la edad de 11 años, le fue diagnosticada una deficiencia de la
-								hormona de crecimiento. El Club Atlético River Plate mostró cierto interés
-								en el progreso de Messi sin embargo, no creyó conveniente desembolsar el
-								dinero para pagar el tratamiento que tenía un costo de $900 por mes.
-								Carles Rexach, director técnico del Barcelona, notó el talento de Messi 
-								y éste tenía parientes en Lérida, España, siendo capaz, junto con su padre,
-								de iniciar un viaje. El Barcelona lo fichó después de verlo jugar, 
-								ofreciéndose entonces a pagar los costosos tratamientos si él se mudaba a
-								España. Su familia se trasladó a Barcelona donde comenzó a jugar con 
-								equipos juveniles.<br>
-								Messi empezó a jugar en las categorias inferiores del FC Barcelona a la 
-								edad de 13 años. En ellas fue compañero de equipo de Cesc Fabregas y Gerard
-								Piqué entre otros. Uno de sus primeros técnicos fue Tito Vilanova, quien años
-								más tarde sería su entrenador en el primer equipo.
 							</div>
+							<h2>Actividad reciente</h2>
 							<div id="recent_activity">
-								recent_activity
+								<% foreach activity in *recent_activity %>
+									<% item %>
+										<div class="pci_box_description pci_problems_problem_description">
+											<% include template_view::publication_description(activity) %>
+										</div>
+									<% end %>
+								<% empty %>
+									No hay actividad reciente
+								<% end %>
 							</div>
 						</div>
 					</div>

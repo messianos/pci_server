@@ -1,14 +1,13 @@
-
 // Includes
 #include "Server.h"
 #include <iostream>// TODO: remove this (debugging purposes)
-
 // Namespaces
 using namespace ViewContent;
 using namespace cppcms;
 using namespace std;
 
-Server::Server(cppcms::service &service) : application(service) {
+Server::Server(cppcms::service &service) :
+		application(service) {
 
 	dispatcher().assign("/ideas", &Server::ideas, this);
 	mapper().assign("ideas", "/ideas");
@@ -43,7 +42,8 @@ Server::Server(cppcms::service &service) : application(service) {
 	mapper().root("/pci");
 }
 
-Server::~Server() {}
+Server::~Server() {
+}
 
 void Server::setSessionProperties(TemplateContent &content) {
 	content.user_signed_in = session().is_set("user_signed_in");
@@ -57,7 +57,7 @@ ErrorCode *Server::processNewProblemPost(ViewContent::NewProblemFormInfo &form_i
 
 	form_info.load(context());
 	error_code = InputValidator::validateNewProblemInput(&form_info);
-	if (! error_code->isAnError()) {
+	if (!error_code->isAnError()) {
 		// Valid input
 		Problem *problem = new Problem();
 		problem->content = form_info.content.value();
@@ -67,7 +67,7 @@ ErrorCode *Server::processNewProblemPost(ViewContent::NewProblemFormInfo &form_i
 		problem->is_anonymous = form_info.is_anonymous.value();
 
 		error_code = DatabaseInterface::insertProblem(problem);
-		if (! error_code->isAnError())
+		if (!error_code->isAnError())
 			response().set_redirect_header(url("/publication", problem->id));
 	}
 
@@ -79,7 +79,7 @@ ErrorCode *Server::processNewSolutionPost(ViewContent::NewSolutionFormInfo &form
 
 	form_info.load(context());
 	error_code = InputValidator::validateNewSolutionInput(&form_info);
-	if (! error_code->isAnError()) {
+	if (!error_code->isAnError()) {
 		// Valid input
 		Solution *solution = new Solution();
 		solution->content = form_info.content.value();
@@ -89,7 +89,7 @@ ErrorCode *Server::processNewSolutionPost(ViewContent::NewSolutionFormInfo &form
 		solution->is_anonymous = form_info.is_anonymous.value();
 
 		error_code = DatabaseInterface::insertSolution(solution, problem_id);
-		if (! error_code->isAnError())
+		if (!error_code->isAnError())
 			response().set_redirect_header(url("/publication", problem_id));
 	}
 
@@ -101,12 +101,12 @@ ErrorCode *Server::processSignInPost(SignInFormInfo &form_info) {
 
 	form_info.load(context());
 	error_code = InputValidator::validateSignInInput(&form_info);
-	if (! error_code->isAnError()) {
+	if (!error_code->isAnError()) {
 		// Valid input
 		string user_name = form_info.user_name.value();
 		string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
 		error_code = DatabaseInterface::signInUser(user_name, encrypted_password);
-		if (! error_code->isAnError()) {
+		if (!error_code->isAnError()) {
 			// User and password are valid
 			User *user = DatabaseInterface::searchUser(user_name);
 			session()["user_signed_in"] = "";
@@ -125,7 +125,7 @@ ErrorCode *Server::processSignUpPost(SignUpFormInfo &form_info) {
 
 	form_info.load(context());
 	error_code = InputValidator::validateSignUpInput(&form_info);
-	if (! error_code->isAnError()) {
+	if (!error_code->isAnError()) {
 		// Valid input
 		User* user = new User();
 		user->birth_date = new Date("%d-%m-%Y", form_info.birth_date.value().c_str());
@@ -138,7 +138,7 @@ ErrorCode *Server::processSignUpPost(SignUpFormInfo &form_info) {
 		string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
 
 		error_code = DatabaseInterface::signUpUser(user, encrypted_password);
-		if (! error_code->isAnError())
+		if (!error_code->isAnError())
 			response().set_redirect_header(url("/"));
 	}
 
@@ -157,7 +157,7 @@ void Server::ideas() {
 		if (form_name.compare("sign_in_form") == 0)
 			content.error_code = processSignInPost(content.sign_in_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -178,7 +178,7 @@ void Server::index() {
 		else if (form_name.compare("sign_up_form") == 0)
 			content.error_code = processSignUpPost(content.sign_up_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -214,7 +214,7 @@ void Server::newProblem() {
 		else if (form_name.compare("new_problem_form") == 0)
 			content.error_code = processNewProblemPost(content.new_problem_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -235,7 +235,7 @@ void Server::newSolution(string problem_id) {
 		else if (form_name.compare("new_solution_form") == 0)
 			content.error_code = processNewSolutionPost(content.new_solution_form_info, problem_id);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -253,7 +253,7 @@ void Server::problem(string id) {
 		if (form_name.compare("sign_in_form") == 0)
 			content.error_code = processSignInPost(content.sign_in_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -283,7 +283,7 @@ void Server::problems() {
 		if (form_name.compare("sign_in_form") == 0)
 			content.error_code = processSignInPost(content.sign_in_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -311,7 +311,7 @@ void Server::solution(string problem_id, string solution_id) {
 		if (form_name.compare("sign_in_form") == 0)
 			content.error_code = processSignInPost(content.sign_in_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
@@ -334,12 +334,19 @@ void Server::user(string user_name) {
 		if (form_name.compare("sign_in_form") == 0)
 			content.error_code = processSignInPost(content.sign_in_form_info);
 
-		if (! content.error_code->isAnError())
+		if (!content.error_code->isAnError())
 			return;
 	}
 
 	content.page_title = "PCI - Perfil de " + user_name;
 	content.user = DatabaseInterface::searchUser(user_name);
+	content.number_of_solutions = DatabaseInterface::numberOfSolutionsByUser(user_name);
+	content.number_of_problems = DatabaseInterface::numberOfProblemsByUser(user_name);
+	content.number_of_publications = content.number_of_solutions + content.number_of_problems;
+
+	// TODO: Repair!
+	content.recent_activity = new list<Publication *>();
+	//DatabaseInterface::getRecentActivityByUser(user_name);
 
 	// TODO: si el usuario no fue encontrado, enviar a pagina especial
 

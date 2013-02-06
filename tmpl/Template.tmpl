@@ -235,6 +235,19 @@
 			</span>
 		<% end template %>
 		
+		<% template publication_description(PublicationPointer publication) %>
+			<a class="pci_link_description" href="<% url "/publication" using publication->id %>">
+				<%= publication->description %>
+			</a>
+			<span class="pci_text_description">
+				<% if publication->is_anonymous %>
+					<i>Publicado Anónimamente</i>
+				<% else %>
+					<i>Por <a class="pci_link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
+				<% end %>
+				- <%= publication->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+			</span>
+		<% end template %>		
 		
 		<% template sign_in_form(ViewContent::SignInFormInfo &sign_in_form_info) %>
 			<form action="" method="post">

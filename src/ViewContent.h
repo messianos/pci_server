@@ -106,6 +106,10 @@ namespace ViewContent {
 
 	struct UserContent : TemplateContent {
 		User* user;
+		int number_of_solutions;
+		int number_of_problems;
+		int number_of_publications;
+		std::list<Publication*>* recent_activity;
 	};
 }
 

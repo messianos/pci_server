@@ -9,11 +9,13 @@
 class Datetime {
 
 private:
-	time_t timestamp;
 
 public:
+	time_t timestamp; //TODO: Made public for simplicity
+
 	Datetime(time_t timestamp);
 	virtual ~Datetime();
+	bool operator<(const Datetime &other);
 	std::string toString(std::string format);
 };
 

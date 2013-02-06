@@ -16,3 +16,7 @@ string Datetime::toString(string format) {
 	strftime(buffer, 32, format.data(), localtime(&timestamp));
 	return string(buffer);
 }
+
+bool Datetime::operator<(const Datetime &other){
+	return timestamp < other.timestamp;
+}

@@ -12,6 +12,7 @@
 #include <ctime>
 #include <list>
 #include <string>
+#include <sstream>
 
 class DatabaseInterface {
 
@@ -38,6 +39,20 @@ public:
 	static std::list<Clarification *> *searchClarifications(std::string associated_publication_id);
 	static ErrorCode *insertClarification(Clarification *clarification);
 	static ErrorCode *deleteClarification(std::string id);
+
+	static int numberOfSolutionsByUser(std::string user_name);
+	static int numberOfProblemsByUser(std::string user_name);
+	static int numberOfAcceptedSolutionsByUser(std::string user_name);
+
+	static std::list<Publication *> * getRecentActivityByUser(std::string user_name);
+
+
+	static Clarification* fetchClarification(cppdb::ref_ptr<cppdb::result> result);
+	static Problem* fetchProblem(cppdb::result result);
+	static Solution* fetchSolution(cppdb::result result);
+	static User* fetchUser(cppdb::result result);
+
+	static bool userExists(std::string user_name);
 };
 
 #endif /* DATABASEINTERFACE_H_ */

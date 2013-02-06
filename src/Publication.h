@@ -18,6 +18,10 @@ public:
 	Datetime *last_edition_datetime;
 	Publication();
 	virtual ~Publication();
+
+	//TODO: Compares last_editon_datetime
+	bool operator<(Publication* other);
+
 };
 
 #endif /* PUBLICATION_H_ */
