@@ -47,7 +47,7 @@ public:
 	static std::list<Publication *> * getRecentActivityByUser(std::string user_name);
 
 
-	static Clarification* fetchClarification(cppdb::ref_ptr<cppdb::result> result);
+	static Clarification* fetchClarification(cppdb::result result);
 	static Problem* fetchProblem(cppdb::result result);
 	static Solution* fetchSolution(cppdb::result result);
 	static User* fetchUser(cppdb::result result);

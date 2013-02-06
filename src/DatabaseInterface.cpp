@@ -1,5 +1,6 @@
 // Includes
 #include "DatabaseInterface.h"
+
 //TODO
 #include <iostream>
 
@@ -11,8 +12,6 @@ using namespace std;
 //session DatabaseInterface::database_handler = session("mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
 session DatabaseInterface::database_handler = session(
 		"mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
-
-// TODO: Define share mode on SELECT statements
 
 // Attributes strings for objects
 const string clarification_attributes = "		answer,"
@@ -31,43 +30,24 @@ const string problem_attributes = "		HEX(accepted_solution_id) AS accepted_solut
 		"		is_solved,"
 		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime";
 
-User *DatabaseInterface::searchUser(string user_name) {
+const string solution_attributes = "		content,"
+		"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
+		"		creator_user_name,"
+		"		description,"
+		"		HEX(id) AS id,"
+		"		is_anonymous,"
+		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime";
 
-	string query = "	SELECT"
-			"		birth_date,"
-			"		email,"
-			"		first_name,"
-			"		genre,"
-			"		last_name,"
-			"		location,"
-			"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime,"
-			"		user_name"
-			"	FROM User"
-			"	WHERE user_name LIKE BINARY ?"
-			"	LIMIT 1";
+const string user_attributes = "		birth_date,"
+		"		email,"
+		"		first_name,"
+		"		genre,"
+		"		last_name,"
+		"		location,"
+		"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime,"
+		"		user_name";
 
-	result result = database_handler << query << user_name;
-	if (!result.next())
-		// User not found
-		return NULL;
-
-	User *user = new User();
-	string formatted_date;
-	time_t timestamp;
-
-	result.fetch("birth_date", formatted_date);
-	user->birth_date = new Date("%Y-%m-%d", formatted_date);
-	result.fetch("email", user->email);
-	result.fetch("first_name", user->first_name);
-	result.fetch("genre", user->genre);
-	result.fetch("last_name", user->last_name);
-	result.fetch("location", user->location);
-	result.fetch("sign_up_datetime", timestamp);
-	user->sign_up_datetime = new Datetime(timestamp);
-	result.fetch("user_name", user->user_name);
-
-	return user;
-}
+// TODO: Define share mode on SELECT statements
 
 ErrorCode *DatabaseInterface::signInUser(string user_name, string encrypted_password) {
 	string query;
@@ -113,6 +93,22 @@ ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) 
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
+Clarification *DatabaseInterface::searchClarification(string id) {
+
+	stringstream query;
+	query << "	SELECT" << clarification_attributes << "	FROM Clarification"
+			"	WHERE id = UNHEX(?)"
+			"	LIMIT 1";
+
+	result result = database_handler << query.str() << id;
+
+	if (!result.next())
+		// Clarification not found
+		return NULL;
+
+	return fetchClarification(result);
+}
+
 Problem *DatabaseInterface::searchProblem(string id) {
 
 	stringstream query;
@@ -121,26 +117,44 @@ Problem *DatabaseInterface::searchProblem(string id) {
 			"	LIMIT 1";
 
 	result result = database_handler << query.str() << id;
+
 	if (!result.next())
 		// Problem not found
 		return NULL;
 
-	Problem *problem = new Problem();
-	time_t timestamp;
+	return fetchProblem(result);
+}
 
-	result.fetch("accepted_solution_id", problem->accepted_solution_id);
-	result.fetch("content", problem->content);
-	result.fetch("creation_datetime", timestamp);
-	problem->creation_datetime = new Datetime(timestamp);
-	result.fetch("creator_user_name", problem->creator_user_name);
-	result.fetch("description", problem->description);
-	result.fetch("id", problem->id);
-	result.fetch("is_anonymous", problem->is_anonymous);
-	result.fetch("is_solved", problem->is_solved);
-	result.fetch("last_edition_datetime", timestamp);
-	problem->last_edition_datetime = new Datetime(timestamp);
+Solution *DatabaseInterface::searchSolution(string id) {
 
-	return problem;
+	stringstream query;
+	query << "	SELECT" << solution_attributes << "	FROM Solution"
+			"	WHERE id = UNHEX(?)"
+			"	LIMIT 1";
+
+	result result = database_handler << query.str() << id;
+
+	if (!result.next())
+		// Solution not found
+		return NULL;
+
+	return fetchSolution(result);
+}
+
+User *DatabaseInterface::searchUser(string user_name) {
+	stringstream query;
+
+	query << "	SELECT" << user_attributes << "	FROM User"
+			"	WHERE user_name LIKE BINARY ?"
+			"	LIMIT 1";
+
+	result result = database_handler << query.str() << user_name;
+
+	if (!result.next())
+		// User not found
+		return NULL;
+
+	return fetchUser(result);
 }
 
 list<Problem *> *DatabaseInterface::searchProblems(/* TODO: define parameters */) {
@@ -150,84 +164,62 @@ list<Problem *> *DatabaseInterface::searchProblems(/* TODO: define parameters */
 
 list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 
-	string query = "	SELECT"
-			"		HEX(accepted_solution_id) AS accepted_solution_id,"
-			"		content,"
-			"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
-			"		creator_user_name,"
-			"		description,"
-			"		HEX(id) AS id,"
-			"		is_anonymous,"
-			"		is_solved,"
-			"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
-			"	FROM Problem"
+	stringstream query;
+	query << "	SELECT" << problem_attributes << "	FROM Problem"
 			"	WHERE creator_user_name LIKE BINARY ?";
 
-	result result = database_handler << query << user_name;
+	result result = database_handler << query.str() << user_name;
 
 	list<Problem *> *problem_list = new list<Problem *>();
 
 	while (result.next()) {
 
-		Problem *problem = new Problem();
-		time_t timestamp;
-
-		result.fetch("accepted_solution_id", problem->accepted_solution_id);
-		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", timestamp);
-		problem->creation_datetime = new Datetime(timestamp);
-		result.fetch("creator_user_name", problem->creator_user_name);
-		result.fetch("description", problem->description);
-		result.fetch("id", problem->id);
-		result.fetch("is_anonymous", problem->is_anonymous);
-		result.fetch("is_solved", problem->is_solved);
-		result.fetch("last_edition_datetime", timestamp);
-		problem->last_edition_datetime = new Datetime(timestamp);
-
-		problem_list->push_back(problem);
+		problem_list->push_back(fetchProblem(result));
 	}
 
 	return problem_list;
 }
 
-list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
+Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 
 	string query = "	SELECT"
-			"		HEX(accepted_solution_id) AS accepted_solution_id,"
-			"		content,"
-			"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
-			"		creator_user_name,"
-			"		description,"
-			"		HEX(id) AS id,"
-			"		is_anonymous,"
-			"		is_solved,"
-			"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
-			"	FROM Problem"
+			"		Solution.content AS content,"
+			"		UNIX_TIMESTAMP(Solution.creation_datetime) AS creation_datetime,"
+			"		Solution.creator_user_name AS creator_user_name,"
+			"		Solution.description AS description,"
+			"		HEX(Solution.id) AS id,"
+			"		Solution.is_anonymous AS is_anonymous,"
+			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime"
+			"	FROM"
+			"		Problem"
+			"		JOIN"
+			"		Solution"
+			"	ON Problem.accepted_solution_id = Solution.id"
+			"	WHERE Problem.id = UNHEX(?)"
+			"	LIMIT 1";
+
+	result result = database_handler << query << problem_id;
+
+	if (!result.next())
+		// Solution not found
+		return NULL;
+
+	return fetchSolution(result);
+}
+
+list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
+
+	stringstream query;
+	query << "	SELECT" << problem_attributes << "	FROM Problem"
 			"	ORDER BY RAND()"
 			"	LIMIT ?";
 
-	result result = database_handler << query << amount;
+	result result = database_handler << query.str() << amount;
 
 	list<Problem *> *problem_list = new list<Problem *>();
 
 	while (result.next()) {
-
-		Problem *problem = new Problem();
-		time_t timestamp;
-
-		result.fetch("accepted_solution_id", problem->accepted_solution_id);
-		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", timestamp);
-		problem->creation_datetime = new Datetime(timestamp);
-		result.fetch("creator_user_name", problem->creator_user_name);
-		result.fetch("description", problem->description);
-		result.fetch("id", problem->id);
-		result.fetch("is_anonymous", problem->is_anonymous);
-		result.fetch("is_solved", problem->is_solved);
-		result.fetch("last_edition_datetime", timestamp);
-		problem->last_edition_datetime = new Datetime(timestamp);
-
-		problem_list->push_back(problem);
+		problem_list->push_back(fetchProblem(result));
 	}
 
 	return problem_list;
@@ -257,80 +249,6 @@ ErrorCode * DatabaseInterface::deleteProblem(string id) {
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-Solution *DatabaseInterface::searchSolution(string id) {
-
-	string query = "	SELECT"
-			"		content,"
-			"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
-			"		creator_user_name,"
-			"		description,"
-			"		HEX(id) AS id,"
-			"		is_anonymous,"
-			"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
-			"	FROM Solution"
-			"	WHERE id = UNHEX(?)"
-			"	LIMIT 1";
-
-	result result = database_handler << query << id;
-	if (!result.next())
-		// Solution not found
-		return NULL;
-
-	Solution *solution = new Solution();
-	time_t timestamp;
-
-	result.fetch("content", solution->content);
-	result.fetch("creation_datetime", timestamp);
-	solution->creation_datetime = new Datetime(timestamp);
-	result.fetch("creator_user_name", solution->creator_user_name);
-	result.fetch("description", solution->description);
-	result.fetch("id", solution->id);
-	result.fetch("is_anonymous", solution->is_anonymous);
-	result.fetch("last_edition_datetime", timestamp);
-	solution->last_edition_datetime = new Datetime(timestamp);
-
-	return solution;
-}
-
-Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
-
-	string query = "	SELECT"
-			"		Solution.content AS content,"
-			"		UNIX_TIMESTAMP(Solution.creation_datetime) AS creation_datetime,"
-			"		Solution.creator_user_name AS creator_user_name,"
-			"		Solution.description AS description,"
-			"		HEX(Solution.id) AS id,"
-			"		Solution.is_anonymous AS is_anonymous,"
-			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime"
-			"	FROM"
-			"		Problem"
-			"		JOIN"
-			"		Solution"
-			"	ON Problem.accepted_solution_id = Solution.id"
-			"	WHERE Problem.id = UNHEX(?)"
-			"	LIMIT 1";
-
-	result result = database_handler << query << problem_id;
-	if (!result.next())
-		// Solution not found
-		return NULL;
-
-	Solution *solution = new Solution();
-	time_t timestamp;
-
-	result.fetch("content", solution->content);
-	result.fetch("creation_datetime", timestamp);
-	solution->creation_datetime = new Datetime(timestamp);
-	result.fetch("creator_user_name", solution->creator_user_name);
-	result.fetch("description", solution->description);
-	result.fetch("id", solution->id);
-	result.fetch("is_anonymous", solution->is_anonymous);
-	result.fetch("last_edition_datetime", timestamp);
-	solution->last_edition_datetime = new Datetime(timestamp);
-
-	return solution;
-}
-
 list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 	string query = "	SELECT"
@@ -358,21 +276,7 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 	list<Solution *> *solution_list = new list<Solution *>();
 
 	while (result.next()) {
-
-		Solution *solution = new Solution();
-		time_t timestamp;
-
-		result.fetch("content", solution->content);
-		result.fetch("creation_datetime", timestamp);
-		solution->creation_datetime = new Datetime(timestamp);
-		result.fetch("creator_user_name", solution->creator_user_name);
-		result.fetch("description", solution->description);
-		result.fetch("id", solution->id);
-		result.fetch("is_anonymous", solution->is_anonymous);
-		result.fetch("last_edition_datetime", timestamp);
-		solution->last_edition_datetime = new Datetime(timestamp);
-
-		solution_list->push_back(solution);
+		solution_list->push_back(fetchSolution(result));
 	}
 
 	return solution_list;
@@ -380,37 +284,16 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 
-	string query = "	SELECT"
-			"		content,"
-			"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
-			"		creator_user_name,"
-			"		description,"
-			"		HEX(Solution.id) AS id,"
-			"		is_anonymous,"
-			"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime"
-			"	FROM Solution"
+	stringstream query;
+	query << "	SELECT" << solution_attributes << "	FROM Solution"
 			"	WHERE creator_user_name LIKE BINARY ?";
 
-	result result = database_handler << query << user_name;
+	result result = database_handler << query.str() << user_name;
 
 	list<Solution *> *solution_list = new list<Solution *>();
 
 	while (result.next()) {
-
-		Solution *solution = new Solution();
-		time_t timestamp;
-
-		result.fetch("content", solution->content);
-		result.fetch("creation_datetime", timestamp);
-		solution->creation_datetime = new Datetime(timestamp);
-		result.fetch("creator_user_name", solution->creator_user_name);
-		result.fetch("description", solution->description);
-		result.fetch("id", solution->id);
-		result.fetch("is_anonymous", solution->is_anonymous);
-		result.fetch("last_edition_datetime", timestamp);
-		solution->last_edition_datetime = new Datetime(timestamp);
-
-		solution_list->push_back(solution);
+		solution_list->push_back(fetchSolution(result));
 	}
 
 	return solution_list;
@@ -441,29 +324,6 @@ ErrorCode * DatabaseInterface::deleteSolution(string id) {
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-Clarification *DatabaseInterface::searchClarification(string id) {
-
-	stringstream query;
-	query << "	SELECT" << clarification_attributes << "	FROM Clarification"
-			"	WHERE id = UNHEX(?)"
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << id;
-	if (!result.next())
-		// Clarification not found
-		return NULL;
-
-	Clarification *clarification = new Clarification();
-
-	result.fetch("answer", clarification->answer);
-	result.fetch("associated_publication_id", clarification->associated_publication_id);
-	result.fetch("creator_user_name", clarification->creator_user_name);
-	result.fetch("id", clarification->id);
-	result.fetch("question", clarification->question);
-
-	return clarification;
-}
-
 list<Clarification *> *DatabaseInterface::searchClarifications(string associated_publication_id) {
 
 	stringstream query;
@@ -475,15 +335,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string associated
 	list<Clarification *> *clarification_list = new list<Clarification *>();
 
 	while (result.next()) {
-		Clarification *clarification = new Clarification();
-
-		result.fetch("answer", clarification->answer);
-		result.fetch("associated_publication_id", clarification->associated_publication_id);
-		result.fetch("creator_user_name", clarification->creator_user_name);
-		result.fetch("id", clarification->id);
-		result.fetch("question", clarification->question);
-
-		clarification_list->push_back(clarification);
+		clarification_list->push_back(fetchClarification(result));
 	}
 
 	return clarification_list;
@@ -511,6 +363,7 @@ ErrorCode * DatabaseInterface::deleteClarification(string id) {
 	// TODO
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
+
 int DatabaseInterface::numberOfSolutionsByUser(std::string user_name) {
 	string query = "	SELECT"
 			"	count(*) AS num_solutions"
@@ -553,28 +406,14 @@ int DatabaseInterface::numberOfAcceptedSolutionsByUser(std::string user_name) {
 list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string user_name) {
 
 	stringstream problem_query;
-	problem_query << "	SELECT" << "		HEX(accepted_solution_id) AS accepted_solution_id,"
-			"		content,"
-			"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
-			"		creator_user_name,"
-			"		description,"
-			"		HEX(id) AS id,"
-			"		is_anonymous,"
-			"		is_solved,"
-			"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime" << "	FROM"
+	problem_query << "	SELECT" << problem_attributes << "	FROM"
 			"	Problem"
 			"	WHERE"
 			"	creator_user_name = ?"
 			"	ORDER BY last_edition_datetime DESC"
 			"	LIMIT 10";
 	stringstream solution_query;
-	solution_query << "	SELECT" << "		content,"
-			"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
-			"		creator_user_name,"
-			"		description,"
-			"		HEX(id) AS id,"
-			"		is_anonymous,"
-			"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime" << "	FROM"
+	solution_query << "	SELECT" << solution_attributes << "	FROM"
 			"	Solution"
 			"	WHERE"
 			"	creator_user_name = ?"
@@ -595,21 +434,17 @@ list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string use
 	}
 
 	publication_list->sort();
-	//TODO: Ineficient? Keep the size and use the necessary?
 	while (publication_list->size() > 10) {
 		publication_list->pop_back();
 	}
 
+	//TODO: debug
+	cerr << publication_list->size();
+
 	return publication_list;
 }
 
-Clarification* DatabaseInterface::fetchClarification(ref_ptr<result> res) {
-	result result = *res.get();
-	cerr << "start fetch" << endl;
-	cerr << result.next() << endl;
-	if (!result.next())
-		// Clarification not found
-		return NULL;
+Clarification* DatabaseInterface::fetchClarification(result result) {
 
 	Clarification *clarification = new Clarification();
 	try {
@@ -625,11 +460,30 @@ Clarification* DatabaseInterface::fetchClarification(ref_ptr<result> res) {
 
 	return clarification;
 }
+Solution* DatabaseInterface::fetchSolution(result result) {
+
+	Solution *solution = new Solution();
+	try {
+		time_t timestamp;
+
+		result.fetch("content", solution->content);
+		result.fetch("creation_datetime", timestamp);
+		solution->creation_datetime = new Datetime(timestamp);
+		result.fetch("creator_user_name", solution->creator_user_name);
+		result.fetch("description", solution->description);
+		result.fetch("id", solution->id);
+		result.fetch("is_anonymous", solution->is_anonymous);
+		result.fetch("last_edition_datetime", timestamp);
+		solution->last_edition_datetime = new Datetime(timestamp);
+	} catch (std::exception const &e) {
+		std::cerr << "ERROR: " << e.what() << std::endl;
+		return NULL;
+	}
+
+	return solution;
+}
 
 Problem* DatabaseInterface::fetchProblem(result result) {
-	if (!result.next())
-		// Problem not found
-		return NULL;
 
 	Problem *problem = new Problem();
 	try {
@@ -655,36 +509,7 @@ Problem* DatabaseInterface::fetchProblem(result result) {
 	return problem;
 }
 
-Solution* DatabaseInterface::fetchSolution(result result) {
-	if (!result.next())
-		// Solution not found
-		return NULL;
-
-	Solution *solution = new Solution();
-	try {
-		time_t timestamp;
-
-		result.fetch("content", solution->content);
-		result.fetch("creation_datetime", timestamp);
-		solution->creation_datetime = new Datetime(timestamp);
-		result.fetch("creator_user_name", solution->creator_user_name);
-		result.fetch("description", solution->description);
-		result.fetch("id", solution->id);
-		result.fetch("is_anonymous", solution->is_anonymous);
-		result.fetch("last_edition_datetime", timestamp);
-		solution->last_edition_datetime = new Datetime(timestamp);
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
-		return NULL;
-	}
-
-	return solution;
-}
-
 User* DatabaseInterface::fetchUser(result result) {
-	if (!result.next())
-		// User not found
-		return NULL;
 
 	User *user = new User();
 	try {
@@ -709,20 +534,3 @@ User* DatabaseInterface::fetchUser(result result) {
 	return user;
 }
 
-bool DatabaseInterface::userExists(std::string user_name) {
-	string query = ""
-			"	SELECT"
-			"	count(*) AS num_users"
-			"	FROM"
-			"	User"
-			"	WHERE"
-			"	user_name = ?";
-
-	result result = database_handler << query << user_name;
-
-	int to_return;
-	result.next();
-	result.fetch("num_users", to_return);
-
-	return to_return;
-}
