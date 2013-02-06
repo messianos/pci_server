@@ -323,11 +323,13 @@
 		
 		
 		<% template javascript_code() %>
-			$(document).ready(function() {
-				configureTextfield('pci_sign_in_textfield_user_name');
-				configurePasswordfield('pci_sign_in_textfield_password');
-				configureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');
-			});
+			<script>
+				$(document).ready(function() {
+					configureTextfield('pci_sign_in_textfield_user_name');
+					configurePasswordfield('pci_sign_in_textfield_password');
+					configureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');
+				});
+			</script>
 		<% end template %>
 		
 		
@@ -341,9 +343,7 @@
 				<head>
 					<% include css_links() %>
 					<% include js_links() %>
-					<script>
-						<% include javascript_code() %>
-					</script>
+					<% include javascript_code() %>
 			    	<title>
 			    		<%= page_title %>
 			    	</title>

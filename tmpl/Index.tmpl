@@ -21,6 +21,7 @@
 	
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function() {
 				configureValidator([
 					{ elementId: 'pci_sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },
@@ -41,6 +42,7 @@
 				configureDatepicker('pci_sign_up_textfield_birth_date');
 				configureDropdownlist('pci_sign_up_dropdownlist_genre');
 			});
+			</script>
 		<% end template %>
 	
 	

@@ -19,9 +19,11 @@
 		
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function(){
 				configureTexteditor('pci_texteditor');
 			});
+			</script>
 		<% end template %>
 		
 	
