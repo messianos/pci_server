@@ -271,7 +271,11 @@
 				<% if solution->is_anonymous %>
 					<i>Publicado Anónimamente</i>
 				<% else %>
-					<i>Por <a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>"><%= solution->creator_user_name %></a></i>
+					<i>Por 
+						<a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>">
+							<%= solution->creator_user_name %>
+						</a>
+					</i>
 				<% end %>
 				- <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>

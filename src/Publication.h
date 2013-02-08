@@ -16,6 +16,7 @@ public:
 	std::string id;
 	short int is_anonymous;
 	Datetime *last_edition_datetime;
+	int vote_balance;
 	Publication();
 	virtual ~Publication();
 

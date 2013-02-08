@@ -260,10 +260,12 @@ void Server::problem(string id) {
 	Problem *problem = DatabaseInterface::searchProblem(id);
 	content.problem = problem;
 	content.page_title = "PCI - " + problem->description;
+
 	if (problem->is_solved)
-		content.accepted_solution = DatabaseInterface::searchSolution(problem->accepted_solution_id);
+		content.accepted_solution = DatabaseInterface::searchAcceptedSolution(problem->id);
 	else
 		content.accepted_solution = NULL;
+
 	content.solutions = DatabaseInterface::searchSolutions(id);
 	content.clarifications = DatabaseInterface::searchClarifications(id);
 

@@ -9,7 +9,46 @@
 			<% include template_view::css_links() %>
 			<link href="/css/problem.css" rel="stylesheet" type="text/css" />
 		<% end template %>
+		
+		<% template js_links() %>
+			<% include template_view::js_links() %>
+			<script src="/lib/ckeditor/ckeditor.js"></script>
+		<% end template %>
 	
+		<% template javascript_code() %>
+			<% include template_view::javascript_code() %>
+			<script>
+
+				// Toggles elements involved in edition
+				function toggle(){
+					$("#problem_edit_button").toggle();
+					$("#pci_problem_problem_content").toggle();
+					$("#problem_cancel_edit_button").toggle();
+					$("#problem_finish_edit_button").toggle();
+					$("#ckeditor_container").toggle();				
+				}
+				
+				$(document).ready(function(){
+					configureTexteditor("pci_textfield");
+
+					$("#ckeditor_container").hide();
+					$("#problem_cancel_edit_button").hide();
+					$("#problem_finish_edit_button").hide();
+					$("#problem_edit_button").click(function(){
+						toggle();
+					});
+	
+					$("#problem_cancel_edit_button").click(function(){
+						toggle();
+					});
+	
+					$("#problem_finish_edit_button").click(function(){
+						toggle();
+						alert('Edition submit dumb method to be replaced with AJAX');
+					});
+				});
+			</script>
+		<% end template %>	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
@@ -21,11 +60,37 @@
 						<div class="pci_horizontal_line"></div>
 					<% end %>
 					<div id="pci_problem_header_container">
+						<a id="problem_edit_button">
+							<div class="pci_button_classic pci_header_bar_button">
+								Editar
+							</div>
+						</a>
 						<h2>
 							<%= problem->description %>
 						</h2>
+						<span class="pci_text_description">
+							<% if problem->is_anonymous %>
+								<i>Publicado Anónimamente</i>
+							<% else %>
+								<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+							<% end %>
+							- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+						</span>
 					</div>
 					<div id="pci_problem_problem_container">
+						<div id="ckeditor_container">
+						<textfield id="pci_textfield"></textfield>
+						</div>
+						<a id="problem_finish_edit_button">
+							<div class="pci_button_classic pci_header_bar_button">
+								Finalizar
+							</div>
+						</a>
+						<a id="problem_cancel_edit_button">
+							<div class="pci_button_classic pci_header_bar_button">
+								Cancelar
+							</div>
+						</a>
 						<div class="pci_box_content" id="pci_problem_problem_content">
 							<%= problem->content %>
 						</div>

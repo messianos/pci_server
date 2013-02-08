@@ -16,8 +16,12 @@ public:
 	std::string genre;
 	std::string last_name;
 	std::string location;
+	std::string preferences;
+	std::string profile_content;
+	int rank;
 	Datetime *sign_up_datetime;
 	std::string user_name;
+
 	User();
 	virtual ~User();
 };

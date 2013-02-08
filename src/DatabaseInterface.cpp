@@ -14,13 +14,14 @@ session DatabaseInterface::database_handler = session(
 		"mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
 
 // Attributes strings for objects
-const string clarification_attributes = "		answer,"
+const string clarification_attributes = ""
+		"		answer,"
 		"		HEX(associated_publication_id) AS associated_publication_id,"
 		"		creator_user_name,"
 		"		HEX(id) AS id,"
 		"		question";
 
-const string problem_attributes = "		HEX(accepted_solution_id) AS accepted_solution_id,"
+const string problem_attributes = ""
 		"		content,"
 		"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
 		"		creator_user_name,"
@@ -28,22 +29,29 @@ const string problem_attributes = "		HEX(accepted_solution_id) AS accepted_solut
 		"		HEX(id) AS id,"
 		"		is_anonymous,"
 		"		is_solved,"
-		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime";
+		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime,"
+		"		vote_balance";
 
-const string solution_attributes = "		content,"
+const string solution_attributes = ""
+		"		content,"
 		"		UNIX_TIMESTAMP(creation_datetime) AS creation_datetime,"
 		"		creator_user_name,"
 		"		description,"
 		"		HEX(id) AS id,"
 		"		is_anonymous,"
-		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime";
+		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime,"
+		"		vote_balance";
 
-const string user_attributes = "		birth_date,"
+const string user_attributes = ""
+		"		birth_date,"
 		"		email,"
 		"		first_name,"
 		"		genre,"
 		"		last_name,"
 		"		location,"
+		"		preferences,"
+		"		profile_content,"
+		"		rank,"
 		"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime,"
 		"		user_name";
 
@@ -180,8 +188,9 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 	return problem_list;
 }
 
+// FIXME: because of db changes
 Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
-
+/*
 	string query = "	SELECT"
 			"		Solution.content AS content,"
 			"		UNIX_TIMESTAMP(Solution.creation_datetime) AS creation_datetime,"
@@ -204,7 +213,8 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 		// Solution not found
 		return NULL;
 
-	return fetchSolution(result);
+	return fetchSolution(result);*/
+	return NULL;
 }
 
 list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
@@ -249,6 +259,7 @@ ErrorCode * DatabaseInterface::deleteProblem(string id) {
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
+// FIXME: READ FROM problems_solved
 list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 	string query = "	SELECT"
@@ -258,7 +269,8 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 			"		Solution.description AS description,"
 			"		HEX(Solution.id) AS id,"
 			"		Solution.is_anonymous AS is_anonymous,"
-			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime"
+			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
+			"		Solution.vote_balance"
 			"	FROM"
 			"		Problem"
 			"		JOIN"
@@ -451,12 +463,39 @@ Clarification* DatabaseInterface::fetchClarification(result result) {
 		result.fetch("id", clarification->id);
 		result.fetch("question", clarification->question);
 	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
+		std::cerr << "ERROR: " << e.what() << " in fetchClarification" << std::endl;
 		return NULL;
 	}
 
 	return clarification;
 }
+
+Problem* DatabaseInterface::fetchProblem(result result) {
+
+	Problem *problem = new Problem();
+	try {
+		time_t timestamp;
+
+		result.fetch("content", problem->content);
+		result.fetch("creation_datetime", timestamp);
+		problem->creation_datetime = new Datetime(timestamp);
+		result.fetch("creator_user_name", problem->creator_user_name);
+		result.fetch("description", problem->description);
+		result.fetch("id", problem->id);
+		result.fetch("is_anonymous", problem->is_anonymous);
+		result.fetch("is_solved", problem->is_solved);
+		result.fetch("last_edition_datetime", timestamp);
+		problem->last_edition_datetime = new Datetime(timestamp);
+		result.fetch("vote_balance", problem->vote_balance);
+
+	} catch (std::exception const &e) {
+		std::cerr << "ERROR: " << e.what() << " in fetchProblem" << std::endl;
+		return NULL;
+	}
+
+	return problem;
+}
+
 Solution* DatabaseInterface::fetchSolution(result result) {
 
 	Solution *solution = new Solution();
@@ -472,38 +511,14 @@ Solution* DatabaseInterface::fetchSolution(result result) {
 		result.fetch("is_anonymous", solution->is_anonymous);
 		result.fetch("last_edition_datetime", timestamp);
 		solution->last_edition_datetime = new Datetime(timestamp);
+		result.fetch("vote_balance", solution->vote_balance);
+
 	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
+		std::cerr << "ERROR: " << e.what() << " in fetchSolution" << std::endl;
 		return NULL;
 	}
 
 	return solution;
-}
-
-Problem* DatabaseInterface::fetchProblem(result result) {
-
-	Problem *problem = new Problem();
-	try {
-		time_t timestamp;
-
-		result.fetch("accepted_solution_id", problem->accepted_solution_id);
-		result.fetch("content", problem->content);
-		result.fetch("creation_datetime", timestamp);
-		problem->creation_datetime = new Datetime(timestamp);
-		result.fetch("creator_user_name", problem->creator_user_name);
-		result.fetch("description", problem->description);
-		result.fetch("id", problem->id);
-		result.fetch("is_anonymous", problem->is_anonymous);
-		result.fetch("is_solved", problem->is_solved);
-		result.fetch("last_edition_datetime", timestamp);
-		problem->last_edition_datetime = new Datetime(timestamp);
-
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
-		return NULL;
-	}
-
-	return problem;
 }
 
 User* DatabaseInterface::fetchUser(result result) {
@@ -523,8 +538,13 @@ User* DatabaseInterface::fetchUser(result result) {
 		result.fetch("sign_up_datetime", timestamp);
 		user->sign_up_datetime = new Datetime(timestamp);
 		result.fetch("user_name", user->user_name);
+
+		result.fetch("rank", user->rank);
+		result.fetch("profile_content", user->profile_content);
+		result.fetch("preferences", user->preferences);
+
 	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
+		std::cerr << "ERROR: " << e.what() << " in fetchUser" << endl;
 		return NULL;
 	}
 

@@ -9,7 +9,6 @@
 class Problem : public Publication {
 
 public:
-	std::string accepted_solution_id;
 	short int is_solved;
 	Problem();
 	virtual ~Problem();
