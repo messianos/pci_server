@@ -346,6 +346,8 @@ void Server::user(string user_name) {
 	content.number_of_problems = DatabaseInterface::numberOfProblemsByUser(user_name);
 	content.number_of_publications = content.number_of_solutions + content.number_of_problems;
 
+	content.number_of_accepted_solutions = DatabaseInterface::numberOfAcceptedSolutionsByUser(user_name);
+
 	content.recent_activity = DatabaseInterface::getRecentActivityByUser(user_name);
 
 	// TODO: si el usuario no fue encontrado, enviar a pagina especial

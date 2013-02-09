@@ -109,6 +109,7 @@ namespace ViewContent {
 		int number_of_solutions;
 		int number_of_problems;
 		int number_of_publications;
+		int number_of_accepted_solutions;
 		std::list<Publication*>* recent_activity;
 	};
 }

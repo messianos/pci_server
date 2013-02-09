@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS User (
         location VARCHAR(15),
         preferences TEXT CHARACTER SET utf8,
         profile_content MEDIUMTEXT CHARACTER SET utf8,
+        profile_picture_url MEDIUMTEXT CHARACTER SET utf8,
 		rank INT,
         sign_up_datetime TIMESTAMP,
         user_name VARCHAR(31),
@@ -327,6 +328,7 @@ BEGIN
                 location,
 				preferences,
 				profile_content,
+				profile_picture_url,
 				rank,
                 sign_up_datetime,
                 user_name
@@ -338,6 +340,7 @@ BEGIN
                 in_genre,
                 in_last_name,
                 in_location,
+				NULL,
 				NULL,
 				NULL,
 				0,
@@ -953,7 +956,11 @@ TO 'pci_user'@'localhost';
 GRANT SELECT
 ON TABLE pci_database.problem_solutions
 TO 'pci_user'@'localhost';
- 
+
+GRANT SELECT
+ON TABLE pci_database.problem_solved
+TO 'pci_user'@'localhost';
+
 GRANT SELECT
 ON TABLE pci_database.Clarification
 TO 'pci_user'@'localhost';

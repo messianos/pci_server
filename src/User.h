@@ -18,6 +18,7 @@ public:
 	std::string location;
 	std::string preferences;
 	std::string profile_content;
+	std::string profile_picture_url;
 	int rank;
 	Datetime *sign_up_datetime;
 	std::string user_name;

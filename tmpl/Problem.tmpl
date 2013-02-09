@@ -97,15 +97,17 @@
 					</div>
 					<div id="pci_problem_solution_container">
 						<% if problem->is_solved  %>
-							<div class="pci_box_description pci_problem_solution_description">
+							<div class="pci_box_description pci_problem_solution_description" style="background-color:#ABFFAB;">
 								<% include template_view::solution_description(problem, accepted_solution) %>
 							</div>
 						<% end %>
 						<% foreach solution in *solutions %>
 		 					<% item %>
-								<div class="pci_box_description pci_problem_solution_description">
-									<% include template_view::solution_description(problem, solution) %>
-								</div>
+		 						<% if (!content.problem->is_solved || solution->id.compare(content.accepted_solution->id) != 0) %>
+									<div class="pci_box_description pci_problem_solution_description">
+										<% include template_view::solution_description(problem, solution) %>
+									</div>
+								<% end %>
 		  					<% end %>
 						<% end %>
 					</div>

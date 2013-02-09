@@ -46,7 +46,7 @@
 										<div class="stat_description">Soluciones</div>
 									</div>
 									<div class="stat_container">
-										<div class="stat_number">N/A</div>
+										<div class="stat_number"><%= number_of_accepted_solutions %></div>
 										<div class="stat_description">Soluciones aceptadas</div>
 									</div>
 								</div>
@@ -80,7 +80,7 @@
 						</div>
 					</div>
 					<div id="column_2">
-						<div id="profile_image"></div>
+						<div id="profile_image" style="background:url('<%= user->profile_picture_url %>')"></div>
 						<div id="user_personal_info">
 							<div class="feature_container">
 								<div class="feature_title">

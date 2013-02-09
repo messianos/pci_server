@@ -51,6 +51,7 @@ const string user_attributes = ""
 		"		location,"
 		"		preferences,"
 		"		profile_content,"
+		"		profile_picture_url,"
 		"		rank,"
 		"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime,"
 		"		user_name";
@@ -188,24 +189,24 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 	return problem_list;
 }
 
-// FIXME: because of db changes
 Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
-/*
-	string query = "	SELECT"
+	string query = ""
+			"	SELECT"
 			"		Solution.content AS content,"
 			"		UNIX_TIMESTAMP(Solution.creation_datetime) AS creation_datetime,"
 			"		Solution.creator_user_name AS creator_user_name,"
 			"		Solution.description AS description,"
 			"		HEX(Solution.id) AS id,"
 			"		Solution.is_anonymous AS is_anonymous,"
-			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime"
+			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
+			"		Solution.vote_balance AS vote_balance"
 			"	FROM"
-			"		Problem"
+			"		problem_solved"
 			"		JOIN"
 			"		Solution"
-			"	ON Problem.accepted_solution_id = Solution.id"
-			"	WHERE Problem.id = UNHEX(?)"
-			"	LIMIT 1";
+			"	ON problem_solved.solution_id = Solution.id"
+			"	WHERE"
+			"		problem_id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
@@ -213,8 +214,7 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 		// Solution not found
 		return NULL;
 
-	return fetchSolution(result);*/
-	return NULL;
+	return fetchSolution(result);
 }
 
 list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
@@ -377,12 +377,13 @@ ErrorCode * DatabaseInterface::deleteClarification(string id) {
 }
 
 int DatabaseInterface::numberOfSolutionsByUser(std::string user_name) {
-	string query = "	SELECT"
-			"	count(*) AS num_solutions"
+	string query = ""
+			"	SELECT"
+			"		count(1) AS num_solutions"
 			"	FROM"
-			"	Solution"
+			"		Solution"
 			"	WHERE"
-			"	creator_user_name = ?";
+			"		creator_user_name = ?";
 
 	result result = database_handler << query << user_name;
 
@@ -394,12 +395,13 @@ int DatabaseInterface::numberOfSolutionsByUser(std::string user_name) {
 }
 
 int DatabaseInterface::numberOfProblemsByUser(std::string user_name) {
-	string query = "	SELECT"
-			"	count(*) AS num_problems"
+	string query = ""
+			"	SELECT"
+			"		count(1) AS num_problems"
 			"	FROM"
-			"	Problem"
+			"		Problem"
 			"	WHERE"
-			"	creator_user_name = ?";
+			"		creator_user_name = ?";
 
 	result result = database_handler << query << user_name;
 
@@ -411,24 +413,49 @@ int DatabaseInterface::numberOfProblemsByUser(std::string user_name) {
 }
 
 int DatabaseInterface::numberOfAcceptedSolutionsByUser(std::string user_name) {
-	//TODO
-	return 0;
+	int number = 0;
+
+	string query = ""
+			"	SELECT"
+			"		count(1) AS num_accepted_solutions"
+			"	FROM"
+			"		Solution"
+			"		JOIN"
+			"		problem_solved"
+			"		ON Solution.id = problem_solved.solution_id"
+			"	WHERE"
+			"	Solution.creator_user_name = ?";
+
+	result result = database_handler << query << user_name;
+
+	if(!result.next())
+		return 0;
+
+	result.fetch("num_accepted_solutions", number);
+
+	return number;
 }
 
 list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string user_name) {
 
 	stringstream problem_query;
-	problem_query << "	SELECT" << problem_attributes << "	FROM"
-			"	Problem"
+	problem_query << ""
+			"	SELECT"
+			"		" << problem_attributes << ""
+			"	FROM"
+			"		Problem"
 			"	WHERE"
-			"	creator_user_name = ?"
+			"		creator_user_name = ?"
 			"	ORDER BY last_edition_datetime DESC"
 			"	LIMIT 10";
 	stringstream solution_query;
-	solution_query << "	SELECT" << solution_attributes << "	FROM"
-			"	Solution"
+	solution_query << ""
+			"	SELECT"
+			"		" << solution_attributes << ""
+			"	FROM"
+			"		Solution"
 			"	WHERE"
-			"	creator_user_name = ?"
+			"		creator_user_name = ?"
 			"	ORDER BY last_edition_datetime DESC"
 			"	LIMIT 10";
 
@@ -537,11 +564,15 @@ User* DatabaseInterface::fetchUser(result result) {
 		result.fetch("location", user->location);
 		result.fetch("sign_up_datetime", timestamp);
 		user->sign_up_datetime = new Datetime(timestamp);
+
 		result.fetch("user_name", user->user_name);
 
 		result.fetch("rank", user->rank);
 		result.fetch("profile_content", user->profile_content);
 		result.fetch("preferences", user->preferences);
+
+		result.fetch("profile_picture_url", user->profile_picture_url);
+
 
 	} catch (std::exception const &e) {
 		std::cerr << "ERROR: " << e.what() << " in fetchUser" << endl;

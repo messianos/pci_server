@@ -1185,7 +1185,7 @@ namespace pci_skin {
 			if(content.problem->is_solved) {
 				#line 101 "Problem.tmpl"
 				out()<<"\n"
-					"\t\t\t\t\t\t\t<div class=\"pci_box_description pci_problem_solution_description\">\n"
+					"\t\t\t\t\t\t\t<div class=\"pci_box_description pci_problem_solution_description\" style=\"background-color:#ABFFAB;\">\n"
 					"\t\t\t\t\t\t\t\t";
 				#line 101 "Problem.tmpl"
 				template_view::solution_description(content.problem,content.accepted_solution);
@@ -1207,39 +1207,49 @@ namespace pci_skin {
 				for(CPPCMS_TYPEOF((*content.solutions).begin()) solution_ptr=(*content.solutions).begin(),solution_ptr_end=(*content.solutions).end();solution_ptr!=solution_ptr_end;++solution_ptr) {
 				#line 105 "Problem.tmpl"
 				CPPCMS_TYPEOF(*solution_ptr) &solution=*solution_ptr;
-					#line 107 "Problem.tmpl"
+					#line 106 "Problem.tmpl"
 					out()<<"\n"
-						"\t\t\t\t\t\t\t\t<div class=\"pci_box_description pci_problem_solution_description\">\n"
-						"\t\t\t\t\t\t\t\t\t";
-					#line 107 "Problem.tmpl"
-					template_view::solution_description(content.problem,solution);
-					#line 109 "Problem.tmpl"
+						"\t\t \t\t\t\t\t\t";
+					#line 106 "Problem.tmpl"
+					if(!content.problem->is_solved || solution->id.compare(content.accepted_solution->id) != 0) {
+						#line 108 "Problem.tmpl"
+						out()<<"\n"
+							"\t\t\t\t\t\t\t\t\t<div class=\"pci_box_description pci_problem_solution_description\">\n"
+							"\t\t\t\t\t\t\t\t\t\t";
+						#line 108 "Problem.tmpl"
+						template_view::solution_description(content.problem,solution);
+						#line 110 "Problem.tmpl"
+						out()<<"\n"
+							"\t\t\t\t\t\t\t\t\t</div>\n"
+							"\t\t\t\t\t\t\t\t";
+					#line 110 "Problem.tmpl"
+					} // endif
+					#line 111 "Problem.tmpl"
 					out()<<"\n"
-						"\t\t\t\t\t\t\t\t</div>\n"
 						"\t\t  \t\t\t\t\t";
-				#line 109 "Problem.tmpl"
+				#line 111 "Problem.tmpl"
 				} // end of item
-				#line 110 "Problem.tmpl"
+				#line 112 "Problem.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t";
-			#line 110 "Problem.tmpl"
-			}
 			#line 112 "Problem.tmpl"
+			}
+			#line 114 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t";
-			#line 112 "Problem.tmpl"
+			#line 114 "Problem.tmpl"
 			template_view::clarifications(content.clarifications,content.problem);
-			#line 115 "Problem.tmpl"
+			#line 117 "Problem.tmpl"
 			out()<<"\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 115 "Problem.tmpl"
+		#line 117 "Problem.tmpl"
 		} // end of template page_content
-	#line 118 "Problem.tmpl"
+	#line 120 "Problem.tmpl"
 	}; // end of class problem_view
-#line 119 "Problem.tmpl"
+#line 121 "Problem.tmpl"
 } // end of namespace pci_skin
 #line 2 "NewProblem.tmpl"
 #include "ViewContent.h" 
@@ -1427,12 +1437,16 @@ namespace pci_skin {
 				"\t\t\t\t\t\t\t\t\t\t<div class=\"stat_number\">";
 			#line 45 "User.tmpl"
 			out()<<cppcms::filters::escape(content.number_of_solutions);
-			#line 68 "User.tmpl"
+			#line 49 "User.tmpl"
 			out()<<"</div>\n"
 				"\t\t\t\t\t\t\t\t\t\t<div class=\"stat_description\">Soluciones</div>\n"
 				"\t\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t\t\t<div class=\"stat_container\">\n"
-				"\t\t\t\t\t\t\t\t\t\t<div class=\"stat_number\">N/A</div>\n"
+				"\t\t\t\t\t\t\t\t\t\t<div class=\"stat_number\">";
+			#line 49 "User.tmpl"
+			out()<<cppcms::filters::escape(content.number_of_accepted_solutions);
+			#line 68 "User.tmpl"
+			out()<<"</div>\n"
 				"\t\t\t\t\t\t\t\t\t\t<div class=\"stat_description\">Soluciones aceptadas</div>\n"
 				"\t\t\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t\t\t</div>\n"
@@ -1494,13 +1508,17 @@ namespace pci_skin {
 					"\t\t\t\t\t\t\t\t";
 			#line 78 "User.tmpl"
 			} // end of empty
-			#line 91 "User.tmpl"
+			#line 83 "User.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t<div id=\"column_2\">\n"
-				"\t\t\t\t\t\t<div id=\"profile_image\"></div>\n"
+				"\t\t\t\t\t\t<div id=\"profile_image\" style=\"background:url('";
+			#line 83 "User.tmpl"
+			out()<<cppcms::filters::escape(content.user->profile_picture_url);
+			#line 91 "User.tmpl"
+			out()<<"')\"></div>\n"
 				"\t\t\t\t\t\t<div id=\"user_personal_info\">\n"
 				"\t\t\t\t\t\t\t<div class=\"feature_container\">\n"
 				"\t\t\t\t\t\t\t\t<div class=\"feature_title\">\n"
