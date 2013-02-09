@@ -428,7 +428,7 @@ int DatabaseInterface::numberOfAcceptedSolutionsByUser(std::string user_name) {
 
 	result result = database_handler << query << user_name;
 
-	if(!result.next())
+	if (!result.next())
 		return 0;
 
 	result.fetch("num_accepted_solutions", number);
@@ -472,7 +472,8 @@ list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string use
 		publication_list->push_back(fetchSolution(solution_result));
 	}
 
-	publication_list->sort();
+	publication_list->sort(&Publication::publicationComparator);
+
 	while (publication_list->size() > 10) {
 		publication_list->pop_back();
 	}
@@ -572,7 +573,6 @@ User* DatabaseInterface::fetchUser(result result) {
 		result.fetch("preferences", user->preferences);
 
 		result.fetch("profile_picture_url", user->profile_picture_url);
-
 
 	} catch (std::exception const &e) {
 		std::cerr << "ERROR: " << e.what() << " in fetchUser" << endl;

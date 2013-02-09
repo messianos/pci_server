@@ -14,6 +14,6 @@ Publication::Publication() {
 Publication::~Publication() {
 }
 
-bool Publication::operator <(Publication *other) {
-	return last_edition_datetime < other->last_edition_datetime;
+bool Publication::publicationComparator(Publication* first, Publication* second){
+	return first->last_edition_datetime->timestamp > second->last_edition_datetime->timestamp;
 }

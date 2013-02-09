@@ -21,7 +21,7 @@ public:
 	virtual ~Publication();
 
 	//TODO: Compares last_editon_datetime
-	bool operator<(Publication* other);
+	static bool publicationComparator(Publication* first, Publication* second);
 
 };
 

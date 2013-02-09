@@ -102,8 +102,7 @@
 				</div>
 			</div>
 		<% end template %>
-		
-		
+	
 		<% template information_footer() %>
 			<div id="pci_information_footer_main_container">
 				<div id="pci_information_footer_central_container">
@@ -222,17 +221,42 @@
 		
 		
 		<% template problem_description(ProblemPointer problem) %>
-			<a class="pci_link_description" href="<% url "/publication" using problem->id %>">
-				<%= problem->description %>
-			</a>
-			<span class="pci_text_description">
-				<% if problem->is_anonymous %>
-					<i>Publicado Anónimamente</i>
-				<% else %>
-					<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
-				<% end %>
-				- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
-			</span>
+			<div class="pci_box_container pci_problems_problem_description">
+				<div class="row-fluid">
+					<div class="span2">
+						<div class="row-fluid"> <!-- Votes & Answers -->
+							<div class="span6">
+								<center>125</center>
+								<center>Votos</center>
+							</div>
+							<div class="span6">
+								<center>6</center>
+								<center>Soluciones</center>
+							</div>
+						</div>
+					</div>
+					<div class="span9">
+						<div class="row-fluid">				
+							<a class="pci_link_description" href="<% url "/publication" using problem->id %>">
+								<%= problem->description %>
+							</a>
+							<span class="pci_text_description">
+								<% if problem->is_anonymous %>
+									<i>Publicado Anónimamente</i>
+								<% else %>
+									<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+								<% end %>
+								- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+							</span>
+						</div>
+					</div>
+					<% if problem->is_solved %>
+						<div class="span1">
+							<div class="tick_on"></div>
+						</div>
+					<% end %>
+				</div>				
+			</div>
 		<% end template %>
 		
 		<% template publication_description(PublicationPointer publication) %>
@@ -317,12 +341,20 @@
 
 		<% template css_links() %>
 			<link href="/css/template.css" rel="stylesheet" type="text/css" />
+    		
+    		<link href="/css/bootstrap.min.css" rel="stylesheet">
 		<% end template %>
 
 
 		<% template js_links() %>
 			<script src="/js/utilities.js"></script>
 			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
+			
+			<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+	    	<!--[if lt IE 9]>
+	      		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	    	<![endif]-->
+    		<script src="/js/bootstrap.min.js"></script>
 		<% end template %>
 		
 		
@@ -346,14 +378,14 @@
 			<html>
 				<head>
 					<% include css_links() %>
-					<% include js_links() %>
-					<% include javascript_code() %>
 			    	<title>
 			    		<%= page_title %>
 			    	</title>
 				</head>
 				<body>
 					<% include page_content() %>
+					<% include js_links() %> <!-- Placed here for faster page loading -->
+					<% include javascript_code() %>
 				</body>
 			</html>
 		<% end template %>

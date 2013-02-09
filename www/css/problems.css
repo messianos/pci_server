@@ -5,9 +5,9 @@ body {
 
 #pci_problems_main_container {
 	min-width:912px;
-	padding:64px 128px 0px 240px;
+	padding:64px 10px 0px 128px;
 }
 
 div.pci_problems_problem_description {
-	margin-top:16px;
+	margin-bottom:16px;
 }
