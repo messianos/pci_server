@@ -25,6 +25,9 @@ public:
 	Date(short int day, short int month, short int year);
 	Date(std::string format, std::string formatted_date);
 	virtual ~Date();
+	short int getDay();
+	short int getMonth();
+	short int getYear();
 	std::string toString(std::string format);
 };
 

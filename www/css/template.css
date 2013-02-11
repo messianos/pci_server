@@ -26,6 +26,7 @@ div {
 }
 
 a, a:active, a:hover, a:visited {
+	cursor: pointer;
 	text-decoration:none;
 }
 
@@ -538,7 +539,7 @@ div.pci_header_bar_button {
 	display:none;
 	float:right;
 	margin-top:-10px;
-	padding:0px 16px 8px 16px;
+	padding:8px;
 }
 
 

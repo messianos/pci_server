@@ -7,36 +7,45 @@ using namespace std;
 
 // Initializations
 const string ErrorCode::ERROR_DESCRIPTIONS[] = {
-	"No se produjo ningun error",
-	"Nombre de usuario o password invalido",
-	"Completar el campo de la descripción",
-	"Completar el campo de contenido",
-	"Campo de usuario vacio",
-	"Campo de contraseña vacio",
-	"Nombre de usuario muy corto",
-	"Contraseña muy corta,debe tener más de 6 caracteres o números",
-	"Apellido muy corto",
-	"Email invalido",
-	"La contraseña ingresada no es la misma que la de la verificación",
-	"El nombre de usuario es invalido",
-	"La contraseña es invalida."
-	// TODO: completar las descripciones
+	"CODE_NONE",
+	"CODE_INVALID_BIRTH_DATE",
+	"CODE_INVALID_EMAIL",
+	"CODE_INVALID_FIRST_NAME",
+	"CODE_INVALID_GENRE",
+	"CODE_INVALID_IS_ANONYMOUS",
+	"CODE_INVALID_LAST_NAME",
+	"CODE_INVALID_LOCATION",
+	"CODE_INVALID_PASSWORD",
+	"CODE_INVALID_USER_NAMEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaeee",
+	"CODE_INVALID_PROBLEM_ID",
+	"CODE_INVALID_SOLUTION_ID",
+	"CODE_INVALID_CLARIFICATION_ID",
+	"CODE_INVALID_PUBLICATION_CONTENT",
+	"CODE_INVALID_PUBLICATION_DESCRIPTION",
+	"CODE_INVALID_CLARIFICATION_ANSWER",
+	"CODE_INVALID_CLARIFICATION_ASSOCIATED_PUBLICATION_ID",
+	"CODE_INVALID_CLARIFICATION_QUESTION"
+	// TODO: cambiar descripciones
 };
-const short int ErrorCode::CODE_NONE = 0;
-const short int ErrorCode::CODE_INVALID_SIGN_IN = 1;
-const short int ErrorCode::CODE_SHORT_DESCRIPTION = 2;
-const short int ErrorCode::CODE_SHORT_CONTENT = 3;
-const short int ErrorCode::CODE_VOID_USERNAME_FIELD = 4;
-const short int ErrorCode::CODE_VOID_PASSWORD_FIELD = 5;
-const short int ErrorCode::CODE_SHORT_USERNAME = 6;
-const short int ErrorCode::CODE_SHORT_PASSWORD = 7;
-const short int ErrorCode::CODE_SHORT_LASTNAME = 8;
-const short int ErrorCode::CODE_EMAIL_INVALID = 9;
-const short int ErrorCode::CODE_INVALID_PASSWORD_VERIFICATION = 10;
-const short int ErrorCode::CODE_INVALID_USERNAME = 11;
-const short int ErrorCode::CODE_INVALID_PASSWORD = 12;
 
-// TODO: completar esta lista
+const short int ErrorCode::CODE_NONE = 0;
+const short int ErrorCode::CODE_INVALID_BIRTH_DATE = 1;
+const short int ErrorCode::CODE_INVALID_EMAIL = 2;
+const short int ErrorCode::CODE_INVALID_FIRST_NAME = 3;
+const short int ErrorCode::CODE_INVALID_GENRE = 4;
+const short int ErrorCode::CODE_INVALID_IS_ANONYMOUS = 5;
+const short int ErrorCode::CODE_INVALID_LAST_NAME = 6;
+const short int ErrorCode::CODE_INVALID_LOCATION = 7;
+const short int ErrorCode::CODE_INVALID_PASSWORD = 8;
+const short int ErrorCode::CODE_INVALID_USER_NAME = 9;
+const short int ErrorCode::CODE_INVALID_PROBLEM_ID = 10;
+const short int ErrorCode::CODE_INVALID_SOLUTION_ID = 11;
+const short int ErrorCode::CODE_INVALID_CLARIFICATION_ID = 12;
+const short int ErrorCode::CODE_INVALID_PUBLICATION_CONTENT = 13;
+const short int ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION = 14;
+const short int ErrorCode::CODE_INVALID_CLARIFICATION_ANSWER = 15;
+const short int ErrorCode::CODE_INVALID_CLARIFICATION_ASSOCIATED_PUBLICATION_ID = 16;
+const short int ErrorCode::CODE_INVALID_CLARIFICATION_QUESTION = 17;
 
 ErrorCode::ErrorCode(short int code) {
 	this->code = code;

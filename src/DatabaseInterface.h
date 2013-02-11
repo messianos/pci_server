@@ -25,9 +25,8 @@ public:
 	 * User operations
 	 */
 	static User *searchUser(std::string user_name);
-	static ErrorCode *signInUser(std::string user_name, std::string encrypted_password);
+	static bool signInUser(std::string user_name, std::string encrypted_password);
 	static ErrorCode *signUpUser(User *user, std::string encrypted_password);
-	static bool userExists(std::string user_name);
 
 	/*
 	 * Problem operations

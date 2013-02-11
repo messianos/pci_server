@@ -32,6 +32,7 @@
 							<tool command="g++ -rdynamic" id="cdt.managedbuild.tool.gnu.cpp.linker.base.464917134" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
 								<option id="gnu.cpp.link.option.libs.2033505500" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="cppcms"/>
+									<listOptionValue builtIn="false" value="boost_regex"/>
 									<listOptionValue builtIn="false" value="crypto"/>
 									<listOptionValue builtIn="false" value="cppdb"/>
 									<listOptionValue builtIn="false" value="booster"/>

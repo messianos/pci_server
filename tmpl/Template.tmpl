@@ -4,6 +4,169 @@
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
 
+		<% template sign_in_form() %>
+			<input id="sign_in_user_name" placeholder="Nombre de usuario" type="text"><br />
+			<input id="sign_in_password" placeholder="Contraseña" type="password"><br />
+			<a class="btn pull-right" id="sign_in_submit">Ingresar</a>
+			<script>
+				$('#sign_in_submit').click({
+					password: $('#sign_in_password'),
+					user_name: $('#sign_in_user_name')
+				}, function(event) {
+					var password = event.data.password.val();
+					var user_name = event.data.user_name.val();
+					
+					var onInvalidInput = onInvalidInputSignIn(event.data.password, event.data.user_name);
+					if(validateSignInInput(onInvalidInput, password, user_name))
+						postSignIn(onSuccessSignIn(), onFailureSignIn(), password, user_name);
+				});
+			</script>
+		<% end template %>
+		
+		<% template sign_out_form() %>
+			<a class="btn" id="sign_out_submit">Salir</a>
+			<script>
+				$('#sign_out_submit').click(function() {
+					postSignOut(onSuccessSignOut(), onFailureSignOut());
+				});
+			</script>
+		<% end template %>
+		
+		<% template create_user_form() %>
+			<legend>Registrate</legend>
+			<input id="create_user_user_name" placeholder="Nombre de usuario" type="text"><br />
+			<input id="create_user_first_name" placeholder="Nombre" type="text"><br />
+			<input id="create_user_last_name" placeholder="Apellido" type="text"><br />
+			<input id="create_user_email" placeholder="E-mail" type="text"><br />
+			<input id="create_user_password" placeholder="Contraseña" type="password"><br />
+			<!--<input id="create_user_location" placeholder="Localidad" type="text"><br />-->
+			<input id="create_user_birth_date" placeholder="Fecha de nacimiento" readonly type="text"><br />
+			<select id="create_user_genre">
+				<option value="F">Mujer</option>
+				<option value="M">Hombre</option>
+			</select><br />
+			<a class="btn pull-right" id="create_user_submit">Registrar</a>
+			<script>
+				var current_year = new Date().getFullYear();
+				$('#create_user_birth_date').datepicker({
+					showOn:'focus',
+					yearRange: (current_year - 100) + ':' + current_year,
+					dateFormat:'dd-mm-yy',
+					changeMonth:true,
+					changeYear:true
+				});
+			
+				$('#create_user_submit').click({
+					birth_date: $('#create_user_birth_date'),
+					email: $('#create_user_email'),
+					first_name: $('#create_user_first_name'),
+					genre: $('#create_user_genre'),
+					last_name: $('#create_user_last_name'),
+					location: $('#create_user_location'),
+					password: $('#create_user_password'),
+					user_name: $('#create_user_user_name')
+				}, function(event) {
+					var birth_date = event.data.birth_date.val();
+					var email = event.data.email.val();
+					var first_name = $.trim(event.data.first_name.val());
+					var genre = event.data.genre.val();
+					var last_name = $.trim(event.data.last_name.val());
+					var location = $.trim(event.data.location.val());
+					var password = event.data.password.val();
+					var user_name = event.data.user_name.val();
+					
+					var onInvalidInput = onInvalidInputCreateUser(event.data.email, event.data.first_name, event.data.last_name, event.data.location, event.data.password, event.data.user_name);
+					if (validateCreateUserInput(onInvalidInput, email, first_name, last_name, location, password, user_name))
+						postCreateUser(onSuccessCreateUser(), onFailureCreateUser(), birth_date, email, first_name, genre, last_name, location, password, user_name);
+				});
+			</script>
+		<% end template %>
+		
+		<% template create_problem_form() %>
+			<legend>Crear problema</legend>
+			<input id="create_problem_description" placeholder="Descripción del problema" type="text"><br />
+			<textarea id="create_problem_content"></textarea><br />
+			<input id="create_problem_is_anonymous" placeholder="is_anonymous (temporal)" type="text"><br />
+			<a class="btn" id="create_problem_submit">Crear problema</a>
+			<script>
+				CKEDITOR.replace('create_problem_content', {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					]
+				});
+			
+				$('#create_problem_submit').click({
+					content: $('#create_problem_content'),
+					description: $('#create_problem_description'),
+					is_anonymous: $('#create_problem_is_anonymous')
+				}, function(event) {
+					CKEDITOR.instances.create_problem_content.updateElement();
+					
+					var content = $.trim(event.data.content.val());
+					var description = $.trim(event.data.description.val());
+					var is_anonymous = event.data.is_anonymous.val();
+					
+					var onInvalidInput = onInvalidInputCreateProblem(event.data.content, event.data.description);
+					if (validateCreateProblemInput(onInvalidInput, content, description))
+						postCreateProblem(onSuccessCreateProblem(), onFailureCreateProblem(), content, description, is_anonymous);
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template create_solution_form(std::string problem_id) %>
+			<legend>Crear solución</legend>
+			<input id="create_solution_description" placeholder="Descripción de la solución" type="text"><br />
+			<textarea id="create_solution_content"></textarea><br />
+			<input id="create_solution_is_anonymous" placeholder="is_anonymous (temporal)" type="text"><br />
+			<a class="btn" id="create_solution_submit">Crear solución</a>
+			<script>
+				CKEDITOR.replace(create_solution_content, {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					]
+				});
+			
+				$('#create_solution_submit').click({
+					content: $('#create_solution_content'),
+					description: $('#create_solution_description'),
+					is_anonymous: $('#create_solution_is_anonymous')
+				}, function(event) {
+					CKEDITOR.instances.create_solution_content.updateElement();
+					
+					var content = $.trim(event.data.content.val());
+					var description = $.trim(event.data.description.val());
+					var is_anonymous = event.data.is_anonymous.val();
+					var problem_id =  '<%= problem_id %>';
+					
+					var onInvalidInput = onInvalidInputCreateSolution(event.data.content, event.data.description);
+					if (validateCreateSolutionInput(onInvalidInput, content, description))
+						postCreateSolution(onSuccessCreateSolution(), onFailureCreateSolution(), content, description, is_anonymous, problem_id);
+				});
+			</script>
+		<% end template %>
 
 		<% template clarifications(ClarificationList clarifications, PublicationPointer publication) %>
 			<% if (! clarifications->empty()) %>
@@ -43,7 +206,7 @@
 											<div class="pci_clarifications_answer_content">
 												<textarea class="pci_clarifications_answer_textarea pci_textarea_small" id="textarea_<%= clarification->id %>">Responder</textarea>
 												<div class="pci_clarifications_button_container">
-													<a href="javascript:void(0)">
+													<a>
 														<div class="pci_button_classic pci_clarifications_answer_button" id="answer_button_<%= clarification->id %>">
 															Responder
 														</div>
@@ -76,11 +239,7 @@
 					</div>
 					<div id="pci_header_bar_sign_container">
 					 	<% if user_signed_in %>
-							<a href="<% url "/sign_out" %>">
-								<div class="pci_button_classic pci_header_bar_button">
-									Salir
-								</div>
-							</a>
+							<% include sign_out_form() %>
 					 		<div id="pci_header_bar_user_name_container">
 							<a href="<% url "/user" using user_name %>">
 					 			<span id="pci_header_bar_user_name">
@@ -89,13 +248,13 @@
 				 			</a>
 				 			</div>
 						<% else %>
-							<a href="javascript:void(0)">
+							<a>
 								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
 									Ingresar
 								</div>
 							</a>
 							<div id="pci_header_bar_sign_in_container">
-								<% include sign_in_form(sign_in_form_info) %>
+								<% include sign_in_form() %>
 							</div>
 						<% end %>
 					</div>
@@ -205,21 +364,6 @@
 			</div>
 		<% end template %>
 		
-		
-		<% template new_problem_form(ViewContent::NewProblemFormInfo &new_problem_form_info) %>
-			<form action="" method="post">
-				<% form as_p new_problem_form_info %>
-			</form>
-		<% end template %>
-		
-		
-		<% template new_solution_form(ViewContent::NewSolutionFormInfo &new_solution_form_info) %>
-			<form action="" method="post">
-				<% form as_p new_solution_form_info %>
-			</form>
-		<% end template %>
-		
-		
 		<% template problem_description(ProblemPointer problem) %>
 			<div class="pci_box_container pci_problems_problem_description">
 				<div class="row-fluid">
@@ -272,20 +416,6 @@
 				- <%= publication->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
 		<% end template %>		
-		
-		<% template sign_in_form(ViewContent::SignInFormInfo &sign_in_form_info) %>
-			<form action="" method="post">
-				<% form as_p sign_in_form_info %>
-			</form>
-		<% end template %>
-		
-		
-		<% template sign_up_form(ViewContent::SignUpFormInfo &sign_up_form_info) %>
-			<form action="" method="post">
-				<% form as_p sign_up_form_info %>
-			</form>
-		<% end template %>
-		
 		
 		<% template solution_description(ProblemPointer problem, SolutionPointer solution) %>
 			<a class="pci_link_description" href="<% url "/publication" using problem->id, solution->id %>">
@@ -348,6 +478,7 @@
 
 		<% template js_links() %>
 			<script src="/js/utilities.js"></script>
+			<script src="/js/logic.js"></script>
 			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
 			
 			<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -378,14 +509,14 @@
 			<html>
 				<head>
 					<% include css_links() %>
+					<% include js_links() %> <!-- Placed here for faster page loading -->
+					<% include javascript_code() %>
 			    	<title>
 			    		<%= page_title %>
 			    	</title>
 				</head>
 				<body>
 					<% include page_content() %>
-					<% include js_links() %> <!-- Placed here for faster page loading -->
-					<% include javascript_code() %>
 				</body>
 			</html>
 		<% end template %>

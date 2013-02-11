@@ -1,42 +1,93 @@
 // Includes
 #include "Server.h"
-#include <iostream>// TODO: remove this (debugging purposes)
+
 // Namespaces
-using namespace ViewContent;
+using namespace boost;
 using namespace cppcms;
 using namespace std;
+using namespace ViewContent;
+
+bool Server::getRequestReceived() {
+	return request().request_method() == "GET";
+}
+
+bool Server::postRequestReceived() {
+	return request().request_method() == "POST";
+}
+
+string Server::postRequestData(string name) {
+	return request().post(name);
+}
+
+void Server::setSessionProperties(TemplateContent &content) {
+	content.user_signed_in = session().is_set("session_user_signed_in");
+	content.user_name = session()["session_user_name"];
+	content.user_first_name = session()["session_first_name"];
+	content.user_last_name = session()["session_last_name"];
+}
+
+void Server::debug() {
+	ViewContent::TemplateContent content;
+	render("debug_view", content);
+}
 
 Server::Server(cppcms::service &service) :
 		application(service) {
 
-	dispatcher().assign("/ideas", &Server::ideas, this);
-	mapper().assign("ideas", "/ideas");
+	/* TODO: remove this (debugging purposes) */
+	dispatcher().assign("/debug", &Server::debug, this);
+	mapper().assign("debug", "/debug");
 
-	dispatcher().assign("", &Server::index, this);
-	mapper().assign("");
-
-	dispatcher().assign("/new_clarification_answer", &Server::newClarificationAnswer, this);
-	mapper().assign("new_clarification_answer", "/new_clarification_answer");
-
-	dispatcher().assign("/new_problem", &Server::newProblem, this);
-	mapper().assign("new_problem", "/new_problem");
-
-	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::newSolution, this, 1);
-	mapper().assign("new_solution", "/new_solution/{1}");
-
-	dispatcher().assign("/publication/(50\\w{32,32})", &Server::problem, this, 1);
-	mapper().assign("publication", "/publication/{1}");
-
-	dispatcher().assign("/problems", &Server::problems, this);
-	mapper().assign("problems", "/problems");
-
-	dispatcher().assign("/sign_out", &Server::signOut, this);
+	// Session services
+	dispatcher().assign("/sign_in", &Server::postSignIn, this);
+	mapper().assign("sign_in", "/sign_in");
+	dispatcher().assign("/sign_out", &Server::postSignOut, this);
 	mapper().assign("sign_out", "/sign_out");
 
-	dispatcher().assign("/publication/(50\\w{32,32})/(53\\w{32,32})", &Server::solution, this, 1, 2);
-	mapper().assign("publication", "/publication/{1}/{2}");
+	// Database-querying services
 
-	dispatcher().assign("/user/(\\w+)", &Server::user, this, 1);
+	// Database-updating services
+	dispatcher().assign("/create_user", &Server::postCreateUser, this);
+	mapper().assign("create_user", "/create_user");
+	dispatcher().assign("/update_user", &Server::postUpdateUser, this);
+	mapper().assign("update_user", "/update_user");
+	dispatcher().assign("/delete_user", &Server::postDeleteUser, this);
+	mapper().assign("delete_user", "/delete_user");
+	dispatcher().assign("/create_problem", &Server::postCreateProblem, this);
+	mapper().assign("create_problem", "/create_problem");
+	dispatcher().assign("/update_problem", &Server::postUpdateProblem, this);
+	mapper().assign("update_problem", "/update_problem");
+	dispatcher().assign("/delete_problem", &Server::postDeleteProblem, this);
+	mapper().assign("delete_problem", "/delete_problem");
+	dispatcher().assign("/create_solution", &Server::postCreateSolution, this);
+	mapper().assign("create_solution", "/create_solution");
+	dispatcher().assign("/update_solution", &Server::postUpdateSolution, this);
+	mapper().assign("update_solution", "/update_solution");
+	dispatcher().assign("/delete_solution", &Server::postDeleteSolution, this);
+	mapper().assign("delete_solution", "/delete_solution");
+	dispatcher().assign("/create_clarification", &Server::postCreateClarification, this);
+	mapper().assign("create_clarification", "/create_clarification");
+	dispatcher().assign("/update_clarification", &Server::postUpdateClarification, this);
+	mapper().assign("update_clarification", "/update_clarification");
+	dispatcher().assign("/delete_clarification", &Server::postDeleteClarification, this);
+	mapper().assign("delete_clarification", "/delete_clarification");
+
+	// Page-fetching services
+	dispatcher().assign("/ideas", &Server::getFetchIdeasPage, this);
+	mapper().assign("ideas", "/ideas");
+	dispatcher().assign("", &Server::getFetchMainPage, this);
+	mapper().assign("");
+	dispatcher().assign("/new_problem", &Server::getFetchNewProblemPage, this);
+	mapper().assign("new_problem", "/new_problem");
+	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::getFetchNewSolutionPage, this, 1);
+	mapper().assign("new_solution", "/new_solution/{1}");
+	dispatcher().assign("/problems", &Server::getFetchProblemsPage, this);
+	mapper().assign("problems", "/problems");
+	dispatcher().assign("/publication/(50\\w{32,32})", &Server::getFetchProblemPage, this, 1);
+	mapper().assign("publication", "/publication/{1}");
+	dispatcher().assign("/publication/(50\\w{32,32})/(53\\w{32,32})", &Server::getFetchSolutionPage, this, 1, 2);
+	mapper().assign("publication", "/publication/{1}/{2}");
+	dispatcher().assign("/user/(\\w+)", &Server::getFetchUserPage, this, 1);
 	mapper().assign("user", "/user/{1}");
 
 	mapper().root("/pci");
@@ -45,314 +96,475 @@ Server::Server(cppcms::service &service) :
 Server::~Server() {
 }
 
-void Server::setSessionProperties(TemplateContent &content) {
-	content.user_signed_in = session().is_set("user_signed_in");
-	content.user_name = session()["user_name"];
-	content.user_first_name = session()["user_first_name"];
-	content.user_last_name = session()["user_last_name"];
-}
+#include <iostream> // TODO: remove this
+void Server::postSignIn() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		// TODO: password should be send using HTTPS (does that change this method?)
+		string user_name = postRequestData("user_name");
+		string password = postRequestData("password");
 
-ErrorCode *Server::processNewProblemPost(ViewContent::NewProblemFormInfo &form_info) {
-	ErrorCode *error_code;
+		ErrorCode *error_code;
+		error_code = InputValidator::validateSignInInput(user_name, password);
+		if (error_code->isAnError())
+			response().status(http::response::bad_request, error_code->getErrorDescription());
+		else {
+			string encrypted_password = PasswordManager::encryptPassword(password);
 
-	form_info.load(context());
-	error_code = InputValidator::validateNewProblemInput(&form_info);
-	if (!error_code->isAnError()) {
-		// Valid input
-		Problem *problem = new Problem();
-		problem->content = form_info.content.value();
-		problem->creator_user_name = session()["user_name"];
-		problem->description = form_info.description.value();
-		problem->id = IDManager::generateProblemID();
-		problem->is_anonymous = form_info.is_anonymous.value();
+			/*
+			 * A sign in failed attempt is not a HTTP error.
+			 * Instead of responding with a HTTP error code, the
+			 * server sends a specific message to the client.
+			 */
 
-		error_code = DatabaseInterface::insertProblem(problem);
-		if (!error_code->isAnError())
-			response().set_redirect_header(url("/publication", problem->id));
-	}
+			json::value json_response = json::value();
+			if (!DatabaseInterface::signInUser(user_name, encrypted_password)) {
+				json_response["user_signed_in"] = false;
+			} else {
+				User *user = DatabaseInterface::searchUser(user_name);
+				session()["session_user_signed_in"] = "";
+				session()["session_user_name"] = user_name;
+				session()["session_first_name"] = user->first_name;
+				session()["session_last_name"] = user->last_name;
+				json_response["user_signed_in"] = true;
+			}
 
-	return error_code;
-}
-
-ErrorCode *Server::processNewSolutionPost(ViewContent::NewSolutionFormInfo &form_info, string problem_id) {
-	ErrorCode *error_code;
-
-	form_info.load(context());
-	error_code = InputValidator::validateNewSolutionInput(&form_info);
-	if (!error_code->isAnError()) {
-		// Valid input
-		Solution *solution = new Solution();
-		solution->content = form_info.content.value();
-		solution->creator_user_name = session()["user_name"];
-		solution->description = form_info.description.value();
-		solution->id = IDManager::generateSolutionID();
-		solution->is_anonymous = form_info.is_anonymous.value();
-
-		error_code = DatabaseInterface::insertSolution(solution, problem_id);
-		if (!error_code->isAnError())
-			response().set_redirect_header(url("/publication", problem_id));
-	}
-
-	return error_code;
-}
-
-ErrorCode *Server::processSignInPost(SignInFormInfo &form_info) {
-	ErrorCode *error_code;
-
-	form_info.load(context());
-	error_code = InputValidator::validateSignInInput(&form_info);
-	if (!error_code->isAnError()) {
-		// Valid input
-		string user_name = form_info.user_name.value();
-		string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
-		error_code = DatabaseInterface::signInUser(user_name, encrypted_password);
-		if (!error_code->isAnError()) {
-			// User and password are valid
-			User *user = DatabaseInterface::searchUser(user_name);
-			session()["user_signed_in"] = "";
-			session()["user_name"] = user_name;
-			session()["user_first_name"] = user->first_name;
-			session()["user_last_name"] = user->last_name;
-			response().set_redirect_header(url("/"));
+			response().out() << json_response;
+			response().status(http::response::ok);
 		}
 	}
-
-	return error_code;
 }
 
-ErrorCode *Server::processSignUpPost(SignUpFormInfo &form_info) {
-	ErrorCode *error_code;
-
-	form_info.load(context());
-	error_code = InputValidator::validateSignUpInput(&form_info);
-	if (!error_code->isAnError()) {
-		// Valid input
-		User* user = new User();
-		user->birth_date = new Date("%d-%m-%Y", form_info.birth_date.value().c_str());
-		user->email = form_info.email.value();
-		user->first_name = form_info.first_name.value();
-		user->genre = form_info.genre.selected() == 0 ? "F" : "M";
-		user->last_name = form_info.last_name.value();
-		user->location = ""; // TODO: add location widget to form
-		user->user_name = form_info.user_name.value();
-		string encrypted_password = PasswordManager::encryptPassword(form_info.password.value());
-
-		error_code = DatabaseInterface::signUpUser(user, encrypted_password);
-		if (!error_code->isAnError())
-			response().set_redirect_header(url("/"));
+void Server::postSignOut() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		session().clear();
+		response().status(http::response::ok);
 	}
-
-	return error_code;
 }
 
-void Server::ideas() {
-	IdeasContent content;
+void Server::postCreateUser() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		// TODO: password should be send using HTTPS (does that change this method?)
+		string birth_date = postRequestData("birth_date");
+		string email = postRequestData("email");
+		string first_name = postRequestData("first_name");
+		trim(first_name);
+		string genre = postRequestData("genre");
+		string last_name = postRequestData("last_name");
+		trim(last_name);
+		string location = postRequestData("location");
+		trim(location);
+		string password = postRequestData("password");
+		string user_name = postRequestData("user_name");
 
-	setSessionProperties(content);
-	content.page_title = "PCI - Ideas";
+		ErrorCode *error_code;
+		error_code = InputValidator::validateCreateUserInput(birth_date, email, first_name, genre, last_name, location,
+				password, user_name);
+		if (error_code->isAnError())
+			response().status(http::response::bad_request, error_code->getErrorDescription());
+		else {
+			User *user = new User();
+			user->birth_date = new Date("%d-%m-%Y", birth_date);
+			user->email = email;
+			user->first_name = first_name;
+			user->genre = genre;
+			user->last_name = last_name;
+			user->location = location;
+			user->user_name = user_name;
+			string encrypted_password = PasswordManager::encryptPassword(password);
 
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-
-		if (!content.error_code->isAnError())
-			return;
+			error_code = DatabaseInterface::signUpUser(user, encrypted_password);
+			if (error_code->isAnError())
+				response().status(http::response::internal_server_error, error_code->getErrorDescription());
+			else
+				response().status(http::response::ok);
+		}
 	}
-
-	render("ideas_view", content);
 }
 
-void Server::index() {
-	IndexContent content;
-
-	setSessionProperties(content);
-	content.page_title = "PCI";
-
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-		else if (form_name.compare("sign_up_form") == 0)
-			content.error_code = processSignUpPost(content.sign_up_form_info);
-
-		if (!content.error_code->isAnError())
-			return;
-	}
-
-	render("index_view", content);
-}
-
-#include <iostream>
-// TODO
-void Server::newClarificationAnswer() {
-
-	// TODO: security measurements ---> only the creator can answer a question
-
-	if (request().request_method() == "POST") {
+void Server::postUpdateUser() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
 		// TODO
-		cout << "Dumb method newClarificationAnswer() invoked with:" << endl;
-		cout << "Clarification ID: " << request().post("id") << endl;
-		cout << "Clarification answer: " << request().post("answer") << endl;
-		cout << "You need to actual implement this method" << endl;
 	}
 }
 
-void Server::newProblem() {
-	NewProblemContent content;
-
-	setSessionProperties(content);
-	content.page_title = "Nuevo problema";
-
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-		else if (form_name.compare("new_problem_form") == 0)
-			content.error_code = processNewProblemPost(content.new_problem_form_info);
-
-		if (!content.error_code->isAnError())
-			return;
+void Server::postDeleteUser() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		// TODO
 	}
-
-	render("new_problem_view", content);
 }
 
-void Server::newSolution(string problem_id) {
-	NewSolutionContent content;
+void Server::postCreateProblem() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
 
-	setSessionProperties(content);
-	content.page_title = "Nueva solución";
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string content = postRequestData("content");
+			trim(content);
+			string description = postRequestData("description");
+			trim(description);
+			string is_anonymous = postRequestData("is_anonymous");
 
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-		else if (form_name.compare("new_solution_form") == 0)
-			content.error_code = processNewSolutionPost(content.new_solution_form_info, problem_id);
+			ErrorCode *error_code;
+			error_code = InputValidator::validateCreateProblemInput(content, description, is_anonymous);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Problem *problem = new Problem();
+				problem->content = content;
+				problem->creator_user_name = user_name;
+				problem->description = description;
+				problem->id = IDManager::generateProblemID();
+				problem->is_anonymous = is_anonymous.compare("true") == 0;
 
-		if (!content.error_code->isAnError())
-			return;
+				error_code = DatabaseInterface::insertProblem(problem);
+				if (error_code->isAnError())
+					response().status(http::response::internal_server_error, error_code->getErrorDescription());
+				else
+					response().status(http::response::ok);
+			}
+		}
 	}
-
-	render("new_solution_view", content);
 }
 
-void Server::problem(string id) {
-	ProblemContent content;
-
-	setSessionProperties(content);
-
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-
-		if (!content.error_code->isAnError())
-			return;
+void Server::postUpdateProblem() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		// TODO
 	}
-
-	Problem *problem = DatabaseInterface::searchProblem(id);
-	content.problem = problem;
-	content.page_title = "PCI - " + problem->description;
-
-	if (problem->is_solved)
-		content.accepted_solution = DatabaseInterface::searchAcceptedSolution(problem->id);
-	else
-		content.accepted_solution = NULL;
-
-	content.solutions = DatabaseInterface::searchSolutions(id);
-	content.clarifications = DatabaseInterface::searchClarifications(id);
-
-	render("problem_view", content);
 }
 
-void Server::problems() {
-	ProblemsContent content;
+void Server::postDeleteProblem() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
 
-	setSessionProperties(content);
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string problem_id = postRequestData("problem_id");
 
-	content.page_title = "Problemas";
+			ErrorCode *error_code;
+			error_code = InputValidator::validateDeleteProblemInput(problem_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Problem *problem = DatabaseInterface::searchProblem(problem_id);
 
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-
-		if (!content.error_code->isAnError())
-			return;
+				if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
+					response().status(http::response::forbidden);
+				else {
+					error_code = DatabaseInterface::deleteProblem(problem_id);
+					if (error_code->isAnError())
+						response().status(http::response::internal_server_error, error_code->getErrorDescription());
+					else
+						response().status(http::response::ok);
+				}
+			}
+		}
 	}
-
-	content.random_problems = DatabaseInterface::searchProblemsRandom(20);
-	content.unsolved_problems = DatabaseInterface::searchProblemsUnsolved(20);
-	content.latest_problems = DatabaseInterface::searchProblemsLatest(20);
-
-	render("problems_view", content);
 }
 
-void Server::signOut() {
-	session().erase("user_signed_in");
-	session().erase("user_name");
-	session().erase("user_first_name");
-	session().erase("user_last_name");
-	response().set_redirect_header(url("/"));
+void Server::postCreateSolution() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string content = postRequestData("content");
+			trim(content);
+			string description = postRequestData("description");
+			trim(description);
+			string is_anonymous = postRequestData("is_anonymous");
+			string problem_id = postRequestData("problem_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateCreateSolutionInput(content, description, is_anonymous, problem_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Solution *solution = new Solution();
+				solution->content = content;
+				solution->creator_user_name = user_name;
+				solution->description = description;
+				solution->id = IDManager::generateSolutionID();
+				solution->is_anonymous = is_anonymous.compare("true") == 0;
+
+				error_code = DatabaseInterface::insertSolution(solution, problem_id);
+				if (error_code->isAnError())
+					response().status(http::response::internal_server_error, error_code->getErrorDescription());
+				else
+					response().status(http::response::ok);
+			}
+		}
+	}
 }
 
-void Server::solution(string problem_id, string solution_id) {
-	SolutionContent content;
-
-	setSessionProperties(content);
-
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
-
-		if (!content.error_code->isAnError())
-			return;
+void Server::postUpdateSolution() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		// TODO
 	}
-
-	content.page_title = "PCI - Solución " + solution_id;
-	content.solution = DatabaseInterface::searchSolution(solution_id);
-	content.clarifications = DatabaseInterface::searchClarifications(solution_id);
-	content.problem_id = problem_id;
-
-	render("solution_view", content);
 }
 
-void Server::user(string user_name) {
-	UserContent content;
+void Server::postDeleteSolution() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
 
-	setSessionProperties(content);
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string solution_id = postRequestData("solution_id");
 
-	if (request().request_method() == "POST") {
-		// POST message received
-		string form_name = request().post("form_name");
-		if (form_name.compare("sign_in_form") == 0)
-			content.error_code = processSignInPost(content.sign_in_form_info);
+			ErrorCode *error_code;
+			error_code = InputValidator::validateDeleteSolutionInput(solution_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Solution *solution = DatabaseInterface::searchSolution(solution_id);
 
-		if (!content.error_code->isAnError())
-			return;
+				if (solution == NULL || user_name.compare(solution->creator_user_name) != 0)
+					response().status(http::response::forbidden);
+				else {
+
+					error_code = DatabaseInterface::deleteSolution(solution_id);
+					if (error_code->isAnError())
+						response().status(http::response::internal_server_error, error_code->getErrorDescription());
+					else
+						response().status(http::response::ok);
+				}
+			}
+		}
 	}
+}
 
-	content.page_title = "PCI - Perfil de " + user_name;
-	content.user = DatabaseInterface::searchUser(user_name);
-	content.number_of_solutions = DatabaseInterface::numberOfSolutionsByUser(user_name);
-	content.number_of_problems = DatabaseInterface::numberOfProblemsByUser(user_name);
-	content.number_of_publications = content.number_of_solutions + content.number_of_problems;
+void Server::postCreateClarification() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
 
-	content.number_of_accepted_solutions = DatabaseInterface::numberOfAcceptedSolutionsByUser(user_name);
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string associated_publication_id = postRequestData("associated_publication_id");
+			string question = postRequestData("question");
+			trim(question);
 
-	content.recent_activity = DatabaseInterface::getRecentActivityByUser(user_name);
+			ErrorCode *error_code;
+			error_code = InputValidator::validateCreateClarificationInput(associated_publication_id, question);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Clarification *clarification = new Clarification();
+				clarification->associated_publication_id = associated_publication_id;
+				clarification->creator_user_name = user_name;
+				clarification->id = IDManager::generateClarificationID();
+				clarification->question = question;
 
-	// TODO: si el usuario no fue encontrado, enviar a pagina especial
+				error_code = DatabaseInterface::insertClarification(clarification);
+				if (error_code->isAnError())
+					response().status(http::response::internal_server_error, error_code->getErrorDescription());
+				else
+					response().status(http::response::ok);
+			}
+		}
+	}
+}
 
-	render("user_view", content);
+void Server::postUpdateClarification() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		// TODO
+	}
+}
+
+void Server::postDeleteClarification() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string clarification_id = postRequestData("clarification_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateDeleteClarificationInput(clarification_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Clarification *clarification = DatabaseInterface::searchClarification(clarification_id);
+
+				if (clarification == NULL || user_name.compare(clarification->creator_user_name) != 0)
+					response().status(http::response::forbidden);
+				else {
+					error_code = DatabaseInterface::deleteClarification(clarification_id);
+					if (error_code->isAnError())
+						response().status(http::response::internal_server_error, error_code->getErrorDescription());
+					else
+						response().status(http::response::ok);
+				}
+			}
+		}
+	}
+}
+
+void Server::getFetchMainPage() {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		IndexContent content;
+
+		setSessionProperties(content);
+		content.page_title = "PCI";
+
+		render("index_view", content);
+	}
+}
+
+void Server::getFetchNewProblemPage() {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		NewProblemContent content;
+
+		setSessionProperties(content);
+		content.page_title = "Nuevo problema";
+
+		render("new_problem_view", content);
+	}
+}
+
+void Server::getFetchNewSolutionPage(string problem_id) {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		NewSolutionContent content;
+
+		setSessionProperties(content);
+		content.page_title = "Nueva solución";
+		content.problem_id = problem_id;
+
+		render("new_solution_view", content);
+	}
+}
+
+void Server::getFetchUserPage(string user_name) {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		UserContent content;
+
+		setSessionProperties(content);
+
+		content.page_title = "PCI - Perfil de " + user_name;
+		content.user = DatabaseInterface::searchUser(user_name);
+		content.number_of_solutions = DatabaseInterface::numberOfSolutionsByUser(user_name);
+		content.number_of_problems = DatabaseInterface::numberOfProblemsByUser(user_name);
+		content.number_of_publications = content.number_of_solutions + content.number_of_problems;
+
+		content.number_of_accepted_solutions = DatabaseInterface::numberOfAcceptedSolutionsByUser(user_name);
+
+		content.recent_activity = DatabaseInterface::getRecentActivityByUser(user_name);
+
+		// TODO: si el usuario no fue encontrado, enviar a pagina especial
+
+		render("user_view", content);
+	}
+}
+
+void Server::getFetchProblemsPage() {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		ProblemsContent content;
+
+		setSessionProperties(content);
+
+		content.page_title = "Problemas";
+
+		content.random_problems = DatabaseInterface::searchProblemsRandom(20);
+		content.unsolved_problems = DatabaseInterface::searchProblemsUnsolved(20);
+		content.latest_problems = DatabaseInterface::searchProblemsLatest(20);
+
+		render("problems_view", content);
+	}
+}
+
+void Server::getFetchProblemPage(string problem_id) {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		ProblemContent content;
+
+		setSessionProperties(content);
+
+		Problem *problem = DatabaseInterface::searchProblem(problem_id);
+		content.problem = problem;
+		content.page_title = "PCI - " + problem->description;
+
+		if (problem->is_solved)
+			content.accepted_solution = DatabaseInterface::searchAcceptedSolution(problem->id);
+		else
+			content.accepted_solution = NULL;
+
+		content.solutions = DatabaseInterface::searchSolutions(problem_id);
+		content.clarifications = DatabaseInterface::searchClarifications(problem_id);
+
+		render("problem_view", content);
+	}
+}
+
+void Server::getFetchSolutionPage(string problem_id, string solution_id) {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		SolutionContent content;
+
+		setSessionProperties(content);
+
+		content.page_title = "PCI - Solución " + solution_id;
+		content.solution = DatabaseInterface::searchSolution(solution_id);
+		content.clarifications = DatabaseInterface::searchClarifications(solution_id);
+		content.problem_id = problem_id;
+
+		render("solution_view", content);
+	}
+}
+
+void Server::getFetchIdeasPage() {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		IdeasContent content;
+
+		setSessionProperties(content);
+		content.page_title = "PCI - Ideas";
+
+		render("ideas_view", content);
+	}
 }

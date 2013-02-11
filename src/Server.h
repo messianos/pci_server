@@ -3,42 +3,58 @@
 #define SERVER_H_
 
 // Includes
+#include "Clarification.h"
 #include "DatabaseInterface.h"
-#include "Date.h"
-#include "ErrorCode.h"
 #include "IDManager.h"
 #include "InputValidator.h"
 #include "PasswordManager.h"
-#include "Problem.h"
 #include "ViewContent.h"
+#include <boost/algorithm/string.hpp>
 #include <cppcms/application.h>
 #include <cppcms/applications_pool.h>
+#include <cppcms/http_request.h>
 #include <cppcms/http_response.h>
+#include <cppcms/json.h>
 #include <cppcms/service.h>
+#include <cppcms/session_interface.h>
 #include <cppcms/url_dispatcher.h>
 #include <cppcms/url_mapper.h>
 #include <string>
 
 class Server : public cppcms::application {
 
+private:
+	bool getRequestReceived();
+	bool postRequestReceived();
+	std::string postRequestData(std::string name);
+	void setSessionProperties(ViewContent::TemplateContent &content);
+
 public:
 	Server(cppcms::service &service);
 	virtual ~Server();
-	void setSessionProperties(ViewContent::TemplateContent &content);
-	ErrorCode *processNewProblemPost(ViewContent::NewProblemFormInfo &form_info);
-	ErrorCode *processNewSolutionPost(ViewContent::NewSolutionFormInfo &form_info, std::string problem_id);
-	ErrorCode *processSignInPost(ViewContent::SignInFormInfo &form_info);
-	ErrorCode *processSignUpPost(ViewContent::SignUpFormInfo &form_info);
-	void ideas();
-	void index();
-	void newClarificationAnswer();
-	void newProblem();
-	void newSolution(std::string problem_id);
-	void problem(std::string id);
-	void problems();
-	void signOut();
-	void solution(std::string problem_id, std::string solution_id);
-	void user(std::string user_name);
+	void debug(); // TODO: remove this (debugging purposes)
+	void postSignIn();
+	void postSignOut();
+	void postCreateUser();
+	void postUpdateUser();
+	void postDeleteUser();
+	void postCreateProblem();
+	void postUpdateProblem();
+	void postDeleteProblem();
+	void postCreateSolution();
+	void postUpdateSolution();
+	void postDeleteSolution();
+	void postCreateClarification();
+	void postUpdateClarification();
+	void postDeleteClarification();
+	void getFetchMainPage();
+	void getFetchNewProblemPage();
+	void getFetchNewSolutionPage(std::string problem_id);
+	void getFetchUserPage(std::string user_name);
+	void getFetchProblemsPage();
+	void getFetchProblemPage(std::string problem_id);
+	void getFetchSolutionPage(std::string problem_id, std::string solution_id);
+	void getFetchIdeasPage();
 };
 
 #endif /* SERVER_H_ */

@@ -58,28 +58,31 @@ const string user_attributes = ""
 
 // TODO: Define share mode on SELECT statements
 
-ErrorCode *DatabaseInterface::signInUser(string user_name, string encrypted_password) {
-	string query;
+bool DatabaseInterface::signInUser(string user_name, string encrypted_password) {
+    string query;
 
-	query = "	CALL sign_in_user("
-			"		?,"
-			"		?,"
-			"		@out_success"
-			"	)";
+    query =
+    "   CALL sign_in_user("
+    "       ?,"
+    "       ?,"
+    "       @out_success"
+    "   )";
 
-	database_handler << query << user_name << encrypted_password << exec;
+    database_handler
+        << query
+        << user_name
+        << encrypted_password
+        << exec;
 
-	query = "SELECT @out_success";
+    query = "SELECT @out_success";
 
-	result result = database_handler << query;
-	result.next();
+    result result = database_handler << query;
+    result.next();
 
-	short int sign_in_success;
-	result.fetch("@out_success", sign_in_success);
-	if (!sign_in_success)
-		return new ErrorCode(ErrorCode::CODE_INVALID_SIGN_IN);
+    short int sign_in_success;
+    result.fetch("@out_success", sign_in_success);
 
-	return new ErrorCode(ErrorCode::CODE_NONE);
+    return sign_in_success;
 }
 
 // FIXME: This may return success or fail
@@ -94,10 +97,14 @@ ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) 
 			"		?,"
 			"		?"
 			"	)";
-
+	// FIXME: In all methods
+	try{
 	database_handler << query << user->birth_date->toString("%Y-%m-%d") << user->email << user->first_name
 			<< user->genre << user->last_name << user->location << user->user_name << encrypted_password << exec;
-
+	} catch (std::exception const &e) {
+		std::cerr << "ERROR: " << e.what() << " in signUp" << endl;
+		return new ErrorCode(ErrorCode::CODE_INVALID_GENRE);
+	}
 	// TODO
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }

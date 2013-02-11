@@ -94,6 +94,18 @@ Date::Date(string format, string formatted_date) {
 
 Date::~Date() {}
 
+short int Date::getDay() {
+	return day;
+}
+
+short int Date::getMonth() {
+	return month;
+}
+
+short int Date::getYear() {
+	return year;
+}
+
 string Date::toString(string format) {
 
 	string formatted_date = format; // The initial content is the format

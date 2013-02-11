@@ -7,7 +7,7 @@ pwd
 
 echo -- Building Templates from `pwd`...
 
-cppcms_tmpl_cc Template.tmpl Index.tmpl Problems.tmpl Problem.tmpl NewProblem.tmpl User.tmpl Solution.tmpl NewSolution.tmpl Ideas.tmpl -o $OUTPUT_FILE
+cppcms_tmpl_cc Template.tmpl Debug.tmpl Index.tmpl Problems.tmpl Problem.tmpl NewProblem.tmpl User.tmpl Solution.tmpl NewSolution.tmpl Ideas.tmpl -o $OUTPUT_FILE
 
 echo -- Templates built to $OUTPUT_FILE
 
