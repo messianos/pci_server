@@ -235,6 +235,48 @@ list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
 	return problem_list;
 }
 
+list<Problem *> *DatabaseInterface::searchProblemsUnsolved(int amount) {
+
+	stringstream query;
+	query << "	SELECT" << problem_attributes << "	FROM Problem"
+			"	WHERE"
+			"		is_solved = 0"
+			"	LIMIT ?";
+
+	result result = database_handler << query.str() << amount;
+
+	list<Problem *> *problem_list = new list<Problem *>();
+
+	while (result.next()) {
+		problem_list->push_back(fetchProblem(result));
+	}
+
+	return problem_list;
+}
+
+list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount){
+	stringstream query;
+	query << "	SELECT" << problem_attributes << "	FROM Problem"
+			"	ORDER BY creation_datetime DESC"
+			"	LIMIT ?";
+
+	result result = database_handler << query.str() << amount;
+
+	list<Problem *> *problem_list = new list<Problem *>();
+
+	while (result.next()) {
+		problem_list->push_back(fetchProblem(result));
+	}
+
+	problem_list->sort(&Publication::publicationComparator);
+
+	while (problem_list->size() > amount) {
+		problem_list->pop_back();
+	}
+
+	return problem_list;
+}
+
 ErrorCode * DatabaseInterface::insertProblem(Problem *problem) {
 	string query = "	CALL insert_problem("
 			"		?,"
@@ -436,6 +478,7 @@ int DatabaseInterface::numberOfAcceptedSolutionsByUser(std::string user_name) {
 	return number;
 }
 
+// TODO: Parametrize amount
 list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string user_name) {
 
 	stringstream problem_query;
@@ -474,6 +517,7 @@ list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string use
 
 	publication_list->sort(&Publication::publicationComparator);
 
+	// FIXME: Unefficient? WARN: It's also used in other problem searches
 	while (publication_list->size() > 10) {
 		publication_list->pop_back();
 	}

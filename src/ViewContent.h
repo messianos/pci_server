@@ -91,7 +91,13 @@ namespace ViewContent {
 	};
 
 	struct ProblemsContent : TemplateContent {
-		std::list<Problem *> *problems;
+		std::list<Problem *> *random_problems;
+		std::list<Problem *> *unsolved_problems;
+		std::list<Problem *> *latest_problems;
+
+		// TODO: Not implemented!
+		std::list<Problem *> *nosolutions_problems;
+		std::list<Problem *> *most_voted_problems;
 	};
 
 	struct SolutionContent: TemplateContent {

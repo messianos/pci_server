@@ -982,19 +982,19 @@ namespace pci_skin {
 			out()<<"\n"
 				"\t\t\t\t\t<ul class=\"nav nav-tabs\">\n"
 				"\t\t\t\t\t\t<li class=\"active\"><a href=\"#tab1\" data-toggle=\"tab\">Al azar</a></li>\n"
-				"\t\t\t\t\t\t<li><a href=\"#tab2\" data-toggle=\"tab\">Mas votados</a></li>\n"
-				"\t\t\t\t\t\t<li><a href=\"#tab3\" data-toggle=\"tab\">Sin solucion</a></li>\n"
+				"\t\t\t\t\t\t<li><a href=\"#tab2\" data-toggle=\"tab\">Recientes</a></li>\n"
+				"\t\t\t\t\t\t<li><a href=\"#tab3\" data-toggle=\"tab\">Sin resolver</a></li>\n"
 				"\t\t\t\t\t</ul>\n"
 				"\t\t\t\t\t<div class=\"tab-content\">\n"
 				"\t\t\t\t\t\t<div class=\"tab-pane active\" id=\"tab1\">\n"
 				"\t\t\t\t\t\t\t";
 			#line 39 "Problems.tmpl"
-			if((*content.problems).begin()!=(*content.problems).end()) {
+			if((*content.random_problems).begin()!=(*content.random_problems).end()) {
 				#line 40 "Problems.tmpl"
 				out()<<"\n"
 					"\t\t\t\t\t\t\t\t";
 				#line 40 "Problems.tmpl"
-				for(CPPCMS_TYPEOF((*content.problems).begin()) problem_ptr=(*content.problems).begin(),problem_ptr_end=(*content.problems).end();problem_ptr!=problem_ptr_end;++problem_ptr) {
+				for(CPPCMS_TYPEOF((*content.random_problems).begin()) problem_ptr=(*content.random_problems).begin(),problem_ptr_end=(*content.random_problems).end();problem_ptr!=problem_ptr_end;++problem_ptr) {
 				#line 40 "Problems.tmpl"
 				CPPCMS_TYPEOF(*problem_ptr) &problem=*problem_ptr;
 					#line 41 "Problems.tmpl"
@@ -1018,24 +1018,88 @@ namespace pci_skin {
 					"\t\t\t\t\t\t\t";
 			#line 45 "Problems.tmpl"
 			} // end of empty
-			#line 56 "Problems.tmpl"
+			#line 48 "Problems.tmpl"
 			out()<<"\n"
 				"\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t<div class=\"tab-pane\" id=\"tab2\">\n"
-				"\t\t\t\t\t\t\t<p>Problemas mas votados</p>\n"
+				"\t\t\t\t\t\t\t";
+			#line 48 "Problems.tmpl"
+			if((*content.latest_problems).begin()!=(*content.latest_problems).end()) {
+				#line 49 "Problems.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t\t";
+				#line 49 "Problems.tmpl"
+				for(CPPCMS_TYPEOF((*content.latest_problems).begin()) problem_ptr=(*content.latest_problems).begin(),problem_ptr_end=(*content.latest_problems).end();problem_ptr!=problem_ptr_end;++problem_ptr) {
+				#line 49 "Problems.tmpl"
+				CPPCMS_TYPEOF(*problem_ptr) &problem=*problem_ptr;
+					#line 50 "Problems.tmpl"
+					out()<<"\n"
+						"\t\t\t\t\t\t\t\t\t";
+					#line 50 "Problems.tmpl"
+					template_view::problem_description(problem);
+					#line 51 "Problems.tmpl"
+					out()<<"\n"
+						"\t\t\t\t\t\t\t\t";
+				#line 51 "Problems.tmpl"
+				} // end of item
+				#line 52 "Problems.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t";
+			#line 52 "Problems.tmpl"
+			 } else {
+				#line 54 "Problems.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t\tNo se encontraron problemas sin resolver\n"
+					"\t\t\t\t\t\t\t";
+			#line 54 "Problems.tmpl"
+			} // end of empty
+			#line 57 "Problems.tmpl"
+			out()<<"\t\t\t\t\t\t\t\n"
 				"\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t\t<div class=\"tab-pane\" id=\"tab3\">\n"
-				"\t\t\t\t\t\t\t<p>Problemas sin solucion</p>\n"
+				"\t\t\t\t\t\t\t";
+			#line 57 "Problems.tmpl"
+			if((*content.unsolved_problems).begin()!=(*content.unsolved_problems).end()) {
+				#line 58 "Problems.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t\t";
+				#line 58 "Problems.tmpl"
+				for(CPPCMS_TYPEOF((*content.unsolved_problems).begin()) problem_ptr=(*content.unsolved_problems).begin(),problem_ptr_end=(*content.unsolved_problems).end();problem_ptr!=problem_ptr_end;++problem_ptr) {
+				#line 58 "Problems.tmpl"
+				CPPCMS_TYPEOF(*problem_ptr) &problem=*problem_ptr;
+					#line 59 "Problems.tmpl"
+					out()<<"\n"
+						"\t\t\t\t\t\t\t\t\t";
+					#line 59 "Problems.tmpl"
+					template_view::problem_description(problem);
+					#line 60 "Problems.tmpl"
+					out()<<"\n"
+						"\t\t\t\t\t\t\t\t";
+				#line 60 "Problems.tmpl"
+				} // end of item
+				#line 61 "Problems.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t";
+			#line 61 "Problems.tmpl"
+			 } else {
+				#line 63 "Problems.tmpl"
+				out()<<"\n"
+					"\t\t\t\t\t\t\t\tNo se encontraron problemas sin resolver\n"
+					"\t\t\t\t\t\t\t";
+			#line 63 "Problems.tmpl"
+			} // end of empty
+			#line 68 "Problems.tmpl"
+			out()<<"\n"
 				"\t\t\t\t\t\t</div>\n"
 				"\t\t\t\t\t</div>\n"
 				"\t\t\t\t</div>\n"
 				"\t\t\t</div>\n"
 				"\t\t";
-		#line 56 "Problems.tmpl"
+		#line 68 "Problems.tmpl"
 		} // end of template page_content
-	#line 59 "Problems.tmpl"
+	#line 71 "Problems.tmpl"
 	}; // end of class problems_view
-#line 60 "Problems.tmpl"
+#line 72 "Problems.tmpl"
 } // end of namespace pci_skin
 #line 2 "Problem.tmpl"
 #include "ViewContent.h" 

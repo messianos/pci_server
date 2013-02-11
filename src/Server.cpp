@@ -289,7 +289,9 @@ void Server::problems() {
 			return;
 	}
 
-	content.problems = DatabaseInterface::searchProblemsRandom(40);
+	content.random_problems = DatabaseInterface::searchProblemsRandom(20);
+	content.unsolved_problems = DatabaseInterface::searchProblemsUnsolved(20);
+	content.latest_problems = DatabaseInterface::searchProblemsLatest(20);
 
 	render("problems_view", content);
 }
