@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string>
 
-class IDManager {
+class IdManager {
 
 private:
 	static const char PROBLEM_ID_PREFIX;

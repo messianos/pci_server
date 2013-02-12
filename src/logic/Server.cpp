@@ -69,8 +69,8 @@ Server::Server(cppcms::service &service) :
 	mapper().assign("vote_solution", "/vote_solution");
 	dispatcher().assign("/create_clarification", &Server::postCreateClarification, this);
 	mapper().assign("create_clarification", "/create_clarification");
-	dispatcher().assign("/edit_clarification", &Server::postEditClarification, this);
-	mapper().assign("edit_clarification", "/edit_clarification");
+	dispatcher().assign("/answer_clarification", &Server::postAnswerClarification, this);
+	mapper().assign("answer_clarification", "/answer_clarification");
 	/*dispatcher().assign("/delete_clarification", &Server::postDeleteClarification, this);
 	mapper().assign("delete_clarification", "/delete_clarification");*/
 
@@ -221,7 +221,7 @@ void Server::postCreateProblem() {
 				problem->content = content;
 				problem->creator_user_name = user_name;
 				problem->description = description;
-				problem->id = IDManager::generateProblemID();
+				problem->id = IdManager::generateProblemID();
 				problem->is_anonymous = is_anonymous.compare("true") == 0;
 
 				error_code = DatabaseInterface::insertProblem(problem);
@@ -408,7 +408,7 @@ void Server::postCreateSolution() {
 				solution->content = content;
 				solution->creator_user_name = user_name;
 				solution->description = description;
-				solution->id = IDManager::generateSolutionID();
+				solution->id = IdManager::generateSolutionID();
 				solution->is_anonymous = is_anonymous.compare("true") == 0;
 
 				error_code = DatabaseInterface::insertSolution(solution, problem_id);
@@ -523,7 +523,7 @@ void Server::postCreateClarification() {
 				Clarification *clarification = new Clarification();
 				clarification->associated_publication_id = associated_publication_id;
 				clarification->creator_user_name = user_name;
-				clarification->id = IDManager::generateClarificationID();
+				clarification->id = IdManager::generateClarificationID();
 				clarification->question = question;
 
 				error_code = DatabaseInterface::insertClarification(clarification);
@@ -536,11 +536,44 @@ void Server::postCreateClarification() {
 	}
 }
 
-void Server::postEditClarification() {
+void Server::postAnswerClarification() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		// TODO
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string answer = postRequestData("answer");
+			trim(answer);
+			string clarification_id = postRequestData("clarification_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateAnswerClarificationInput(answer, clarification_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Clarification *clarification = DatabaseInterface::searchClarification(clarification_id);
+
+				if (clarification == NULL)
+					; // TODO: DO SOMETHING !!! PREVENT CRASHES FROM NULL POINTER
+				else {
+					//Publication *publication = DatabaseInterface::searchPublication(clarification->associated_publication_id);  TODO --> NEED THIS METHOD
+					/*
+					if (user_name.compare(publication->creator_user_name) != 0)
+						response().status(http::response::forbidden);
+					else {
+						//error_code = DatabaseInterface::(clarification_id, answer); TODO --> NEED THIS METHOD
+						if (error_code->isAnError())
+							response().status(http::response::internal_server_error, error_code->getErrorDescription());
+						else
+							response().status(http::response::ok);
+					}
+					*/
+				}
+			}
+		}
 	}
 }
 

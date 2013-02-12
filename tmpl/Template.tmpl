@@ -1,18 +1,22 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
 
 		<% template sign_in_form() %>
-			<input id="sign_in_user_name" placeholder="Nombre de usuario" type="text"><br />
-			<input id="sign_in_password" placeholder="Contraseña" type="password"><br />
-			<a class="btn pull-right" id="sign_in_submit">Ingresar</a>
+			<form id="sign_in_form">
+				<input id="sign_in_user_name" placeholder="Nombre de usuario" type="text" /><br />
+				<input id="sign_in_password" placeholder="Contraseña" type="password" /><br />
+				<input class="btn pull-right" type="submit" value="Ingresar" />
+			</form>
 			<script>
-				$('#sign_in_submit').click({
+				$('#sign_in_form').submit({
 					password: $('#sign_in_password'),
 					user_name: $('#sign_in_user_name')
 				}, function(event) {
+					event.preventDefault();
+					
 					var password = event.data.password.val();
 					var user_name = event.data.user_name.val();
 					
@@ -27,9 +31,13 @@
 		<% end template %>
 		
 		<% template sign_out_form() %>
-			<a class="btn" id="sign_out_submit">Salir</a>
+			<form id="sign_out_form">
+				<input class="btn pull-right" type="submit" value="Salir" />
+			</form>
 			<script>
-				$('#sign_out_submit').click(function() {
+				$('#sign_out_form').submit(function() {
+					event.preventDefault();
+					
 					var onSuccess = onSuccessSignOut();
 					var onFailure = onFailureSignOut()
 					postSignOut(onSuccess, onFailure);
@@ -39,18 +47,20 @@
 		
 		<% template create_user_form() %>
 			<legend>Registrate</legend>
-			<input id="create_user_user_name" placeholder="Nombre de usuario" type="text"><br />
-			<input id="create_user_first_name" placeholder="Nombre" type="text"><br />
-			<input id="create_user_last_name" placeholder="Apellido" type="text"><br />
-			<input id="create_user_email" placeholder="E-mail" type="text"><br />
-			<input id="create_user_password" placeholder="Contraseña" type="password"><br />
-			<!--<input id="create_user_location" placeholder="Localidad" type="text"><br />-->
-			<input id="create_user_birth_date" placeholder="Fecha de nacimiento" readonly type="text"><br />
-			<select id="create_user_genre">
-				<option value="F">Mujer</option>
-				<option value="M">Hombre</option>
-			</select><br />
-			<a class="btn pull-right" id="create_user_submit">Registrar</a>
+			<form id="create_user_form">
+				<input id="create_user_user_name" placeholder="Nombre de usuario" type="text" /><br />
+				<input id="create_user_first_name" placeholder="Nombre" type="text" /><br />
+				<input id="create_user_last_name" placeholder="Apellido" type="text" /><br />
+				<input id="create_user_email" placeholder="E-mail" type="text" /><br />
+				<input id="create_user_password" placeholder="Contraseña" type="password" /><br />
+				<!--<input id="create_user_location" placeholder="Localidad" type="text" /><br />-->
+				<input id="create_user_birth_date" placeholder="Fecha de nacimiento" readonly type="text" /><br />
+				<select id="create_user_genre">
+					<option value="F">Mujer</option>
+					<option value="M">Hombre</option>
+				</select><br />
+				<input class="btn pull-right" type="submit" value="Registrar" />
+			</form>
 			<script>
 				var current_year = new Date().getFullYear();
 				$('#create_user_birth_date').datepicker({
@@ -61,7 +71,7 @@
 					changeYear:true
 				});
 			
-				$('#create_user_submit').click({
+				$('#create_user_form').submit({
 					birth_date: $('#create_user_birth_date'),
 					email: $('#create_user_email'),
 					first_name: $('#create_user_first_name'),
@@ -71,6 +81,8 @@
 					password: $('#create_user_password'),
 					user_name: $('#create_user_user_name')
 				}, function(event) {
+					event.preventDefault();
+					
 					var birth_date = event.data.birth_date.val();
 					var email = event.data.email.val();
 					var first_name = $.trim(event.data.first_name.val());
@@ -92,10 +104,12 @@
 		
 		<% template create_problem_form() %>
 			<legend>Crear problema</legend>
-			<input id="create_problem_description" placeholder="Descripción del problema" type="text"><br />
-			<textarea id="create_problem_content"></textarea><br />
-			<input id="create_problem_is_anonymous" placeholder="is_anonymous (temporal)" type="text"><br />
-			<a class="btn" id="create_problem_submit">Crear problema</a>
+			<form id="create_problem_form">
+				<input id="create_problem_description" placeholder="Descripción del problema" type="text" /><br />
+				<textarea id="create_problem_content"></textarea><br />
+				<input id="create_problem_is_anonymous" placeholder="is_anonymous (temporal)" type="text" /><br />
+				<input class="btn" type="submit" value="Crear problema" />
+			</form>
 			<script>
 				CKEDITOR.replace(create_problem_content, {
 					customConfig: '',
@@ -115,11 +129,12 @@
 					]
 				});
 			
-				$('#create_problem_submit').click({
+				$('#create_problem_form').submit({
 					content: $('#create_problem_content'),
 					description: $('#create_problem_description'),
 					is_anonymous: $('#create_problem_is_anonymous')
 				}, function(event) {
+					event.preventDefault();
 					CKEDITOR.instances.create_problem_content.updateElement();
 					
 					var content = $.trim(event.data.content.val());
@@ -139,10 +154,12 @@
 		
 		<% template create_solution_form(std::string problem_id) %>
 			<legend>Crear solución</legend>
-			<input id="create_solution_description" placeholder="Descripción de la solución" type="text"><br />
-			<textarea id="create_solution_content"></textarea><br />
-			<input id="create_solution_is_anonymous" placeholder="is_anonymous (temporal)" type="text"><br />
-			<a class="btn" id="create_solution_submit">Crear solución</a>
+			<form id="create_solution_form">
+				<input id="create_solution_description" placeholder="Descripción de la solución" type="text" /><br />
+				<textarea id="create_solution_content"></textarea><br />
+				<input id="create_solution_is_anonymous" placeholder="is_anonymous (temporal)" type="text" /><br />
+				<input class="btn" type="submit" value="Crear solución" />
+			</form>
 			<script>
 				CKEDITOR.replace(create_solution_content, {
 					customConfig: '',
@@ -162,11 +179,12 @@
 					]
 				});
 			
-				$('#create_solution_submit').click({
+				$('#create_solution_form').submit({
 					content: $('#create_solution_content'),
 					description: $('#create_solution_description'),
 					is_anonymous: $('#create_solution_is_anonymous')
 				}, function(event) {
+					event.preventDefault();
 					CKEDITOR.instances.create_solution_content.updateElement();
 					
 					var content = $.trim(event.data.content.val());
@@ -179,6 +197,54 @@
 						var onSuccess = onSuccessCreateSolution(problem_id);
 						var onFailure = onFailureCreateSolution();
 						postCreateSolution(onSuccess, onFailure, content, description, is_anonymous, problem_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template create_clarification_form(std::string associated_publication_id) %>
+			<form id="create_clarification_form">
+				<textarea id="create_clarification_question" placeholder="Solicitar una aclaración..."></textarea>
+				<input class="btn" type="submit" value="Publicar pregunta" />
+			</form>
+			<script>
+				$('#create_clarification_form').submit({
+					question: $('#create_clarification_question')
+				}, function(event) {
+					event.preventDefault();
+					
+					var associated_publication_id = '<%= associated_publication_id %>';
+					var question = $.trim(event.data.question.val());
+					
+					var onInvalidInput = onInvalidInputCreateClarification(event.data.question);
+					if (validateCreateClarificationInput(onInvalidInput, question)) {
+						var onSuccess = onSuccessCreateClarification();
+						var onFailure = onFailureCreateClarification();
+						postCreateClarification(onSuccess, onFailure, associated_publication_id, question);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template answer_clarification_form(std::string clarification_id) %>
+			<form id="answer_clarification_form_<%= clarification_id %>">
+				<textarea id="answer_clarification_answer_<%= clarification_id %>" placeholder="Responder..."></textarea>
+				<input class="btn" type="submit" value="Publicar respuesta" />
+			</form>
+			<script>
+				$('#answer_clarification_form_<%= clarification_id %>').submit({
+					answer: $('#answer_clarification_answer_<%= clarification_id %>')
+				}, function(event) {
+					event.preventDefault();
+					
+					var answer = $.trim(event.data.answer.val());
+					var clarification_id = '<%= clarification_id %>';
+					
+					var onInvalidInput = onInvalidInputAnswerClarification(event.data.answer);
+					if (validateAnswerClarificationInput(onInvalidInput, answer)) {
+						var onSuccess = onSuccessAnswerClarification();
+						var onFailure = onFailureAnswerClarification();
+						postAnswerClarification(onSuccess, onFailure, answer, clarification_id);
 					}
 				});
 			</script>
@@ -220,27 +286,18 @@
 									<% else %>
 										<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
 											<div class="pci_clarifications_answer_content">
-												<textarea class="pci_clarifications_answer_textarea pci_textarea_small" id="textarea_<%= clarification->id %>">Responder</textarea>
-												<div class="pci_clarifications_button_container">
-													<a>
-														<div class="pci_button_classic pci_clarifications_answer_button" id="answer_button_<%= clarification->id %>">
-															Responder
-														</div>
-													</a>
-												</div>
-												<script>
-													configureClarificationTextarea('textarea_<%= clarification->id %>', 'answer_button_<%= clarification->id %>', '<%= clarification->id %>');
-												</script>
+												<% include answer_clarification_form(clarification->id) %>
 											</div>
 										<% end %>
 									<% end %>
 								</div>
 							</div>
 	  					<% end %>
-					<% empty %>
-						Aún no hay aclaraciones
 					<% end %>
 				</div>
+			<% end %>
+			<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
+				<% include create_clarification_form(publication->id) %>
 			<% end %>
 		<% end template %>
 
@@ -487,7 +544,7 @@
 
 		<% template css_links() %>
 			<link href="/css/template.css" rel="stylesheet" type="text/css" />
-    		<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    		<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     		<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 
@@ -502,7 +559,7 @@
 	    	<!--[if lt IE 9]>
 	      		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    	<![endif]-->
-    		<script src="/js/bootstrap.min.js"></script>
+    		<script src="/lib/bootstrap/js/bootstrap.min.js"></script>
 		<% end template %>
 		
 		

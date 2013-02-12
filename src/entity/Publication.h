@@ -3,7 +3,7 @@
 #define PUBLICATION_H_
 
 // Includes
-#include "Datetime.h"
+#include "../auxiliar/Datetime.h"
 #include <string>
 
 class Publication {

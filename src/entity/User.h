@@ -3,8 +3,8 @@
 #define USER_H_
 
 // Includes
-#include "Date.h"
-#include "Datetime.h"
+#include "../auxiliar/Date.h"
+#include "../auxiliar/Datetime.h"
 #include <string>
 
 class User {

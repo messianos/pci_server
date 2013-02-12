@@ -3,8 +3,8 @@
 #define INPUTVALIDATOR_H_
 
 // Includes
-#include "Date.h"
-#include "ErrorCode.h"
+#include "../auxiliar/Date.h"
+#include "../auxiliar/ErrorCode.h"
 #include <boost/tr1/regex.hpp>
 #include <string>
 
@@ -40,6 +40,7 @@ public:
 	//static ErrorCode* validateDeleteSolutionInput(std::string solution_id);
 	static ErrorCode *validateVoteSolutionInput(std::string is_positive, std::string solution_id);
 	static ErrorCode *validateCreateClarificationInput(std::string associated_publication_id, std::string question);
+	static ErrorCode *validateAnswerClarificationInput(std::string answer, std::string clarification_id);
 	//static ErrorCode *validateDeleteClarificationInput(std::string clarification_id);
 };
 

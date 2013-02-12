@@ -3,12 +3,12 @@
 #define SERVER_H_
 
 // Includes
-#include "Clarification.h"
-#include "DatabaseInterface.h"
-#include "IDManager.h"
-#include "InputValidator.h"
-#include "PasswordManager.h"
-#include "ViewContent.h"
+#include "../entity/Clarification.h"
+#include "../logic/ViewContent.h"
+#include "../service/DatabaseInterface.h"
+#include "../service/IdManager.h"
+#include "../service/InputValidator.h"
+#include "../service/PasswordManager.h"
 #include <boost/algorithm/string.hpp>
 #include <cppcms/application.h>
 #include <cppcms/applications_pool.h>
@@ -48,7 +48,7 @@ public:
 	//void postDeleteSolution();
 	void postVoteSolution();
 	void postCreateClarification();
-	void postEditClarification();
+	void postAnswerClarification();
 	//void postDeleteClarification();
 	void getFetchMainPage();
 	void getFetchUserPage(std::string user_name);

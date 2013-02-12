@@ -228,6 +228,16 @@ ErrorCode *InputValidator::validateCreateClarificationInput(string associated_pu
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
+ErrorCode *InputValidator::validateAnswerClarificationInput(string answer, string clarification_id) {
+	if (! isValidClarificationContent(answer))
+		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ANSWER);
+
+	if (! isValidClarificationId(clarification_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
 /*ErrorCode *InputValidator::validateDeleteClarificationInput(string clarification_id) {
 	if (! isValidClarificationId(clarification_id))
 		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ID);

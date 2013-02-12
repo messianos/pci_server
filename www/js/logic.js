@@ -17,7 +17,7 @@ var url = {
 	edit_solution: url_root + '/edit_solution',
 	vote_solution: url_root + '/vote_solution',
 	create_clarification: url_root + '/create_clarification',
-	edit_clarification: url_root + '/edit_clarification',
+	answer_clarification: url_root + '/answer_clarification',
 	fetch_main_page: url_root + '',
 	fetch_user_page: url_root + '/user',
 	fetch_problems_page: url_root + '/problems',
@@ -38,7 +38,8 @@ var error = {
 		user_name: 'user_name',
 		content: 'content',
 		description: 'description',
-		question: 'question'
+		question: 'question',
+		answer: 'answer'
 	},
 	description: {
 		email: 'DESCRIPCION ERROR email',
@@ -49,7 +50,8 @@ var error = {
 		user_name: 'DESCRIPCION ERROR user_name',
 		content: 'DESCRIPCION ERROR content',
 		description: 'DESCRIPCION ERROR description',
-		question: 'DESCRIPCION ERROR question'
+		question: 'DESCRIPCION ERROR question',
+		answer: 'DESCRIPCION ERROR answer'
 	}
 };
 
@@ -209,8 +211,23 @@ function validateCreateClarificationInput(on_invalid_input_callback_function, qu
 	var invalid_input = false;
 	var error_information = new Object();
 	
-	if (! isValidClarificationQuestion(question)) {
+	if (! isValidClarificationContent(question)) {
 		error_information[error.id.question] = error.description.question;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateAnswerClarificationInput(on_invalid_input_callback_function, answer) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidClarificationContent(answer)) {
+		error_information[error.id.answer] = error.description.answer;
 		invalid_input = true;
 	}
 	
@@ -322,9 +339,11 @@ function postCreateClarification(on_success_callback_function, on_failure_callba
 	request.fail(on_failure_callback_function);
 }
 
-function postEditClarification(on_success_callback_function, on_failure_callback_function) {
+function postAnswerClarification(on_success_callback_function, on_failure_callback_function, answer, clarification_id) {
 	var request = postRequest({
-	}, url.edit_clarification);
+		answer: answer,
+		clarification_id: clarification_id
+	}, url.answer_clarification);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
@@ -487,13 +506,20 @@ function onFailureCreateClarification() {
 	};
 }
 
-function onSuccessEditClarification() {
+function onInvalidInputAnswerClarification(answer_textarea) {
+	return function(error_information) {
+		if (error.id.answer in error_information)
+			showErrorFloatingBox(answer_textarea, error_information[error.id.answer]);
+	};
+}
+
+function onSuccessAnswerClarification() {
 	return function(data, text_status, jq_xhr) {
 		// TODO
 	};
 }
 
-function onFailureEditClarification() {
+function onFailureAnswerClarification() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};

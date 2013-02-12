@@ -3,11 +3,11 @@
 #define VIEWCONTENT_H_
 
 // Includes
-#include "Clarification.h"
-#include "ErrorCode.h"
-#include "Problem.h"
-#include "Solution.h"
-#include "User.h"
+#include "../auxiliar/ErrorCode.h"
+#include "../entity/Clarification.h"
+#include "../entity/Problem.h"
+#include "../entity/Solution.h"
+#include "../entity/User.h"
 #include <cppcms/form.h>
 #include <cppcms/view.h>
 #include <list>
