@@ -17,7 +17,6 @@ public:
 	static const short int CODE_INVALID_EMAIL;
 	static const short int CODE_INVALID_FIRST_NAME;
 	static const short int CODE_INVALID_GENRE;
-	static const short int CODE_INVALID_IS_ANONYMOUS;
 	static const short int CODE_INVALID_IS_POSITIVE;
 	static const short int CODE_INVALID_LAST_NAME;
 	static const short int CODE_INVALID_LOCATION;

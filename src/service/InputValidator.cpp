@@ -138,15 +138,12 @@ ErrorCode *InputValidator::validateCreateUserInput(string birth_date, string ema
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode *InputValidator::validateCreateProblemInput(string content, string description, string is_anonymous) {
+ErrorCode *InputValidator::validateCreateProblemInput(string content, string description) {
 	if (! isValidPublicationContent(content))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_CONTENT);
 
 	if (! isValidPublicationDescription(description))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION);
-
-	if (! isValidBoolean(is_anonymous))
-		return new ErrorCode(ErrorCode::CODE_INVALID_IS_ANONYMOUS);
 
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
@@ -185,15 +182,12 @@ ErrorCode *InputValidator::validateUnsetAcceptedSolutionInput(string problem_id)
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode *InputValidator::validateCreateSolutionInput(string content, string description, string is_anonymous, string problem_id) {
+ErrorCode *InputValidator::validateCreateSolutionInput(string content, string description, string problem_id) {
 	if (! isValidPublicationContent(content))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_CONTENT);
 
 	if (! isValidPublicationDescription(description))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION);
-
-	if (! isValidBoolean(is_anonymous))
-		return new ErrorCode(ErrorCode::CODE_INVALID_IS_ANONYMOUS);
 
 	if (! isValidProblemId(problem_id))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);

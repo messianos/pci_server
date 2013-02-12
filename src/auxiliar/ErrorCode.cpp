@@ -12,7 +12,6 @@ const string ErrorCode::ERROR_DESCRIPTIONS[] = {
 	"CODE_INVALID_EMAIL",
 	"CODE_INVALID_FIRST_NAME",
 	"CODE_INVALID_GENRE",
-	"CODE_INVALID_IS_ANONYMOUS",
 	"CODE_INVALID_IS_POSITIVE",
 	"CODE_INVALID_LAST_NAME",
 	"CODE_INVALID_LOCATION",
@@ -35,7 +34,6 @@ const short int ErrorCode::CODE_INVALID_BIRTH_DATE = code_index++;
 const short int ErrorCode::CODE_INVALID_EMAIL = code_index++;
 const short int ErrorCode::CODE_INVALID_FIRST_NAME = code_index++;
 const short int ErrorCode::CODE_INVALID_GENRE = code_index++;
-const short int ErrorCode::CODE_INVALID_IS_ANONYMOUS = code_index++;
 const short int ErrorCode::CODE_INVALID_IS_POSITIVE = code_index++;
 const short int ErrorCode::CODE_INVALID_LAST_NAME = code_index++;
 const short int ErrorCode::CODE_INVALID_LOCATION = code_index++;

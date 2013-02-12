@@ -31,12 +31,12 @@ private:
 public:
 	static ErrorCode *validateSignInInput(std::string user_name, std::string password);
 	static ErrorCode *validateCreateUserInput(std::string birth_date, std::string email, std::string first_name, std::string genre, std::string last_name, std::string location, std::string password, std::string user_name);
-	static ErrorCode *validateCreateProblemInput(std::string content, std::string description, std::string is_anonymous);
+	static ErrorCode *validateCreateProblemInput(std::string content, std::string description);
 	//static ErrorCode *validateDeleteProblemInput(std::string problem_id);
 	static ErrorCode *validateVoteProblemInput(std::string is_positive, std::string problem_id);
 	static ErrorCode *validateSetAcceptedSolutionInput(std::string problem_id, std::string solution_id);
 	static ErrorCode *validateUnsetAcceptedSolutionInput(std::string problem_id);
-	static ErrorCode* validateCreateSolutionInput(std::string content, std::string description, std::string is_anonymous, std::string problem_id);
+	static ErrorCode* validateCreateSolutionInput(std::string content, std::string description, std::string problem_id);
 	//static ErrorCode* validateDeleteSolutionInput(std::string solution_id);
 	static ErrorCode *validateVoteSolutionInput(std::string is_positive, std::string solution_id);
 	static ErrorCode *validateCreateClarificationInput(std::string associated_publication_id, std::string question);

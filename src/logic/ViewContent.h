@@ -19,6 +19,7 @@ namespace ViewContent {
 	struct TemplateContent: public cppcms::base_content {
 		std::string page_title;
 		bool user_signed_in;
+		bool anonymous_mode;
 		std::string user_name;
 		std::string user_first_name;
 		std::string user_last_name;

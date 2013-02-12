@@ -31,16 +31,29 @@
 		<% end template %>
 		
 		<% template sign_out_form() %>
-			<form id="sign_out_form">
-				<input class="btn pull-right" type="submit" value="Salir" />
-			</form>
+			<a class="btn pull-right" id="sign_out_button">Salir</a>
 			<script>
-				$('#sign_out_form').submit(function() {
-					event.preventDefault();
-					
+				$('#sign_out_button').click(function() {
 					var onSuccess = onSuccessSignOut();
 					var onFailure = onFailureSignOut()
 					postSignOut(onSuccess, onFailure);
+				});
+			</script>
+		<% end template %>
+		
+		<% template toggle_anonymous_mode_form(bool anonymous_mode) %>
+			<a class="btn pull-right" id="toggle_anonymous_mode_button">
+				<% if anonymous_mode %>
+					Modo anónimo activado
+				<% else %>
+					Modo anónimo desactivado
+				<% end %>
+			</a>
+			<script>
+				$('#toggle_anonymous_mode_button').click(function() {
+					var onSuccess = onSuccessToggleAnonymousMode($(this));
+					var onFailure = onFailureToggleAnonymousMode()
+					postToggleAnonymousMode(onSuccess, onFailure);
 				});
 			</script>
 		<% end template %>
@@ -107,7 +120,6 @@
 			<form id="create_problem_form">
 				<input id="create_problem_description" placeholder="Descripción del problema" type="text" /><br />
 				<textarea id="create_problem_content"></textarea><br />
-				<input id="create_problem_is_anonymous" placeholder="is_anonymous (temporal)" type="text" /><br />
 				<input class="btn" type="submit" value="Crear problema" />
 			</form>
 			<script>
@@ -131,21 +143,19 @@
 			
 				$('#create_problem_form').submit({
 					content: $('#create_problem_content'),
-					description: $('#create_problem_description'),
-					is_anonymous: $('#create_problem_is_anonymous')
+					description: $('#create_problem_description')
 				}, function(event) {
 					event.preventDefault();
 					CKEDITOR.instances.create_problem_content.updateElement();
 					
 					var content = $.trim(event.data.content.val());
 					var description = $.trim(event.data.description.val());
-					var is_anonymous = event.data.is_anonymous.val();
 					
 					var onInvalidInput = onInvalidInputCreateProblem(event.data.content, event.data.description);
 					if (validateCreateProblemInput(onInvalidInput, content, description)) {
 						var onSuccess = onSuccessCreateProblem();
 						var onFailure = onFailureCreateProblem();
-						postCreateProblem(onSuccess, onFailure, content, description, is_anonymous);
+						postCreateProblem(onSuccess, onFailure, content, description);
 					}
 				});
 			</script>
@@ -157,7 +167,6 @@
 			<form id="create_solution_form">
 				<input id="create_solution_description" placeholder="Descripción de la solución" type="text" /><br />
 				<textarea id="create_solution_content"></textarea><br />
-				<input id="create_solution_is_anonymous" placeholder="is_anonymous (temporal)" type="text" /><br />
 				<input class="btn" type="submit" value="Crear solución" />
 			</form>
 			<script>
@@ -181,22 +190,20 @@
 			
 				$('#create_solution_form').submit({
 					content: $('#create_solution_content'),
-					description: $('#create_solution_description'),
-					is_anonymous: $('#create_solution_is_anonymous')
+					description: $('#create_solution_description')
 				}, function(event) {
 					event.preventDefault();
 					CKEDITOR.instances.create_solution_content.updateElement();
 					
 					var content = $.trim(event.data.content.val());
 					var description = $.trim(event.data.description.val());
-					var is_anonymous = event.data.is_anonymous.val();
 					var problem_id =  '<%= problem_id %>';
 					
 					var onInvalidInput = onInvalidInputCreateSolution(event.data.content, event.data.description);
 					if (validateCreateSolutionInput(onInvalidInput, content, description)) {
 						var onSuccess = onSuccessCreateSolution(problem_id);
 						var onFailure = onFailureCreateSolution();
-						postCreateSolution(onSuccess, onFailure, content, description, is_anonymous, problem_id);
+						postCreateSolution(onSuccess, onFailure, content, description, problem_id);
 					}
 				});
 			</script>
@@ -314,12 +321,13 @@
 					 	<% if user_signed_in %>
 							<% include sign_out_form() %>
 					 		<div id="pci_header_bar_user_name_container">
-							<a href="<% url "/user" using user_name %>">
-					 			<span id="pci_header_bar_user_name">
-					 				<%= user_first_name %> <%= user_last_name %>
-					 			</span>
-				 			</a>
+								<a href="<% url "/user" using user_name %>">
+						 			<span id="pci_header_bar_user_name">
+						 				<%= user_first_name %> <%= user_last_name %>
+						 			</span>
+					 			</a>
 				 			</div>
+					 		<% include toggle_anonymous_mode_form(anonymous_mode) %>
 						<% else %>
 							<a>
 								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
@@ -459,7 +467,7 @@
 							</a>
 							<span class="pci_text_description">
 								<% if problem->is_anonymous %>
-									<i>Publicado Anónimamente</i>
+									<i>Publicado anónimamente</i>
 								<% else %>
 									<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
 								<% end %>
@@ -482,7 +490,7 @@
 			</a>
 			<span class="pci_text_description">
 				<% if publication->is_anonymous %>
-					<i>Publicado Anónimamente</i>
+					<i>Publicado anónimamente</i>
 				<% else %>
 					<i>Por <a class="pci_link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
 				<% end %>
@@ -496,7 +504,7 @@
 			</a>
 			<span class="pci_text_description">
 				<% if solution->is_anonymous %>
-					<i>Publicado Anónimamente</i>
+					<i>Publicado anónimamente</i>
 				<% else %>
 					<i>Por 
 						<a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>">

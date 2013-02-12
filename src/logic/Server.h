@@ -35,6 +35,7 @@ public:
 	void debug(); // TODO: remove this (debugging purposes)
 	void postSignIn();
 	void postSignOut();
+	void postToggleAnonymousMode();
 	void postCreateUser();
 	//void postDeleteUser();
 	void postCreateProblem();

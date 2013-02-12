@@ -9,6 +9,7 @@ var url_root = '/pci';
 var url = {
 	sign_in: url_root + '/sign_in',
 	sign_out: url_root + '/sign_out',
+	toggle_anonymous_mode: url_root + '/toggle_anonymous_mode',
 	create_user: url_root + '/create_user',
 	create_problem: url_root + '/create_problem',
 	edit_problem: url_root + '/edit_problem',
@@ -260,6 +261,13 @@ function postSignOut(on_success_callback_function, on_failure_callback_function)
 	request.fail(on_failure_callback_function);
 }
 
+function postToggleAnonymousMode(on_success_callback_function, on_failure_callback_function) {
+	var request = postRequest({
+	}, url.toggle_anonymous_mode);
+	request.done(on_success_callback_function);
+	request.fail(on_failure_callback_function);
+}
+
 function postCreateUser(on_success_callback_function, on_failure_callback_function, birth_date, email, first_name, genre, last_name, location, password, user_name) {
 	var request = postRequest({
 		birth_date: birth_date,
@@ -275,11 +283,10 @@ function postCreateUser(on_success_callback_function, on_failure_callback_functi
 	request.fail(on_failure_callback_function);
 }
 
-function postCreateProblem(on_success_callback_function, on_failure_callback_function, content, description, is_anonymous) {
+function postCreateProblem(on_success_callback_function, on_failure_callback_function, content, description) {
 	var request = postRequest({
 		content: content,
-		description: description,
-		is_anonymous: is_anonymous
+		description: description
 	}, url.create_problem);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
@@ -302,11 +309,10 @@ function postVoteProblem(on_success_callback_function, on_failure_callback_funct
 	request.fail(on_failure_callback_function);
 }
 
-function postCreateSolution(on_success_callback_function, on_failure_callback_function, content, description, is_anonymous, problem_id) {
+function postCreateSolution(on_success_callback_function, on_failure_callback_function, content, description, problem_id) {
 	var request = postRequest({
 		content: content,
 		description: description,
-		is_anonymous: is_anonymous,
 		problem_id: problem_id
 	}, url.create_solution);
 	request.done(on_success_callback_function);
@@ -387,7 +393,27 @@ function onSuccessSignOut() {
 }
 
 function onFailureSignOut() {
-	return null;
+	return function(jq_xhr, text_status, error_thrown) {
+		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
+}
+
+function onSuccessToggleAnonymousMode(toggle_button) {
+	return function(data, text_status, jq_xhr) {
+		if (toggle_button.hasClass('anonymous_mode')) {
+			toggle_button.removeClass('anonymous_mode');
+			toggle_button.html('Modo anónimo desactivado');
+		} else {
+			toggle_button.addClass('anonymous_mode');
+			toggle_button.html('Modo anónimo activado');
+		}
+	};
+}
+
+function onFailureToggleAnonymousMode() {
+	return function(jq_xhr, text_status, error_thrown) {
+		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
 }
 
 function onInvalidInputCreateUser(email_textfield, first_name_textfield, last_name_textfield, location_textfield, password_passwordfield, user_name_textfield) {

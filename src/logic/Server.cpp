@@ -21,6 +21,7 @@ string Server::postRequestData(string name) {
 
 void Server::setSessionProperties(TemplateContent &content) {
 	content.user_signed_in = session().is_set("session_user_signed_in");
+	content.anonymous_mode = session().is_set("session_anonymous_mode");
 	content.user_name = session()["session_user_name"];
 	content.user_first_name = session()["session_first_name"];
 	content.user_last_name = session()["session_last_name"];
@@ -43,6 +44,8 @@ Server::Server(cppcms::service &service) :
 	mapper().assign("sign_in", "/sign_in");
 	dispatcher().assign("/sign_out", &Server::postSignOut, this);
 	mapper().assign("sign_out", "/sign_out");
+	dispatcher().assign("/toggle_anonymous_mode", &Server::postToggleAnonymousMode, this);
+	mapper().assign("toggle_anonymous_mode", "/toggle_anonymous_mode");
 
 	// Database-querying services
 
@@ -126,6 +129,7 @@ void Server::postSignIn() {
 			} else {
 				User *user = DatabaseInterface::searchUser(user_name);
 				session()["session_user_signed_in"] = "";
+				//session()["session_anonymous_mode"] = ""; TODO --> SET or NOT this key according to user preferences
 				session()["session_user_name"] = user_name;
 				session()["session_first_name"] = user->first_name;
 				session()["session_last_name"] = user->last_name;
@@ -141,10 +145,29 @@ void Server::postSignIn() {
 void Server::postSignOut() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
-	else {
-		session().clear();
-		response().status(http::response::ok);
-	}
+	else
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			session().clear();
+			response().status(http::response::ok);
+		}
+}
+
+void Server::postToggleAnonymousMode() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			if (session().is_set("session_anonymous_mode"))
+				session().erase("session_anonymous_mode");
+			else
+				session()["session_anonymous_mode"] = "";
+
+			response().status(http::response::ok);
+		}
 }
 
 void Server::postCreateUser() {
@@ -201,6 +224,7 @@ void Server::postCreateProblem() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
+		bool is_anonymous = session().is_set("session_anonymous_mode");
 		string user_name = session()["session_user_name"];
 
 		if (!session().is_set("session_user_signed_in"))
@@ -210,10 +234,9 @@ void Server::postCreateProblem() {
 			trim(content);
 			string description = postRequestData("description");
 			trim(description);
-			string is_anonymous = postRequestData("is_anonymous");
 
 			ErrorCode *error_code;
-			error_code = InputValidator::validateCreateProblemInput(content, description, is_anonymous);
+			error_code = InputValidator::validateCreateProblemInput(content, description);
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {
@@ -222,7 +245,7 @@ void Server::postCreateProblem() {
 				problem->creator_user_name = user_name;
 				problem->description = description;
 				problem->id = IdManager::generateProblemID();
-				problem->is_anonymous = is_anonymous.compare("true") == 0;
+				problem->is_anonymous = is_anonymous;
 
 				error_code = DatabaseInterface::insertProblem(problem);
 				if (error_code->isAnError())
@@ -387,6 +410,7 @@ void Server::postCreateSolution() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
+		bool is_anonymous = session().is_set("session_anonymous_mode");
 		string user_name = session()["session_user_name"];
 
 		if (!session().is_set("session_user_signed_in"))
@@ -396,11 +420,10 @@ void Server::postCreateSolution() {
 			trim(content);
 			string description = postRequestData("description");
 			trim(description);
-			string is_anonymous = postRequestData("is_anonymous");
 			string problem_id = postRequestData("problem_id");
 
 			ErrorCode *error_code;
-			error_code = InputValidator::validateCreateSolutionInput(content, description, is_anonymous, problem_id);
+			error_code = InputValidator::validateCreateSolutionInput(content, description, problem_id);
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {
@@ -409,7 +432,7 @@ void Server::postCreateSolution() {
 				solution->creator_user_name = user_name;
 				solution->description = description;
 				solution->id = IdManager::generateSolutionID();
-				solution->is_anonymous = is_anonymous.compare("true") == 0;
+				solution->is_anonymous = is_anonymous;
 
 				error_code = DatabaseInterface::insertSolution(solution, problem_id);
 				if (error_code->isAnError())
