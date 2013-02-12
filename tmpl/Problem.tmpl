@@ -20,7 +20,7 @@
 			<script>
 
 				// Toggles elements involved in edition
-				function toggle(){
+				function toggle() {
 					$("#problem_edit_button").toggle();
 					$("#pci_problem_problem_content").toggle();
 					$("#problem_cancel_edit_button").toggle();
@@ -28,7 +28,14 @@
 					$("#ckeditor_container").toggle();				
 				}
 				
-				$(document).ready(function(){
+				$(document).ready(function() {
+					var html_code = XBBCODE.process({
+						text: $('#pci_problem_problem_content').html()
+					}).html;
+					
+					$('#pci_problem_problem_content').empty();
+					$('#pci_problem_problem_content').append(html_code);
+					
 					configureTexteditor("pci_textfield");
 
 					$("#ckeditor_container").hide();

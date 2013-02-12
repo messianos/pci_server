@@ -49,46 +49,48 @@ Server::Server(cppcms::service &service) :
 	// Database-updating services
 	dispatcher().assign("/create_user", &Server::postCreateUser, this);
 	mapper().assign("create_user", "/create_user");
-	dispatcher().assign("/update_user", &Server::postUpdateUser, this);
-	mapper().assign("update_user", "/update_user");
-	dispatcher().assign("/delete_user", &Server::postDeleteUser, this);
-	mapper().assign("delete_user", "/delete_user");
+	/*dispatcher().assign("/delete_user", &Server::postDeleteUser, this);
+	mapper().assign("delete_user", "/delete_user");*/
 	dispatcher().assign("/create_problem", &Server::postCreateProblem, this);
 	mapper().assign("create_problem", "/create_problem");
-	dispatcher().assign("/update_problem", &Server::postUpdateProblem, this);
-	mapper().assign("update_problem", "/update_problem");
-	dispatcher().assign("/delete_problem", &Server::postDeleteProblem, this);
-	mapper().assign("delete_problem", "/delete_problem");
+	dispatcher().assign("/edit_problem", &Server::postEditProblem, this);
+	mapper().assign("edit_problem", "/edit_problem");
+	/*dispatcher().assign("/delete_problem", &Server::postDeleteProblem, this);
+	mapper().assign("delete_problem", "/delete_problem");*/
+	dispatcher().assign("/vote_problem", &Server::postVoteProblem, this);
+	mapper().assign("vote_problem", "/vote_problem");
 	dispatcher().assign("/create_solution", &Server::postCreateSolution, this);
 	mapper().assign("create_solution", "/create_solution");
-	dispatcher().assign("/update_solution", &Server::postUpdateSolution, this);
-	mapper().assign("update_solution", "/update_solution");
-	dispatcher().assign("/delete_solution", &Server::postDeleteSolution, this);
-	mapper().assign("delete_solution", "/delete_solution");
+	dispatcher().assign("/edit_solution", &Server::postEditSolution, this);
+	mapper().assign("edit_solution", "/edit_solution");
+	/*dispatcher().assign("/delete_solution", &Server::postDeleteSolution, this);
+	mapper().assign("delete_solution", "/delete_solution");*/
+	dispatcher().assign("/vote_solution", &Server::postVoteSolution, this);
+	mapper().assign("vote_solution", "/vote_solution");
 	dispatcher().assign("/create_clarification", &Server::postCreateClarification, this);
 	mapper().assign("create_clarification", "/create_clarification");
-	dispatcher().assign("/update_clarification", &Server::postUpdateClarification, this);
-	mapper().assign("update_clarification", "/update_clarification");
-	dispatcher().assign("/delete_clarification", &Server::postDeleteClarification, this);
-	mapper().assign("delete_clarification", "/delete_clarification");
+	dispatcher().assign("/edit_clarification", &Server::postEditClarification, this);
+	mapper().assign("edit_clarification", "/edit_clarification");
+	/*dispatcher().assign("/delete_clarification", &Server::postDeleteClarification, this);
+	mapper().assign("delete_clarification", "/delete_clarification");*/
 
 	// Page-fetching services
-	dispatcher().assign("/ideas", &Server::getFetchIdeasPage, this);
-	mapper().assign("ideas", "/ideas");
 	dispatcher().assign("", &Server::getFetchMainPage, this);
 	mapper().assign("");
-	dispatcher().assign("/new_problem", &Server::getFetchNewProblemPage, this);
-	mapper().assign("new_problem", "/new_problem");
-	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::getFetchNewSolutionPage, this, 1);
-	mapper().assign("new_solution", "/new_solution/{1}");
+	dispatcher().assign("/user/(\\w+)", &Server::getFetchUserPage, this, 1);
+	mapper().assign("user", "/user/{1}");
 	dispatcher().assign("/problems", &Server::getFetchProblemsPage, this);
 	mapper().assign("problems", "/problems");
 	dispatcher().assign("/publication/(50\\w{32,32})", &Server::getFetchProblemPage, this, 1);
 	mapper().assign("publication", "/publication/{1}");
 	dispatcher().assign("/publication/(50\\w{32,32})/(53\\w{32,32})", &Server::getFetchSolutionPage, this, 1, 2);
 	mapper().assign("publication", "/publication/{1}/{2}");
-	dispatcher().assign("/user/(\\w+)", &Server::getFetchUserPage, this, 1);
-	mapper().assign("user", "/user/{1}");
+	dispatcher().assign("/new_problem", &Server::getFetchNewProblemPage, this);
+	mapper().assign("new_problem", "/new_problem");
+	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::getFetchNewSolutionPage, this, 1);
+	mapper().assign("new_solution", "/new_solution/{1}");
+	dispatcher().assign("/ideas", &Server::getFetchIdeasPage, this);
+	mapper().assign("ideas", "/ideas");
 
 	mapper().root("/pci");
 }
@@ -169,7 +171,7 @@ void Server::postCreateUser() {
 			response().status(http::response::bad_request, error_code->getErrorDescription());
 		else {
 			User *user = new User();
-			user->birth_date = new Date("%d-%m-%Y", birth_date);
+			user->birth_date = new Date("%d/%m/%Y", birth_date);
 			user->email = email;
 			user->first_name = first_name;
 			user->genre = genre;
@@ -187,21 +189,13 @@ void Server::postCreateUser() {
 	}
 }
 
-void Server::postUpdateUser() {
+/*void Server::postDeleteUser() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
 		// TODO
 	}
-}
-
-void Server::postDeleteUser() {
-	if (!postRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		// TODO
-	}
-}
+}*/
 
 void Server::postCreateProblem() {
 	if (!postRequestReceived())
@@ -233,14 +227,18 @@ void Server::postCreateProblem() {
 				error_code = DatabaseInterface::insertProblem(problem);
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
-				else
+				else {
+					json::value json_response = json::value();
+					json_response["problem_id"] = problem->id;
+					response().out() << json_response;
 					response().status(http::response::ok);
+				}
 			}
 		}
 	}
 }
 
-void Server::postUpdateProblem() {
+void Server::postEditProblem() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
@@ -248,7 +246,7 @@ void Server::postUpdateProblem() {
 	}
 }
 
-void Server::postDeleteProblem() {
+/*void Server::postDeleteProblem() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
@@ -270,6 +268,111 @@ void Server::postDeleteProblem() {
 					response().status(http::response::forbidden);
 				else {
 					error_code = DatabaseInterface::deleteProblem(problem_id);
+					if (error_code->isAnError())
+						response().status(http::response::internal_server_error, error_code->getErrorDescription());
+					else
+						response().status(http::response::ok);
+				}
+			}
+		}
+	}
+}*/
+
+void Server::postVoteProblem() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+
+			/*
+			 * TODO: DOUBTS
+			 * Can a user vote it's own publication?
+			 * Does the SQL stored procedure checks whether the user has already voted the publication?
+			 */
+
+			string is_positive = postRequestData("is_positive");
+			string problem_id = postRequestData("problem_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateVoteProblemInput(is_positive, problem_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				bool is_positive_boolean = is_positive.compare("true") == 0;
+
+				//error_code = DatabaseInterface::voteProblem(problem_id, user_name, is_positive_boolean); TODO----> NEED THE METHOD
+				if (error_code->isAnError())
+					response().status(http::response::internal_server_error, error_code->getErrorDescription());
+				else
+					response().status(http::response::ok);
+			}
+		}
+	}
+}
+
+void Server::postSetAcceptedSolution() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string problem_id = postRequestData("problem_id");
+			string solution_id = postRequestData("solution_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateSetAcceptedSolutionInput(problem_id, solution_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Problem *problem = DatabaseInterface::searchProblem(problem_id);
+
+				// TODO: what to do in case of NULL?? BAD_REQUEST??? CHECK THIS !!!
+
+				if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
+					response().status(http::response::forbidden);
+				else {
+					//error_code = DatabaseInterface::setAcceptedSolution(problem_id, solution_id); TODO --> NEED THIS METHOD
+					if (error_code->isAnError())
+						response().status(http::response::internal_server_error, error_code->getErrorDescription());
+					else
+						response().status(http::response::ok);
+				}
+			}
+		}
+	}
+}
+
+void Server::postUnsetAcceptedSolution() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string problem_id = postRequestData("problem_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateUnsetAcceptedSolutionInput(problem_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				Problem *problem = DatabaseInterface::searchProblem(problem_id);
+
+				// TODO: what to do in case of NULL?? BAD_REQUEST??? CHECK THIS !!!
+
+				if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
+					response().status(http::response::forbidden);
+				else {
+					//error_code = DatabaseInterface::unsetAcceptedSolution(problem_id, solution_id); TODO --> NEED THIS METHOD
 					if (error_code->isAnError())
 						response().status(http::response::internal_server_error, error_code->getErrorDescription());
 					else
@@ -311,14 +414,18 @@ void Server::postCreateSolution() {
 				error_code = DatabaseInterface::insertSolution(solution, problem_id);
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
-				else
+				else {
+					json::value json_response = json::value();
+					json_response["solution_id"] = solution->id;
+					response().out() << json_response;
 					response().status(http::response::ok);
+				}
 			}
 		}
 	}
 }
 
-void Server::postUpdateSolution() {
+void Server::postEditSolution() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
@@ -326,7 +433,7 @@ void Server::postUpdateSolution() {
 	}
 }
 
-void Server::postDeleteSolution() {
+/*void Server::postDeleteSolution() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
@@ -354,6 +461,42 @@ void Server::postDeleteSolution() {
 					else
 						response().status(http::response::ok);
 				}
+			}
+		}
+	}
+}*/
+
+void Server::postVoteSolution() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+
+			/*
+			 * TODO: DOUBTS
+			 * Can a user vote it's own publication?
+			 * Does the SQL stored procedure checks whether the user has already voted the publication?
+			 */
+
+			string is_positive = postRequestData("is_positive");
+			string solution_id = postRequestData("solution_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateVoteSolutionInput(is_positive, solution_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				bool is_positive_boolean = is_positive.compare("true") == 0;
+
+				//error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean); TODO----> NEED THE METHOD
+				if (error_code->isAnError())
+					response().status(http::response::internal_server_error, error_code->getErrorDescription());
+				else
+					response().status(http::response::ok);
 			}
 		}
 	}
@@ -393,7 +536,7 @@ void Server::postCreateClarification() {
 	}
 }
 
-void Server::postUpdateClarification() {
+void Server::postEditClarification() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
@@ -401,7 +544,7 @@ void Server::postUpdateClarification() {
 	}
 }
 
-void Server::postDeleteClarification() {
+/*void Server::postDeleteClarification() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
@@ -431,7 +574,7 @@ void Server::postDeleteClarification() {
 			}
 		}
 	}
-}
+}*/
 
 void Server::getFetchMainPage() {
 	if (!getRequestReceived())
@@ -443,33 +586,6 @@ void Server::getFetchMainPage() {
 		content.page_title = "PCI";
 
 		render("index_view", content);
-	}
-}
-
-void Server::getFetchNewProblemPage() {
-	if (!getRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		NewProblemContent content;
-
-		setSessionProperties(content);
-		content.page_title = "Nuevo problema";
-
-		render("new_problem_view", content);
-	}
-}
-
-void Server::getFetchNewSolutionPage(string problem_id) {
-	if (!getRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		NewSolutionContent content;
-
-		setSessionProperties(content);
-		content.page_title = "Nueva solución";
-		content.problem_id = problem_id;
-
-		render("new_solution_view", content);
 	}
 }
 
@@ -554,6 +670,39 @@ void Server::getFetchSolutionPage(string problem_id, string solution_id) {
 
 		render("solution_view", content);
 	}
+}
+
+void Server::getFetchNewProblemPage() {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			NewProblemContent content;
+
+			setSessionProperties(content);
+			content.page_title = "Nuevo problema";
+
+			render("new_problem_view", content);
+		}
+}
+
+void Server::getFetchNewSolutionPage(string problem_id) {
+	if (!getRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			NewSolutionContent content;
+
+			setSessionProperties(content);
+			content.page_title = "Nueva solución";
+			content.problem_id = problem_id;
+
+			render("new_solution_view", content);
+		}
 }
 
 void Server::getFetchIdeasPage() {

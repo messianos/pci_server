@@ -10,22 +10,21 @@ var url = {
 	sign_in: url_root + '/sign_in',
 	sign_out: url_root + '/sign_out',
 	create_user: url_root + '/create_user',
-	update_user: url_root + '/update_user',
-	delete_user: url_root + '/delete_user',
 	create_problem: url_root + '/create_problem',
-	update_problem: url_root + '/update_problem',
-	delete_problem: url_root + '/delete_problem',
+	edit_problem: url_root + '/edit_problem',
+	vote_problem: url_root + '/vote_problem',
 	create_solution: url_root + '/create_solution',
-	update_solution: url_root + '/update_solution',
-	delete_solution: url_root + '/delete_solution',
+	edit_solution: url_root + '/edit_solution',
+	vote_solution: url_root + '/vote_solution',
 	create_clarification: url_root + '/create_clarification',
-	update_clarification: url_root + '/update_clarification',
-	delete_clarification: url_root + '/delete_clarification',
+	edit_clarification: url_root + '/edit_clarification',
 	fetch_main_page: url_root + '',
-	fetch_user_page: url_root + '/user/',
+	fetch_user_page: url_root + '/user',
 	fetch_problems_page: url_root + '/problems',
-	fetch_problem_page: url_root + '/publication/',
-	fetch_solution_page: url_root + '/publication/',
+	fetch_problem_page: url_root + '/publication',
+	fetch_solution_page: url_root + '/publication',
+	fetch_new_problem_page: url_root + '/new_problem',
+	fetch_new_solution_page: url_root + '/new_solution',
 	fetch_ideas_page: url_root + '/ideas'
 };
 
@@ -259,22 +258,6 @@ function postCreateUser(on_success_callback_function, on_failure_callback_functi
 	request.fail(on_failure_callback_function);
 }
 
-function postUpdateUser(on_success_callback_function, on_failure_callback_function) {
-	var request = postRequest({
-		// TODO
-	}, url.update_user);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postDeleteUser(on_success_callback_function, on_failure_callback_function, user_name) {
-	var request = postRequest({
-		user_name: user_name
-	}, url.delete_user);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
 function postCreateProblem(on_success_callback_function, on_failure_callback_function, content, description, is_anonymous) {
 	var request = postRequest({
 		content: content,
@@ -285,18 +268,19 @@ function postCreateProblem(on_success_callback_function, on_failure_callback_fun
 	request.fail(on_failure_callback_function);
 }
 
-function postUpdateProblem(on_success_callback_function, on_failure_callback_function) {
+function postEditProblem(on_success_callback_function, on_failure_callback_function) {
 	var request = postRequest({
 		// TODO
-	}, url.update_problem);
+	}, url.edit_problem);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
 
-function postDeleteProblem(on_success_callback_function, on_failure_callback_function, problem_id) {
+function postVoteProblem(on_success_callback_function, on_failure_callback_function, is_positive, problem_id) {
 	var request = postRequest({
+		is_positive: is_positive,
 		problem_id: problem_id
-	}, url.delete_problem);
+	}, url.vote_problem);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
@@ -312,18 +296,19 @@ function postCreateSolution(on_success_callback_function, on_failure_callback_fu
 	request.fail(on_failure_callback_function);
 }
 
-function postUpdateSolution(on_success_callback_function, on_failure_callback_function) {
+function postEditSolution(on_success_callback_function, on_failure_callback_function) {
 	var request = postRequest({
 		// TODO
-	}, url.update_solution);
+	}, url.edit_solution);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
 
-function postDeleteSolution(on_success_callback_function, on_failure_callback_function, solution_id) {
+function postVoteSolution(on_success_callback_function, on_failure_callback_function, is_positive, solution_id) {
 	var request = postRequest({
+		is_positive: is_positive,
 		solution_id: solution_id
-	}, url.delete_solution);
+	}, url.vote_solution);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
@@ -337,17 +322,9 @@ function postCreateClarification(on_success_callback_function, on_failure_callba
 	request.fail(on_failure_callback_function);
 }
 
-function postUpdateClarification(on_success_callback_function, on_failure_callback_function) {
+function postEditClarification(on_success_callback_function, on_failure_callback_function) {
 	var request = postRequest({
-	}, url.update_clarification);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postDeleteClarification(on_success_callback_function, on_failure_callback_function, clarification_id) {
-	var request = postRequest({
-		clarification_id: clarification_id
-	}, url.delete_clarification);
+	}, url.edit_clarification);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
@@ -372,8 +349,7 @@ function onSuccessSignIn() {
 	return function(data, text_status, jq_xhr) {
 		data = $.parseJSON(data);
 		if (data['user_signed_in'])
-			//TODO: DON'T REDIRECT, RELOAD
-			window.location.href = url.fetch_main_page;
+			location.reload(true);
 		else
 			alert("INVALID USER_NAME AND PASSWORD. DO SOMETHING"); // TODO: DO SOMETHING WHEN SIGN IN FAILS
 	};
@@ -387,7 +363,7 @@ function onFailureSignIn() {
 
 function onSuccessSignOut() {
 	return function(data, text_status, jq_xhr) {
-		window.location.href = url.fetch_main_page;
+		location.reload(true);
 	};
 }
 
@@ -424,30 +400,6 @@ function onFailureCreateUser() {
 	};
 }
 
-function onSuccessUpdateUser() {
-	return function(data, text_status, jq_xhr) {
-		// TODO
-	};
-}
-
-function onFailureUpdateUser() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessDeleteUser() {
-	return function(data, text_status, jq_xhr) {
-		// TODO
-	};
-}
-
-function onFailureDeleteUser() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
 function onInvalidInputCreateProblem(content_textarea, description_textfield) {
 	return function(error_information) {
 		if (error.id.content in error_information)
@@ -459,7 +411,8 @@ function onInvalidInputCreateProblem(content_textarea, description_textfield) {
 
 function onSuccessCreateProblem() {
 	return function(data, text_status, jq_xhr) {
-		// TODO
+		data = $.parseJSON(data);
+		window.location.href = url.fetch_problem_page + '/' + data['problem_id'];
 	};
 }
 
@@ -469,25 +422,13 @@ function onFailureCreateProblem() {
 	};
 }
 
-function onSuccessUpdateProblem() {
+function onSuccessEditProblem() {
 	return function(data, text_status, jq_xhr) {
 		// TODO
 	};
 }
 
-function onFailureUpdateProblem() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessDeleteProblem() {
-	return function(data, text_status, jq_xhr) {
-		// TODO
-	};
-}
-
-function onFailureDeleteProblem() {
+function onFailureEditProblem() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};
@@ -502,9 +443,10 @@ function onInvalidInputCreateSolution(content_textarea, description_textfield) {
 	};
 }
 
-function onSuccessCreateSolution() {
+function onSuccessCreateSolution(problem_id) {
 	return function(data, text_status, jq_xhr) {
-		// TODO
+		data = $.parseJSON(data);
+		window.location.href = url.fetch_solution_page + '/' + problem_id + '/' + data['solution_id'];
 	};
 }
 
@@ -514,25 +456,13 @@ function onFailureCreateSolution() {
 	};
 }
 
-function onSuccessUpdateSolution() {
+function onSuccessEditSolution() {
 	return function(data, text_status, jq_xhr) {
 		// TODO
 	};
 }
 
-function onFailureUpdateSolution() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessDeleteSolution() {
-	return function(data, text_status, jq_xhr) {
-		// TODO
-	};
-}
-
-function onFailureDeleteSolution() {
+function onFailureEditSolution() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};
@@ -557,25 +487,13 @@ function onFailureCreateClarification() {
 	};
 }
 
-function onSuccessUpdateClarification() {
+function onSuccessEditClarification() {
 	return function(data, text_status, jq_xhr) {
 		// TODO
 	};
 }
 
-function onFailureUpdateClarification() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessDeleteClarification() {
-	return function(data, text_status, jq_xhr) {
-		// TODO
-	};
-}
-
-function onFailureDeleteClarification() {
+function onFailureEditClarification() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};

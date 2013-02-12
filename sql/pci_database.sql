@@ -691,8 +691,8 @@ END; !
  
  
 /*
- * Vote a existing solution
- * Note: in_problem_id and in_id must be strings representing hexadecimal numbers.
+ * Vote a existing solution.
+ * Note: in_id must be a string representing an hexadecimal number.
  */
 CREATE PROCEDURE vote_solution(
         IN in_id BINARY(34),

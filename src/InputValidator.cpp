@@ -6,6 +6,10 @@
 using namespace boost;
 using namespace std;
 
+bool InputValidator::isValidBoolean(string boolean) {
+	return regex_match(boolean, regex("^true$|^false$"));
+}
+
 bool InputValidator::isValidBirthDate(string birth_date) {
 	if (! regex_match(birth_date, regex("^[0-9]{2,2}/[0-9]{2,2}/[0-9]{4,4}$")))
 		return false;
@@ -32,10 +36,6 @@ bool InputValidator::isValidFirstName(string first_name) {
 
 bool InputValidator::isValidGenre(string genre) {
 	return regex_match(genre, regex("^[FM]$"));
-}
-
-bool InputValidator::isValidIsAnonymous(string is_anonymous) {
-	return regex_match(is_anonymous, regex("^true$|^false$"));
 }
 
 bool InputValidator::isValidLastName(string last_name) {
@@ -145,13 +145,40 @@ ErrorCode *InputValidator::validateCreateProblemInput(string content, string des
 	if (! isValidPublicationDescription(description))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION);
 
-	if (! isValidIsAnonymous(is_anonymous))
+	if (! isValidBoolean(is_anonymous))
 		return new ErrorCode(ErrorCode::CODE_INVALID_IS_ANONYMOUS);
 
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode *InputValidator::validateDeleteProblemInput(string problem_id) {
+/*ErrorCode *InputValidator::validateDeleteProblemInput(string problem_id) {
+	if (! isValidProblemId(problem_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}*/
+
+ErrorCode *InputValidator::validateVoteProblemInput(string is_positive, string problem_id) {
+	if (! isValidBoolean(is_positive))
+		return new ErrorCode(ErrorCode::CODE_INVALID_IS_POSITIVE);
+
+	if (! isValidProblemId(problem_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+ErrorCode *InputValidator::validateSetAcceptedSolutionInput(string problem_id, string solution_id) {
+	if (! isValidProblemId(problem_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+
+	if (! isValidSolutionId(solution_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+ErrorCode *InputValidator::validateUnsetAcceptedSolutionInput(string problem_id) {
 	if (! isValidProblemId(problem_id))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
 
@@ -165,7 +192,7 @@ ErrorCode *InputValidator::validateCreateSolutionInput(string content, string de
 	if (! isValidPublicationDescription(description))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION);
 
-	if (! isValidIsAnonymous(is_anonymous))
+	if (! isValidBoolean(is_anonymous))
 		return new ErrorCode(ErrorCode::CODE_INVALID_IS_ANONYMOUS);
 
 	if (! isValidProblemId(problem_id))
@@ -174,7 +201,17 @@ ErrorCode *InputValidator::validateCreateSolutionInput(string content, string de
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode* InputValidator::validateDeleteSolutionInput(string solution_id) {
+/*ErrorCode* InputValidator::validateDeleteSolutionInput(string solution_id) {
+	if (! isValidSolutionId(solution_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}*/
+
+ErrorCode *InputValidator::validateVoteSolutionInput(string is_positive, string solution_id) {
+	if (! isValidBoolean(is_positive))
+		return new ErrorCode(ErrorCode::CODE_INVALID_IS_POSITIVE);
+
 	if (! isValidSolutionId(solution_id))
 		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
 
@@ -191,9 +228,9 @@ ErrorCode *InputValidator::validateCreateClarificationInput(string associated_pu
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode *InputValidator::validateDeleteClarificationInput(string clarification_id) {
+/*ErrorCode *InputValidator::validateDeleteClarificationInput(string clarification_id) {
 	if (! isValidClarificationId(clarification_id))
 		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ID);
 
 	return new ErrorCode(ErrorCode::CODE_NONE);
-}
+}*/

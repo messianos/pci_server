@@ -17,8 +17,11 @@
 					var user_name = event.data.user_name.val();
 					
 					var onInvalidInput = onInvalidInputSignIn(event.data.password, event.data.user_name);
-					if(validateSignInInput(onInvalidInput, password, user_name))
-						postSignIn(onSuccessSignIn(), onFailureSignIn(), password, user_name);
+					if(validateSignInInput(onInvalidInput, password, user_name)) {
+						var onSuccess = onSuccessSignIn();
+						var onFailure = onFailureSignIn();
+						postSignIn(onSuccess, onFailure, password, user_name);
+					}
 				});
 			</script>
 		<% end template %>
@@ -27,7 +30,9 @@
 			<a class="btn" id="sign_out_submit">Salir</a>
 			<script>
 				$('#sign_out_submit').click(function() {
-					postSignOut(onSuccessSignOut(), onFailureSignOut());
+					var onSuccess = onSuccessSignOut();
+					var onFailure = onFailureSignOut()
+					postSignOut(onSuccess, onFailure);
 				});
 			</script>
 		<% end template %>
@@ -51,7 +56,7 @@
 				$('#create_user_birth_date').datepicker({
 					showOn:'focus',
 					yearRange: (current_year - 100) + ':' + current_year,
-					dateFormat:'dd-mm-yy',
+					dateFormat:'dd/mm/yy',
 					changeMonth:true,
 					changeYear:true
 				});
@@ -76,8 +81,11 @@
 					var user_name = event.data.user_name.val();
 					
 					var onInvalidInput = onInvalidInputCreateUser(event.data.email, event.data.first_name, event.data.last_name, event.data.location, event.data.password, event.data.user_name);
-					if (validateCreateUserInput(onInvalidInput, email, first_name, last_name, location, password, user_name))
-						postCreateUser(onSuccessCreateUser(), onFailureCreateUser(), birth_date, email, first_name, genre, last_name, location, password, user_name);
+					if (validateCreateUserInput(onInvalidInput, email, first_name, last_name, location, password, user_name)) {
+						var onSuccess = onSuccessCreateUser();
+						var onFailure = onFailureCreateUser();
+						postCreateUser(onSuccess, onFailure, birth_date, email, first_name, genre, last_name, location, password, user_name);
+					}
 				});
 			</script>
 		<% end template %>
@@ -89,13 +97,14 @@
 			<input id="create_problem_is_anonymous" placeholder="is_anonymous (temporal)" type="text"><br />
 			<a class="btn" id="create_problem_submit">Crear problema</a>
 			<script>
-				CKEDITOR.replace('create_problem_content', {
+				CKEDITOR.replace(create_problem_content, {
 					customConfig: '',
 					extraPlugins: 'bbcode',
 					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
 					language: 'es',
 					removePlugins: 'elementspath, colordialog',
 					resize_enabled: false,
+					skin: 'moono-dark',
 					toolbar: [
 						[ 'Undo', '-', 'Redo' ],
 						[ 'FontSize' ],
@@ -118,8 +127,11 @@
 					var is_anonymous = event.data.is_anonymous.val();
 					
 					var onInvalidInput = onInvalidInputCreateProblem(event.data.content, event.data.description);
-					if (validateCreateProblemInput(onInvalidInput, content, description))
-						postCreateProblem(onSuccessCreateProblem(), onFailureCreateProblem(), content, description, is_anonymous);
+					if (validateCreateProblemInput(onInvalidInput, content, description)) {
+						var onSuccess = onSuccessCreateProblem();
+						var onFailure = onFailureCreateProblem();
+						postCreateProblem(onSuccess, onFailure, content, description, is_anonymous);
+					}
 				});
 			</script>
 		<% end template %>
@@ -139,6 +151,7 @@
 					language: 'es',
 					removePlugins: 'elementspath, colordialog',
 					resize_enabled: false,
+					skin: 'moono-dark',
 					toolbar: [
 						[ 'Undo', '-', 'Redo' ],
 						[ 'FontSize' ],
@@ -162,8 +175,11 @@
 					var problem_id =  '<%= problem_id %>';
 					
 					var onInvalidInput = onInvalidInputCreateSolution(event.data.content, event.data.description);
-					if (validateCreateSolutionInput(onInvalidInput, content, description))
-						postCreateSolution(onSuccessCreateSolution(), onFailureCreateSolution(), content, description, is_anonymous, problem_id);
+					if (validateCreateSolutionInput(onInvalidInput, content, description)) {
+						var onSuccess = onSuccessCreateSolution(problem_id);
+						var onFailure = onFailureCreateSolution();
+						postCreateSolution(onSuccess, onFailure, content, description, is_anonymous, problem_id);
+					}
 				});
 			</script>
 		<% end template %>
@@ -471,8 +487,8 @@
 
 		<% template css_links() %>
 			<link href="/css/template.css" rel="stylesheet" type="text/css" />
-    		
-    		<link href="/css/bootstrap.min.css" rel="stylesheet">
+    		<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    		<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 
 
@@ -480,6 +496,7 @@
 			<script src="/js/utilities.js"></script>
 			<script src="/js/logic.js"></script>
 			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
+			<script src="/lib/xbbcode/xbbcode.js"></script>
 			
 			<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	    	<!--[if lt IE 9]>
