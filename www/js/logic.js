@@ -400,13 +400,12 @@ function onFailureSignOut() {
 
 function onSuccessToggleAnonymousMode(toggle_button) {
 	return function(data, text_status, jq_xhr) {
-		if (toggle_button.hasClass('anonymous_mode')) {
-			toggle_button.removeClass('anonymous_mode');
-			toggle_button.html('Modo anónimo desactivado');
-		} else {
-			toggle_button.addClass('anonymous_mode');
+		data = $.parseJSON(data);
+		
+		if (data['anonymous_mode'])
 			toggle_button.html('Modo anónimo activado');
-		}
+		else
+			toggle_button.html('Modo anónimo desactivado');
 	};
 }
 
@@ -479,6 +478,19 @@ function onFailureEditProblem() {
 	};
 }
 
+function onSuccessVoteProblem(display) {
+	return function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		display.html(data['vote_balance'].toString());
+	};
+}
+
+function onFailureVoteProblem() {
+	return function(jq_xhr, text_status, error_thrown) {
+		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
+}
+
 function onInvalidInputCreateSolution(content_textarea, description_textfield) {
 	return function(error_information) {
 		if (error.id.content in error_information)
@@ -508,6 +520,19 @@ function onSuccessEditSolution() {
 }
 
 function onFailureEditSolution() {
+	return function(jq_xhr, text_status, error_thrown) {
+		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
+}
+
+function onSuccessVotSolution(display) {
+	return function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		display.html(data['vote_balance'].toString());
+	};
+}
+
+function onFailureVoteSolution() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};

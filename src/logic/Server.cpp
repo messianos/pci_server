@@ -161,11 +161,17 @@ void Server::postToggleAnonymousMode() {
 		if (!session().is_set("session_user_signed_in"))
 			response().status(http::response::unauthorized);
 		else {
-			if (session().is_set("session_anonymous_mode"))
-				session().erase("session_anonymous_mode");
-			else
-				session()["session_anonymous_mode"] = "";
+			json::value json_response = json::value();
 
+			if (session().is_set("session_anonymous_mode")) {
+				session().erase("session_anonymous_mode");
+				json_response["anonymous_mode"] = false;
+			} else {
+				session()["session_anonymous_mode"] = "";
+				json_response["anonymous_mode"] = true;
+			}
+
+			response().out() << json_response;
 			response().status(http::response::ok);
 		}
 }
@@ -327,11 +333,15 @@ void Server::postVoteProblem() {
 			else {
 				bool is_positive_boolean = is_positive.compare("true") == 0;
 
-				//error_code = DatabaseInterface::voteProblem(problem_id, user_name, is_positive_boolean); TODO----> NEED THE METHOD
+				//error_code = DatabaseInterface::voteProblem(problem_id, user_name, is_positive_boolean); FIXME----> NEED THE METHOD
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
-				else
+				else {
+					json::value json_response = json::value();
+					json_response["vote_balance"] = 5; // FIXME: get actual vote_balance ---> NEED DATABASEINTERFACE METHOD
+					response().out() << json_response;
 					response().status(http::response::ok);
+				}
 			}
 		}
 	}
@@ -515,11 +525,15 @@ void Server::postVoteSolution() {
 			else {
 				bool is_positive_boolean = is_positive.compare("true") == 0;
 
-				//error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean); TODO----> NEED THE METHOD
+				//error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean); FIXME----> NEED THE METHOD
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
-				else
+				else {
+					json::value json_response = json::value();
+					json_response["vote_balance"] = 5; // FIXME: get actual vote_balance ---> NEED DATABASEINTERFACE METHOD
+					response().out() << json_response;
 					response().status(http::response::ok);
+				}
 			}
 		}
 	}
