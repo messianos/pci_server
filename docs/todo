@@ -2,3 +2,22 @@ Actions
 	Insertions
 	Deletions
 	Edition
+	
+
+TODO -  reunion, day 11/02/13
+AJAX:
+accepted_solution (set & unset)
+
+vote_up (probl, sol, prop)
+vote_down (probl, sol, prop)
+
+clarification send and response
+
+make proposal
+
+image upload
+user exists
+
+DB:
+Add problem_id to solution for fast searches
+Notifications
