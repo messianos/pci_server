@@ -3,7 +3,7 @@ body {
 	background-color:#F1F1F1;
 }
 
-#pci_user_main_container {
+#user_main_container {
 	min-width:912px;
 	padding:64px 16px 0px 128px;
 }
@@ -28,7 +28,7 @@ body {
 
 #column_1{
 	margin-right:210px;
-	font-family: pci_font_global;
+	font-family: font_global;
 }
 #column_2{
 	float:right;

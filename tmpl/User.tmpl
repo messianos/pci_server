@@ -15,7 +15,7 @@
 			<% include template_view::javascript_code() %>
 			<script>
 			$(document).ready(function() {
-				setActiveNavigationButton('pci_navigation_menu_profile_button');
+				setActiveNavigationButton('navigation_menu_profile_button');
 			});
 			</script>
 		<% end template %>
@@ -23,10 +23,10 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
 			
-			<div id="pci_user_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="box_container">
 					<div id="column_1">
 						<div id="content_wrapper">
 							<div id="title_container">
@@ -79,7 +79,7 @@
 								<% foreach activity in *recent_activity %>
 									<% item %>
 										<% if (!activity->is_anonymous || content.user_name.compare(content.user->user_name) == 0) %>
-											<div class="pci_box_description pci_problems_problem_description">
+											<div class="box_description problems_problem_description">
 												<% include template_view::publication_description(activity) %>
 											</div>
 										<% end %>

@@ -9,7 +9,7 @@ var templateConstants = {
 	/* Customizable ------------------------------------------------------- */
 		activeClass: 'active',
 		clickedClass: 'clicked',
-		errorBoxClass: 'pci_box_error',
+		errorBoxClass: 'box_error',
 		errorBoxOffset: 8,
 		errorClass: 'error',
 		selectedClass: 'selected',
@@ -81,8 +81,8 @@ function configureClarificationTextarea(textareaId, answerButtonId, clarificatio
 		}, function() {
 			var parent = textarea.parent();
 			parent.empty();
-			parent.addClass('pci_box_content');
-			parent.append($('<span class="pci_text_clarification">' + textarea.val() + '</span>'));
+			parent.addClass('box_content');
+			parent.append($('<span class="text_clarification">' + textarea.val() + '</span>'));
 		});
 	});
 }

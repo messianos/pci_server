@@ -1,4 +1,4 @@
-OUTPUT_FILE=../src/pci_skin.cpp
+OUTPUT_FILE=pci_skin.cpp
 OUTPUT_LIB=../lib/libpci_skin.so
 
 cd ../tmpl
@@ -14,6 +14,8 @@ echo -- Templates built to $OUTPUT_FILE
 echo -- Building Dynamic Library...
 
 g++ -shared -fPIC $OUTPUT_FILE -o $OUTPUT_LIB -lcppcms -lbooster
+
+rm -f $OUTPUT_FILE
 
 echo
 

@@ -21,7 +21,7 @@
 			<% include template_view::javascript_code() %>
 			<script>
 			$(document).ready(function(){
-				configureTexteditor('pci_texteditor');
+				configureTexteditor('texteditor');
 			});
 			</script>
 		<% end template %>
@@ -29,9 +29,9 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_new_solution_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="box_container">
 					<% include create_solution_form(problem_id) %>
 				</div>
 			</div>

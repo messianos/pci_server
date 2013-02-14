@@ -15,7 +15,7 @@
 			<% include template_view::javascript_code() %>
 			<script>
 			$(document).ready(function() {
-				setActiveNavigationButton('pci_navigation_menu_problems_button');
+				setActiveNavigationButton('navigation_menu_problems_button');
 			});
 			</script>
 		<% end template %>
@@ -23,9 +23,10 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_problems_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid central_container">
+				<div class="row-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="box_container">
 					<% if user_signed_in %>
 						<% include template_view::toolbar_problems() %>
 					<% end %>
@@ -64,6 +65,7 @@
 						</div>
 					</div>
 				</div>
+			</div>
 			</div>
 		<% end template %>
 	

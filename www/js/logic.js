@@ -401,11 +401,17 @@ function onFailureSignOut() {
 function onSuccessToggleAnonymousMode(toggle_button) {
 	return function(data, text_status, jq_xhr) {
 		data = $.parseJSON(data);
+
+		$(toggle_button).tooltip('hide');
 		
 		if (data['anonymous_mode'])
-			toggle_button.html('Modo anónimo activado');
+			$(toggle_button).attr('data-original-title', 'Modo anónimo activado');
 		else
-			toggle_button.html('Modo anónimo desactivado');
+			$(toggle_button).attr('data-original-title', 'Modo anónimo desactivado');
+		
+		$(toggle_button).tooltip('fixTitle');
+		$(toggle_button).tooltip('show');
+		$(toggle_button).toggleClass('on');
 	};
 }
 

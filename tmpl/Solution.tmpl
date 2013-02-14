@@ -16,13 +16,13 @@
 			<script>
 				$(document).ready(function() {
 					var html_code = XBBCODE.process({
-						text: $('#pci_solution_solution_content').html(),
+						text: $('#solution_solution_content').html(),
 						removeMisalignedTags: false,
 						addInLineBreaks: true
 					}).html;
 					
-					$('#pci_solution_solution_content').empty();
-					$('#pci_solution_solution_content').append(html_code);
+					$('#solution_solution_content').empty();
+					$('#solution_solution_content').append(html_code);
 				});
 			</script>
 		<% end template %>	
@@ -30,17 +30,17 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_solution_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="box_container">
 					<% include template_view::toolbar_solution(problem_id) %>
-					<div class="pci_horizontal_line"></div>
-					<div id="pci_solution_header_container">
+					<div class="horizontal_line"></div>
+					<div id="solution_header_container">
 						<h2>
 							<%= solution->description %>
 						</h2>
 					</div>
-					<div class="pci_box_content" id="pci_solution_solution_content">
+					<div class="box_content" id="solution_solution_content">
 						<%= solution->content %>
 					</div>
 					<% include template_view::clarifications(clarifications, solution) %>

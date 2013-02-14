@@ -2,24 +2,3 @@
 body {
 	background-color:#F1F1F1;
 }
-
-#pci_problems_main_container {
-	min-width:912px;
-	padding:64px 16px 0px 128px;
-}
-
-div.pci_problems_problem_description {
-	margin-bottom:16px;
-}
-
-div.pci_problems_votes {
-	font-size:16px;
-	text-align:center;
-}
-
-div.pci_problems_votes .number {
-	font-size: 30px;
-	color: #8BC7FF;
-	text-shadow: 1px 1px #000;
-	margin-bottom:8px;
-}

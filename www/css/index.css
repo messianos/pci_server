@@ -3,18 +3,18 @@ body {
 	background-color:#F1F1F1;
 }
 
-#pci_index_main_container {
+#index_main_container {
 	background-color:#FFFFFF;
 	min-width:1024px;
 	overflow:hidden;
 	padding:64px 128px 16px 128px;
 }
 
-#pci_index_TO_DEFINE_container {
+#index_TO_DEFINE_container {
 	float:left;
 }
 
-#pci_index_sign_up_container {
+#index_sign_up_container {
 	background-color:#F1F1F1;
 	border-color:#D0D0D0;
 	border-radius:4px;

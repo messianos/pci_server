@@ -22,21 +22,25 @@
 				// Toggles elements involved in edition
 				function toggle() {
 					$("#problem_edit_button").toggle();
-					$("#pci_problem_problem_content").toggle();
+					$("#problem_problem_content").toggle();
 					$("#problem_cancel_edit_button").toggle();
 					$("#problem_finish_edit_button").toggle();
-					$("#ckeditor_container").toggle();				
+					$("#ckeditor_container").toggle();
+					var editor = $("#ckeditor_container");
+					if(editor.visible()){
+						editor.html = $('#problem_problem_content').val();
+					}				
 				}
 				
 				$(document).ready(function() {
 					var html_code = XBBCODE.process({
-						text: $('#pci_problem_problem_content').html()
+						text: $('#problem_problem_content').html()
 					}).html;
 					
-					$('#pci_problem_problem_content').empty();
-					$('#pci_problem_problem_content').append(html_code);
+					$('#problem_problem_content').empty();
+					$('#problem_problem_content').append(html_code);
 					
-					configureTexteditor("pci_textfield");
+					configureTexteditor("textfield");
 
 					$("#ckeditor_container").hide();
 					$("#problem_cancel_edit_button").hide();
@@ -59,66 +63,94 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_problem_main_container">
-				<div class="pci_box_container">
-					<% if user_signed_in %>
-						<% include template_view::toolbar_problem(problem->id) %>
-						<div class="pci_horizontal_line"></div>
-					<% end %>
-					<div id="pci_problem_header_container">
-						<a id="problem_edit_button">
-							<div class="pci_button_classic">
-								Editar
+			<div class="container-fluid central_container">
+				<% include template_view::navigation_menu() %>
+				<div class="fixed_box_container">
+					<div class="row-fluid fixed-right">
+						<div class="span9"> <!-- // Problem header -->
+							<div id="problem_header_container">
+								<h2><%= problem->description %></h2>
+								<span class="text_description">
+									Creado el <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+								</span>
 							</div>
-						</a>
-						<h2>
-							<%= problem->description %>
-						</h2>
-						<span class="pci_text_description">
-							<% if problem->is_anonymous %>
-								<i>Publicado Anónimamente</i>
-							<% else %>
-								<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+						</div>
+						<div class="span3 fixed-right-sidebar box_container"> <!-- // Statistics + toolbar -->
+							<div class="pull-left">
+									<h2>
+										<a>-</a>
+										<a>80</a>
+										<a>+</a>
+									</h2>
+							</div>
+							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
+								<a id="problem_edit_button" class="btn">
+									<i class="icon-pencil"></i> Editar
+								</a>
+								<a class="btn">
+									Agregar Imagen
+								</a>
 							<% end %>
-							- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
-						</span>
-					</div>
-					<div id="pci_problem_problem_container">
-						<div id="ckeditor_container">
-						<textfield id="pci_textfield"></textfield>
-						</div>
-						<a id="problem_finish_edit_button">
-							<div class="pci_button_classic">
-								Finalizar
+							<div>
+								<div class="">
+									<% if problem->is_anonymous %>
+										<img src="../img/anonymous_on.png">
+										Anónimo
+									<% else %>
+										<img src="" height="32" width="32">
+										<a href="<% url "/user" using problem->creator_user_name %>">
+											<h3><%= problem->creator_user_name %></h3>
+										</a>
+									<% end %>
+								</div>
 							</div>
-						</a>
-						<a id="problem_cancel_edit_button">
-							<div class="pci_button_classic">
-								Cancelar
-							</div>
-						</a>
-						<div class="pci_box_content" id="pci_problem_problem_content">
-							<%= problem->content %>
 						</div>
 					</div>
-					<div id="pci_problem_solution_container">
-						<% if problem->is_solved  %>
-							<div class="pci_box_description pci_problem_solution_description" style="background-color:#ABFFAB;">
-								<% include template_view::solution_description(problem, accepted_solution) %>
+					<div class="row-fluid margin-for-fixed-title">
+						<div class="span9"><!-- // Problem content -->
+							<div id="fixed_problem_content">
+								<div id="ckeditor_container">
+									<textfield id="textfield"></textfield>
+								</div>
+								<a id="problem_finish_edit_button" class="pull-right btn btn-primary">Finalizar</a>
+								<a id="problem_cancel_edit_button" class="pull-right btn">Cancelar</a>
+								
+								<div id="problem_problem_content">
+									<%= problem->content %>
+								</div>
 							</div>
-						<% end %>
-						<% foreach solution in *solutions %>
-		 					<% item %>
-		 						<% if (!content.problem->is_solved || solution->id.compare(content.accepted_solution->id) != 0) %>
-									<div class="pci_box_description pci_problem_solution_description">
-										<% include template_view::solution_description(problem, solution) %>
-									</div>
-								<% end %>
-		  					<% end %>
-						<% end %>
-					</div>
-					<% include template_view::clarifications(clarifications, problem) %>
+							<% include template_view::clarifications(clarifications, problem) %>
+						</div>
+						<div class="span3 fixed-right"> <!-- // Solutions sidebar -->
+								<ul class="nav">
+									<li>
+										<% if user_signed_in %>
+											<% include template_view::toolbar_problem(problem->id) %>
+										<% end %>
+									</li>
+									<li>
+										<% if problem->is_solved  %>
+											<div class="box_description problem_solution_description" style="background-color:#ABFFAB;">
+												<% include template_view::solution_description(problem, accepted_solution) %>
+											</div>
+										<% end %>
+									</li>
+									<li>
+										<% foreach solution in *solutions %>
+						 					<% item %>
+						 						<% if (!content.problem->is_solved || solution->id.compare(content.accepted_solution->id) != 0) %>
+													<div class="box_description problem_solution_description">
+														<% include template_view::solution_description(problem, solution) %>
+													</div>
+												<% end %>
+						  					<% end %>
+										<% end %>
+
+									</li>
+								</ul>
+						</div>
+						</div>
+					
 				</div>
 			</div>
 		<% end template %>

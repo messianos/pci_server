@@ -31,7 +31,7 @@
 		<% end template %>
 		
 		<% template sign_out_form() %>
-			<a class="btn pull-right" id="sign_out_button">Salir</a>
+			<button class="btn pull-right" id="sign_out_button">Salir</button>
 			<script>
 				$('#sign_out_button').click(function() {
 					var on_success = onSuccessSignOut();
@@ -42,14 +42,14 @@
 		<% end template %>
 		
 		<% template toggle_anonymous_mode_form(bool anonymous_mode) %>
-			<a class="btn pull-right" id="toggle_anonymous_mode_button">
-				<% if anonymous_mode %>
-					Modo anónimo activado
-				<% else %>
-					Modo anónimo desactivado
-				<% end %>
+			<a class="pull-right <% if anonymous_mode %>on<% end %>"
+				id="toggle_anonymous_mode_button" data-toggle="tooltip"
+				data-original-title="Modo anónimo <% if anonymous_mode %>activado<% else %>desactivado<% end %>"
+				data-placement="bottom"
+				data-container="body">
 			</a>
 			<script>
+				$('#toggle_anonymous_mode_button').tooltip();
 				$('#toggle_anonymous_mode_button').click(function() {
 					var on_success = onSuccessToggleAnonymousMode($(this));
 					var on_failure = onFailureToggleAnonymousMode()
@@ -312,40 +312,40 @@
 
 		<% template clarifications(ClarificationList clarifications, PublicationPointer publication) %>
 			<% if (! clarifications->empty()) %>
-				<div id="pci_clarifications_main_container">
-					<div class="pci_horizontal_line"></div>
-					<div class="pci_clarifications_row_container">
-						<div class="pci_clarifications_question_container">
-							<div class="pci_clarifications_column_header pci_clarifications_question_content">
+				<div id="clarifications_main_container">
+					<div class="horizontal_line"></div>
+					<div class="clarifications_row_container">
+						<div class="clarifications_question_container">
+							<div class="clarifications_column_header clarifications_question_content">
 								Pregunta
 							</div>
 						</div>
-						<div class="pci_clarifications_answer_container">
-							<div class="pci_clarifications_answer_content pci_clarifications_column_header">
+						<div class="clarifications_answer_container">
+							<div class="clarifications_answer_content clarifications_column_header">
 								Respuesta
 							</div>
 						</div>
 					</div>
 					<% foreach clarification in *clarifications %>
 	 					<% item %>
-							<div class="pci_clarifications_row_container">
-								<div class="pci_clarifications_question_container">
-									<div class="pci_box_content pci_clarifications_question_content">
-										<span class="pci_text_clarification">
+							<div class="clarifications_row_container">
+								<div class="clarifications_question_container">
+									<div class="box_content clarifications_question_content">
+										<span class="text_clarification">
 											<%= clarification->question %>
 										</span>
 									</div>
 								</div>
-								<div class="pci_clarifications_answer_container">
+								<div class="clarifications_answer_container">
 									<% if (! clarification->answer.empty()) %>
-										<div class="pci_box_content pci_clarifications_answer_content">
-											<span class="pci_text_clarification">
+										<div class="box_content clarifications_answer_content">
+											<span class="text_clarification">
 												<%= clarification->answer %>
 											</span>
 										</div>
 									<% else %>
 										<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
-											<div class="pci_clarifications_answer_content">
+											<div class="clarifications_answer_content">
 												<% include answer_clarification_form(clarification->id) %>
 											</div>
 										<% end %>
@@ -361,21 +361,58 @@
 			<% end %>
 		<% end template %>
 
-
 		<% template header_bar() %>
-			<div id="pci_header_bar_main_container">
-				<div id="pci_header_bar_central_container">
-					<div id="pci_header_bar_logo_container">
-						<a href="<% url "/" %>" >
-							<div id="pci_header_bar_logo"></div>
+			<div class="navbar navbar-inverse navbar-fixed-top">
+		    	<div class="navbar-inner">
+		        	<div class="container-fluid">
+						<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
+						<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
 						</a>
-					</div>
-					<div id="pci_header_bar_sign_container">
+						<div class="nav-collapse collapse">
+					 		<ul class="nav pull-right">
+					 			<li>
+									<form class="navbar-search pull-right" action="">
+			                      		<input type="text" class="search-query span2" placeholder="Buscar">
+			                    	</form>
+	                    		</li>
+							 	<% if user_signed_in %>
+							      	<li><% include toggle_anonymous_mode_form(anonymous_mode) %></li>
+									<li>
+								 		<a id="header_bar_user_name" href="<% url "/user" using user_name %>">
+								 			<%= user_first_name %> <%= user_last_name %>
+							 			</a>
+						 			</li>
+									<li><% include sign_out_form() %></li>		 		
+								<% else %>
+									<li>									
+										<button class="btn pull-right" id="header_bar_button_sign_in">
+											Ingresar
+										</button>
+										<div id="header_bar_sign_in_container">
+											<% include sign_in_form() %>
+										</div>
+									</li>
+								<% end %>
+							</ul>
+			          	</div><!--/.nav-collapse -->
+		        	</div>
+		     	</div>
+		    </div>
+		<% end template %>
+
+		<% template old_header_bar() %>
+			<div id="header_bar_main_container">
+					<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
+					<div id="header_bar_sign_container">
 					 	<% if user_signed_in %>
 							<% include sign_out_form() %>
-					 		<div id="pci_header_bar_user_name_container">
+					 		<div id="header_bar_user_name_container">
 								<a href="<% url "/user" using user_name %>">
-						 			<span id="pci_header_bar_user_name">
+						 			<span id="header_bar_user_name">
 						 				<%= user_first_name %> <%= user_last_name %>
 						 			</span>
 					 			</a>
@@ -383,11 +420,11 @@
 					 		<% include toggle_anonymous_mode_form(anonymous_mode) %>
 						<% else %>
 							<a>
-								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
+								<div class="button_classic header_bar_button" id="header_bar_button_sign_in">
 									Ingresar
 								</div>
 							</a>
-							<div id="pci_header_bar_sign_in_container">
+							<div id="header_bar_sign_in_container">
 								<% include sign_in_form() %>
 							</div>
 						<% end %>
@@ -397,74 +434,74 @@
 		<% end template %>
 	
 		<% template information_footer() %>
-			<div id="pci_information_footer_main_container">
-				<div id="pci_information_footer_central_container">
-					<div id="pci_information_footer_logo_extended_container">
-						<div id="pci_information_footer_logo_extended"></div>
+			<div id="information_footer_main_container">
+				<div id="information_footer_central_container">
+					<div id="information_footer_logo_extended_container">
+						<div id="information_footer_logo_extended"></div>
 					</div>
-					<div id="pci_information_footer_link_container">
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								<span class="pci_text_footer">
+					<div id="information_footer_link_container">
+						<div class="information_footer_column_container">
+							<div class="information_footer_column_header">
+								<span class="text_footer">
 									PCI
 								</span>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Acerca de
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Filosofía
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
 						</div>
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								<span class="pci_text_footer">
+						<div class="information_footer_column_container">
+							<div class="information_footer_column_header">
+								<span class="text_footer">
 									Header 2
 								</span>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 1
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 2
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
 						</div>
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								<span class="pci_text_footer">
+						<div class="information_footer_column_container">
+							<div class="information_footer_column_header">
+								<span class="text_footer">
 									Soporte
 								</span>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Ayuda
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Condiciones de servicio
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Copyright
 								</a>
 							</div>
@@ -476,33 +513,30 @@
 
 
 		<% template navigation_menu() %>
-			<div id="pci_navigation_menu_main_container">
-				<a href="<% url "/problems" %>">
-					<div class="pci_button_square pci_navigation_menu_button" id="pci_navigation_menu_problems_button">
-						Problemas
-					</div>
-				</a>
-				<a href="<% url "/ideas" %>">
-					<div class="pci_button_square pci_navigation_menu_button" id="pci_navigation_menu_ideas_button">
-						Ideas
-					</div>
-				</a>
-				<% if user_signed_in %>
-					<div class="pci_horizontal_line" ></div>
-					<a href="<% url "/user" using user_name %>">
-						<div class="pci_button_square pci_navigation_menu_button" id="pci_navigation_menu_profile_button">
+		<div class="sidebar-nav pull-left" id="navigation_menu">
+            <ul class="nav nav-list">
+              <li><a class="button_square navigation_menu_button" id="navigation_menu_problems_button"
+              		href="<% url "/problems" %>">Problemas</a></li>
+              <li><a class="button_square navigation_menu_button" id="navigation_menu_ideas_button"
+              		 href="<% url "/ideas" %>">Ideas</a></li>
+              <% if user_signed_in %>
+					<li><div class="horizontal_line" ></div></li>
+					<li>
+						<a class="button_square navigation_menu_button" id="navigation_menu_profile_button"
+							href="<% url "/user" using user_name %>">
 							Perfil
-						</div>
-					</a>
+						</a>
+					</li>
 				<% end %>
-			</div>
+            </ul>
+          </div>
 		<% end template %>
 		
 		<% template problem_description(ProblemPointer problem) %>
-			<div class="pci_box_container pci_problems_problem_description">
+			<div class="problems_problem_description">
 				<div class="row-fluid">
 					<div class="span2">
-						<div class="row-fluid pci_problems_votes"> <!-- Votes & Answers -->
+						<div class="row-fluid problems_votes"> <!-- Votes & Answers -->
 							<div class="span6">
 								<div class="number">125</div>
 								<div>Votos</div>
@@ -515,14 +549,14 @@
 					</div>
 					<div class="span9">
 						<div class="row-fluid">				
-							<a class="pci_link_description" href="<% url "/publication" using problem->id %>">
+							<a class="link_description" href="<% url "/publication" using problem->id %>">
 								<%= problem->description %>
 							</a>
-							<span class="pci_text_description">
+							<span class="text_description">
 								<% if problem->is_anonymous %>
 									<i>Publicado anónimamente</i>
 								<% else %>
-									<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+									<i>Por <a class="link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
 								<% end %>
 								- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 							</span>
@@ -538,29 +572,29 @@
 		<% end template %>
 		
 		<% template publication_description(PublicationPointer publication) %>
-			<a class="pci_link_description" href="<% url "/publication" using publication->id %>">
+			<a class="link_description" href="<% url "/publication" using publication->id %>">
 				<%= publication->description %>
 			</a>
-			<span class="pci_text_description">
+			<span class="text_description">
 				<% if publication->is_anonymous %>
 					<i>Publicado anónimamente</i>
 				<% else %>
-					<i>Por <a class="pci_link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
+					<i>Por <a class="link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
 				<% end %>
 				- <%= publication->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
 		<% end template %>		
 		
 		<% template solution_description(ProblemPointer problem, SolutionPointer solution) %>
-			<a class="pci_link_description" href="<% url "/publication" using problem->id, solution->id %>">
+			<a class="link_description" href="<% url "/publication" using problem->id, solution->id %>">
 				<%= solution->description %>
 			</a>
-			<span class="pci_text_description">
+			<span class="text_description">
 				<% if solution->is_anonymous %>
 					<i>Publicado anónimamente</i>
 				<% else %>
 					<i>Por 
-						<a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>">
+						<a class="link_user_name" href="<% url "/user" using solution->creator_user_name %>">
 							<%= solution->creator_user_name %>
 						</a>
 					</i>
@@ -571,20 +605,19 @@
 		
 		
 		<% template toolbar_problems() %>
-			<div id="pci_toolbar_problems_container">
-				<a href="<% url "/new_problem" %>">
-					<div class="pci_button_icon pci_toolbar_problems_button" id="pci_toolbar_problems_new_problem_button">
-						Nuevo problema
-					</div>
+			<div id="toolbar_problems_container">
+				<a class="button_icon toolbar_problems_button" id="toolbar_problems_new_problem_button"
+					href="<% url "/new_problem" %>">
+					Nuevo problema
 				</a>
 			</div>
 		<% end template %>
 		
 		
 		<% template toolbar_problem(std::string problem_id) %>
-			<div id="pci_toolbar_problem_container">
+			<div id="toolbar_problem_container">
 				<a href="<% url "/new_solution" using problem_id %>">
-					<div class="pci_button_icon pci_toolbar_problem_button" id="pci_toolbar_problem_new_solution_button">
+					<div class="button_icon toolbar_problem_button" id="toolbar_problem_new_solution_button">
 						Plantear solución
 					</div>
 				</a>
@@ -593,9 +626,9 @@
 		
 		
 		<% template toolbar_solution(std::string problem_id) %>
-			<div id="pci_toolbar_solution_container">
+			<div id="toolbar_solution_container">
 				<a href="<% url "/publication" using problem_id %>">
-					<div class="pci_button_icon pci_toolbar_solution_button" id="pci_toolbar_solution_go_back_button">
+					<div class="button_icon toolbar_solution_button" id="toolbar_solution_go_back_button">
 						Volver al problema
 					</div>
 				</a>
@@ -604,8 +637,9 @@
 
 
 		<% template css_links() %>
-			<link href="/css/template.css" rel="stylesheet" type="text/css" />
     		<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    		<link href="/lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
+			<link href="/css/template.css" rel="stylesheet" type="text/css" />
     		<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 
@@ -627,9 +661,9 @@
 		<% template javascript_code() %>
 			<script>
 				$(document).ready(function() {
-					configureTextfield('pci_sign_in_textfield_user_name');
-					configurePasswordfield('pci_sign_in_textfield_password');
-					configureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');
+					configureTextfield('sign_in_textfield_user_name');
+					configurePasswordfield('sign_in_textfield_password');
+					configureSignInFormContainer('header_bar_sign_in_container', 'header_bar_button_sign_in');
 				});
 			</script>
 		<% end template %>
