@@ -103,9 +103,9 @@ CREATE TABLE IF NOT EXISTS Problem (
  
  
 CREATE TABLE IF NOT EXISTS Proposal (
+        content MEDIUMTEXT CHARACTER SET utf8,
         creation_datetime TIMESTAMP,
         creator_user_name VARCHAR(31),
-        content MEDIUMTEXT CHARACTER SET utf8,
         id BINARY(17),
         is_anonymous BOOLEAN,
         last_edition_datetime TIMESTAMP,

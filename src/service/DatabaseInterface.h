@@ -7,6 +7,7 @@
 #include "../entity/Clarification.h"
 #include "../entity/Problem.h"
 #include "../entity/Solution.h"
+#include "../entity/Proposal.h"
 #include "../entity/User.h"
 #include <cppdb/frontend.h>
 #include <ctime>
@@ -27,6 +28,10 @@ public:
 	static User *searchUser(std::string user_name);
 	static bool signInUser(std::string user_name, std::string encrypted_password);
 	static ErrorCode *signUpUser(User *user, std::string encrypted_password);
+	static User *searchUserByProblem(std::string problem_id);
+	static User *searchUserBySolution(std::string solution_id);
+	static User *searchUserByProposal(std::string proposal_id);
+	static User *searchUserByClarification(std::string clarification_id);
 
 	/*
 	 * Problem operations
@@ -39,6 +44,7 @@ public:
 	static std::list<Problem *> *searchProblemsLatest(int amount);
 	static std::list<Problem *> *searchProblemsNoSolutions(int amount);
 	static std::list<Problem *> *searchProblemsMostVoted(int amount);
+	static Problem *searchProblemByAcceptedSolution(std::string solution_id);
 
 	static ErrorCode *insertProblem(Problem *problem);
 	static ErrorCode *deleteProblem(std::string id);
@@ -51,8 +57,20 @@ public:
 	static Solution *searchAcceptedSolution(std::string problem_id);
 	static std::list<Solution *> *searchSolutions(std::string problem_id);
 	static std::list<Solution *> *searchSolutionsByUser(std::string user_name);
+
+
 	static ErrorCode *insertSolution(Solution *solution, std::string problem_id);
 	static ErrorCode *deleteSolution(std::string id);
+
+
+	/*
+	 * Proposal operations
+	 */
+	static Proposal *searchProposal(std::string id);
+	static std::list<Proposal *> *searchProposals(std::string solution_id);
+	static std::list<Proposal *> *searchProposalsByUser(std::string user_name);
+	static ErrorCode *insertProposal(Proposal *proposal, std::string solution_id);
+	static ErrorCode *deleteProposal(std::string id);
 
 	/*
 	 * Clarification operations
@@ -76,6 +94,7 @@ public:
 	static Clarification* fetchClarification(cppdb::result result);
 	static Problem* fetchProblem(cppdb::result result);
 	static Solution* fetchSolution(cppdb::result result);
+	static Proposal* fetchProposal(cppdb::result result);
 	static User* fetchUser(cppdb::result result);
 
 };
