@@ -1,5 +1,5 @@
 
-<% c++ #include "logic/ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view user_view uses ViewContent::UserContent extends template_view %>
@@ -26,7 +26,7 @@
 			
 			<div class="container-fluid">
 				<% include template_view::navigation_menu() %>
-				<div class="box_container">
+				<div class="main-container">
 					<div id="column_1">
 						<div id="content_wrapper">
 							<div id="title_container">

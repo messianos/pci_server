@@ -328,12 +328,13 @@ void Server::postVoteProblem() {
 
 			ErrorCode *error_code;
 			error_code = InputValidator::validateVoteProblemInput(is_positive, problem_id);
+
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {
 				bool is_positive_boolean = is_positive.compare("true") == 0;
 
-				//error_code = DatabaseInterface::voteProblem(problem_id, user_name, is_positive_boolean); FIXME----> NEED THE METHOD
+				error_code = DatabaseInterface::voteProblem(problem_id, user_name, is_positive_boolean);
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
@@ -371,7 +372,7 @@ void Server::postSetAcceptedSolution() {
 				if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
 					response().status(http::response::forbidden);
 				else {
-					//error_code = DatabaseInterface::setAcceptedSolution(problem_id, solution_id); TODO --> NEED THIS METHOD
+					error_code = DatabaseInterface::setAcceptedSolution(problem_id, solution_id);
 					if (error_code->isAnError())
 						response().status(http::response::internal_server_error, error_code->getErrorDescription());
 					else

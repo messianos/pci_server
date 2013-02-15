@@ -1,5 +1,5 @@
 
-<% c++ #include "logic/ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view problem_view uses ViewContent::ProblemContent extends template_view %>
@@ -63,66 +63,41 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div class="container-fluid central_container">
+			<div class="container-fluid">
 				<% include template_view::navigation_menu() %>
-				<div class="fixed_box_container">
-					<div class="row-fluid fixed-right">
-						<div class="span9"> <!-- // Problem header -->
-							<div id="problem_header_container">
-								<h2><%= problem->description %></h2>
+				<div class="main-container">
+						<div class="fixed-title-wrapper">
+							<% include votes_panel() %>
+							<div class="title-container">
+								<div class="title"><%= problem->description %></div>
 								<span class="text_description">
 									Creado el <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 								</span>
 							</div>
-						</div>
-						<div class="span3 fixed-right-sidebar box_container"> <!-- // Statistics + toolbar -->
-							<div class="pull-left">
-									<h2>
-										<a>-</a>
-										<a>80</a>
-										<a>+</a>
-									</h2>
-							</div>
-							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-								<a id="problem_edit_button" class="btn">
-									<i class="icon-pencil"></i> Editar
-								</a>
-								<a class="btn">
-									Agregar Imagen
-								</a>
-							<% end %>
-							<div>
-								<div class="">
-									<% if problem->is_anonymous %>
-										<img src="../img/anonymous_on.png">
-										Anónimo
-									<% else %>
-										<img src="" height="32" width="32">
+							<div class="statistics">
+								<% if problem->is_anonymous %>
+									<img src="../img/anonymous_on.png">
+									Anónimo
+								<% else %>
+									<div class="user_image_name">
 										<a href="<% url "/user" using problem->creator_user_name %>">
 											<h3><%= problem->creator_user_name %></h3>
 										</a>
-									<% end %>
-								</div>
+									</div>
+								<% end %>
+								<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
+									<a id="problem_edit_button" class="btn">
+										<i class="icon-pencil"></i> Editar
+									</a>
+									<a class="btn">
+										Agregar Imagen
+									</a>
+								<% end %>
 							</div>
 						</div>
-					</div>
-					<div class="row-fluid margin-for-fixed-title">
-						<div class="span9"><!-- // Problem content -->
-							<div id="fixed_problem_content">
-								<div id="ckeditor_container">
-									<textfield id="textfield"></textfield>
-								</div>
-								<a id="problem_finish_edit_button" class="pull-right btn btn-primary">Finalizar</a>
-								<a id="problem_cancel_edit_button" class="pull-right btn">Cancelar</a>
-								
-								<div id="problem_problem_content">
-									<%= problem->content %>
-								</div>
-							</div>
-							<% include template_view::clarifications(clarifications, problem) %>
-						</div>
-						<div class="span3 fixed-right"> <!-- // Solutions sidebar -->
-								<ul class="nav">
+						<div class="solution-sidebar">
+							<a onclick="animate()">Animar</a>
+							<ul class="nav">
 									<li>
 										<% if user_signed_in %>
 											<% include template_view::toolbar_problem(problem->id) %>
@@ -132,6 +107,12 @@
 										<% if problem->is_solved  %>
 											<div class="box_description problem_solution_description" style="background-color:#ABFFAB;">
 												<% include template_view::solution_description(problem, accepted_solution) %>
+												<div class="tick_on" id="accept_solution_button"></div>
+												<script type="text/javascript">
+													$("#accept_solution_button").click(function(){
+														// TODO: Call post when implemented
+													});
+												</script>
 											</div>
 										<% end %>
 									</li>
@@ -149,10 +130,68 @@
 									</li>
 								</ul>
 						</div>
+						<div class="problem-content">
+							<div id="problem">
+								<div id="ckeditor_container">
+									<textfield id="textfield"></textfield>
+								</div>
+								<a id="problem_finish_edit_button" class="pull-right btn btn-primary">Finalizar</a>
+								<a id="problem_cancel_edit_button" class="pull-right btn">Cancelar</a>
+								
+								<div id="problem_problem_content">
+									<%= problem->content %>
+								</div>
+								<% include template_view::clarifications(clarifications, problem) %>
+							</div>
 						</div>
-					
+						<script type="text/javascript">
+						function animate(){
+							$("#problem").animate({
+								opacity: "0",
+								queue: false
+							},function(){
+								$('#problem').toggle();
+							});
+							$('#solution').css('position','absolute');
+							$('#solution').css('left','1280px');
+							$('#solution').css('width',$("#problem").css('width'));
+							$('#solution').css('height',$("#problem").css('height'));
+							$('#solution').css('padding-top',$("#problem").css('padding-top'));
+							$('#solution').toggle();
+							$("#solution").animate({
+								left: "150px",
+								queue: false
+							},800, function(){
+								$('#solution').css('position','static');
+							});
+						}
+						</script>
+					</div>
 				</div>
+		<% end template %>
+		
+		<% template votes_panel() %>
+			<div class="votes_container">
+				<div class="vote_up" id="vote_up">+</div>
+				<div class="votes_number" id="votes_number"><%= problem->vote_balance %></div>
+				<div class="vote_down" id="vote_down">-</div>
 			</div>
+			<script type="text/javascript">
+				var success_callback = function(data){
+					var sign = data.is_positive ? 1 : -1;
+					$('#votes_number').html(parseInt($('#votes_number').html()) + sign);
+					alert('vote SUCCESSFUL');
+				};
+				var failure_callback = function(textStatus){
+					alert('vote FAILED ' + textStatus);
+				};
+				$("#vote_down").click(function(){
+					postVoteProblem(success_callback, failure_callback, false, '<%= problem->id %>');
+				});
+				$("#vote_up").click(function(){
+					postVoteProblem(success_callback, failure_callback, true, '<%= problem->id %>');
+				});
+			</script>
 		<% end template %>
 		
 	

@@ -1,5 +1,5 @@
 
-<% c++ #include "logic/ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view problems_view uses ViewContent::ProblemsContent extends template_view %>
@@ -23,10 +23,9 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div class="container-fluid central_container">
-				<div class="row-fluid">
+			<div class="container-fluid">
 				<% include template_view::navigation_menu() %>
-				<div class="box_container">
+				<div class="main-container">
 					<% if user_signed_in %>
 						<% include template_view::toolbar_problems() %>
 					<% end %>
@@ -65,7 +64,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
 			</div>
 		<% end template %>
 	

@@ -1,5 +1,5 @@
 
-<% c++ #include "logic/ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
@@ -538,11 +538,11 @@
 					<div class="span2">
 						<div class="row-fluid problems_votes"> <!-- Votes & Answers -->
 							<div class="span6">
-								<div class="number">125</div>
+								<div class="number"><%= problem->vote_balance %></div>
 								<div>Votos</div>
 							</div>
 							<div class="span6">
-								<div class="number">6</div>
+								<div class="number">N/A</div>
 								<div>Soluciones</div>
 							</div>
 						</div>
@@ -606,7 +606,7 @@
 		
 		<% template toolbar_problems() %>
 			<div id="toolbar_problems_container">
-				<a class="button_icon toolbar_problems_button" id="toolbar_problems_new_problem_button"
+				<a class="btn" id="toolbar_problems_new_problem_button"
 					href="<% url "/new_problem" %>">
 					Nuevo problema
 				</a>

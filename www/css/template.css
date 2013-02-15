@@ -23,11 +23,6 @@ div {
 	font-family:font_global;
 }
 
-body {
-	padding-top: 60px;
-	padding-bottom: 40px;
-}
-
 a, a:active, a:hover, a:visited {
 	cursor: pointer;
 	text-decoration:none;
@@ -444,12 +439,132 @@ div.problems_votes .number {
 	margin-bottom:8px;
 }
 
+/* NEW TOTALLY UNORDERED!! */
 
-.central_container{
-	margin-left:112px;
+.main-container{
+	margin-left: 112px;
+	padding: 64px 20px 20px 20px;
+
+	background-color:#FFFFFF;
+	border-color:#D0D0D0;
+	border-style:solid;
+	border-width:1px;
+	
+	box-shadow: 2px 0px 8px #333,
+		-2px 0px 8px #333;
+
+	border-bottom-style:none;
+}
+
+.fixed-title-wrapper{
+	position: fixed;
+	right:21px;
+	left:133px;
+	top: 48px;
+	padding-top: 10px;
+
+	background-color:#FFFFFF;
+	border-color:#D0D0D0;
+	/*border-style:solid;*/
+	border-width:1px;
+
+	height: 120px; /* same as stats box */
+}
+
+.title-container{
+	height: 120px;
+	float:left;
+	padding: 10px;
+}
+
+.statistics{
+	float:right;
+	width: 300px;
+	height: 120px;
+
+	background-color:#FFFFFF;
+	/*border: 1px solid gray;*/
+	border-radius: 3px;
+}
+
+.solution-sidebar{
+	position:fixed;
+	top: 170px; /* size of the title-container & stats box + top of them */
+	bottom:0;
+	right:20px;
+	width: 300px;
+	/*border: 1px solid gray;*/
+	border-radius: 3px;
 }
 
 
+.problem-content{
+	padding-top: 140px; /* fixed bar height + internal padding */
+	padding-right: 320px; /* stats width */
+	padding-left: 30px;
+	padding-bottom: 10px;
+
+	min-height: 100%;
+}
+
+/* Votes */
+.votes_container{
+	float:left;
+	width: 60px;
+	text-align: center;
+	margin: 5px 10px;
+	cursor: pointer;
+}
+.vote_up{
+	height: 30px;
+	text-shadow: 0 0 2px gray;
+	font-size: 50px;
+	padding: 3px;
+
+	color: green;
+}
+.vote_up:hover{
+	text-shadow: 0 0 8px green;
+}
+.vote_down{
+	height: 30px;
+	text-shadow: 0 0 2px gray;
+	font-size: 70px;
+	padding: 3px;
+
+	color: red;
+}
+.vote_down:hover{
+	text-shadow: 0 0 8px red;
+}
+.votes_number{
+	height: 30px;
+
+	line-height: 30px;
+	font-size: 30px;
+	font-weight: bold;
+	padding: 3px;
+}
+
+/* user stats */
+.user_image_name{
+
+	background: url('../img/anonymous_on.png'); /* translate! */
+	background-repeat: no-repeat;
+	background-position: left center;
+
+	background-color: black;
+	padding-left: 40px;
+	width: 200px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.title{
+	font-size: 30px;
+	line-height: 30px;
+	max-width: 750px;
+}
 /*
 ----------------------------------------------------------------------------------------------
 	Clarifications
@@ -559,7 +674,11 @@ div.header_bar_button {
 	float:right;
 	margin-top:-10px;
 	padding:8px;
+	position: fixed;
+	top: 45px;
+	right: 20px;
 }
+
 #toggle_anonymous_mode_button{
 	display:block;
 	background-image:url('../img/anonymous_off.png');

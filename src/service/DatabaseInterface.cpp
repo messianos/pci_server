@@ -68,30 +68,25 @@ const string user_attributes = ""
 // TODO: Define share mode on SELECT statements
 
 bool DatabaseInterface::signInUser(string user_name, string encrypted_password) {
-    string query;
+	string query;
 
-    query =
-    "   CALL sign_in_user("
-    "       ?,"
-    "       ?,"
-    "       @out_success"
-    "   )";
+	query = "   CALL sign_in_user("
+			"       ?,"
+			"       ?,"
+			"       @out_success"
+			"   )";
 
-    database_handler
-        << query
-        << user_name
-        << encrypted_password
-        << exec;
+	database_handler << query << user_name << encrypted_password << exec;
 
-    query = "SELECT @out_success";
+	query = "SELECT @out_success";
 
-    result result = database_handler << query;
-    result.next();
+	result result = database_handler << query;
+	result.next();
 
-    short int sign_in_success;
-    result.fetch("@out_success", sign_in_success);
+	short int sign_in_success;
+	result.fetch("@out_success", sign_in_success);
 
-    return sign_in_success;
+	return sign_in_success;
 }
 
 // FIXME: This may return success or fail
@@ -107,9 +102,9 @@ ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) 
 			"		?"
 			"	)";
 	// FIXME: In all methods
-	try{
-	database_handler << query << user->birth_date->toString("%Y-%m-%d") << user->email << user->first_name
-			<< user->genre << user->last_name << user->location << user->user_name << encrypted_password << exec;
+	try {
+		database_handler << query << user->birth_date->toString("%Y-%m-%d") << user->email << user->first_name
+				<< user->genre << user->last_name << user->location << user->user_name << encrypted_password << exec;
 	} catch (std::exception const &e) {
 		std::cerr << "ERROR: " << e.what() << " in signUp" << endl;
 		return new ErrorCode(ErrorCode::CODE_INVALID_GENRE);
@@ -166,9 +161,7 @@ Solution *DatabaseInterface::searchSolution(string id) {
 	return fetchSolution(result);
 }
 
-
-
-Proposal *DatabaseInterface::searchProposal(string id){
+Proposal *DatabaseInterface::searchProposal(string id) {
 	stringstream query;
 	query << "	SELECT" << proposal_attributes << "	FROM Proposal"
 			"	WHERE id = UNHEX(?)"
@@ -182,8 +175,6 @@ Proposal *DatabaseInterface::searchProposal(string id){
 
 	return fetchProposal(result);
 }
-
-
 
 User *DatabaseInterface::searchUser(string user_name) {
 	stringstream query;
@@ -201,7 +192,7 @@ User *DatabaseInterface::searchUser(string user_name) {
 	return fetchUser(result);
 }
 
-User *DatabaseInterface::searchUserByProblem(std::string problem_id){
+User *DatabaseInterface::searchUserByProblem(std::string problem_id) {
 	stringstream query;
 
 	query << "	SELECT"
@@ -232,7 +223,7 @@ User *DatabaseInterface::searchUserByProblem(std::string problem_id){
 
 }
 
-User *DatabaseInterface::searchUserBySolution(std::string solution_id){
+User *DatabaseInterface::searchUserBySolution(std::string solution_id) {
 	stringstream query;
 
 	query << "	SELECT"
@@ -263,67 +254,65 @@ User *DatabaseInterface::searchUserBySolution(std::string solution_id){
 
 }
 
-User *DatabaseInterface::searchUserByProposal(std::string proposal_id){
+User *DatabaseInterface::searchUserByProposal(std::string proposal_id) {
 	stringstream query;
 
-		query << "	SELECT"
-				"	User.birth_date AS	birth_date,"
-				"	User.email AS email,"
-				"	User.first_name AS first_name,"
-				"	User.genre AS genre,"
-				"	User.last_name AS last_name,"
-				"	User.location AS location,"
-				"	User.preferences AS preferences,"
-				"	User.profile_content AS profile_content,"
-				"	User.profile_picture_url AS profile_picture_url,"
-				"	User.rank AS rank,"
-				"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-				"	User.user_name AS user_name"
-				"	FROM User JOIN Proposal"
-				"   ON Proposal.creator_user_name = User.user_name "
-				"	WHERE Proposal.id = UNHEX(?) "
-				"	LIMIT 1";
+	query << "	SELECT"
+			"	User.birth_date AS	birth_date,"
+			"	User.email AS email,"
+			"	User.first_name AS first_name,"
+			"	User.genre AS genre,"
+			"	User.last_name AS last_name,"
+			"	User.location AS location,"
+			"	User.preferences AS preferences,"
+			"	User.profile_content AS profile_content,"
+			"	User.profile_picture_url AS profile_picture_url,"
+			"	User.rank AS rank,"
+			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
+			"	User.user_name AS user_name"
+			"	FROM User JOIN Proposal"
+			"   ON Proposal.creator_user_name = User.user_name "
+			"	WHERE Proposal.id = UNHEX(?) "
+			"	LIMIT 1";
 
-		result result = database_handler << query.str() << proposal_id;
+	result result = database_handler << query.str() << proposal_id;
 
-		if (!result.next())
-			// problem not found
-			return NULL;
+	if (!result.next())
+		// problem not found
+		return NULL;
 
-		return fetchUser(result);
+	return fetchUser(result);
 }
 
-
-User *DatabaseInterface::searchUserByClarification(std::string clarification_id){
+User *DatabaseInterface::searchUserByClarification(std::string clarification_id) {
 	stringstream query;
 
-		query << "	SELECT"
-				"	User.birth_date AS	birth_date,"
-				"	User.email AS email,"
-				"	User.first_name AS first_name,"
-				"	User.genre AS genre,"
-				"	User.last_name AS last_name,"
-				"	User.location AS location,"
-				"	User.preferences AS preferences,"
-				"	User.profile_content AS profile_content,"
-				"	User.profile_picture_url AS profile_picture_url,"
-				"	User.rank AS rank,"
-				"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-				"	User.user_name AS user_name"
-				"	FROM User JOIN Clarification"
-				"   ON Clarification.creator_user_name = User.user_name "
-				"	WHERE Clarification.id = UNHEX(?) "
-				"	LIMIT 1";
+	query << "	SELECT"
+			"	User.birth_date AS	birth_date,"
+			"	User.email AS email,"
+			"	User.first_name AS first_name,"
+			"	User.genre AS genre,"
+			"	User.last_name AS last_name,"
+			"	User.location AS location,"
+			"	User.preferences AS preferences,"
+			"	User.profile_content AS profile_content,"
+			"	User.profile_picture_url AS profile_picture_url,"
+			"	User.rank AS rank,"
+			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
+			"	User.user_name AS user_name"
+			"	FROM User JOIN Clarification"
+			"   ON Clarification.creator_user_name = User.user_name "
+			"	WHERE Clarification.id = UNHEX(?) "
+			"	LIMIT 1";
 
-		result result = database_handler << query.str() << clarification_id;
+	result result = database_handler << query.str() << clarification_id;
 
-		if (!result.next())
-			// problem not found
-			return NULL;
+	if (!result.next())
+		// problem not found
+		return NULL;
 
-		return fetchUser(result);
+	return fetchUser(result);
 }
-
 
 list<Problem *> *DatabaseInterface::searchProblems(/* TODO: define parameters */) {
 	// TODO
@@ -413,7 +402,7 @@ list<Problem *> *DatabaseInterface::searchProblemsUnsolved(int amount) {
 	return problem_list;
 }
 
-list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount){
+list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount) {
 	stringstream query;
 	query << "	SELECT" << problem_attributes << "	FROM Problem"
 			"	ORDER BY creation_datetime DESC"
@@ -436,27 +425,25 @@ list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount){
 	return problem_list;
 }
 
-
-
-Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id){
+Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id) {
 	string query = ""
-				"	SELECT"
-				"		Problem.content AS content,"
-				"		UNIX_TIMESTAMP(Problem.creation_datetime) AS creation_datetime,"
-				"		Problem.creator_user_name AS creator_user_name,"
-				"		Solution.description AS description,"
-				"		HEX(Problem.id) AS id,"
-				"		Problem.is_anonymous AS is_anonymous,"
-				"		Problem.is_solved AS is_solved"
-				"		UNIX_TIMESTAMP(Problem.last_edition_datetime) AS last_edition_datetime,"
-				"		Problem.vote_balance AS vote_balance"
-				"	FROM"
-				"		problem_solved"
-				"		JOIN"
-				"		Problem"
-				"	ON problem_solved.problem_id = Problem.id"
-				"	WHERE"
-				"		solution_id = UNHEX(?)";
+			"	SELECT"
+			"		Problem.content AS content,"
+			"		UNIX_TIMESTAMP(Problem.creation_datetime) AS creation_datetime,"
+			"		Problem.creator_user_name AS creator_user_name,"
+			"		Solution.description AS description,"
+			"		HEX(Problem.id) AS id,"
+			"		Problem.is_anonymous AS is_anonymous,"
+			"		Problem.is_solved AS is_solved"
+			"		UNIX_TIMESTAMP(Problem.last_edition_datetime) AS last_edition_datetime,"
+			"		Problem.vote_balance AS vote_balance"
+			"	FROM"
+			"		problem_solved"
+			"		JOIN"
+			"		Problem"
+			"	ON problem_solved.problem_id = Problem.id"
+			"	WHERE"
+			"		solution_id = UNHEX(?)";
 
 	result result = database_handler << query << solution_id;
 
@@ -466,8 +453,6 @@ Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id){
 
 	return fetchProblem(result);
 }
-
-
 
 ErrorCode * DatabaseInterface::insertProblem(Problem *problem) {
 	string query = "	CALL insert_problem("
@@ -570,42 +555,39 @@ ErrorCode * DatabaseInterface::deleteSolution(string id) {
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-
-list<Proposal *> *DatabaseInterface::searchProposals(string solution_id){
+list<Proposal *> *DatabaseInterface::searchProposals(string solution_id) {
 	string query = "	SELECT"
-				"		Proposal.content AS content,"
-				"		UNIX_TIMESTAMP(Proposal.creation_datetime) AS creation_datetime,"
-				"		Proposal.creator_user_name AS creator_user_name,"
-				"		HEX(Proposal.id) AS id,"
-				"		Proposal.is_anonymous AS is_anonymous,"
-				"		UNIX_TIMESTAMP(Proposal.last_edition_datetime) AS last_edition_datetime,"
-				"		Proposal.vote_balance"
-				"	FROM"
-				"		Solution"
-				"		JOIN"
-				"		solution_proposals"
-				"		JOIN"
-				"		Proposal"
-				"	ON"
-				"		Solution.id = solution_proposals.solution_id"
-				"		AND"
-				"		Proposal.id = solution_proposals.proposal_id"
-				"	WHERE Solution.id = UNHEX(?)";
+			"		Proposal.content AS content,"
+			"		UNIX_TIMESTAMP(Proposal.creation_datetime) AS creation_datetime,"
+			"		Proposal.creator_user_name AS creator_user_name,"
+			"		HEX(Proposal.id) AS id,"
+			"		Proposal.is_anonymous AS is_anonymous,"
+			"		UNIX_TIMESTAMP(Proposal.last_edition_datetime) AS last_edition_datetime,"
+			"		Proposal.vote_balance"
+			"	FROM"
+			"		Solution"
+			"		JOIN"
+			"		solution_proposals"
+			"		JOIN"
+			"		Proposal"
+			"	ON"
+			"		Solution.id = solution_proposals.solution_id"
+			"		AND"
+			"		Proposal.id = solution_proposals.proposal_id"
+			"	WHERE Solution.id = UNHEX(?)";
 
-		result result = database_handler << query << solution_id;
+	result result = database_handler << query << solution_id;
 
-		list<Proposal *> *proposal_list = new list<Proposal *>();
+	list<Proposal *> *proposal_list = new list<Proposal *>();
 
-		while (result.next()) {
-			proposal_list->push_back(fetchProposal(result));
-		}
+	while (result.next()) {
+		proposal_list->push_back(fetchProposal(result));
+	}
 
-		return proposal_list;
+	return proposal_list;
 }
 
-
-
-list<Proposal *> *DatabaseInterface::searchProposalsByUser(string user_name){
+list<Proposal *> *DatabaseInterface::searchProposalsByUser(string user_name) {
 
 	stringstream query;
 	query << "	SELECT" << proposal_attributes << "	FROM Proposal"
@@ -622,33 +604,29 @@ list<Proposal *> *DatabaseInterface::searchProposalsByUser(string user_name){
 	return proposal_list;
 }
 
-
-ErrorCode *DatabaseInterface::insertProposal(Proposal *proposal, string solution_id){
+ErrorCode *DatabaseInterface::insertProposal(Proposal *proposal, string solution_id) {
 	string query = "	CALL insert_proposal("
-				"		?,"
-				"		?,"
-				"		?,"
-				"		?,"
-				"		?"
-				"	)";
+			"		?,"
+			"		?,"
+			"		?,"
+			"		?,"
+			"		?"
+			"	)";
 
-		database_handler << query << solution_id << proposal->content << proposal->creator_user_name
-				<< proposal->id << proposal->is_anonymous << exec;
+	database_handler << query << solution_id << proposal->content << proposal->creator_user_name << proposal->id
+			<< proposal->is_anonymous << exec;
 
-		// TODO
-		return new ErrorCode(ErrorCode::CODE_NONE);
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-
-ErrorCode *DatabaseInterface::deleteProposal(string id){
+ErrorCode *DatabaseInterface::deleteProposal(string id) {
 	string query = "CALL delete_proposal(?)";
 	database_handler << query << id << exec;
 
 	// TODO
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
-
-
 
 list<Clarification *> *DatabaseInterface::searchClarifications(string associated_publication_id) {
 
@@ -865,7 +843,7 @@ Solution* DatabaseInterface::fetchSolution(result result) {
 	return solution;
 }
 
-Proposal *DatabaseInterface::fetchProposal (result result){
+Proposal *DatabaseInterface::fetchProposal(result result) {
 	Proposal *proposal = new Proposal();
 	try {
 		time_t timestamp;
@@ -888,6 +866,31 @@ Proposal *DatabaseInterface::fetchProposal (result result){
 	}
 
 	return proposal;
+}
+
+ErrorCode* DatabaseInterface::voteProblem(std::string problem_id, std::string user_name, bool is_positive) {
+	string query = "	CALL vote_problem("
+			"		?,"
+			"		?,"
+			"		?"
+			"	)";
+
+	database_handler << query << problem_id << user_name << is_positive << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+ErrorCode* DatabaseInterface::setAcceptedSolution(std::string problem_id, std::string solution_id) {
+	string query = "	CALL set_accepted_solution("
+			"		?,"
+			"		?"
+			"	)";
+
+	database_handler << query << problem_id << solution_id << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 User* DatabaseInterface::fetchUser(result result) {

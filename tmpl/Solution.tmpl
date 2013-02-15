@@ -1,5 +1,5 @@
 
-<% c++ #include "logic/ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view solution_view uses ViewContent::SolutionContent extends template_view %>
@@ -32,7 +32,7 @@
 			<% include template_view::header_bar() %>
 			<div class="container-fluid">
 				<% include template_view::navigation_menu() %>
-				<div class="box_container">
+				<div class="main-container">
 					<% include template_view::toolbar_solution(problem_id) %>
 					<div class="horizontal_line"></div>
 					<div id="solution_header_container">

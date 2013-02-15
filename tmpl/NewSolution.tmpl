@@ -1,5 +1,5 @@
 
-<% c++ #include "logic/ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view new_solution_view uses ViewContent::NewSolutionContent extends template_view %>
@@ -31,7 +31,7 @@
 			<% include template_view::header_bar() %>
 			<div class="container-fluid">
 				<% include template_view::navigation_menu() %>
-				<div class="box_container">
+				<div class="main-container">
 					<% include create_solution_form(problem_id) %>
 				</div>
 			</div>

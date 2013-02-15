@@ -563,7 +563,7 @@ BEGIN
         START TRANSACTION;
         SELECT count(*)
                 FROM problem_votes
-                WHERE id = v_id_binary
+                WHERE problem_id = v_id_binary
                 LIMIT 1
                 INTO v_vote_balance;
        
