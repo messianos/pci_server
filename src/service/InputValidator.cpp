@@ -19,7 +19,30 @@ bool InputValidator::isValidBirthDate(string birth_date) {
 	int month = date->getMonth();
 	int year = date->getYear();
 
-	// TODO: validate date
+	if (day < 1 || day > 31)
+		return false;
+
+	if (month < 1 || month > 12)
+		return false;
+
+	// TODO: Perhaps check year boundaries
+
+	switch (month) {
+		case 2 : {
+			if ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0))) {
+				if (day > 29) return false;
+			} else {
+				if (day > 28) return false;
+			}
+
+			break;
+		}
+		case 4 :
+		case 6 :
+		case 9 :
+		case 11 : if (day == 31) return false;
+	}
+
 	return true;
 }
 

@@ -27,11 +27,13 @@ private:
 	bool getRequestReceived();
 	bool postRequestReceived();
 	std::string postRequestData(std::string name);
+	void renderError404Page();
 	void setSessionProperties(ViewContent::TemplateContent &content);
 
 public:
 	Server(cppcms::service &service);
 	virtual ~Server();
+	void main(std::string url);
 	void debug(); // TODO: remove this (debugging purposes)
 	void postSignIn();
 	void postSignOut();

@@ -19,6 +19,16 @@ string Server::postRequestData(string name) {
 	return request().post(name);
 }
 
+void Server::renderError404Page() {
+	TemplateContent content;
+
+	setSessionProperties(content);
+	content.page_title = "PCI - Página no encontrada";
+
+	response().status(http::response::not_found);
+	render("error_404", content);
+}
+
 void Server::setSessionProperties(TemplateContent &content) {
 	content.user_signed_in = session().is_set("session_user_signed_in");
 	content.anonymous_mode = session().is_set("session_anonymous_mode");
@@ -106,6 +116,11 @@ Server::Server(cppcms::service &service) :
 }
 
 Server::~Server() {
+}
+
+void Server::main(string url) {
+	if (! dispatcher().dispatch(url))
+		renderError404Page();
 }
 
 #include <iostream> // TODO: remove this
@@ -664,6 +679,7 @@ void Server::getFetchMainPage() {
 		setSessionProperties(content);
 		content.page_title = "PCI";
 
+		response().status(http::response::ok);
 		render("index_view", content);
 	}
 }
@@ -672,23 +688,27 @@ void Server::getFetchUserPage(string user_name) {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		UserContent content;
+		User *user = DatabaseInterface::searchUser(user_name);
+		if (user == NULL)
+			renderError404Page();
+		else {
+			UserContent content;
 
-		setSessionProperties(content);
+			setSessionProperties(content);
 
-		content.page_title = "PCI - Perfil de " + user_name;
-		content.user = DatabaseInterface::searchUser(user_name);
-		content.number_of_solutions = DatabaseInterface::numberOfSolutionsByUser(user_name);
-		content.number_of_problems = DatabaseInterface::numberOfProblemsByUser(user_name);
-		content.number_of_publications = content.number_of_solutions + content.number_of_problems;
+			content.page_title = "PCI - Perfil de " + user_name;
+			content.user = user;
+			content.number_of_solutions = DatabaseInterface::numberOfSolutionsByUser(user_name);
+			content.number_of_problems = DatabaseInterface::numberOfProblemsByUser(user_name);
+			content.number_of_publications = content.number_of_solutions + content.number_of_problems;
 
-		content.number_of_accepted_solutions = DatabaseInterface::numberOfAcceptedSolutionsByUser(user_name);
+			content.number_of_accepted_solutions = DatabaseInterface::numberOfAcceptedSolutionsByUser(user_name);
 
-		content.recent_activity = DatabaseInterface::getRecentActivityByUser(user_name);
+			content.recent_activity = DatabaseInterface::getRecentActivityByUser(user_name);
 
-		// TODO: si el usuario no fue encontrado, enviar a pagina especial
-
-		render("user_view", content);
+			response().status(http::response::ok);
+			render("user_view", content);
+		}
 	}
 }
 
@@ -706,6 +726,7 @@ void Server::getFetchProblemsPage() {
 		content.unsolved_problems = DatabaseInterface::searchProblemsUnsolved(20);
 		content.latest_problems = DatabaseInterface::searchProblemsLatest(20);
 
+		response().status(http::response::ok);
 		render("problems_view", content);
 	}
 }
@@ -730,6 +751,7 @@ void Server::getFetchProblemPage(string problem_id) {
 		content.solutions = DatabaseInterface::searchSolutions(problem_id);
 		content.clarifications = DatabaseInterface::searchClarifications(problem_id);
 
+		response().status(http::response::ok);
 		render("problem_view", content);
 	}
 }
@@ -747,6 +769,7 @@ void Server::getFetchSolutionPage(string problem_id, string solution_id) {
 		content.clarifications = DatabaseInterface::searchClarifications(solution_id);
 		content.problem_id = problem_id;
 
+		response().status(http::response::ok);
 		render("solution_view", content);
 	}
 }
@@ -763,6 +786,7 @@ void Server::getFetchNewProblemPage() {
 			setSessionProperties(content);
 			content.page_title = "Nuevo problema";
 
+			response().status(http::response::ok);
 			render("new_problem_view", content);
 		}
 }
@@ -780,6 +804,7 @@ void Server::getFetchNewSolutionPage(string problem_id) {
 			content.page_title = "Nueva solución";
 			content.problem_id = problem_id;
 
+			response().status(http::response::ok);
 			render("new_solution_view", content);
 		}
 }
@@ -793,6 +818,7 @@ void Server::getFetchIdeasPage() {
 		setSessionProperties(content);
 		content.page_title = "PCI - Ideas";
 
+		response().status(http::response::ok);
 		render("ideas_view", content);
 	}
 }
