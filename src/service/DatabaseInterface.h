@@ -50,7 +50,9 @@ public:
 	static ErrorCode *deleteProblem(std::string id);
 
 	static ErrorCode *voteProblem(std::string problem_id, std::string user_name, bool is_positive);
+
 	static ErrorCode *setAcceptedSolution(std::string problem_id, std::string solution_id);
+	static ErrorCode *unsetAcceptedSolution(std::string problem_id);
 
 	/*
 	 * Solution operations

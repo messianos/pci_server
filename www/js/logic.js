@@ -19,6 +19,8 @@ var url = {
 	vote_solution: url_root + '/vote_solution',
 	create_clarification: url_root + '/create_clarification',
 	answer_clarification: url_root + '/answer_clarification',
+	set_accepted_solution: url_root + '/set_accepted_solution',
+	unset_accepted_solution: url_root + '/unset_accepted_solution',
 	fetch_main_page: url_root + '',
 	fetch_user_page: url_root + '/user',
 	fetch_problems_page: url_root + '/problems',
@@ -354,6 +356,23 @@ function postAnswerClarification(on_success_callback_function, on_failure_callba
 	request.fail(on_failure_callback_function);
 }
 
+function postSetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id, solution_id) {
+	var request = postRequest({
+		problem_id: problem_id,
+		solution_id: solution_id
+	}, url.set_accepted_solution);
+	request.done(on_success_callback_function);
+	request.fail(on_failure_callback_function);
+}
+
+function postUnsetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id, solution_id) {
+	var request = postRequest({
+		problem_id: problem_id,
+		solution_id: solution_id
+	}, url.unset_accepted_solution);
+	request.done(on_success_callback_function);
+	request.fail(on_failure_callback_function);
+}
 
 /*
 ----------------------------------------------------------------------------------------------

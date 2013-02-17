@@ -19,17 +19,26 @@
 			<% include template_view::javascript_code() %>
 			<script>
 
-				// Toggles elements involved in edition
-				function toggle() {
-					$("#problem_edit_button").toggle();
-					$("#problem_problem_content").toggle();
-					$("#problem_cancel_edit_button").toggle();
-					$("#problem_finish_edit_button").toggle();
-					$("#ckeditor_container").toggle();
-					var editor = $("#ckeditor_container");
-					if(editor.visible()){
-						editor.html = $('#problem_problem_content').val();
-					}				
+				// Shows up the ckeditor
+				function showEditor() {
+					$("#problem_edit_button").hide();
+					$("#problem_problem_content").hide();
+					$("#ckeditor_container").show();
+					
+					var ck_editor = CKEDITOR.instances.textfield;
+					ck_editor.setData($('#problem_problem_content').html());
+									
+				}
+				
+				// Hides the ckeditor
+				function hideEditor() {
+					$("#problem_edit_button").show();
+					$("#problem_problem_content").show();
+					$("#ckeditor_container").hide();
+					
+					var ck_editor = CKEDITOR.instances.textfield;
+					$('#problem_problem_content').html(XBBCODE.process({ text: ck_editor.getData()}).html);
+									
 				}
 				
 				$(document).ready(function() {
@@ -43,18 +52,17 @@
 					configureTexteditor("textfield");
 
 					$("#ckeditor_container").hide();
-					$("#problem_cancel_edit_button").hide();
-					$("#problem_finish_edit_button").hide();
+					
 					$("#problem_edit_button").click(function(){
-						toggle();
+						showEditor();
 					});
 	
 					$("#problem_cancel_edit_button").click(function(){
-						toggle();
+						hideEditor();
 					});
 	
 					$("#problem_finish_edit_button").click(function(){
-						toggle();
+						hideEditor();
 						alert('Edition submit dumb method to be replaced with AJAX');
 					});
 				});
@@ -107,11 +115,20 @@
 										<% if problem->is_solved  %>
 											<div class="box_description problem_solution_description" style="background-color:#ABFFAB;">
 												<% include template_view::solution_description(problem, accepted_solution) %>
-												<div class="tick_on" id="accept_solution_button"></div>
+												<a class="tick on" id="accept_solution_button"></a>
 												<script type="text/javascript">
+													<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
 													$("#accept_solution_button").click(function(){
-														// TODO: Call post when implemented
+														var success_callback = function(data){
+															$('#accept_solution_button').toggleClass('on');
+															alert('unset accepted solution SUCCESSFUL');
+														};
+														var failure_callback = function(textStatus){
+															alert('unset accepted solution FAILED ' + textStatus);
+														};
+														postUnsetAcceptedSolution(success_callback, failure_callback, '<%= problem->id %>', '<%= accepted_solution->id');
 													});
+													<% end %>
 												</script>
 											</div>
 										<% end %>
@@ -119,9 +136,24 @@
 									<li>
 										<% foreach solution in *solutions %>
 						 					<% item %>
-						 						<% if (!content.problem->is_solved || solution->id.compare(content.accepted_solution->id) != 0) %>
+						 						<% if (!content.problem->is_solved || solution->id.compare(content.accepted_solution->id)) %>
 													<div class="box_description problem_solution_description">
 														<% include template_view::solution_description(problem, solution) %>
+														<a class="tick" id="<%= solution->id %>"></a>
+														<script type="text/javascript">
+														<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
+														$("#<%= solution->id %>").click(function(){
+															var success_callback = function(data){
+																$('#<%= solution->id %>').toggleClass('on');
+																alert('set accepted solution SUCCESSFUL');
+															};
+															var failure_callback = function(textStatus){
+																alert('set accepted solution FAILED ' + textStatus);
+															};
+															postSetAcceptedSolution(success_callback, failure_callback, '<%= problem->id %>', '<%= solution->id %>');
+														});
+														<% end %>
+														</script>
 													</div>
 												<% end %>
 						  					<% end %>
@@ -134,9 +166,9 @@
 							<div id="problem">
 								<div id="ckeditor_container">
 									<textfield id="textfield"></textfield>
+									<a id="problem_finish_edit_button" class="pull-right btn btn-primary">Finalizar</a>
+									<a id="problem_cancel_edit_button" class="pull-right btn">Cancelar</a>
 								</div>
-								<a id="problem_finish_edit_button" class="pull-right btn btn-primary">Finalizar</a>
-								<a id="problem_cancel_edit_button" class="pull-right btn">Cancelar</a>
 								
 								<div id="problem_problem_content">
 									<%= problem->content %>

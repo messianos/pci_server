@@ -409,11 +409,16 @@ a.link_description:hover {
 	text-shadow: 0px 0px 3px #AAA;
 }
 
-.tick_on {
+.tick {
+	display: block; /* for <a> */
 	height: 48px;
-	background-image: url('../img/tick.png');
+	background-image: url('../img/tick_off.png');
 	background-position: center center;
 	background-repeat: no-repeat;
+}
+
+.tick.on{
+	background-image: url('../img/tick_on.png');
 }
 
 div.problems_problem_description {
@@ -869,6 +874,7 @@ div.toolbar_problems_button {
 }
 
 #toolbar_problems_new_problem_button {
+	padding-left: 40px;
 	background-image:url('../img/new_problem_off.png');
 	background-position:left center;
 	background-repeat:no-repeat;

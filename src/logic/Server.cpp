@@ -77,6 +77,13 @@ Server::Server(cppcms::service &service) :
 	/*dispatcher().assign("/delete_clarification", &Server::postDeleteClarification, this);
 	mapper().assign("delete_clarification", "/delete_clarification");*/
 
+	dispatcher().assign("/set_accepted_solution", &Server::postSetAcceptedSolution, this);
+	mapper().assign("set_accepted_solution", "/set_accepted_solution");
+
+	dispatcher().assign("/unset_accepted_solution", &Server::postUnsetAcceptedSolution, this);
+	mapper().assign("unset_accepted_solution", "/unset_accepted_solution");
+
+
 	// Page-fetching services
 	dispatcher().assign("", &Server::getFetchMainPage, this);
 	mapper().assign("");
@@ -362,6 +369,7 @@ void Server::postSetAcceptedSolution() {
 
 			ErrorCode *error_code;
 			error_code = InputValidator::validateSetAcceptedSolutionInput(problem_id, solution_id);
+			cerr << error_code->getErrorDescription() << endl;
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {
@@ -406,7 +414,7 @@ void Server::postUnsetAcceptedSolution() {
 				if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
 					response().status(http::response::forbidden);
 				else {
-					//error_code = DatabaseInterface::unsetAcceptedSolution(problem_id, solution_id); TODO --> NEED THIS METHOD
+					error_code = DatabaseInterface::unsetAcceptedSolution(problem_id);
 					if (error_code->isAnError())
 						response().status(http::response::internal_server_error, error_code->getErrorDescription());
 					else

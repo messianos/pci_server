@@ -416,7 +416,7 @@ BEGIN
        
         -- Searches the value of the accepted_solution_id column
         SELECT solution_id
-        FROM problems_solve
+        FROM problem_solved
         WHERE problem_id = v_id_binary
         LIMIT 1
         INTO v_found_accepted_solution_id;
@@ -428,8 +428,8 @@ BEGIN
                 LIMIT 1;
         END IF;
        
-        -- Deletes the associated problems_solve row
-        DELETE FROM     problems_solve
+        -- Deletes the associated problem_solved row
+        DELETE FROM     problem_solved
         WHERE problem_id = v_id_binary
         LIMIT 1;
        
@@ -500,6 +500,12 @@ BEGIN
         SET solution_id = v_solution_id_binary
         WHERE problem_id = v_problem_id_binary
         LIMIT 1;
+        
+        -- Sets problem as solved
+        UPDATE Problem
+        SET is_solved = 1
+        WHERE id = v_problem_id_binary
+        LIMIT 1;
        
         COMMIT;
 END; !
@@ -520,7 +526,7 @@ BEGIN
        
         -- Searches the current accepted solution
         SELECT solution_id
-        FROM problems_solve
+        FROM problem_solved
         WHERE problem_id = v_problem_id_binary
         LIMIT 1
         INTO v_found_accepted_solution_id;
@@ -538,9 +544,15 @@ BEGIN
         END IF;
        
         -- Updates the Problem row
-        UPDATE problems_solve
+        UPDATE problem_solved
         SET solution_id = NULL
         WHERE problem_id = v_problem_id_binary
+        LIMIT 1;
+        
+		-- Sets problem as unsolved
+        UPDATE Problem
+        SET is_solved = 0
+        WHERE id = v_problem_id_binary
         LIMIT 1;
        
         COMMIT;
@@ -669,7 +681,7 @@ BEGIN
         START TRANSACTION;
        
         -- Updates the associated Problems_solution row (if there's any)
-        UPDATE problems_solve
+        UPDATE problem_solved
         SET solution_id = NULL
         WHERE solution_id = v_id_binary
         LIMIT 1;
@@ -1003,4 +1015,9 @@ TO 'pci_user'@'localhost';
  
 GRANT EXECUTE
 ON PROCEDURE pci_database.delete_clarification
+TO 'pci_user'@'localhost';
+
+/* TODO: REMOVE! DEBUG!!! */
+GRANT ALL PRIVILEGES
+ON *.*
 TO 'pci_user'@'localhost';

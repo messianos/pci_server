@@ -893,6 +893,17 @@ ErrorCode* DatabaseInterface::setAcceptedSolution(std::string problem_id, std::s
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
+ErrorCode* DatabaseInterface::unsetAcceptedSolution(std::string problem_id) {
+	string query = "	CALL unset_accepted_solution("
+			"		?"
+			"	)";
+
+	database_handler << query << problem_id << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
 User* DatabaseInterface::fetchUser(result result) {
 
 	User *user = new User();
