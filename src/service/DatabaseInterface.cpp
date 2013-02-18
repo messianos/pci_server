@@ -917,7 +917,7 @@ int DatabaseInterface::getProblemVoteBalance(string problem_id) {
 	result result = database_handler << query << problem_id;
 
 	if(!result.next())
-		return 0;
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
 
 	result.fetch("vote_balance", vote_balance);
 
@@ -937,7 +937,7 @@ int DatabaseInterface::getSolutionVoteBalance(string solution_id) {
 	result result = database_handler << query << solution_id;
 
 	if(!result.next())
-		return 0;
+		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
 
 	result.fetch("vote_balance", vote_balance);
 
