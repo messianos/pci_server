@@ -154,14 +154,17 @@ div.box_content:hover {
 	border-color:#B5B5B5;
 }
 
-a.box_description {
+div.box_description {
 	color:#333333;
 	box-shadow:0px 0px 5px 0px #979797 inset;
 	padding:8px;
 }
-
 div.box_description:hover {
 	background-color:#F9FFFF;
+}
+
+div.box_description.accepted_solution, div.box_description.accepted_solution:hover {
+	background-color: #ABFFAB;
 }
 
 div.box_error {

@@ -384,7 +384,6 @@ void Server::postSetAcceptedSolution() {
 
 			ErrorCode *error_code;
 			error_code = InputValidator::validateSetAcceptedSolutionInput(problem_id, solution_id);
-			cerr << error_code->getErrorDescription() << endl;
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {

@@ -107,7 +107,7 @@
 					
 					var on_invalid_input = onInvalidInputCreateUser(event.data.email, event.data.first_name, event.data.last_name, event.data.location, event.data.password, event.data.user_name);
 					if (validateCreateUserInput(on_invalid_input, email, first_name, last_name, location, password, user_name)) {
-						var on_success = onSuccessCreateUser();
+						var on_success = onSuccessCreateUser(user_name);
 						var on_failure = onFailureCreateUser();
 						postCreateUser(on_success, on_failure, birth_date, email, first_name, genre, last_name, location, password, user_name);
 					}
@@ -186,7 +186,38 @@
 					postVoteProblem(on_success, on_failure, false, problem_id);
 				});
 			</script>
-		<% end %>
+		<% end template %>
+		
+		
+		<% template set_accepted_solution_form(std::string problem_id, std::string solution_id) %>
+			<a class="tick" id="<%= solution_id %>"></a>
+			<script>
+				$('#<%= solution_id %>').click(function() {
+					var problem_id = '<%= problem_id %>';
+					var solution_id = '<%= solution_id %>';
+					
+					var on_success = onSuccessSetAcceptedSolution($(this), problem_id, solution_id);
+					var on_failure = onFailureSetAcceptedSolution();
+					postSetAcceptedSolution(on_success, on_failure, problem_id, solution_id);
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template unset_accepted_solution_form(std::string problem_id, std::string accepted_solution_id) %>
+			<a class="tick on" id="<%= accepted_solution_id %>"></a>
+			<script>
+				$('#<%= accepted_solution_id %>').click(function() {
+					var problem_id = '<%= problem_id %>';
+					var accepted_solution_id = '<%= accepted_solution_id %>';
+					
+					var on_success = onSuccessUnsetAcceptedSolution($(this), problem_id, accepted_solution_id);
+					var on_failure = onFailureUnsetAcceptedSolution();
+					postUnsetAcceptedSolution(on_success, on_failure, problem_id);
+				});
+			</script>
+		<% end template %>
+		
 		
 		<% template create_solution_form(std::string problem_id) %>
 			<legend>Crear solución</legend>

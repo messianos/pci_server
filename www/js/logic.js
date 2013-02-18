@@ -14,13 +14,13 @@ var url = {
 	create_problem: url_root + '/create_problem',
 	edit_problem: url_root + '/edit_problem',
 	vote_problem: url_root + '/vote_problem',
+	set_accepted_solution: url_root + '/set_accepted_solution',
+	unset_accepted_solution: url_root + '/unset_accepted_solution',
 	create_solution: url_root + '/create_solution',
 	edit_solution: url_root + '/edit_solution',
 	vote_solution: url_root + '/vote_solution',
 	create_clarification: url_root + '/create_clarification',
 	answer_clarification: url_root + '/answer_clarification',
-	set_accepted_solution: url_root + '/set_accepted_solution',
-	unset_accepted_solution: url_root + '/unset_accepted_solution',
 	fetch_main_page: url_root + '',
 	fetch_user_page: url_root + '/user',
 	fetch_problems_page: url_root + '/problems',
@@ -311,6 +311,23 @@ function postVoteProblem(on_success_callback_function, on_failure_callback_funct
 	request.fail(on_failure_callback_function);
 }
 
+function postSetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id, solution_id) {
+	var request = postRequest({
+		problem_id: problem_id,
+		solution_id: solution_id
+	}, url.set_accepted_solution);
+	request.done(on_success_callback_function);
+	request.fail(on_failure_callback_function);
+}
+
+function postUnsetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id) {
+	var request = postRequest({
+		problem_id: problem_id
+	}, url.unset_accepted_solution);
+	request.done(on_success_callback_function);
+	request.fail(on_failure_callback_function);
+}
+
 function postCreateSolution(on_success_callback_function, on_failure_callback_function, content, description, problem_id) {
 	var request = postRequest({
 		content: content,
@@ -352,24 +369,6 @@ function postAnswerClarification(on_success_callback_function, on_failure_callba
 		answer: answer,
 		clarification_id: clarification_id
 	}, url.answer_clarification);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postSetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id, solution_id) {
-	var request = postRequest({
-		problem_id: problem_id,
-		solution_id: solution_id
-	}, url.set_accepted_solution);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postUnsetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id, solution_id) {
-	var request = postRequest({
-		problem_id: problem_id,
-		solution_id: solution_id
-	}, url.unset_accepted_solution);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
 }
@@ -457,9 +456,10 @@ function onInvalidInputCreateUser(email_textfield, first_name_textfield, last_na
 	};
 }
 
-function onSuccessCreateUser() {
+function onSuccessCreateUser(user_name) {
 	return function(data, text_status, jq_xhr) {
 		// TODO
+		window.location.href = url.fetch_user_page + '/' + user_name;
 	};
 }
 
@@ -511,6 +511,58 @@ function onSuccessVoteProblem(display) {
 }
 
 function onFailureVoteProblem() {
+	return function(jq_xhr, text_status, error_thrown) {
+		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
+}
+
+function onSuccessSetAcceptedSolution(button, problem_id, solution_id) {
+	return function(data, text_status, jq_xhr) {
+		var on_button = $('.tick.on');
+		if (on_button.length > 0) {
+			on_button.parent().removeClass('accepted_solution');
+			on_button.removeClass('on');
+			on_button.unbind('click');
+			on_button.click(function() {
+				var accepted_solution_id = $(this).attr('id');
+				
+				var on_success = onSuccessSetAcceptedSolution($(this), problem_id, accepted_solution_id);
+				var on_failure = onFailureSetAcceptedSolution();
+				postSetAcceptedSolution(on_success, on_failure, problem_id, accepted_solution_id);
+			});
+		}
+		
+		button.parent().addClass('accepted_solution');
+		button.addClass('on');
+		button.unbind('click');
+		button.click(function() {
+			var on_success = onSuccessUnsetAcceptedSolution($(this), problem_id, solution_id);
+			var on_failure = onFailureUnsetAcceptedSolution();
+			postUnsetAcceptedSolution(on_success, on_failure, problem_id);
+		});
+	};
+}
+
+function onFailureSetAcceptedSolution() {
+	return function(jq_xhr, text_status, error_thrown) {
+		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
+}
+
+function onSuccessUnsetAcceptedSolution(button, problem_id, accepted_solution_id) {
+	return function(data, text_status, jq_xhr) {
+		button.parent().removeClass('accepted_solution');
+		button.removeClass('on');
+		button.unbind('click');
+		button.click(function() {
+			var on_success = onSuccessSetAcceptedSolution($(this), problem_id, accepted_solution_id);
+			var on_failure = onFailureSetAcceptedSolution();
+			postSetAcceptedSolution(on_success, on_failure, problem_id, accepted_solution_id);
+		});
+	};
+}
+
+function onFailureUnsetAcceptedSolution() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorLateralBox('Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};

@@ -113,49 +113,27 @@
 									</li>
 									<li>
 										<% if problem->is_solved  %>
-											<div class="box_description problem_solution_description" style="background-color:#ABFFAB;">
+											<div class="box_description accepted_solution problem_solution_description">
 												<% include template_view::solution_description(problem, accepted_solution) %>
-												<a class="tick on" id="accept_solution_button"></a>
-												<script type="text/javascript">
-													<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-													$("#accept_solution_button").click(function(){
-														var success_callback = function(data){
-															$('#accept_solution_button').toggleClass('on');
-															alert('unset accepted solution SUCCESSFUL');
-														};
-														var failure_callback = function(textStatus){
-															alert('unset accepted solution FAILED ' + textStatus);
-														};
-														postUnsetAcceptedSolution(success_callback, failure_callback, '<%= problem->id %>', '<%= accepted_solution->id');
-													});
-													<% end %>
-												</script>
+												<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
+													<% include unset_accepted_solution_form(problem->id, accepted_solution->id) %>
+												<% else %>
+													<div class="tick on"></div>
+												<% end %>
 											</div>
 										<% end %>
 									</li>
 									<li>
 										<% foreach solution in *solutions %>
 						 					<% item %>
-						 						<% if (!content.problem->is_solved || solution->id.compare(content.accepted_solution->id)) %>
-													<div class="box_description problem_solution_description">
-														<% include template_view::solution_description(problem, solution) %>
-														<a class="tick" id="<%= solution->id %>"></a>
-														<script type="text/javascript">
-														<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-														$("#<%= solution->id %>").click(function(){
-															var success_callback = function(data){
-																$('#<%= solution->id %>').toggleClass('on');
-																alert('set accepted solution SUCCESSFUL');
-															};
-															var failure_callback = function(textStatus){
-																alert('set accepted solution FAILED ' + textStatus);
-															};
-															postSetAcceptedSolution(success_callback, failure_callback, '<%= problem->id %>', '<%= solution->id %>');
-														});
-														<% end %>
-														</script>
-													</div>
-												<% end %>
+												<div class="box_description problem_solution_description">
+													<% include template_view::solution_description(problem, solution) %>
+													<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
+														<% include set_accepted_solution_form(problem->id, solution->id) %>
+													<% else %>
+														<div class="tick"></div>
+													<% end %>
+												</div>
 						  					<% end %>
 										<% end %>
 
