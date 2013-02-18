@@ -10,6 +10,7 @@
 #include <cppcms/service.h>
 #include <iostream>
 
+void database_operations_tester();
 int main(int argc, char **argv);
 
 #endif /* MAIN_H_ */

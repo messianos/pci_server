@@ -907,17 +907,18 @@ ErrorCode* DatabaseInterface::unsetAcceptedSolution(string problem_id) {
 int DatabaseInterface::getProblemVoteBalance(string problem_id) {
 	int vote_balance;
 	string query = ""
-			"SELECT"
-			"	vote_balance"
-			"FROM"
-			"	Problem"
-			"WHERE"
-			"	id = UNEX(?)";
+			"	SELECT"
+			"		vote_balance"
+			"	FROM"
+			"		Problem"
+			"	WHERE"
+			"		id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
 	if(!result.next())
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+		// FIXME: Throw exception?
+		return 0;
 
 	result.fetch("vote_balance", vote_balance);
 
@@ -927,21 +928,61 @@ int DatabaseInterface::getProblemVoteBalance(string problem_id) {
 int DatabaseInterface::getSolutionVoteBalance(string solution_id) {
 	int vote_balance;
 	string query = ""
-			"SELECT"
-			"	vote_balance"
-			"FROM"
-			"	Solution"
-			"WHERE"
-			"	id = UNEX(?)";
+			"	SELECT"
+			"		vote_balance"
+			"	FROM"
+			"		Solution"
+			"	WHERE"
+			"		id = UNHEX(?)";
 
 	result result = database_handler << query << solution_id;
 
 	if(!result.next())
-		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
+		// TODO: Throw exception?
+		return 0;
 
 	result.fetch("vote_balance", vote_balance);
 
 	return vote_balance;
+}
+
+int DatabaseInterface::getUserVoteOnProblem(std::string user_name, std::string problem_id) {
+	string query = ""
+			"	SELECT"
+			"		is_positive"
+			"	FROM"
+			"		problem_votes"
+			"	WHERE"
+			"		problem_id = UNHEX(?) AND username LIKE BINARY ?";
+
+	result result = database_handler << query << problem_id << user_name;
+
+	if(!result.next())
+		return 0;
+
+	int is_positive;
+	result.fetch("is_positive", is_positive);
+
+	return is_positive ? 1 : -1;
+}
+
+int DatabaseInterface::getUserVoteOnSolution(std::string user_name, std::string solution_id) {
+	string query = ""
+				"	SELECT"
+				"		is_positive"
+				"	FROM"
+				"		solution_votes"
+				"	WHERE"
+				"		solution_id = UNHEX(?) AND username LIKE BINARY ?";
+		result result = database_handler << query << solution_id << user_name;
+
+		if(!result.next())
+			return 0;
+
+		int is_positive;
+		result.fetch("is_positive", is_positive);
+
+		return is_positive ? 1 : -1;
 }
 
 User* DatabaseInterface::fetchUser(result result) {

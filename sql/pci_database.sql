@@ -1,4 +1,6 @@
- 
+source pci_database_removal.sql
+source pci_database_server_configuration.sql
+
 /*
  * TODO:
  *

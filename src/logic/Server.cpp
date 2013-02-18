@@ -7,6 +7,7 @@ using namespace cppcms;
 using namespace std;
 using namespace ViewContent;
 
+
 bool Server::getRequestReceived() {
 	return request().request_method() == "GET";
 }

@@ -24,6 +24,7 @@
 class Server : public cppcms::application {
 
 private:
+	void database_operations_tester();
 	bool getRequestReceived();
 	bool postRequestReceived();
 	std::string postRequestData(std::string name);
