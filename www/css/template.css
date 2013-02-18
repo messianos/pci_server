@@ -426,8 +426,8 @@ a.link_description:hover {
 }
 
 div.problems_problem_description {
-	background: -webkit-gradient(linear,left bottom,left top,
-		color-stop(0, rgba(206, 206, 206, 0.35)),color-stop(1, white));
+	background: -webkit-gradient(linear,left bottom,left top, 
+		color-stop(0, #E6E6E6),color-stop(0.1, white));
 	border-color:#D0D0D0;
 	border-radius:5px;
 	border-style:solid;

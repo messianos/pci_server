@@ -105,8 +105,8 @@ ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) 
 	try {
 		database_handler << query << user->birth_date->toString("%Y-%m-%d") << user->email << user->first_name
 				<< user->genre << user->last_name << user->location << user->user_name << encrypted_password << exec;
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << " in signUp" << endl;
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in signUp" << endl;
 		return new ErrorCode(ErrorCode::CODE_INVALID_GENRE);
 	}
 	// TODO
@@ -192,7 +192,7 @@ User *DatabaseInterface::searchUser(string user_name) {
 	return fetchUser(result);
 }
 
-User *DatabaseInterface::searchUserByProblem(std::string problem_id) {
+User *DatabaseInterface::searchUserByProblem(string problem_id) {
 	stringstream query;
 
 	query << "	SELECT"
@@ -223,7 +223,7 @@ User *DatabaseInterface::searchUserByProblem(std::string problem_id) {
 
 }
 
-User *DatabaseInterface::searchUserBySolution(std::string solution_id) {
+User *DatabaseInterface::searchUserBySolution(string solution_id) {
 	stringstream query;
 
 	query << "	SELECT"
@@ -254,7 +254,7 @@ User *DatabaseInterface::searchUserBySolution(std::string solution_id) {
 
 }
 
-User *DatabaseInterface::searchUserByProposal(std::string proposal_id) {
+User *DatabaseInterface::searchUserByProposal(string proposal_id) {
 	stringstream query;
 
 	query << "	SELECT"
@@ -284,7 +284,7 @@ User *DatabaseInterface::searchUserByProposal(std::string proposal_id) {
 	return fetchUser(result);
 }
 
-User *DatabaseInterface::searchUserByClarification(std::string clarification_id) {
+User *DatabaseInterface::searchUserByClarification(string clarification_id) {
 	stringstream query;
 
 	query << "	SELECT"
@@ -668,7 +668,7 @@ ErrorCode * DatabaseInterface::deleteClarification(string id) {
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-int DatabaseInterface::numberOfSolutionsByUser(std::string user_name) {
+int DatabaseInterface::numberOfSolutionsByUser(string user_name) {
 	string query = ""
 			"	SELECT"
 			"		count(1) AS num_solutions"
@@ -686,7 +686,7 @@ int DatabaseInterface::numberOfSolutionsByUser(std::string user_name) {
 	return to_return;
 }
 
-int DatabaseInterface::numberOfProblemsByUser(std::string user_name) {
+int DatabaseInterface::numberOfProblemsByUser(string user_name) {
 	string query = ""
 			"	SELECT"
 			"		count(1) AS num_problems"
@@ -704,7 +704,7 @@ int DatabaseInterface::numberOfProblemsByUser(std::string user_name) {
 	return to_return;
 }
 
-int DatabaseInterface::numberOfAcceptedSolutionsByUser(std::string user_name) {
+int DatabaseInterface::numberOfAcceptedSolutionsByUser(string user_name) {
 	int number = 0;
 
 	string query = ""
@@ -729,7 +729,7 @@ int DatabaseInterface::numberOfAcceptedSolutionsByUser(std::string user_name) {
 }
 
 // TODO: Parametrize amount
-list<Publication *> * DatabaseInterface::getRecentActivityByUser(std::string user_name) {
+list<Publication *> * DatabaseInterface::getRecentActivityByUser(string user_name) {
 
 	stringstream problem_query;
 	problem_query << ""
@@ -784,8 +784,8 @@ Clarification* DatabaseInterface::fetchClarification(result result) {
 		result.fetch("creator_user_name", clarification->creator_user_name);
 		result.fetch("id", clarification->id);
 		result.fetch("question", clarification->question);
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << " in fetchClarification" << std::endl;
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in fetchClarification" << endl;
 		return NULL;
 	}
 
@@ -810,8 +810,8 @@ Problem* DatabaseInterface::fetchProblem(result result) {
 		problem->last_edition_datetime = new Datetime(timestamp);
 		result.fetch("vote_balance", problem->vote_balance);
 
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << " in fetchProblem" << std::endl;
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in fetchProblem" << endl;
 		return NULL;
 	}
 
@@ -835,8 +835,8 @@ Solution* DatabaseInterface::fetchSolution(result result) {
 		solution->last_edition_datetime = new Datetime(timestamp);
 		result.fetch("vote_balance", solution->vote_balance);
 
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << " in fetchSolution" << std::endl;
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in fetchSolution" << endl;
 		return NULL;
 	}
 
@@ -860,15 +860,15 @@ Proposal *DatabaseInterface::fetchProposal(result result) {
 		//Description always is null ('cause proposal doesn't have)
 		proposal->description = "";
 
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << " in fetchSolution" << std::endl;
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in fetchSolution" << endl;
 		return NULL;
 	}
 
 	return proposal;
 }
 
-ErrorCode* DatabaseInterface::voteProblem(std::string problem_id, std::string user_name, bool is_positive) {
+ErrorCode* DatabaseInterface::voteProblem(string problem_id, string user_name, bool is_positive) {
 	string query = "	CALL vote_problem("
 			"		?,"
 			"		?,"
@@ -881,7 +881,7 @@ ErrorCode* DatabaseInterface::voteProblem(std::string problem_id, std::string us
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode* DatabaseInterface::setAcceptedSolution(std::string problem_id, std::string solution_id) {
+ErrorCode* DatabaseInterface::setAcceptedSolution(string problem_id, string solution_id) {
 	string query = "	CALL set_accepted_solution("
 			"		?,"
 			"		?"
@@ -893,7 +893,7 @@ ErrorCode* DatabaseInterface::setAcceptedSolution(std::string problem_id, std::s
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode* DatabaseInterface::unsetAcceptedSolution(std::string problem_id) {
+ErrorCode* DatabaseInterface::unsetAcceptedSolution(string problem_id) {
 	string query = "	CALL unset_accepted_solution("
 			"		?"
 			"	)";
@@ -902,6 +902,46 @@ ErrorCode* DatabaseInterface::unsetAcceptedSolution(std::string problem_id) {
 
 	// TODO
 	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+int DatabaseInterface::getProblemVoteBalance(string problem_id) {
+	int vote_balance;
+	string query = ""
+			"SELECT"
+			"	vote_balance"
+			"FROM"
+			"	Problem"
+			"WHERE"
+			"	id = UNEX(?)";
+
+	result result = database_handler << query << problem_id;
+
+	if(!result.next())
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+
+	result.fetch("vote_balance", vote_balance);
+
+	return vote_balance;
+}
+
+int DatabaseInterface::getSolutionVoteBalance(string solution_id) {
+	int vote_balance;
+	string query = ""
+			"SELECT"
+			"	vote_balance"
+			"FROM"
+			"	Solution"
+			"WHERE"
+			"	id = UNEX(?)";
+
+	result result = database_handler << query << solution_id;
+
+	if(!result.next())
+		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
+
+	result.fetch("vote_balance", vote_balance);
+
+	return vote_balance;
 }
 
 User* DatabaseInterface::fetchUser(result result) {
@@ -929,8 +969,8 @@ User* DatabaseInterface::fetchUser(result result) {
 
 		result.fetch("profile_picture_url", user->profile_picture_url);
 
-	} catch (std::exception const &e) {
-		std::cerr << "ERROR: " << e.what() << " in fetchUser" << endl;
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in fetchUser" << endl;
 		return NULL;
 	}
 

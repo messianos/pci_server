@@ -54,6 +54,8 @@ public:
 	static ErrorCode *setAcceptedSolution(std::string problem_id, std::string solution_id);
 	static ErrorCode *unsetAcceptedSolution(std::string problem_id);
 
+	static int getProblemVoteBalance(std::string problem_id);
+
 	/*
 	 * Solution operations
 	 */
@@ -65,6 +67,8 @@ public:
 
 	static ErrorCode *insertSolution(Solution *solution, std::string problem_id);
 	static ErrorCode *deleteSolution(std::string id);
+
+	static int getSolutionVoteBalance(std::string solution_id);
 
 
 	/*
