@@ -267,7 +267,7 @@ FROM Clarification;
  
 -- STORED PROCEDURES ----------------------------------------------------------
  
-DELIMITER ! -- Changes the current sentence delimiter
+DELIMITER !
  
  
 /*
@@ -567,49 +567,95 @@ CREATE PROCEDURE vote_problem(
         IN in_id BINARY(34),
         IN in_vote_user_name VARCHAR(31),
         IN in_is_positive_vote BOOLEAN
-)      
+)
 BEGIN
         DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
-        DECLARE v_vote_balance INT DEFAULT 0;
+        DECLARE v_vote_balance INT;
+        DECLARE checkExist INT;
+        DECLARE v_is_positive BOOLEAN DEFAULT true;
        
         START TRANSACTION;
-        SELECT count(*)
-                FROM problem_votes
-                WHERE problem_id = v_id_binary
-                LIMIT 1
-                INTO v_vote_balance;
-       
-        -- Create the vote in solution_votes table
-        INSERT INTO problem_votes(
-                problem_id,
-                username,
-                is_positive
-        )
-        VALUES (
-                v_id_binary,
-                in_vote_user_name,
-                in_is_positive_vote
-        );
-       
-        -- Get the vote balance from Solution
+        
+        -- Get the vote balance from Problem
         SELECT vote_balance
-                FROM Problem
-                WHERE id = v_id_binary
-                LIMIT 1
-                INTO v_vote_balance;
-       
-        IF in_is_positive_vote IS TRUE THEN
-			SET v_vote_balance = v_vote_balance + 1;
-		ELSE
-			SET v_vote_balance = v_vote_balance - 1;    
-        END IF;
-       
-        -- Updates the vote_balance from the Solution row
-        UPDATE Problem
-        SET vote_balance = v_vote_balance
+        FROM Problem
         WHERE id = v_id_binary
-        LIMIT 1;
+        LIMIT 1
+        INTO v_vote_balance;
        
+        -- If the user already votes
+        SELECT count(*) FROM problem_votes
+        WHERE problem_id = v_id_binary
+        AND username = in_vote_user_name
+        INTO checkExist;
+        
+        
+       
+        IF  checkExist = 0 THEN
+       
+                -- Create the vote in problem_votes table
+                INSERT INTO problem_votes(
+                        problem_id,
+                        username,
+                        is_positive
+                )
+                VALUES (
+                        v_id_binary,
+                        in_vote_user_name,
+                        in_is_positive_vote
+                );
+               
+                IF in_is_positive_vote IS TRUE THEN 
+                	SET v_vote_balance = v_vote_balance + 1;            
+                ELSE
+                	SET v_vote_balance = v_vote_balance - 1;    
+                END IF;
+               
+                -- Updates the vote_balance from the Problem row
+                UPDATE Problem
+                SET vote_balance = v_vote_balance
+                WHERE id = v_id_binary
+                LIMIT 1;
+        ELSE
+				SELECT is_positive FROM problem_votes
+                WHERE problem_id = v_id_binary
+                AND username = in_vote_user_name
+                INTO v_is_positive;
+		        
+		        
+                IF in_is_positive_vote IS TRUE AND v_is_positive IS FALSE THEN
+                        
+                        -- Delete the vote an increment the vote_balance
+                        DELETE FROM problem_votes
+                        WHERE problem_id = v_id_binary AND username = in_vote_user_name
+                        LIMIT 1;
+                        
+                        SET v_vote_balance = v_vote_balance + 1;
+                        
+                        UPDATE Problem
+		                SET vote_balance = v_vote_balance
+		                WHERE id = v_id_binary
+		                LIMIT 1;
+           		ELSE
+                	IF in_is_positive_vote IS FALSE AND v_is_positive IS true THEN
+	            	
+	            		-- Delete the vote an increment the vote_balance
+			        	
+			        	DELETE FROM problem_votes
+			        	WHERE problem_id = v_id_binary AND username = in_vote_user_name
+			        	LIMIT 1;
+			        	
+			        	SET v_vote_balance = v_vote_balance - 1;
+			        	
+			        	UPDATE Problem
+		                SET vote_balance = v_vote_balance
+		                WHERE id = v_id_binary
+		                LIMIT 1;
+		                
+	           		END IF;
+		  	END IF;
+		        
+        END IF;
         COMMIT;
 END; !
  
@@ -715,18 +761,28 @@ BEGIN
         DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
         DECLARE v_vote_balance INT;
         DECLARE checkExist INT;
+        DECLARE v_is_positive BOOLEAN DEFAULT true;
        
         START TRANSACTION;
+        
+        -- Get the vote balance from Problem
+        SELECT vote_balance
+        FROM Solution
+        WHERE id = v_id_binary
+        LIMIT 1
+        INTO v_vote_balance;
        
         -- If the user already votes
         SELECT count(*) FROM solution_votes
         WHERE solution_id = v_id_binary
         AND username = in_vote_user_name
         INTO checkExist;
+        
+        
        
         IF  checkExist = 0 THEN
        
-                -- Create the vote in solution_votes table
+                -- Create the vote in problem_votes table
                 INSERT INTO solution_votes(
                         solution_id,
                         username,
@@ -738,26 +794,56 @@ BEGIN
                         in_is_positive_vote
                 );
                
-                -- Get the vote balance from Solution
-                SELECT vote_balance
-                        FROM Solution
-                        WHERE id = v_id_binary
-                        LIMIT 1
-                        INTO v_vote_balance;
-               
                 IF in_is_positive_vote IS TRUE THEN 
                 	SET v_vote_balance = v_vote_balance + 1;            
                 ELSE
                 	SET v_vote_balance = v_vote_balance - 1;    
                 END IF;
                
-                -- Updates the vote_balance from the Solution row
+                -- Updates the vote_balance from the Problem row
                 UPDATE Solution
                 SET vote_balance = v_vote_balance
                 WHERE id = v_id_binary
                 LIMIT 1;
-        -- ELSE
-                -- DO SOMETHING FOR THE ELSE STATEMENT
+        ELSE
+				SELECT is_positive FROM solution_votes
+                WHERE solution_id = v_id_binary
+                AND username = in_vote_user_name
+                INTO v_is_positive;
+		        
+		        
+                IF in_is_positive_vote IS TRUE AND v_is_positive IS FALSE THEN
+                        
+                        -- Delete the vote an increment the vote_balance
+                        DELETE FROM solution_votes
+                        WHERE solution_id = v_id_binary AND username = in_vote_user_name
+                        LIMIT 1;
+                        
+                        SET v_vote_balance = v_vote_balance + 1;
+                        
+                        UPDATE Solution
+		                SET vote_balance = v_vote_balance
+		                WHERE id = v_id_binary
+		                LIMIT 1;
+           		ELSE
+                	IF in_is_positive_vote IS FALSE AND v_is_positive IS true THEN
+	            	
+	            		-- Delete the vote an increment the vote_balance
+			        	
+			        	DELETE FROM solution_votes
+			        	WHERE solution_id = v_id_binary AND username = in_vote_user_name
+			        	LIMIT 1;
+			        	
+			        	SET v_vote_balance = v_vote_balance - 1;
+			        	
+			        	UPDATE Solution
+		                SET vote_balance = v_vote_balance
+		                WHERE id = v_id_binary
+		                LIMIT 1;
+		                
+	           		END IF;
+		  	END IF;
+		        
         END IF;
         COMMIT;
 END; !
@@ -879,16 +965,116 @@ BEGIN
         WHERE id = v_id_binary
         LIMIT 1;
 END; !
+
+
+/*
+ * Vote a existing proposal.
+ * Note: in_id must be a string representing an hexadecimal number.
+ */
+CREATE PROCEDURE vote_proposal(
+        IN in_id BINARY(34),
+        IN in_vote_user_name VARCHAR(31),
+        IN in_is_positive_vote BOOLEAN
+)
+BEGIN
+        DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
+        DECLARE v_vote_balance INT;
+        DECLARE checkExist INT;
+        DECLARE v_is_positive BOOLEAN DEFAULT true;
+       
+        START TRANSACTION;
+        
+        -- Get the vote balance from Problem
+        SELECT vote_balance
+        FROM Proposal
+        WHERE id = v_id_binary
+        LIMIT 1
+        INTO v_vote_balance;
+       
+        -- If the user already votes
+        SELECT count(*) FROM proposal_votes
+        WHERE proposal_id = v_id_binary
+        AND username = in_vote_user_name
+        INTO checkExist;
+        
+        
+       
+        IF  checkExist = 0 THEN
+       
+                -- Create the vote in problem_votes table
+                INSERT INTO proposal_votes(
+                        proposal_id,
+                        username,
+                        is_positive
+                )
+                VALUES (
+                        v_id_binary,
+                        in_vote_user_name,
+                        in_is_positive_vote
+                );
+               
+                IF in_is_positive_vote IS TRUE THEN 
+                	SET v_vote_balance = v_vote_balance + 1;            
+                ELSE
+                	SET v_vote_balance = v_vote_balance - 1;    
+                END IF;
+               
+                -- Updates the vote_balance from the Problem row
+                UPDATE Proposal
+                SET vote_balance = v_vote_balance
+                WHERE id = v_id_binary
+                LIMIT 1;
+        ELSE
+				SELECT is_positive FROM proposal_votes
+                WHERE proposal_id = v_id_binary
+                AND username = in_vote_user_name
+                INTO v_is_positive;
+		        
+		        
+                IF in_is_positive_vote IS TRUE AND v_is_positive IS FALSE THEN
+                        
+                        -- Delete the vote an increment the vote_balance
+                        DELETE FROM proposal_votes
+                        WHERE proposal_id = v_id_binary AND username = in_vote_user_name
+                        LIMIT 1;
+                        
+                        SET v_vote_balance = v_vote_balance + 1;
+                        
+                        UPDATE Proposal
+		                SET vote_balance = v_vote_balance
+		                WHERE id = v_id_binary
+		                LIMIT 1;
+           		ELSE
+                	IF in_is_positive_vote IS FALSE AND v_is_positive IS true THEN
+	            	
+	            		-- Delete the vote an increment the vote_balance
+			        	
+			        	DELETE FROM proposal_votes
+			        	WHERE proposal_id = v_id_binary AND username = in_vote_user_name
+			        	LIMIT 1;
+			        	
+			        	SET v_vote_balance = v_vote_balance - 1;
+			        	
+			        	UPDATE Proposal
+		                SET vote_balance = v_vote_balance
+		                WHERE id = v_id_binary
+		                LIMIT 1;
+		                
+	           		END IF;
+		  	END IF;
+		        
+        END IF;
+        COMMIT;
+END; !
  
  
-DELIMITER ; -- Changes the current sentence delimiter
+DELIMITER ;
  
  
  
 -- TRIGGERS -------------------------------------------------------------------
  
-DELIMITER ! -- Changes the current sentence delimiter
- 
+DELIMITER !
  
 /*
  * Triggered before a Problem row is deleted.
@@ -941,7 +1127,7 @@ BEGIN
 END; !
  
  
-DELIMITER ; -- Changes the current sentence delimiter
+DELIMITER ;
  
  
  
