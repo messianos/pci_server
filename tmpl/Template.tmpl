@@ -161,29 +161,40 @@
 			</script>
 		<% end template %>
 		
+		
 		<% template vote_problem_form(std::string problem_id, int vote_balance) %>
-			<a class="btn" id="vote_problem_positive_button">Votar positivamente</a>
-			<div id="vote_problem_display"><%= vote_balance %></div>
-			<a class="btn" id="vote_problem_negative_button">Votar negativamente</a>
+			<div class="votes_container">
+				<div class="vote_up" id="vote_up">+</div>
+				<div class="votes_number" id="votes_number"><%= vote_balance %></div>
+				<div class="vote_down" id="vote_down">-</div>
+			</div>
 			<script>
-				$('#vote_problem_positive_button').click({
-					display: $('#vote_problem_display')
+				$('#vote_up').click({
+					display: $('#votes_number')
 				}, function(event) {
-					var problem_id = '<%= problem_id %>';
+					var user_vote = 5; // TODO: HOW?????
 					
-					var on_success = onSuccessVoteProblem(event.data.display);
-					var on_failure = onFailureVoteProblem();
-					postVoteProblem(on_success, on_failure, true, problem_id);
+					if (user_vote < 1) {
+						var problem_id = '<%= problem_id %>';
+						
+						var on_success = onSuccessVoteProblem(event.data.display);
+						var on_failure = onFailureVoteProblem();
+						postVoteProblem(on_success, on_failure, true, problem_id);
+					}
 				});
 				
-				$('#vote_problem_negative_button').click({
-					display: $('#vote_problem_display')
+				$('#vote_down').click({
+					display: $('#votes_number')
 				}, function(event) {
-					var problem_id = '<%= problem_id %>';
+					var user_vote = 5; // TODO: HOW?????
 					
-					var on_success = onSuccessVoteProblem(event.data.display);
-					var on_failure = onFailureVoteProblem();
-					postVoteProblem(on_success, on_failure, false, problem_id);
+					if (user_vote > -1) {
+						var problem_id = '<%= problem_id %>';
+						
+						var on_success = onSuccessVoteProblem(event.data.display);
+						var on_failure = onFailureVoteProblem();
+						postVoteProblem(on_success, on_failure, false, problem_id);
+					}
 				});
 			</script>
 		<% end template %>

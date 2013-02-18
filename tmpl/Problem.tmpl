@@ -75,7 +75,7 @@
 				<% include template_view::navigation_menu() %>
 				<div class="main-container">
 						<div class="fixed-title-wrapper">
-							<% include votes_panel() %>
+							<% include vote_problem_form(problem->id, problem->vote_balance) %>
 							<div class="title-container">
 								<div class="title"><%= problem->description %></div>
 								<span class="text_description">
@@ -178,30 +178,6 @@
 						</script>
 					</div>
 				</div>
-		<% end template %>
-		
-		<% template votes_panel() %>
-			<div class="votes_container">
-				<div class="vote_up" id="vote_up">+</div>
-				<div class="votes_number" id="votes_number"><%= problem->vote_balance %></div>
-				<div class="vote_down" id="vote_down">-</div>
-			</div>
-			<script type="text/javascript">
-				var success_callback = function(data){
-					var sign = data.is_positive ? 1 : -1;
-					$('#votes_number').html(parseInt($('#votes_number').html()) + sign);
-					alert('vote SUCCESSFUL');
-				};
-				var failure_callback = function(textStatus){
-					alert('vote FAILED ' + textStatus);
-				};
-				$("#vote_down").click(function(){
-					postVoteProblem(success_callback, failure_callback, false, '<%= problem->id %>');
-				});
-				$("#vote_up").click(function(){
-					postVoteProblem(success_callback, failure_callback, true, '<%= problem->id %>');
-				});
-			</script>
 		<% end template %>
 		
 	
