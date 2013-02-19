@@ -1,5 +1,5 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view solution_view uses ViewContent::SolutionContent extends template_view %>
@@ -9,24 +9,41 @@
 			<% include template_view::css_links() %>
 			<link href="/css/solution.css" rel="stylesheet" type="text/css" />
 		<% end template %>
+		
+		
+		<% template javascript_code() %>
+			<% include template_view::javascript_code() %>
+			<script>
+				$(document).ready(function() {
+					var html_code = XBBCODE.process({
+						text: $('#solution_solution_content').html(),
+						removeMisalignedTags: false,
+						addInLineBreaks: true
+					}).html;
+					
+					$('#solution_solution_content').empty();
+					$('#solution_solution_content').append(html_code);
+				});
+			</script>
+		<% end template %>	
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_solution_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="main-container">
 					<% include template_view::toolbar_solution(problem_id) %>
-					<div class="pci_horizontal_line"></div>
-					<div id="pci_solution_header_container">
+					<div class="horizontal_line"></div>
+					<div id="solution_header_container">
 						<h2>
 							<%= solution->description %>
 						</h2>
 					</div>
-					<div class="pci_box_content" id="pci_solution_solution_content">
+					<div class="box_content" id="solution_solution_content">
 						<%= solution->content %>
 					</div>
-					<% include template_view::clarifications(clarifications, solution, user_signed_in, user_name) %>
+					<% include template_view::clarifications(clarifications, solution) %>
 				</div>
 			</div>
 		<% end template %>

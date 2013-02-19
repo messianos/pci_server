@@ -1,5 +1,5 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view user_view uses ViewContent::UserContent extends template_view %>
@@ -13,42 +13,56 @@
 		
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function() {
-				setActiveNavigationButton('pci_navigation_menu_profile_button');
+				setActiveNavigationButton('navigation_menu_profile_button');
 			});
+			</script>
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
 			
-			<div id="pci_user_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="main-container">
 					<div id="column_1">
 						<div id="content_wrapper">
 							<div id="title_container">
-								<div id="rank_icon"></div>
-								<div id="big_name"><%= user->first_name %> <%= user->last_name %></div>
-								<div id="user_stats">
-									<div class="stat_container">
-										<div class="stat_number">1000</div>
-										<div class="stat_description">Publicaciones</div>
-									</div>
-									<div class="stat_container">
-										<div class="stat_number">400</div>
-										<div class="stat_description">Problemas</div>
-									</div>
-									<div class="stat_container">
-										<div class="stat_number">900</div>
-										<div class="stat_description">Soluciones</div>
-									</div>
-									<div class="stat_container">
-										<div class="stat_number">600</div>
-										<div class="stat_description">Soluciones aceptadas</div>
-									</div>
+								<div class="row-fluid title">								
+									<div id="rank_icon"></div>
+									<div id="big_name"><%= user->first_name %> <%= user->last_name %></div>
 								</div>
-							</div>	
+								<div class="row-fluid">
+									<div class="span3">
+										<div>
+											<div class="stat_number"><%= number_of_publications %></div>
+											<div class="stat_description">Publicaciones</div>
+										</div>
+									</div>
+									<div class="span3">
+										<div>
+										<div class="stat_number"><%= number_of_problems %></div>
+										<div class="stat_description">Problemas</div>
+										</div>
+									</div>
+									<div class="span3">
+										<div>
+										<div class="stat_number"><%= number_of_solutions %></div>
+										<div class="stat_description">Soluciones</div>
+										</div>
+									</div>
+									<div class="span3">
+										<div>
+										<div class="stat_number"><%= number_of_accepted_solutions %></div>
+										<div class="stat_description">Soluciones aceptadas</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<h2>Descripcion personal</h2>
 							<div id="user_customizable_panel">
 								Messi nació el 24 de junio de 1987 en la ciudad de Rosario, en la
 								provincia de Santa Fe, Argentina. Es hijo de Jorge Horacio Messi, 
@@ -59,34 +73,25 @@
 								hermanos llamados Rodrigo y Matías, como también una hermana llamada
 								María Sol. Asimismo, dos de sus primos (Maximiliano y Emanuel Biancucchi)
 								son también futbolistas.<br>
-								Con apenas cinco años, Lionel Messi dio sus primeros pasos en Grandoli,
-								un club de barrio a pocas manzanas de su casa, al sur de la ciudad 
-								argentina de Rosario. El club era dirigido por su padre, Jorge.
-								Posteriormente jugó algunos partidos con el Club Atlético Central Córdoba.
-								 En 1995, Messi comenzó a entrenarse en las divisiones inferiores de 
-								Newell's Old Boys, club con el que obtuvo la Copa de la Amistad de Perú
-								en 1997. A la edad de 11 años, le fue diagnosticada una deficiencia de la
-								hormona de crecimiento. El Club Atlético River Plate mostró cierto interés
-								en el progreso de Messi sin embargo, no creyó conveniente desembolsar el
-								dinero para pagar el tratamiento que tenía un costo de $900 por mes.
-								Carles Rexach, director técnico del Barcelona, notó el talento de Messi 
-								y éste tenía parientes en Lérida, España, siendo capaz, junto con su padre,
-								de iniciar un viaje. El Barcelona lo fichó después de verlo jugar, 
-								ofreciéndose entonces a pagar los costosos tratamientos si él se mudaba a
-								España. Su familia se trasladó a Barcelona donde comenzó a jugar con 
-								equipos juveniles.<br>
-								Messi empezó a jugar en las categorias inferiores del FC Barcelona a la 
-								edad de 13 años. En ellas fue compañero de equipo de Cesc Fabregas y Gerard
-								Piqué entre otros. Uno de sus primeros técnicos fue Tito Vilanova, quien años
-								más tarde sería su entrenador en el primer equipo.
 							</div>
+							<h2>Actividad reciente</h2>
 							<div id="recent_activity">
-								recent_activity
+								<% foreach activity in *recent_activity %>
+									<% item %>
+										<% if (!activity->is_anonymous || content.user_name.compare(content.user->user_name) == 0) %>
+											<div class="box_description problems_problem_description">
+												<% include template_view::publication_description(activity) %>
+											</div>
+										<% end %>
+									<% end %>
+								<% empty %>
+									No hay actividad reciente
+								<% end %>
 							</div>
 						</div>
 					</div>
 					<div id="column_2">
-						<div id="profile_image"></div>
+						<div id="profile_image" style="background:url('<%= user->profile_picture_url %>')"></div>
 						<div id="user_personal_info">
 							<div class="feature_container">
 								<div class="feature_title">

@@ -1,5 +1,5 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view index_view uses ViewContent::IndexContent extends template_view %>
@@ -21,52 +21,42 @@
 	
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function() {
 				configureValidator([
-					{ elementId: 'pci_sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },
-					{ elementId: 'pci_sign_up_textfield_last_name', onChangeFunction: lastNameOnChange },
-					{ elementId: 'pci_sign_up_textfield_user_name', onChangeFunction: userNameOnChange },
-					{ elementId: 'pci_sign_up_textfield_email', onChangeFunction: emailOnChange },
-					{ elementId: 'pci_sign_up_textfield_password', onChangeFunction: passwordOnChange },
-					{ elementId: 'pci_sign_up_textfield_password_verification', onChangeFunction: passwordVerificationOnChange },
-					{ elementId: 'pci_sign_up_dropdownlist_genre', onChangeFunction: genreOnChange }
+					{ elementId: 'sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },
+					{ elementId: 'sign_up_textfield_last_name', onChangeFunction: lastNameOnChange },
+					{ elementId: 'sign_up_textfield_user_name', onChangeFunction: userNameOnChange },
+					{ elementId: 'sign_up_textfield_email', onChangeFunction: emailOnChange },
+					{ elementId: 'sign_up_textfield_password', onChangeFunction: passwordOnChange },
+					{ elementId: 'sign_up_textfield_password_verification', onChangeFunction: passwordVerificationOnChange },
+					{ elementId: 'sign_up_dropdownlist_genre', onChangeFunction: genreOnChange }
 				]);
 				
-				configureTextfield('pci_sign_up_textfield_first_name');
-				configureTextfield('pci_sign_up_textfield_last_name');
-				configureTextfield('pci_sign_up_textfield_user_name');
-				configureTextfield('pci_sign_up_textfield_email');
-				configurePasswordfield('pci_sign_up_textfield_password');
-				configurePasswordfield('pci_sign_up_textfield_password_verification');
-				configureDatepicker('pci_sign_up_textfield_birth_date');
-				configureDropdownlist('pci_sign_up_dropdownlist_genre');
+				configureTextfield('sign_up_textfield_first_name');
+				configureTextfield('sign_up_textfield_last_name');
+				configureTextfield('sign_up_textfield_user_name');
+				configureTextfield('sign_up_textfield_email');
+				configurePasswordfield('sign_up_textfield_password');
+				configurePasswordfield('sign_up_textfield_password_verification');
+				configureDatepicker('sign_up_textfield_birth_date');
+				configureDropdownlist('sign_up_dropdownlist_genre');
 			});
+			</script>
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div id="pci_index_main_container">
-				<div id="pci_index_TO_DEFINE_container">
-					<a href="<% url "/problems" %>">
-						<h2>
-							Problemas
-						</h2>
-					</a>
-					Comienzo content
-					<br />
-					<br />
-					<br />
-					Index content
-					<br />
-					<br />
-					<br />
+			<div class="main-container">
+				<a href="<% url "/problems" %>">
+					<img src="img/community.jpg" >
+				</a>
+				<div id="index_sign_up_container">
+					<% include template_view::create_user_form() %>
 				</div>
-				<div id="pci_index_sign_up_container">
-					<% include template_view::sign_up_form(sign_up_form_info) %>
-				</div>
+				<% include template_view::information_footer() %>
 			</div>
-			<% include template_view::information_footer() %>
 		<% end template %>
 	
 	

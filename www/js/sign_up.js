@@ -12,11 +12,11 @@ var signUpConstants = {
 		emailErrorDescription: 'Error description email',
 		emailRegExp: /^[A-Z0-9._+-]+@[A-Z0-9.]+\.[A-Z0-9]{2,}$/i,
 		passwordErrorDescription: 'Error description password',
-		passwordId: 'pci_sign_up_textfield_password',
+		passwordId: 'sign_up_textfield_password',
 		passwordMaxLength: 128,
 		passwordMinLength: 2,
 		passwordVerificationErrorDescription: 'Error description password_verification',
-		passwordVerificationId: 'pci_sign_up_textfield_password_verification',
+		passwordVerificationId: 'sign_up_textfield_password_verification',
 		genreErrorDescription: 'Error description genre',
 		genreRegExp: /^[FM]$/g
 	/* -------------------------------------------------------------------- */

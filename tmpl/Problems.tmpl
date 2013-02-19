@@ -1,5 +1,5 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view problems_view uses ViewContent::ProblemsContent extends template_view %>
@@ -13,30 +13,56 @@
 	
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function() {
-				setActiveNavigationButton('pci_navigation_menu_problems_button');
+				setActiveNavigationButton('navigation_menu_problems_button');
 			});
+			</script>
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_problems_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="main-container">
 					<% if user_signed_in %>
 						<% include template_view::toolbar_problems() %>
-						<div class="pci_horizontal_line"></div>
 					<% end %>
-					<% foreach problem in *problems %>
-						<% item %>
-							<div class="pci_box_description pci_problems_problem_description">
-								<% include template_view::problem_description(problem) %>
-							</div>
-						<% end %>
-					<% empty %>
-						No se encontraron problemas
-					<% end %>
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tab1" data-toggle="tab">Al azar</a></li>
+						<li><a href="#tab2" data-toggle="tab">Recientes</a></li>
+						<li><a href="#tab3" data-toggle="tab">Sin resolver</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab1">
+							<% foreach problem in *random_problems %>
+								<% item %>
+									<% include template_view::problem_description(problem) %>
+								<% end %>
+							<% empty %>
+								No se encontraron problemas
+							<% end %>
+						</div>
+						<div class="tab-pane" id="tab2">
+							<% foreach problem in *latest_problems %>
+								<% item %>
+									<% include template_view::problem_description(problem) %>
+								<% end %>
+							<% empty %>
+								No se encontraron problemas sin resolver
+							<% end %>							
+						</div>
+						<div class="tab-pane" id="tab3">
+							<% foreach problem in *unsolved_problems %>
+								<% item %>
+									<% include template_view::problem_description(problem) %>
+								<% end %>
+							<% empty %>
+								No se encontraron problemas sin resolver
+							<% end %>
+						</div>
+					</div>
 				</div>
 			</div>
 		<% end template %>

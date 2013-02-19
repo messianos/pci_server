@@ -1,178 +1,547 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view template_view uses ViewContent::TemplateContent %>
 
+		<% template sign_in_form() %>
+			<form id="sign_in_form">
+				<input id="sign_in_user_name" placeholder="Nombre de usuario" type="text" /><br />
+				<input id="sign_in_password" placeholder="Contraseña" type="password" /><br />
+				<input class="btn pull-right" type="submit" value="Ingresar" />
+			</form>
+			<script>
+				$('#sign_in_form').submit({
+					password: $('#sign_in_password'),
+					user_name: $('#sign_in_user_name')
+				}, function(event) {
+					event.preventDefault();
+					
+					var password = event.data.password.val();
+					var user_name = event.data.user_name.val();
+					
+					var on_invalid_input = onInvalidInputSignIn(event.data.password, event.data.user_name);
+					if(validateSignInInput(on_invalid_input, password, user_name)) {
+						var on_success = onSuccessSignIn();
+						var on_failure = onFailureSignIn();
+						postSignIn(on_success, on_failure, password, user_name);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template sign_out_form() %>
+			<button class="btn pull-right" id="sign_out_button">Salir</button>
+			<script>
+				$('#sign_out_button').click(function() {
+					var on_success = onSuccessSignOut();
+					var on_failure = onFailureSignOut()
+					postSignOut(on_success, on_failure);
+				});
+			</script>
+		<% end template %>
+		
+		<% template toggle_anonymous_mode_form(bool anonymous_mode) %>
+			<a class="pull-right <% if anonymous_mode %>on<% end %>"
+				id="toggle_anonymous_mode_button" data-toggle="tooltip"
+				data-original-title="Modo anónimo <% if anonymous_mode %>activado<% else %>desactivado<% end %>"
+				data-placement="bottom"
+				data-container="body">
+			</a>
+			<script>
+				$('#toggle_anonymous_mode_button').tooltip();
+				$('#toggle_anonymous_mode_button').click(function() {
+					var on_success = onSuccessToggleAnonymousMode($(this));
+					var on_failure = onFailureToggleAnonymousMode()
+					postToggleAnonymousMode(on_success, on_failure);
+				});
+			</script>
+		<% end template %>
+		
+		<% template create_user_form() %>
+			<legend>Registrate</legend>
+			<form id="create_user_form">
+				<input id="create_user_user_name" placeholder="Nombre de usuario" type="text" /><br />
+				<input id="create_user_first_name" placeholder="Nombre" type="text" /><br />
+				<input id="create_user_last_name" placeholder="Apellido" type="text" /><br />
+				<input id="create_user_email" placeholder="E-mail" type="text" /><br />
+				<input id="create_user_password" placeholder="Contraseña" type="password" /><br />
+				<!--<input id="create_user_location" placeholder="Localidad" type="text" /><br />-->
+				<input id="create_user_birth_date" placeholder="Fecha de nacimiento" readonly type="text" /><br />
+				<select id="create_user_genre">
+					<option value="F">Mujer</option>
+					<option value="M">Hombre</option>
+				</select><br />
+				<input class="btn pull-right" type="submit" value="Registrar" />
+			</form>
+			<script>
+				var current_year = new Date().getFullYear();
+				$('#create_user_birth_date').datepicker({
+					showOn:'focus',
+					yearRange: (current_year - 100) + ':' + current_year,
+					dateFormat:'dd/mm/yy',
+					changeMonth:true,
+					changeYear:true
+				});
+			
+				$('#create_user_form').submit({
+					birth_date: $('#create_user_birth_date'),
+					email: $('#create_user_email'),
+					first_name: $('#create_user_first_name'),
+					genre: $('#create_user_genre'),
+					last_name: $('#create_user_last_name'),
+					location: $('#create_user_location'),
+					password: $('#create_user_password'),
+					user_name: $('#create_user_user_name')
+				}, function(event) {
+					event.preventDefault();
+					
+					var birth_date = event.data.birth_date.val();
+					var email = event.data.email.val();
+					var first_name = $.trim(event.data.first_name.val());
+					var genre = event.data.genre.val();
+					var last_name = $.trim(event.data.last_name.val());
+					var location = $.trim(event.data.location.val());
+					var password = event.data.password.val();
+					var user_name = event.data.user_name.val();
+					
+					var on_invalid_input = onInvalidInputCreateUser(event.data.email, event.data.first_name, event.data.last_name, event.data.location, event.data.password, event.data.user_name);
+					if (validateCreateUserInput(on_invalid_input, email, first_name, last_name, location, password, user_name)) {
+						var on_success = onSuccessCreateUser(user_name);
+						var on_failure = onFailureCreateUser();
+						postCreateUser(on_success, on_failure, birth_date, email, first_name, genre, last_name, location, password, user_name);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template create_problem_form() %>
+			<legend>Crear problema</legend>
+			<form id="create_problem_form">
+				<input id="create_problem_description" placeholder="Descripción del problema" type="text" /><br />
+				<textarea id="create_problem_content"></textarea><br />
+				<input class="btn" type="submit" value="Crear problema" />
+			</form>
+			<script>
+				CKEDITOR.replace(create_problem_content, {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					skin: 'moono-dark',
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					]
+				});
+			
+				$('#create_problem_form').submit({
+					content: $('#create_problem_content'),
+					description: $('#create_problem_description')
+				}, function(event) {
+					event.preventDefault();
+					CKEDITOR.instances.create_problem_content.updateElement();
+					
+					var content = $.trim(event.data.content.val());
+					var description = $.trim(event.data.description.val());
+					
+					var on_invalid_input = onInvalidInputCreateProblem(event.data.content, event.data.description);
+					if (validateCreateProblemInput(on_invalid_input, content, description)) {
+						var on_success = onSuccessCreateProblem();
+						var on_failure = onFailureCreateProblem();
+						postCreateProblem(on_success, on_failure, content, description);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template vote_problem_form(std::string problem_id, int vote_balance, int user_vote) %>
+			<div class="votes_container">
+				<div class="vote_up" id="vote_up">+</div>
+				<div class="votes_number" id="votes_number"><%= vote_balance %></div>
+				<div class="vote_down" id="vote_down">-</div>
+			</div>
+			<script>
+				global_memory.user_vote = <%= user_vote %>;
+			
+				$('#vote_up').click({
+					display: $('#votes_number')
+				}, function(event) {
+					if (global_memory.user_vote < 1) {
+						var problem_id = '<%= problem_id %>';
+						
+						var on_success = onSuccessVoteProblem(event.data.display, 1);
+						var on_failure = onFailureVoteProblem();
+						postVoteProblem(on_success, on_failure, true, problem_id);
+					}
+				});
+				
+				$('#vote_down').click({
+					display: $('#votes_number')
+				}, function(event) {
+					if (global_memory.user_vote > -1) {
+						var problem_id = '<%= problem_id %>';
+						
+						var on_success = onSuccessVoteProblem(event.data.display, -1);
+						var on_failure = onFailureVoteProblem();
+						postVoteProblem(on_success, on_failure, false, problem_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template set_accepted_solution_form(std::string problem_id, std::string solution_id) %>
+			<a class="tick" id="<%= solution_id %>"></a>
+			<script>
+				$('#<%= solution_id %>').click(function() {
+					var problem_id = '<%= problem_id %>';
+					var solution_id = '<%= solution_id %>';
+					
+					var on_success = onSuccessSetAcceptedSolution($(this), problem_id, solution_id);
+					var on_failure = onFailureSetAcceptedSolution();
+					postSetAcceptedSolution(on_success, on_failure, problem_id, solution_id);
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template unset_accepted_solution_form(std::string problem_id, std::string accepted_solution_id) %>
+			<a class="tick on" id="<%= accepted_solution_id %>"></a>
+			<script>
+				$('#<%= accepted_solution_id %>').click(function() {
+					var problem_id = '<%= problem_id %>';
+					var accepted_solution_id = '<%= accepted_solution_id %>';
+					
+					var on_success = onSuccessUnsetAcceptedSolution($(this), problem_id, accepted_solution_id);
+					var on_failure = onFailureUnsetAcceptedSolution();
+					postUnsetAcceptedSolution(on_success, on_failure, problem_id);
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template create_solution_form(std::string problem_id) %>
+			<legend>Crear solución</legend>
+			<form id="create_solution_form">
+				<input id="create_solution_description" placeholder="Descripción de la solución" type="text" /><br />
+				<textarea id="create_solution_content"></textarea><br />
+				<input class="btn" type="submit" value="Crear solución" />
+			</form>
+			<script>
+				CKEDITOR.replace(create_solution_content, {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					skin: 'moono-dark',
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					]
+				});
+			
+				$('#create_solution_form').submit({
+					content: $('#create_solution_content'),
+					description: $('#create_solution_description')
+				}, function(event) {
+					event.preventDefault();
+					CKEDITOR.instances.create_solution_content.updateElement();
+					
+					var content = $.trim(event.data.content.val());
+					var description = $.trim(event.data.description.val());
+					var problem_id =  '<%= problem_id %>';
+					
+					var on_invalid_input = onInvalidInputCreateSolution(event.data.content, event.data.description);
+					if (validateCreateSolutionInput(on_invalid_input, content, description)) {
+						var on_success = onSuccessCreateSolution(problem_id);
+						var on_failure = onFailureCreateSolution();
+						postCreateSolution(on_success, on_failure, content, description, problem_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template vote_solution_form(std::string solution_id, int vote_balance) %>
+			<a class="btn" id="vote_solution_positive_button">Votar positivamente</a>
+			<div id="vote_solution_display"><%= vote_balance %></div>
+			<a class="btn" id="vote_solution_negative_button">Votar negativamente</a>
+			<script>
+				$('#vote_solution_positive_button').click({
+					display: $('#vote_solution_display')
+				}, function(event) {
+					var solution_id = '<%= solution_id %>';
+					
+					var on_success = onSuccessVoteSolution(event.data.display);
+					var on_failure = onFailureVoteSolution();
+					postVoteSolution(on_success, on_failure, true, solution_id);
+				});
+				
+				$('#vote_solution_negative_button').click({
+					display: $('#vote_solution_display')
+				}, function(event) {
+					var solution_id = '<%= solution_id %>';
+					
+					var on_success = onSuccessVoteSolution(event.data.display);
+					var on_failure = onFailureVoteSolution();
+					postVoteSolution(on_success, on_failure, false, solution_id);
+				});
+			</script>
+		<% end %>
+		
+		<% template create_clarification_form(std::string associated_publication_id) %>
+			<form id="create_clarification_form">
+				<textarea id="create_clarification_question" placeholder="Solicitar una aclaración..."></textarea>
+				<input class="btn" type="submit" value="Publicar pregunta" />
+			</form>
+			<script>
+				$('#create_clarification_form').submit({
+					question: $('#create_clarification_question')
+				}, function(event) {
+					event.preventDefault();
+					
+					var associated_publication_id = '<%= associated_publication_id %>';
+					var question = $.trim(event.data.question.val());
+					
+					var on_invalid_input = onInvalidInputCreateClarification(event.data.question);
+					if (validateCreateClarificationInput(on_invalid_input, question)) {
+						var on_success = onSuccessCreateClarification();
+						var on_failure = onFailureCreateClarification();
+						postCreateClarification(on_success, on_failure, associated_publication_id, question);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template answer_clarification_form(std::string clarification_id) %>
+			<form id="answer_clarification_form_<%= clarification_id %>">
+				<textarea id="answer_clarification_answer_<%= clarification_id %>" placeholder="Responder..."></textarea>
+				<input class="btn" type="submit" value="Publicar respuesta" />
+			</form>
+			<script>
+				$('#answer_clarification_form_<%= clarification_id %>').submit({
+					answer: $('#answer_clarification_answer_<%= clarification_id %>')
+				}, function(event) {
+					event.preventDefault();
+					
+					var answer = $.trim(event.data.answer.val());
+					var clarification_id = '<%= clarification_id %>';
+					
+					var on_invalid_input = onInvalidInputAnswerClarification(event.data.answer);
+					if (validateAnswerClarificationInput(on_invalid_input, answer)) {
+						var on_success = onSuccessAnswerClarification();
+						var on_failure = onFailureAnswerClarification();
+						postAnswerClarification(on_success, on_failure, answer, clarification_id);
+					}
+				});
+			</script>
+		<% end template %>
 
-		<% template clarifications(ClarificationList clarifications, PublicationPointer publication, bool user_signed_in, String user_name) %>
+		<% template clarifications(ClarificationList clarifications, PublicationPointer publication) %>
 			<% if (! clarifications->empty()) %>
-				<div id="pci_clarifications_main_container">
-					<div class="pci_horizontal_line"></div>
-					<div class="pci_clarifications_row_container">
-						<div class="pci_clarifications_question_container">
-							<div class="pci_clarifications_column_header pci_clarifications_question_content">
+				<div id="clarifications_main_container">
+					<div class="horizontal_line"></div>
+					<div class="clarifications_row_container">
+						<div class="clarifications_question_container">
+							<div class="clarifications_column_header clarifications_question_content">
 								Pregunta
 							</div>
 						</div>
-						<div class="pci_clarifications_answer_container">
-							<div class="pci_clarifications_answer_content pci_clarifications_column_header">
+						<div class="clarifications_answer_container">
+							<div class="clarifications_answer_content clarifications_column_header">
 								Respuesta
 							</div>
 						</div>
 					</div>
 					<% foreach clarification in *clarifications %>
 	 					<% item %>
-							<div class="pci_clarifications_row_container">
-								<div class="pci_clarifications_question_container">
-									<div class="pci_box_content pci_clarifications_question_content">
-										<span class="pci_text_clarification">
+							<div class="clarifications_row_container">
+								<div class="clarifications_question_container">
+									<div class="box_content clarifications_question_content">
+										<span class="text_clarification">
 											<%= clarification->question %>
 										</span>
 									</div>
 								</div>
-								<div class="pci_clarifications_answer_container">
+								<div class="clarifications_answer_container">
 									<% if (! clarification->answer.empty()) %>
-										<div class="pci_box_content pci_clarifications_answer_content">
-											<span class="pci_text_clarification">
+										<div class="box_content clarifications_answer_content">
+											<span class="text_clarification">
 												<%= clarification->answer %>
 											</span>
 										</div>
 									<% else %>
-										<% if (user_signed_in && user_name.compare(publication->creator_user_name) == 0) %>
-											<div class="pci_clarifications_answer_content">
-												<textarea class="pci_clarifications_answer_textarea pci_textarea_small" id="textarea_<%= clarification->id %>">Responder</textarea>
-												<div class="pci_clarifications_button_container">
-													<a href="javascript:void(0)">
-														<div class="pci_button_classic pci_clarifications_answer_button" id="answer_button_<%= clarification->id %>">
-															Responder
-														</div>
-													</a>
-												</div>
-												<script>
-													configureClarificationTextarea('textarea_<%= clarification->id %>', 'answer_button_<%= clarification->id %>', '<%= clarification->id %>');
-												</script>
+										<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
+											<div class="clarifications_answer_content">
+												<% include answer_clarification_form(clarification->id) %>
 											</div>
 										<% end %>
 									<% end %>
 								</div>
 							</div>
 	  					<% end %>
-					<% empty %>
-						Aún no hay aclaraciones
 					<% end %>
 				</div>
 			<% end %>
+			<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
+				<% include create_clarification_form(publication->id) %>
+			<% end %>
 		<% end template %>
 
-
 		<% template header_bar() %>
-			<div id="pci_header_bar_main_container">
-				<div id="pci_header_bar_central_container">
-					<div id="pci_header_bar_logo_container">
-						<a href="<% url "/" %>" >
-							<div id="pci_header_bar_logo"></div>
+			<div class="navbar navbar-inverse navbar-fixed-top">
+		    	<div class="navbar-inner">
+		        	<div class="container-fluid">
+						<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
+						<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+						<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
 						</a>
-					</div>
-					<div id="pci_header_bar_sign_container">
+						<div class="nav-collapse collapse">
+					 		<ul class="nav pull-right">
+					 			<li>
+									<form class="navbar-search pull-right" action="">
+			                      		<input type="text" class="search-query span2" placeholder="Buscar">
+			                    	</form>
+	                    		</li>
+							 	<% if user_signed_in %>
+							      	<li><% include toggle_anonymous_mode_form(anonymous_mode) %></li>
+									<li>
+								 		<a id="header_bar_user_name" href="<% url "/user" using user_name %>">
+								 			<%= user_first_name %> <%= user_last_name %>
+							 			</a>
+						 			</li>
+									<li><% include sign_out_form() %></li>		 		
+								<% else %>
+									<li>									
+										<button class="btn pull-right" id="header_bar_button_sign_in">
+											Ingresar
+										</button>
+										<div id="header_bar_sign_in_container">
+											<% include sign_in_form() %>
+										</div>
+									</li>
+								<% end %>
+							</ul>
+			          	</div><!--/.nav-collapse -->
+		        	</div>
+		     	</div>
+		    </div>
+		<% end template %>
+
+		<% template old_header_bar() %>
+			<div id="header_bar_main_container">
+					<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
+					<div id="header_bar_sign_container">
 					 	<% if user_signed_in %>
-							<a href="<% url "/sign_out" %>">
-								<div class="pci_button_classic pci_header_bar_button">
-									Salir
-								</div>
-							</a>
-					 		<div id="pci_header_bar_user_name_container">
-							<a href="<% url "/user" using user_name %>">
-					 			<span id="pci_header_bar_user_name">
-					 				<%= user_first_name %> <%= user_last_name %>
-					 			</span>
-				 			</a>
+							<% include sign_out_form() %>
+					 		<div id="header_bar_user_name_container">
+								<a href="<% url "/user" using user_name %>">
+						 			<span id="header_bar_user_name">
+						 				<%= user_first_name %> <%= user_last_name %>
+						 			</span>
+					 			</a>
 				 			</div>
+					 		<% include toggle_anonymous_mode_form(anonymous_mode) %>
 						<% else %>
-							<a href="javascript:void(0)">
-								<div class="pci_button_classic pci_header_bar_button" id="pci_header_bar_button_sign_in">
+							<a>
+								<div class="button_classic header_bar_button" id="header_bar_button_sign_in">
 									Ingresar
 								</div>
 							</a>
-							<div id="pci_header_bar_sign_in_container">
-								<% include sign_in_form(sign_in_form_info) %>
+							<div id="header_bar_sign_in_container">
+								<% include sign_in_form() %>
 							</div>
 						<% end %>
 					</div>
 				</div>
 			</div>
 		<% end template %>
-		
-		
+	
 		<% template information_footer() %>
-			<div id="pci_information_footer_main_container">
-				<div id="pci_information_footer_central_container">
-					<div id="pci_information_footer_logo_extended_container">
-						<div id="pci_information_footer_logo_extended"></div>
+			<div id="information_footer_main_container">
+				<div id="information_footer_central_container">
+					<div id="information_footer_logo_extended_container">
+						<div id="information_footer_logo_extended"></div>
 					</div>
-					<div id="pci_information_footer_link_container">
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								<span class="pci_text_footer">
+					<div id="information_footer_link_container">
+						<div class="information_footer_column_container">
+							<div class="information_footer_column_header">
+								<span class="text_footer">
 									PCI
 								</span>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Acerca de
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Filosofía
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
 						</div>
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								<span class="pci_text_footer">
+						<div class="information_footer_column_container">
+							<div class="information_footer_column_header">
+								<span class="text_footer">
 									Header 2
 								</span>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 1
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 2
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Link 3
 								</a>
 							</div>
 						</div>
-						<div class="pci_information_footer_column_container">
-							<div class="pci_information_footer_column_header">
-								<span class="pci_text_footer">
+						<div class="information_footer_column_container">
+							<div class="information_footer_column_header">
+								<span class="text_footer">
 									Soporte
 								</span>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Ayuda
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Condiciones de servicio
 								</a>
 							</div>
-							<div class="pci_information_footer_link">
-								<a class="pci_link_footer" href="<% url "" %>">
+							<div class="information_footer_link">
+								<a class="link_footer" href="<% url "" %>">
 									Copyright
 								</a>
 							</div>
@@ -184,81 +553,91 @@
 
 
 		<% template navigation_menu() %>
-			<div id="pci_navigation_menu_main_container">
-				<a href="<% url "/problems" %>">
-					<div class="pci_button_square pci_navigation_menu_button" id="pci_navigation_menu_problems_button">
-						Problemas
-					</div>
-				</a>
-				<a href="<% url "/ideas" %>">
-					<div class="pci_button_square pci_navigation_menu_button" id="pci_navigation_menu_ideas_button">
-						Ideas
-					</div>
-				</a>
-				<% if user_signed_in %>
-					<div class="pci_horizontal_line" ></div>
-					<a href="<% url "/user" using user_name %>">
-						<div class="pci_button_square pci_navigation_menu_button" id="pci_navigation_menu_profile_button">
+		<div class="sidebar-nav pull-left" id="navigation_menu">
+            <ul class="nav nav-list">
+              <li><a class="button_square navigation_menu_button" id="navigation_menu_problems_button"
+              		href="<% url "/problems" %>">Problemas</a></li>
+              <li><a class="button_square navigation_menu_button" id="navigation_menu_ideas_button"
+              		 href="<% url "/ideas" %>">Ideas</a></li>
+              <% if user_signed_in %>
+					<li><div class="horizontal_line" ></div></li>
+					<li>
+						<a class="button_square navigation_menu_button" id="navigation_menu_profile_button"
+							href="<% url "/user" using user_name %>">
 							Perfil
-						</div>
-					</a>
+						</a>
+					</li>
 				<% end %>
+            </ul>
+          </div>
+		<% end template %>
+		
+		<% template problem_description(ProblemPointer problem) %>
+			<div class="problems_problem_description">
+				<div class="row-fluid">
+					<div class="span2">
+						<div class="row-fluid problems_votes"> <!-- Votes & Answers -->
+							<div class="span6">
+								<div class="number"><%= problem->vote_balance %></div>
+								<div>Votos</div>
+							</div>
+							<div class="span6">
+								<div class="number">N/A</div>
+								<div>Soluciones</div>
+							</div>
+						</div>
+					</div>
+					<div class="span9">
+						<div class="row-fluid">				
+							<a class="link_description" href="<% url "/publication" using problem->id %>">
+								<%= problem->description %>
+							</a>
+							<span class="text_description">
+								<% if problem->is_anonymous %>
+									<i>Publicado anónimamente</i>
+								<% else %>
+									<i>Por <a class="link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+								<% end %>
+								- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+							</span>
+						</div>
+					</div>
+					<% if problem->is_solved %>
+						<div class="span1">
+							<div class="tick on"></div>
+						</div>
+					<% end %>
+				</div>				
 			</div>
 		<% end template %>
 		
-		
-		<% template new_problem_form(ViewContent::NewProblemFormInfo &new_problem_form_info) %>
-			<form action="" method="post">
-				<% form as_p new_problem_form_info %>
-			</form>
-		<% end template %>
-		
-		
-		<% template new_solution_form(ViewContent::NewSolutionFormInfo &new_solution_form_info) %>
-			<form action="" method="post">
-				<% form as_p new_solution_form_info %>
-			</form>
-		<% end template %>
-		
-		
-		<% template problem_description(ProblemPointer problem) %>
-			<a class="pci_link_description" href="<% url "/publication" using problem->id %>">
-				<%= problem->description %>
+		<% template publication_description(PublicationPointer publication) %>
+			<a class="link_description" href="<% url "/publication" using publication->id %>">
+				<%= publication->description %>
 			</a>
-			<span class="pci_text_description">
-				<% if problem->is_anonymous %>
-					<i>Publicado Anónimamente</i>
+			<span class="text_description">
+				<% if publication->is_anonymous %>
+					<i>Publicado anónimamente</i>
 				<% else %>
-					<i>Por <a class="pci_link_user_name" href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+					<i>Por <a class="link_user_name" href="<% url "/user" using publication->creator_user_name %>"><%= publication->creator_user_name %></a></i>
 				<% end %>
-				- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+				- <%= publication->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
-		<% end template %>
-		
-		
-		<% template sign_in_form(ViewContent::SignInFormInfo &sign_in_form_info) %>
-			<form action="" method="post">
-				<% form as_p sign_in_form_info %>
-			</form>
-		<% end template %>
-		
-		
-		<% template sign_up_form(ViewContent::SignUpFormInfo &sign_up_form_info) %>
-			<form action="" method="post">
-				<% form as_p sign_up_form_info %>
-			</form>
-		<% end template %>
-		
+		<% end template %>		
 		
 		<% template solution_description(ProblemPointer problem, SolutionPointer solution) %>
-			<a class="pci_link_description" href="<% url "/publication" using problem->id, solution->id %>">
+			<a class="link_description" href="<% url "/publication" using problem->id, solution->id %>">
 				<%= solution->description %>
 			</a>
-			<span class="pci_text_description">
+			<span class="text_description">
 				<% if solution->is_anonymous %>
-					<i>Publicado Anónimamente</i>
+					<i>Publicado anónimamente</i>
 				<% else %>
-					<i>Por <a class="pci_link_user_name" href="<% url "/user" using solution->creator_user_name %>"><%= solution->creator_user_name %></a></i>
+					<i>Por 
+						<a class="link_user_name" href="<% url "/user" using solution->creator_user_name %>">
+							<%= solution->creator_user_name %>
+						</a>
+					</i>
 				<% end %>
 				- <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
@@ -266,20 +645,19 @@
 		
 		
 		<% template toolbar_problems() %>
-			<div id="pci_toolbar_problems_container">
-				<a href="<% url "/new_problem" %>">
-					<div class="pci_button_icon pci_toolbar_problems_button" id="pci_toolbar_problems_new_problem_button">
-						Nuevo problema
-					</div>
+			<div id="toolbar_problems_container">
+				<a class="btn" id="toolbar_problems_new_problem_button"
+					href="<% url "/new_problem" %>">
+					Nuevo problema
 				</a>
 			</div>
 		<% end template %>
 		
 		
 		<% template toolbar_problem(std::string problem_id) %>
-			<div id="pci_toolbar_problem_container">
+			<div id="toolbar_problem_container">
 				<a href="<% url "/new_solution" using problem_id %>">
-					<div class="pci_button_icon pci_toolbar_problem_button" id="pci_toolbar_problem_new_solution_button">
+					<div class="button_icon toolbar_problem_button" id="toolbar_problem_new_solution_button">
 						Plantear solución
 					</div>
 				</a>
@@ -288,9 +666,9 @@
 		
 		
 		<% template toolbar_solution(std::string problem_id) %>
-			<div id="pci_toolbar_solution_container">
+			<div id="toolbar_solution_container">
 				<a href="<% url "/publication" using problem_id %>">
-					<div class="pci_button_icon pci_toolbar_solution_button" id="pci_toolbar_solution_go_back_button">
+					<div class="button_icon toolbar_solution_button" id="toolbar_solution_go_back_button">
 						Volver al problema
 					</div>
 				</a>
@@ -299,22 +677,35 @@
 
 
 		<% template css_links() %>
+    		<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    		<link href="/lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
 			<link href="/css/template.css" rel="stylesheet" type="text/css" />
+    		<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 
 
 		<% template js_links() %>
 			<script src="/js/utilities.js"></script>
+			<script src="/js/logic.js"></script>
 			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
+			<script src="/lib/xbbcode/xbbcode.js"></script>
+			
+			<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+	    	<!--[if lt IE 9]>
+	      		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	    	<![endif]-->
+    		<script src="/lib/bootstrap/js/bootstrap.min.js"></script>
 		<% end template %>
 		
 		
 		<% template javascript_code() %>
-			$(document).ready(function() {
-				configureTextfield('pci_sign_in_textfield_user_name');
-				configurePasswordfield('pci_sign_in_textfield_password');
-				configureSignInFormContainer('pci_header_bar_sign_in_container', 'pci_header_bar_button_sign_in');
-			});
+			<script>
+				$(document).ready(function() {
+					configureTextfield('sign_in_textfield_user_name');
+					configurePasswordfield('sign_in_textfield_password');
+					configureSignInFormContainer('header_bar_sign_in_container', 'header_bar_button_sign_in');
+				});
+			</script>
 		<% end template %>
 		
 		
@@ -327,10 +718,8 @@
 			<html>
 				<head>
 					<% include css_links() %>
-					<% include js_links() %>
-					<script>
-						<% include javascript_code() %>
-					</script>
+					<% include js_links() %> <!-- Placed here for faster page loading -->
+					<% include javascript_code() %>
 			    	<title>
 			    		<%= page_title %>
 			    	</title>

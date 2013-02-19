@@ -3,29 +3,44 @@ body {
 	background-color:#F1F1F1;
 }
 
-#pci_problem_main_container {
-	min-width:912px;
-	padding:64px 128px 0px 240px;
+#fixed_problem_content{
+	float:left;
+	right:0;
+	left:0;
 }
 
-#pci_problem_header_container {
+div.fixed_box_container{
+	/* from box container */
+	background-color:#FFFFFF;
+	border-color:#D0D0D0;
+	border-radius:8px;
+	border-style:solid;
+	border-width:1px;
+	overflow:hidden;
+	padding:16px;
+}
+
+.fixed-right-sidebar{
+	position:fixed;
+	right:25px;
+}
+
+#problem_header_container {
 	clear:both;
 }
 
-#pci_problem_problem_container {
-	float:left;
-	width:60%;
+#problem_problem_content {
+	margin:8px 0px 0px 0px;
 }
 
-#pci_problem_problem_content {
-	margin:16px 8px 0px 0px;
-}
-
-#pci_problem_solution_container {
-	float:right;
-	width:40%;
-}
-
-div.pci_problem_solution_description {
+div.problem_solution_description {
 	margin:16px 0px 0px 8px;
+}
+.fixed-right{
+	position:fixed;
+	right:25px;
+}
+
+.margin-for-fixed-title{
+	margin-top:120px;
 }
