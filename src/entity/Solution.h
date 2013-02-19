@@ -8,6 +8,7 @@
 class Solution: public Publication {
 
 public:
+	std::string problem_id;
 	Solution();
 	virtual ~Solution();
 };

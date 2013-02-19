@@ -318,7 +318,7 @@
 					
 					var on_invalid_input = onInvalidInputCreateClarification(event.data.question);
 					if (validateCreateClarificationInput(on_invalid_input, question)) {
-						var on_success = onSuccessCreateClarification();
+						var on_success = onSuccessCreateClarification(question);
 						var on_failure = onFailureCreateClarification();
 						postCreateClarification(on_success, on_failure, associated_publication_id, question);
 					}
@@ -342,7 +342,7 @@
 					
 					var on_invalid_input = onInvalidInputAnswerClarification(event.data.answer);
 					if (validateAnswerClarificationInput(on_invalid_input, answer)) {
-						var on_success = onSuccessAnswerClarification();
+						var on_success = onSuccessAnswerClarification($(this), answer);
 						var on_failure = onFailureAnswerClarification();
 						postAnswerClarification(on_success, on_failure, answer, clarification_id);
 					}

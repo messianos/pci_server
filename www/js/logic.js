@@ -460,7 +460,6 @@ function onInvalidInputCreateUser(email_textfield, first_name_textfield, last_na
 
 function onSuccessCreateUser(user_name) {
 	return function(data, text_status, jq_xhr) {
-		// TODO
 		window.location.href = url.fetch_user_page + '/' + user_name;
 	};
 }
@@ -627,7 +626,7 @@ function onInvalidInputCreateClarification(question_textarea) {
 
 function onSuccessCreateClarification() {
 	return function(data, text_status, jq_xhr) {
-		// TODO
+		showToast('Su pregunta ha sido enviada al autor de la publicación.');
 	};
 }
 
@@ -644,9 +643,13 @@ function onInvalidInputAnswerClarification(answer_textarea) {
 	};
 }
 
-function onSuccessAnswerClarification() {
+function onSuccessAnswerClarification(form, answer) {
 	return function(data, text_status, jq_xhr) {
-		// TODO
+		var new_node = $('<span class="text_clarification">' + answer + '</span>');
+		var parent = form.parent();
+		parent.empty();
+		parent.addClass('box_content');
+		parent.append(new_node);
 	};
 }
 
@@ -767,5 +770,48 @@ function showErrorLateralBox(error_description) {
 		left: 0
 	}, {
 		duration: 1000, queue: false
+	});
+}
+
+function showToast(message) {
+	// TODO
+	alert(message);
+	
+	var toast = $('<div></div>');
+	toast.css('background-color', '#FF0000');
+	toast.css('border-radius', '12px');
+	toast.css('box-shadow', '1px 1px 3px 0px #555555');
+	toast.css('max-width', '448px');
+	toast.css('opacity', '0.95');
+	toast.css('padding', '8px 8px 8px 0px');
+	toast.css('position', 'fixed');
+	// TODO---> set actual toast position
+	
+	var close_button = $('<a>X</a>');
+	close_button.css('background-color', '#111111');
+	close_button.css('border-color', '#E0E0E0');
+	close_button.css('border-radius', '28px');
+	close_button.css('border-style', 'solid');
+	close_button.css('border-width', '2px');
+	close_button.css('color', '#D2D2D2');
+	close_button.css('cursor', 'pointer');
+	close_button.css('font-family', 'Arial');
+	close_button.css('font-weight', 'bold');
+	close_button.css('height', '28px');
+	close_button.css('line-height', '28px');
+	close_button.css('position', 'absolute');
+	close_button.css('right', '-7px');
+	close_button.css('text-align', 'center');
+	close_button.css('text-decoration', 'none');
+	close_button.css('top', '-7px');
+	close_button.css('width', '28px');
+	close_button.click({
+		toast: toast
+	}, function(event) {
+		dialog.animate({
+			left: -dialog.outerWidth() - 16
+		}, 800, function() {
+			dialog.remove();
+		});
 	});
 }

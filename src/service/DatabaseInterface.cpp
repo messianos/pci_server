@@ -49,6 +49,7 @@ const string solution_attributes = ""
 		"		HEX(id) AS id,"
 		"		is_anonymous,"
 		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime,"
+		"		HEX(problem_id),"
 		"		vote_balance";
 
 const string user_attributes = ""
@@ -347,6 +348,7 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 			"		HEX(Solution.id) AS id,"
 			"		Solution.is_anonymous AS is_anonymous,"
 			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
+			"		HEX(Solution.problem_id),"
 			"		Solution.vote_balance AS vote_balance"
 			"	FROM"
 			"		problem_solved"
@@ -489,6 +491,7 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 			"		HEX(Solution.id) AS id,"
 			"		Solution.is_anonymous AS is_anonymous,"
 			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
+			"		HEX(Solution.problem_id),"
 			"		Solution.vote_balance"
 			"	FROM"
 			"		Problem"
@@ -833,6 +836,7 @@ Solution* DatabaseInterface::fetchSolution(result result) {
 		result.fetch("is_anonymous", solution->is_anonymous);
 		result.fetch("last_edition_datetime", timestamp);
 		solution->last_edition_datetime = new Datetime(timestamp);
+		result.fetch("problem_id", solution->problem_id);
 		result.fetch("vote_balance", solution->vote_balance);
 
 	} catch (exception const &e) {
@@ -946,7 +950,7 @@ int DatabaseInterface::getSolutionVoteBalance(string solution_id) {
 	return vote_balance;
 }
 
-int DatabaseInterface::getUserVoteOnProblem(std::string user_name, std::string problem_id) {
+int DatabaseInterface::getUserVoteOnProblem(string user_name, string problem_id) {
 	string query = ""
 			"	SELECT"
 			"		is_positive"
@@ -966,7 +970,7 @@ int DatabaseInterface::getUserVoteOnProblem(std::string user_name, std::string p
 	return is_positive ? 1 : -1;
 }
 
-int DatabaseInterface::getUserVoteOnSolution(std::string user_name, std::string solution_id) {
+int DatabaseInterface::getUserVoteOnSolution(string user_name, string solution_id) {
 	string query = ""
 				"	SELECT"
 				"		is_positive"
@@ -983,6 +987,44 @@ int DatabaseInterface::getUserVoteOnSolution(std::string user_name, std::string 
 		result.fetch("is_positive", is_positive);
 
 		return is_positive ? 1 : -1;
+}
+
+Publication* DatabaseInterface::searchPublication(string publication_id) {
+	if(publication_id[1] == '3')
+		// Publication is a Solution
+		return searchSolution(publication_id);
+	else
+		// Publication is a Problem
+		return searchProblem(publication_id);
+}
+
+ErrorCode* DatabaseInterface::answerClarification(string id, string answer) {
+	string query = ""
+			"	UPDATE"
+			"		Clarification"
+			"	SET"
+			"		answer = ?"
+			"	WHERE"
+			"		id = UNHEX(?)";
+
+	database_handler << query << answer << id << exec;
+
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+ErrorCode* DatabaseInterface::voteSolution(string solution_id, string user_name, bool is_positive) {
+	string query = "	CALL vote_solution("
+			"		?,"
+			"		?,"
+			"		?"
+			"	)";
+
+	database_handler << query << solution_id << user_name << is_positive << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 User* DatabaseInterface::fetchUser(result result) {

@@ -58,7 +58,7 @@ public:
 	void getFetchUserPage(std::string user_name);
 	void getFetchProblemsPage();
 	void getFetchProblemPage(std::string problem_id);
-	void getFetchSolutionPage(std::string problem_id, std::string solution_id);
+	void getFetchSolutionPage(std::string solution_id);
 	void getFetchNewProblemPage();
 	void getFetchNewSolutionPage(std::string problem_id);
 	void getFetchIdeasPage();

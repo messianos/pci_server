@@ -1,6 +1,3 @@
-source pci_database_removal.sql
-source pci_database_server_configuration.sql
-
 /*
  * TODO:
  *
@@ -73,22 +70,7 @@ CREATE TABLE IF NOT EXISTS user_password (
         PRIMARY KEY(user_name),
         FOREIGN KEY(user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
- 
- 
-CREATE TABLE IF NOT EXISTS Solution (
-        content MEDIUMTEXT CHARACTER SET utf8,
-        creation_datetime TIMESTAMP,
-        creator_user_name VARCHAR(31),
-        description TEXT CHARACTER SET utf8,
-        id BINARY(17),
-        is_anonymous BOOLEAN,
-        last_edition_datetime TIMESTAMP,
-        vote_balance INT,
-        PRIMARY KEY(id),
-        FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
-) ENGINE = InnoDB;
- 
- 
+  
 CREATE TABLE IF NOT EXISTS Problem (
         content MEDIUMTEXT CHARACTER SET utf8,
         creation_datetime TIMESTAMP,
@@ -103,7 +85,21 @@ CREATE TABLE IF NOT EXISTS Problem (
         FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
  
- 
+CREATE TABLE IF NOT EXISTS Solution (
+        content MEDIUMTEXT CHARACTER SET utf8,
+        creation_datetime TIMESTAMP,
+        creator_user_name VARCHAR(31),
+        description TEXT CHARACTER SET utf8,
+        id BINARY(17),
+        is_anonymous BOOLEAN,
+        last_edition_datetime TIMESTAMP,
+        problem_id BINARY(17),
+        vote_balance INT,
+        PRIMARY KEY(id),
+        FOREIGN KEY(creator_user_name) REFERENCES User(user_name),
+        FOREIGN KEY(problem_id) REFERENCES Problem(id)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS Proposal (
         content MEDIUMTEXT CHARACTER SET utf8,
         creation_datetime TIMESTAMP,
@@ -690,6 +686,7 @@ BEGIN
                 id,
                 is_anonymous,
                 last_edition_datetime,
+                problem_id,
                 vote_balance
         )
         VALUES (
@@ -700,6 +697,7 @@ BEGIN
                 v_id_binary,
                 in_is_anonymous,
                 v_creation_datetime,
+                in_problem_id_binary,
                 0
         );
        

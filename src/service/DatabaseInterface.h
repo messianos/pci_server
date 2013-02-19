@@ -37,6 +37,11 @@ public:
 	static int getUserVoteOnSolution(std::string user_name, std::string solution_id);
 
 	/*
+	 * Publication operations
+	 */
+	static Publication* searchPublication(std::string publication_id);
+
+	/*
 	 * Problem operations
 	 */
 	static Problem *searchProblem(std::string id);
@@ -67,10 +72,10 @@ public:
 	static std::list<Solution *> *searchSolutions(std::string problem_id);
 	static std::list<Solution *> *searchSolutionsByUser(std::string user_name);
 
-
 	static ErrorCode *insertSolution(Solution *solution, std::string problem_id);
 	static ErrorCode *deleteSolution(std::string id);
 
+	static ErrorCode *voteSolution(std::string solution_id, std::string user_name, bool is_positive);
 	static int getSolutionVoteBalance(std::string solution_id);
 
 
@@ -90,6 +95,8 @@ public:
 	static std::list<Clarification *> *searchClarifications(std::string associated_publication_id);
 	static ErrorCode *insertClarification(Clarification *clarification);
 	static ErrorCode *deleteClarification(std::string id);
+
+	static ErrorCode *answerClarification(std::string id, std::string answer);
 
 	/*
 	 * Statistical operations

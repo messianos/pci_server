@@ -104,8 +104,8 @@ Server::Server(cppcms::service &service) :
 	mapper().assign("problems", "/problems");
 	dispatcher().assign("/publication/(50\\w{32,32})", &Server::getFetchProblemPage, this, 1);
 	mapper().assign("publication", "/publication/{1}");
-	dispatcher().assign("/publication/(50\\w{32,32})/(53\\w{32,32})", &Server::getFetchSolutionPage, this, 1, 2);
-	mapper().assign("publication", "/publication/{1}/{2}");
+	dispatcher().assign("/publication/(53\\w{32,32})", &Server::getFetchSolutionPage, this, 1);
+	mapper().assign("publication", "/publication/{1}");
 	dispatcher().assign("/new_problem", &Server::getFetchNewProblemPage, this);
 	mapper().assign("new_problem", "/new_problem");
 	dispatcher().assign("/new_solution/(50\\w{32,32})", &Server::getFetchNewSolutionPage, this, 1);
@@ -546,10 +546,10 @@ void Server::postVoteSolution() {
 			error_code = InputValidator::validateVoteSolutionInput(is_positive, solution_id);
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
-			else {
+			else {/* TODO
 				bool is_positive_boolean = is_positive.compare("true") == 0;
 
-				//error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean); FIXME----> NEED THE METHOD
+				error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean);
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
@@ -557,7 +557,7 @@ void Server::postVoteSolution() {
 					json_response["vote_balance"] = DatabaseInterface::getSolutionVoteBalance(solution_id);
 					response().out() << json_response;
 					response().status(http::response::ok);
-				}
+				}*/
 			}
 		}
 	}
@@ -618,20 +618,19 @@ void Server::postAnswerClarification() {
 				Clarification *clarification = DatabaseInterface::searchClarification(clarification_id);
 
 				if (clarification == NULL)
-					; // TODO: DO SOMETHING !!! PREVENT CRASHES FROM NULL POINTER
+					response().status(http::response::bad_request, error_code->getErrorDescription());
 				else {
-					//Publication *publication = DatabaseInterface::searchPublication(clarification->associated_publication_id);  TODO --> NEED THIS METHOD
-					/*
+					Publication *publication = DatabaseInterface::searchPublication(clarification->associated_publication_id);
+
 					if (user_name.compare(publication->creator_user_name) != 0)
 						response().status(http::response::forbidden);
 					else {
-						//error_code = DatabaseInterface::(clarification_id, answer); TODO --> NEED THIS METHOD
+						error_code = DatabaseInterface::answerClarification(clarification_id, answer);
 						if (error_code->isAnError())
 							response().status(http::response::internal_server_error, error_code->getErrorDescription());
 						else
 							response().status(http::response::ok);
 					}
-					*/
 				}
 			}
 		}
@@ -679,8 +678,8 @@ void Server::getFetchMainPage() {
 		setSessionProperties(content);
 		content.page_title = "PCI";
 
-		response().status(http::response::ok);
 		render("index_view", content);
+		response().status(http::response::ok);
 	}
 }
 
@@ -706,8 +705,8 @@ void Server::getFetchUserPage(string user_name) {
 
 			content.recent_activity = DatabaseInterface::getRecentActivityByUser(user_name);
 
-			response().status(http::response::ok);
 			render("user_view", content);
+			response().status(http::response::ok);
 		}
 	}
 }
@@ -726,8 +725,8 @@ void Server::getFetchProblemsPage() {
 		content.unsolved_problems = DatabaseInterface::searchProblemsUnsolved(20);
 		content.latest_problems = DatabaseInterface::searchProblemsLatest(20);
 
-		response().status(http::response::ok);
 		render("problems_view", content);
+		response().status(http::response::ok);
 	}
 }
 
@@ -735,46 +734,55 @@ void Server::getFetchProblemPage(string problem_id) {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		ProblemContent content;
-
-		setSessionProperties(content);
-
 		Problem *problem = DatabaseInterface::searchProblem(problem_id);
-		content.problem = problem;
-		content.page_title = "PCI - " + problem->description;
+		if (problem == NULL)
+			renderError404Page();
+		else {
+			ProblemContent content;
 
-		if (problem->is_solved)
-			content.accepted_solution = DatabaseInterface::searchAcceptedSolution(problem->id);
-		else
-			content.accepted_solution = NULL;
+			setSessionProperties(content);
 
-		content.solutions = DatabaseInterface::searchSolutions(problem_id);
-		content.clarifications = DatabaseInterface::searchClarifications(problem_id);
+			content.problem = problem;
+			content.page_title = "PCI - " + problem->description;
 
-		string user_name = session()["session_user_name"];
-		if (session().is_set("session_user_signed_in"))
-			content.user_vote = DatabaseInterface::getUserVoteOnProblem(user_name, problem_id);
+			if (problem->is_solved)
+				content.accepted_solution = DatabaseInterface::searchAcceptedSolution(problem->id);
+			else
+				content.accepted_solution = NULL;
 
-		response().status(http::response::ok);
-		render("problem_view", content);
+			content.solutions = DatabaseInterface::searchSolutions(problem_id);
+			content.clarifications = DatabaseInterface::searchClarifications(problem_id);
+
+			string user_name = session()["session_user_name"];
+			if (session().is_set("session_user_signed_in"))
+				content.user_vote = DatabaseInterface::getUserVoteOnProblem(user_name, problem_id);
+
+			render("problem_view", content);
+			response().status(http::response::ok);
+		}
 	}
 }
 
-void Server::getFetchSolutionPage(string problem_id, string solution_id) {
+void Server::getFetchSolutionPage(string solution_id) {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		SolutionContent content;
+		Solution *solution = DatabaseInterface::searchSolution(solution_id);
+		if (solution == NULL)
+			renderError404Page();
+		else {
+			SolutionContent content;
 
-		setSessionProperties(content);
+			setSessionProperties(content);
 
-		content.page_title = "PCI - Solución " + solution_id;
-		content.solution = DatabaseInterface::searchSolution(solution_id);
-		content.clarifications = DatabaseInterface::searchClarifications(solution_id);
-		content.problem_id = problem_id;
+			content.page_title = "PCI - Solución " + solution_id;
+			content.solution = solution;
+			content.clarifications = DatabaseInterface::searchClarifications(solution_id);
+			content.problem_id = solution->problem_id;
 
-		response().status(http::response::ok);
-		render("solution_view", content);
+			render("solution_view", content);
+			response().status(http::response::ok);
+		}
 	}
 }
 
@@ -790,8 +798,8 @@ void Server::getFetchNewProblemPage() {
 			setSessionProperties(content);
 			content.page_title = "Nuevo problema";
 
-			response().status(http::response::ok);
 			render("new_problem_view", content);
+			response().status(http::response::ok);
 		}
 }
 
@@ -808,8 +816,8 @@ void Server::getFetchNewSolutionPage(string problem_id) {
 			content.page_title = "Nueva solución";
 			content.problem_id = problem_id;
 
-			response().status(http::response::ok);
 			render("new_solution_view", content);
+			response().status(http::response::ok);
 		}
 }
 
@@ -822,7 +830,7 @@ void Server::getFetchIdeasPage() {
 		setSessionProperties(content);
 		content.page_title = "PCI - Ideas";
 
-		response().status(http::response::ok);
 		render("ideas_view", content);
+		response().status(http::response::ok);
 	}
 }
