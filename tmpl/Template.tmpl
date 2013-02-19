@@ -267,7 +267,7 @@
 					
 					var on_invalid_input = onInvalidInputCreateSolution(event.data.content, event.data.description);
 					if (validateCreateSolutionInput(on_invalid_input, content, description)) {
-						var on_success = onSuccessCreateSolution(problem_id);
+						var on_success = onSuccessCreateSolution();
 						var on_failure = onFailureCreateSolution();
 						postCreateSolution(on_success, on_failure, content, description, problem_id);
 					}
@@ -318,7 +318,7 @@
 					
 					var on_invalid_input = onInvalidInputCreateClarification(event.data.question);
 					if (validateCreateClarificationInput(on_invalid_input, question)) {
-						var on_success = onSuccessCreateClarification(question);
+						var on_success = onSuccessCreateClarification($('#clarifications_main_container'), event.data.question, question);
 						var on_failure = onFailureCreateClarification();
 						postCreateClarification(on_success, on_failure, associated_publication_id, question);
 					}
@@ -351,23 +351,23 @@
 		<% end template %>
 
 		<% template clarifications(ClarificationList clarifications, PublicationPointer publication) %>
-			<% if (! clarifications->empty()) %>
-				<div id="clarifications_main_container">
-					<div class="horizontal_line"></div>
-					<div class="clarifications_row_container">
-						<div class="clarifications_question_container">
-							<div class="clarifications_column_header clarifications_question_content">
-								Pregunta
-							</div>
-						</div>
-						<div class="clarifications_answer_container">
-							<div class="clarifications_answer_content clarifications_column_header">
-								Respuesta
-							</div>
+			<div id="clarifications_main_container">
+				<div class="horizontal_line"></div>
+				<div class="clarifications_row_container">
+					<div class="clarifications_question_container">
+						<div class="clarifications_column_header clarifications_question_content">
+							Pregunta
 						</div>
 					</div>
+					<div class="clarifications_answer_container">
+						<div class="clarifications_answer_content clarifications_column_header">
+							Respuesta
+						</div>
+					</div>
+				</div>
+				<% if (! clarifications->empty()) %>
 					<% foreach clarification in *clarifications %>
-	 					<% item %>
+						<% item %>
 							<div class="clarifications_row_container">
 								<div class="clarifications_question_container">
 									<div class="box_content clarifications_question_content">
@@ -394,8 +394,8 @@
 							</div>
 	  					<% end %>
 					<% end %>
-				</div>
-			<% end %>
+				<% end %>
+			</div>
 			<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
 				<% include create_clarification_form(publication->id) %>
 			<% end %>
@@ -626,7 +626,7 @@
 		<% end template %>		
 		
 		<% template solution_description(ProblemPointer problem, SolutionPointer solution) %>
-			<a class="link_description" href="<% url "/publication" using problem->id, solution->id %>">
+			<a class="link_description" href="<% url "/publication" using solution->id %>">
 				<%= solution->description %>
 			</a>
 			<span class="text_description">
@@ -687,6 +687,7 @@
 		<% template js_links() %>
 			<script src="/js/utilities.js"></script>
 			<script src="/js/logic.js"></script>
+			<script src="/js/graphic.js"></script>
 			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
 			<script src="/lib/xbbcode/xbbcode.js"></script>
 			

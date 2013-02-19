@@ -751,11 +751,17 @@ void Server::getFetchProblemPage(string problem_id) {
 				content.accepted_solution = NULL;
 
 			content.solutions = DatabaseInterface::searchSolutions(problem_id);
-			content.clarifications = DatabaseInterface::searchClarifications(problem_id);
 
 			string user_name = session()["session_user_name"];
-			if (session().is_set("session_user_signed_in"))
+			if (session().is_set("session_user_signed_in")) {
+				if (user_name.compare(problem->creator_user_name) == 0)
+					content.clarifications = DatabaseInterface::searchClarifications(problem_id);
+				else
+					content.clarifications = DatabaseInterface::searchAnsweredClarifications(problem_id, user_name);
+
 				content.user_vote = DatabaseInterface::getUserVoteOnProblem(user_name, problem_id);
+			} else
+				content.clarifications = DatabaseInterface::searchAnsweredClarifications(problem_id);
 
 			render("problem_view", content);
 			response().status(http::response::ok);
@@ -777,7 +783,13 @@ void Server::getFetchSolutionPage(string solution_id) {
 
 			content.page_title = "PCI - Solución " + solution_id;
 			content.solution = solution;
-			content.clarifications = DatabaseInterface::searchClarifications(solution_id);
+
+			string user_name = session()["session_user_name"];
+			if (session().is_set("session_user_signed_in") && user_name.compare(solution->creator_user_name) == 0)
+				content.clarifications = DatabaseInterface::searchClarifications(solution_id);
+			else
+				content.clarifications = DatabaseInterface::searchAnsweredClarifications(solution_id);
+
 			content.problem_id = solution->problem_id;
 
 			render("solution_view", content);

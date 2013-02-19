@@ -9,9 +9,8 @@ using namespace cppdb;
 using namespace std;
 
 // Initializations
-//session DatabaseInterface::database_handler = session("mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
-session DatabaseInterface::database_handler = session(
-		"mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
+session DatabaseInterface::database_handler = session("mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
+//session DatabaseInterface::database_handler = session("mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
 
 // Attributes strings for objects
 const string clarification_attributes = ""
@@ -49,7 +48,7 @@ const string solution_attributes = ""
 		"		HEX(id) AS id,"
 		"		is_anonymous,"
 		"		UNIX_TIMESTAMP(last_edition_datetime) AS last_edition_datetime,"
-		"		HEX(problem_id),"
+		"		HEX(problem_id) AS problem_id,"
 		"		vote_balance";
 
 const string user_attributes = ""
@@ -348,7 +347,7 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 			"		HEX(Solution.id) AS id,"
 			"		Solution.is_anonymous AS is_anonymous,"
 			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
-			"		HEX(Solution.problem_id),"
+			"		HEX(Solution.problem_id) AS problem_id,"
 			"		Solution.vote_balance AS vote_balance"
 			"	FROM"
 			"		problem_solved"
@@ -356,7 +355,7 @@ Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
 			"		Solution"
 			"	ON problem_solved.solution_id = Solution.id"
 			"	WHERE"
-			"		problem_id = UNHEX(?)";
+			"		problem_solved.problem_id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
@@ -491,7 +490,7 @@ list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 			"		HEX(Solution.id) AS id,"
 			"		Solution.is_anonymous AS is_anonymous,"
 			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
-			"		HEX(Solution.problem_id),"
+			"		HEX(Solution.problem_id) AS problem_id,"
 			"		Solution.vote_balance"
 			"	FROM"
 			"		Problem"
@@ -1025,6 +1024,47 @@ ErrorCode* DatabaseInterface::voteSolution(string solution_id, string user_name,
 
 	// TODO
 	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::string problem_id) {
+
+	stringstream query;
+	query << "	SELECT" << clarification_attributes << "	FROM Clarification"
+			"	WHERE associated_publication_id = UNHEX(?) AND answer IS NOT NULL";
+
+	result result = database_handler << query.str() << problem_id;
+
+	list<Clarification *> *clarification_list = new list<Clarification *>();
+
+	while (result.next()) {
+		clarification_list->push_back(fetchClarification(result));
+	}
+
+	return clarification_list;
+
+}
+
+std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::string problem_id,
+		std::string user_name) {
+
+	stringstream query;
+	query << "	SELECT" << clarification_attributes << ""
+			"	FROM"
+			"		Clarification"
+			"	WHERE"
+			"		associated_publication_id = UNHEX(?) AND "
+			"		( answer IS NOT NULL OR "
+			"		creator_user_name LIKE BINARY ? )";
+
+	result result = database_handler << query.str() << problem_id << user_name;
+
+	list<Clarification *> *clarification_list = new list<Clarification *>();
+
+	while (result.next()) {
+		clarification_list->push_back(fetchClarification(result));
+	}
+
+	return clarification_list;
 }
 
 User* DatabaseInterface::fetchUser(result result) {

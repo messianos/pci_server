@@ -579,10 +579,10 @@ function onInvalidInputCreateSolution(content_textarea, description_textfield) {
 	};
 }
 
-function onSuccessCreateSolution(problem_id) {
+function onSuccessCreateSolution() {
 	return function(data, text_status, jq_xhr) {
 		data = $.parseJSON(data);
-		window.location.href = url.fetch_solution_page + '/' + problem_id + '/' + data['solution_id'];
+		window.location.href = url.fetch_solution_page + '/' + data['solution_id'];
 	};
 }
 
@@ -604,7 +604,7 @@ function onFailureEditSolution() {
 	};
 }
 
-function onSuccessVotSolution(display) {
+function onSuccessVoteSolution(display) {
 	return function(data, text_status, jq_xhr) {
 		data = $.parseJSON(data);
 		display.html(data['vote_balance'].toString());
@@ -624,8 +624,18 @@ function onInvalidInputCreateClarification(question_textarea) {
 	};
 }
 
-function onSuccessCreateClarification() {
+function onSuccessCreateClarification(row_parent, textarea, question) {
 	return function(data, text_status, jq_xhr) {
+		textarea.val('');
+		
+		var row = $('<div class="clarifications_row_container"></div>');
+		var question_container = $('<div class="clarifications_question_container"><div class="box_content clarifications_question_content"><span class="text_clarification">' + question + '</div></div></div>');
+		var answer_container = $('<div class="clarifications_answer_container"></div>');
+		
+		row.append(question_container);
+		row.append(answer_container);
+		row_parent.append(row);
+		
 		showToast('Su pregunta ha sido enviada al autor de la publicación.');
 	};
 }
@@ -671,147 +681,5 @@ function postRequest(data, url) {
 		data: data,
 		type: 'POST',
 		url: url
-	});
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Graphical functions
-----------------------------------------------------------------------------------------------
-*/
-
-function showErrorFloatingBox(input_element, error_description) {
-	// TODO
-	alert(input_element.val() + ' - Descripcion del error: ' + error_description);
-}
-
-function showErrorLateralBox(error_description) {
-	$('div.dialog_error_report').animate({
-		left: -$(this).outerWidth() - 16
-	}, 800, function() {
-		$(this).remove();
-	});
-	
-	var dialog = $('<div class="dialog_error_report"></div>');
-	dialog.css('background-color', '#FF0000');
-	dialog.css('border-bottom-right-radius', '12px');
-	dialog.css('border-top-right-radius', '12px');
-	dialog.css('box-shadow', '1px 1px 3px 0px #555555');
-	dialog.css('max-width', '448px');
-	dialog.css('opacity', '0.95');
-	dialog.css('padding', '8px 8px 8px 0px');
-	dialog.css('position', 'fixed');
-	dialog.hover(function() {
-		$(this).animate({
-			opacity: 1
-		}, {
-			duration: 300,
-			queue: false
-		});
-	}, function() {
-		$(this).animate({
-			opacity: 0.95
-		}, {
-			duration: 500,
-			queue: false
-		});
-	});
-	
-	var close_button = $('<a>X</a>');
-	close_button.css('background-color', '#111111');
-	close_button.css('border-color', '#E0E0E0');
-	close_button.css('border-radius', '28px');
-	close_button.css('border-style', 'solid');
-	close_button.css('border-width', '2px');
-	close_button.css('color', '#D2D2D2');
-	close_button.css('cursor', 'pointer');
-	close_button.css('font-family', 'Arial');
-	close_button.css('font-weight', 'bold');
-	close_button.css('height', '28px');
-	close_button.css('line-height', '28px');
-	close_button.css('position', 'absolute');
-	close_button.css('right', '-7px');
-	close_button.css('text-align', 'center');
-	close_button.css('text-decoration', 'none');
-	close_button.css('top', '-7px');
-	close_button.css('width', '28px');
-	close_button.click({
-		dialog: dialog
-	}, function(event) {
-		dialog.animate({
-			left: -dialog.outerWidth() - 16
-		}, 800, function() {
-			dialog.remove();
-		});
-	});
-	
-	var container = $('<div><h3>Se ha producido un error</h3><p>' + error_description + '</p></div>');
-	container.css('background-color', '#F84444');
-	container.css('border-color', '#E0E0E0');
-	container.css('border-top-right-radius', '8px');
-	container.css('border-bottom-right-radius', '8px');
-	container.css('border-style', 'solid');
-	container.css('border-width', '1px 1px 1px 0px');
-	container.css('color', '#FFFFFF');
-	container.css('font-family', 'Lucida Console');
-	container.css('letter-spacing', '0.0625em');
-	container.css('padding', '8px 24px 8px 64px');
-	container.css('text-shadow', '0px 0px 0.125em #000000');
-	container.css('word-break', 'break-word');
-	
-	dialog.append(close_button);
-	dialog.append(container);
-	$('body').append(dialog);
-	
-	dialog.css('bottom', '64px');
-	dialog.css('left', -dialog.outerWidth()) - 16;
-	dialog.animate({
-		left: 0
-	}, {
-		duration: 1000, queue: false
-	});
-}
-
-function showToast(message) {
-	// TODO
-	alert(message);
-	
-	var toast = $('<div></div>');
-	toast.css('background-color', '#FF0000');
-	toast.css('border-radius', '12px');
-	toast.css('box-shadow', '1px 1px 3px 0px #555555');
-	toast.css('max-width', '448px');
-	toast.css('opacity', '0.95');
-	toast.css('padding', '8px 8px 8px 0px');
-	toast.css('position', 'fixed');
-	// TODO---> set actual toast position
-	
-	var close_button = $('<a>X</a>');
-	close_button.css('background-color', '#111111');
-	close_button.css('border-color', '#E0E0E0');
-	close_button.css('border-radius', '28px');
-	close_button.css('border-style', 'solid');
-	close_button.css('border-width', '2px');
-	close_button.css('color', '#D2D2D2');
-	close_button.css('cursor', 'pointer');
-	close_button.css('font-family', 'Arial');
-	close_button.css('font-weight', 'bold');
-	close_button.css('height', '28px');
-	close_button.css('line-height', '28px');
-	close_button.css('position', 'absolute');
-	close_button.css('right', '-7px');
-	close_button.css('text-align', 'center');
-	close_button.css('text-decoration', 'none');
-	close_button.css('top', '-7px');
-	close_button.css('width', '28px');
-	close_button.click({
-		toast: toast
-	}, function(event) {
-		dialog.animate({
-			left: -dialog.outerWidth() - 16
-		}, 800, function() {
-			dialog.remove();
-		});
 	});
 }

@@ -97,6 +97,8 @@ public:
 	static ErrorCode *deleteClarification(std::string id);
 
 	static ErrorCode *answerClarification(std::string id, std::string answer);
+	static std::list<Clarification*>* searchAnsweredClarifications(std::string problem_id);
+	static std::list<Clarification*>* searchAnsweredClarifications(std::string problem_id, std::string user_name);
 
 	/*
 	 * Statistical operations

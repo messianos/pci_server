@@ -697,7 +697,7 @@ BEGIN
                 v_id_binary,
                 in_is_anonymous,
                 v_creation_datetime,
-                in_problem_id_binary,
+                v_problem_id_binary,
                 0
         );
        

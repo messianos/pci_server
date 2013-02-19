@@ -26,8 +26,7 @@
 					$("#ckeditor_container").show();
 					
 					var ck_editor = CKEDITOR.instances.textfield;
-					ck_editor.setData($('#problem_problem_content').html());
-									
+					ck_editor.setData(global_memory.problem_bbcode);
 				}
 				
 				// Hides the ckeditor
@@ -38,12 +37,13 @@
 					
 					var ck_editor = CKEDITOR.instances.textfield;
 					$('#problem_problem_content').html(XBBCODE.process({ text: ck_editor.getData()}).html);
-									
 				}
 				
 				$(document).ready(function() {
+					
+					global_memory.problem_bbcode = $('#problem_problem_content').html();
 					var html_code = XBBCODE.process({
-						text: $('#problem_problem_content').html()
+						text: global_memory.problem_bbcode
 					}).html;
 					
 					$('#problem_problem_content').empty();
