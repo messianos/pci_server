@@ -1,0 +1,16 @@
+
+* {
+	margin:0px;
+	outline-style:none;
+	outline-width:0px;
+	padding:0px;
+}
+
+div.horizontal_line {
+	border-color:#D3D3D3;
+	border-style:solid;
+	border-width:0px 0px 1px 0px;
+	clear:both;
+	height:16px;
+	width:100%;
+}

@@ -1,5 +1,5 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view ideas_view uses ViewContent::IdeasContent extends template_view %>
@@ -13,17 +13,19 @@
 	
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function() {
 				setActiveNavigationButton('pci_navigation_menu_ideas_button');
 			});
+			</script>
 		<% end template %>
 	
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_ideas_main_container">
-				<div class="pci_box_container">
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="main-container">
 					Ideas content
 				</div>
 			</div>

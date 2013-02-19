@@ -8,6 +8,10 @@
 		"script_names" : [ "/", "/pci" ]
 	},
 	
+	"logging" : {
+		"level" : "error" // Default
+	},
+	
 	"service" : {
 		"api" : "http" ,
 		"port" : 8080,

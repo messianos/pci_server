@@ -1,5 +1,5 @@
 
-<% c++ #include "ViewContent.h" %>
+<% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
 	<% view new_solution_view uses ViewContent::NewSolutionContent extends template_view %>
@@ -19,18 +19,20 @@
 		
 		<% template javascript_code() %>
 			<% include template_view::javascript_code() %>
+			<script>
 			$(document).ready(function(){
-				configureTexteditor('pci_texteditor');
+				configureTexteditor('texteditor');
 			});
+			</script>
 		<% end template %>
 		
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div id="pci_new_solution_main_container">
-				<div class="pci_box_container">
-					<% include template_view::new_solution_form(new_solution_form_info) %>
+			<div class="container-fluid">
+				<% include template_view::navigation_menu() %>
+				<div class="main-container">
+					<% include create_solution_form(problem_id) %>
 				</div>
 			</div>
 		<% end template %>

@@ -3,15 +3,15 @@ body {
 	background-color:#F1F1F1;
 }
 
-#pci_solution_main_container {
+#solution_main_container {
 	min-width:912px;
-	padding:64px 128px 0px 240px;
+	padding:64px 16px 0px 128px;
 }
 
-#pci_solution_header_container {
+#solution_header_container {
 	clear:both;
 }
 
-#pci_solution_solution_content {
+#solution_solution_content {
 	margin-top:16px;
 }
