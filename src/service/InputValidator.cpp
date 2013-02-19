@@ -133,6 +133,13 @@ ErrorCode *InputValidator::validateSignInInput(string user_name, string password
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
+ErrorCode *InputValidator::validateUserVoteOnProblem(string problem_id) {
+	if (! isValidProblemId(problem_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
 ErrorCode *InputValidator::validateCreateUserInput(string birth_date, string email, string first_name, string genre, string last_name, string location, string password, string user_name) {
 	if (! isValidBirthDate(birth_date))
 		return new ErrorCode(ErrorCode::CODE_INVALID_BIRTH_DATE);

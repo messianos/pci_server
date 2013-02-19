@@ -162,22 +162,22 @@
 		<% end template %>
 		
 		
-		<% template vote_problem_form(std::string problem_id, int vote_balance) %>
+		<% template vote_problem_form(std::string problem_id, int vote_balance, int user_vote) %>
 			<div class="votes_container">
 				<div class="vote_up" id="vote_up">+</div>
 				<div class="votes_number" id="votes_number"><%= vote_balance %></div>
 				<div class="vote_down" id="vote_down">-</div>
 			</div>
 			<script>
+				global_memory.user_vote = <%= user_vote %>;
+			
 				$('#vote_up').click({
 					display: $('#votes_number')
 				}, function(event) {
-					var user_vote = 5; // TODO: HOW?????
-					
-					if (user_vote < 1) {
+					if (global_memory.user_vote < 1) {
 						var problem_id = '<%= problem_id %>';
 						
-						var on_success = onSuccessVoteProblem(event.data.display);
+						var on_success = onSuccessVoteProblem(event.data.display, 1);
 						var on_failure = onFailureVoteProblem();
 						postVoteProblem(on_success, on_failure, true, problem_id);
 					}
@@ -186,12 +186,10 @@
 				$('#vote_down').click({
 					display: $('#votes_number')
 				}, function(event) {
-					var user_vote = 5; // TODO: HOW?????
-					
-					if (user_vote > -1) {
+					if (global_memory.user_vote > -1) {
 						var problem_id = '<%= problem_id %>';
 						
-						var on_success = onSuccessVoteProblem(event.data.display);
+						var on_success = onSuccessVoteProblem(event.data.display, -1);
 						var on_failure = onFailureVoteProblem();
 						postVoteProblem(on_success, on_failure, false, problem_id);
 					}

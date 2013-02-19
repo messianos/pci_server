@@ -38,6 +38,8 @@ namespace ViewContent {
 		Solution *accepted_solution;
 		std::list<Solution *> *solutions;
 		std::list<Clarification *> *clarifications;
+
+		int user_vote;
 	};
 
 	struct NewProblemContent : TemplateContent {

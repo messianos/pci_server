@@ -362,7 +362,7 @@ void Server::postVoteProblem() {
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
 					json::value json_response = json::value();
-					json_response["vote_balance"] = 5; // FIXME: get actual vote_balance ---> NEED DATABASEINTERFACE METHOD
+					json_response["vote_balance"] = DatabaseInterface::getProblemVoteBalance(problem_id);
 					response().out() << json_response;
 					response().status(http::response::ok);
 				}
@@ -554,7 +554,7 @@ void Server::postVoteSolution() {
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
 					json::value json_response = json::value();
-					json_response["vote_balance"] = 5; // FIXME: get actual vote_balance ---> NEED DATABASEINTERFACE METHOD
+					json_response["vote_balance"] = DatabaseInterface::getSolutionVoteBalance(solution_id);
 					response().out() << json_response;
 					response().status(http::response::ok);
 				}
@@ -750,6 +750,10 @@ void Server::getFetchProblemPage(string problem_id) {
 
 		content.solutions = DatabaseInterface::searchSolutions(problem_id);
 		content.clarifications = DatabaseInterface::searchClarifications(problem_id);
+
+		string user_name = session()["session_user_name"];
+		if (session().is_set("session_user_signed_in"))
+			content.user_vote = DatabaseInterface::getUserVoteOnProblem(user_name, problem_id);
 
 		response().status(http::response::ok);
 		render("problem_view", content);

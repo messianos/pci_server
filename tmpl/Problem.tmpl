@@ -75,7 +75,7 @@
 				<% include template_view::navigation_menu() %>
 				<div class="main-container">
 						<div class="fixed-title-wrapper">
-							<% include vote_problem_form(problem->id, problem->vote_balance) %>
+							<% include vote_problem_form(problem->id, problem->vote_balance, user_vote) %>
 							<div class="title-container">
 								<div class="title"><%= problem->description %></div>
 								<span class="text_description">

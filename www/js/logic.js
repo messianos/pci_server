@@ -1,9 +1,11 @@
 
 /*
 ----------------------------------------------------------------------------------------------
-	Global constants
+	Global variables/constants
 ----------------------------------------------------------------------------------------------
 */
+
+var global_memory = new Object();
 
 var url_root = '/pci';
 var url = {
@@ -503,10 +505,11 @@ function onFailureEditProblem() {
 	};
 }
 
-function onSuccessVoteProblem(display) {
+function onSuccessVoteProblem(display, vote_offset) {
 	return function(data, text_status, jq_xhr) {
 		data = $.parseJSON(data);
 		display.html(data['vote_balance'].toString());
+		global_memory.user_vote = global_memory.user_vote + vote_offset;
 	};
 }
 

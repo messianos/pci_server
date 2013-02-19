@@ -30,6 +30,7 @@ private:
 
 public:
 	static ErrorCode *validateSignInInput(std::string user_name, std::string password);
+	static ErrorCode *validateUserVoteOnProblem(std::string problem_id);
 	static ErrorCode *validateCreateUserInput(std::string birth_date, std::string email, std::string first_name, std::string genre, std::string last_name, std::string location, std::string password, std::string user_name);
 	static ErrorCode *validateCreateProblemInput(std::string content, std::string description);
 	//static ErrorCode *validateDeleteProblemInput(std::string problem_id);
