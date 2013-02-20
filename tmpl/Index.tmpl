@@ -8,41 +8,6 @@
 		<% template css_links() %>
 			<% include template_view::css_links() %>
 			<link href="/css/index.css" rel="stylesheet" type="text/css" />
-			<link href="/lib/jquery-ui/ui-lightness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet" type="text/css" />
-		<% end template %>
-		
-		
-		<% template js_links() %>
-			<% include template_view::js_links() %>
-			<script src="/js/sign_up.js"></script>
-			<script src="/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js"></script>
-		<% end template %>
-		
-	
-		<% template javascript_code() %>
-			<% include template_view::javascript_code() %>
-			<script>
-			$(document).ready(function() {
-			/*	configureValidator([
-					{ elementId: 'sign_up_textfield_first_name', onChangeFunction: firstNameOnChange },
-					{ elementId: 'sign_up_textfield_last_name', onChangeFunction: lastNameOnChange },
-					{ elementId: 'sign_up_textfield_user_name', onChangeFunction: userNameOnChange },
-					{ elementId: 'sign_up_textfield_email', onChangeFunction: emailOnChange },
-					{ elementId: 'sign_up_textfield_password', onChangeFunction: passwordOnChange },
-					{ elementId: 'sign_up_textfield_password_verification', onChangeFunction: passwordVerificationOnChange },
-					{ elementId: 'sign_up_dropdownlist_genre', onChangeFunction: genreOnChange }
-				]);
-				
-				configureTextfield('sign_up_textfield_first_name');
-				configureTextfield('sign_up_textfield_last_name');
-				configureTextfield('sign_up_textfield_user_name');
-				configureTextfield('sign_up_textfield_email');
-				configurePasswordfield('sign_up_textfield_password');
-				configurePasswordfield('sign_up_textfield_password_verification');
-				configureDatepicker('sign_up_textfield_birth_date');
-				configureDropdownlist('sign_up_dropdownlist_genre');*/
-			});
-			</script>
 		<% end template %>
 	
 	

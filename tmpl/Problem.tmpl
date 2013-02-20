@@ -26,7 +26,7 @@
 					$("#ckeditor_container").show();
 					
 					var ck_editor = CKEDITOR.instances.textfield;
-					ck_editor.setData(global_memory.problem_bbcode);
+					ck_editor.setData(logic_memory.problem_bbcode);
 				}
 				
 				// Hides the ckeditor
@@ -41,9 +41,9 @@
 				
 				$(document).ready(function() {
 					
-					global_memory.problem_bbcode = $('#problem_problem_content').html();
+					logic_memory.problem_bbcode = $('#problem_problem_content').html();
 					var html_code = XBBCODE.process({
-						text: global_memory.problem_bbcode
+						text: logic_memory.problem_bbcode
 					}).html;
 					
 					$('#problem_problem_content').empty();

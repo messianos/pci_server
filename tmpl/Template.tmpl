@@ -105,8 +105,9 @@
 					var password = event.data.password.val();
 					var user_name = event.data.user_name.val();
 					
-					var on_invalid_input = onInvalidInputCreateUser(event.data.email, event.data.first_name, event.data.last_name, event.data.location, event.data.password, event.data.user_name);
-					if (validateCreateUserInput(on_invalid_input, email, first_name, last_name, location, password, user_name)) {
+					hideAllTooltips();
+					var on_invalid_input = onInvalidInputCreateUser(event.data.birth_date, event.data.email, event.data.first_name, event.data.last_name, event.data.location, event.data.password, event.data.user_name);
+					if (validateCreateUserInput(on_invalid_input, birth_date, email, first_name, last_name, location, password, user_name)) {
 						var on_success = onSuccessCreateUser(user_name);
 						var on_failure = onFailureCreateUser();
 						postCreateUser(on_success, on_failure, birth_date, email, first_name, genre, last_name, location, password, user_name);
@@ -162,6 +163,56 @@
 		<% end template %>
 		
 		
+		<% template edit_problem_form(std::string description, std::string content) %>
+			<legend>Editar problema</legend>
+			<form id="edit_problem_form">
+				<input id="edit_problem_description" placeholder="Descripción del problema" type="text" /><br />
+				<textarea id="edit_problem_content"><%= content %></textarea><br />
+				<input class="pull-right btn btn-primary" type="submit" value="Finalizar" />
+				<a class="pull-right btn">Cancelar</a>
+			</form>
+			<script>
+				//logic_memory.problem_bbcode = ;
+				
+				CKEDITOR.replace(edit_problem_content, {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					skin: 'moono-dark',
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					]
+				});
+			
+				$('#create_problem_form').submit({
+					content: $('#create_problem_content'),
+					description: $('#create_problem_description')
+				}, function(event) {
+					event.preventDefault();
+					CKEDITOR.instances.create_problem_content.updateElement();
+					
+					var content = $.trim(event.data.content.val());
+					var description = $.trim(event.data.description.val());
+					
+					var on_invalid_input = onInvalidInputCreateProblem(event.data.content, event.data.description);
+					if (validateCreateProblemInput(on_invalid_input, content, description)) {
+						var on_success = onSuccessCreateProblem();
+						var on_failure = onFailureCreateProblem();
+						postCreateProblem(on_success, on_failure, content, description);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
 		<% template vote_problem_form(std::string problem_id, int vote_balance, int user_vote) %>
 			<div class="votes_container">
 				<div class="vote_up" id="vote_up">+</div>
@@ -169,12 +220,12 @@
 				<div class="vote_down" id="vote_down">-</div>
 			</div>
 			<script>
-				global_memory.user_vote = <%= user_vote %>;
+				logic_memory.user_vote = <%= user_vote %>;
 			
 				$('#vote_up').click({
 					display: $('#votes_number')
 				}, function(event) {
-					if (global_memory.user_vote < 1) {
+					if (logic_memory.user_vote < 1) {
 						var problem_id = '<%= problem_id %>';
 						
 						var on_success = onSuccessVoteProblem(event.data.display, 1);
@@ -186,7 +237,7 @@
 				$('#vote_down').click({
 					display: $('#votes_number')
 				}, function(event) {
-					if (global_memory.user_vote > -1) {
+					if (logic_memory.user_vote > -1) {
 						var problem_id = '<%= problem_id %>';
 						
 						var on_success = onSuccessVoteProblem(event.data.display, -1);
@@ -677,25 +728,27 @@
 
 
 		<% template css_links() %>
+			<link href="/lib/jquery-ui/ui-lightness/jquery-ui-1.10.0.custom.min.css" rel="stylesheet" type="text/css" />
     		<link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     		<link href="/lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
-			<link href="/css/template.css" rel="stylesheet" type="text/css" />
     		<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
+			<link href="/css/template.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 
 
 		<% template js_links() %>
-			<script src="/js/utilities.js"></script>
+			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
+			<script src="/lib/jquery-ui/jquery-ui-1.10.0.custom.min.js"></script>
+    		<script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+			<script src="/lib/xbbcode/xbbcode.js"></script>
 			<script src="/js/logic.js"></script>
 			<script src="/js/graphic.js"></script>
-			<script src="/lib/jquery/jquery-1.9.0.min.js"></script>
-			<script src="/lib/xbbcode/xbbcode.js"></script>
+			<script src="/js/utilities.js"></script>
 			
 			<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 	    	<!--[if lt IE 9]>
 	      		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	    	<![endif]-->
-    		<script src="/lib/bootstrap/js/bootstrap.min.js"></script>
 		<% end template %>
 		
 		
