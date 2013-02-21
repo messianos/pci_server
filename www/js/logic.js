@@ -201,6 +201,21 @@ function validateCreateProblemInput(on_invalid_input_callback_function, content,
 	return ! invalid_input;
 }
 
+function validateEditProblemInput(on_invalid_input_callback_function, content) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidPublicationContent(content)) {
+		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
 function validateCreateSolutionInput(on_invalid_input_callback_function, content, description) {
 	var invalid_input = false;
 	var error_information = new Object();
@@ -305,9 +320,10 @@ function postCreateProblem(on_success_callback_function, on_failure_callback_fun
 	request.fail(on_failure_callback_function);
 }
 
-function postEditProblem(on_success_callback_function, on_failure_callback_function) {
+function postEditProblem(on_success_callback_function, on_failure_callback_function, content, problem_id) {
 	var request = postRequest({
-		// TODO
+		content: content,
+		problem_id: problem_id
 	}, logic_memory.url.edit_problem);
 	request.done(on_success_callback_function);
 	request.fail(on_failure_callback_function);
@@ -504,9 +520,29 @@ function onFailureCreateProblem() {
 	};
 }
 
-function onSuccessEditProblem() {
+function onInvalidInputEditProblem(content_textarea) {
+	return function(error_information) {
+		if (logic_memory.error.id.content in error_information)
+			showTooltip(content_textarea, 'left', error_information[logic_memory.error.id.content]);
+	}
+}
+
+function onSuccessEditProblem(content) {
 	return function(data, text_status, jq_xhr) {
-		// TODO
+		logic_memory.problem_bbcode = content;
+		CKEDITOR.instances.edit_problem_content.setData(logic_memory.problem_bbcode);
+		
+		var html_code = XBBCODE.process({
+			text: logic_memory.problem_bbcode,
+			addInLineBreaks: true
+		}).html;
+		
+		$('#problem_problem_content').empty();
+		$('#problem_problem_content').append(html_code);
+
+		$("#problem_edit_button").show();
+		$("#problem_problem_content").show();
+		$('#edit_problem_form').hide();
 	};
 }
 

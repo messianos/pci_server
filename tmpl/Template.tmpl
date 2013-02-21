@@ -151,8 +151,9 @@
 					
 					var content = $.trim(event.data.content.val());
 					var description = $.trim(event.data.description.val());
-					
-					var on_invalid_input = onInvalidInputCreateProblem(event.data.content, event.data.description);
+
+					hideAllTooltips();
+					var on_invalid_input = onInvalidInputCreateProblem($('#cke_' + CKEDITOR.instances.create_problem_content.name), event.data.description);
 					if (validateCreateProblemInput(on_invalid_input, content, description)) {
 						var on_success = onSuccessCreateProblem();
 						var on_failure = onFailureCreateProblem();
@@ -163,16 +164,14 @@
 		<% end template %>
 		
 		
-		<% template edit_problem_form(std::string description, std::string content) %>
-			<legend>Editar problema</legend>
+		<% template edit_problem_form(std::string problem_id, std::string content) %>
 			<form id="edit_problem_form">
-				<input id="edit_problem_description" placeholder="Descripción del problema" type="text" /><br />
 				<textarea id="edit_problem_content"><%= content %></textarea><br />
 				<input class="pull-right btn btn-primary" type="submit" value="Finalizar" />
-				<a class="pull-right btn">Cancelar</a>
+				<a class="pull-right btn" id="edit_problem_cancel_button">Cancelar</a>
 			</form>
 			<script>
-				//logic_memory.problem_bbcode = ;
+				logic_memory.problem_bbcode = $('#edit_problem_content').val();
 				
 				CKEDITOR.replace(edit_problem_content, {
 					customConfig: '',
@@ -191,24 +190,39 @@
 						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
 					]
 				});
+				
+				CKEDITOR.instances.edit_problem_content.setData(logic_memory.problem_bbcode);
 			
-				$('#create_problem_form').submit({
-					content: $('#create_problem_content'),
-					description: $('#create_problem_description')
+				$('#edit_problem_form').submit({
+					content: $('#edit_problem_content')
 				}, function(event) {
 					event.preventDefault();
-					CKEDITOR.instances.create_problem_content.updateElement();
+					CKEDITOR.instances.edit_problem_content.updateElement();
 					
-					var content = $.trim(event.data.content.val());
-					var description = $.trim(event.data.description.val());
-					
-					var on_invalid_input = onInvalidInputCreateProblem(event.data.content, event.data.description);
-					if (validateCreateProblemInput(on_invalid_input, content, description)) {
-						var on_success = onSuccessCreateProblem();
-						var on_failure = onFailureCreateProblem();
-						postCreateProblem(on_success, on_failure, content, description);
+					var content = $.trim(CKEDITOR.instances.edit_problem_content.getData());
+					var problem_id = '<%= problem_id %>';
+
+					hideAllTooltips();
+					var on_invalid_input = onInvalidInputEditProblem($('#cke_' + CKEDITOR.instances.edit_problem_content.name));
+					if (validateEditProblemInput(on_invalid_input, content)) {
+						var on_success = onSuccessEditProblem(content);
+						var on_failure = onFailureEditProblem();
+						postEditProblem(on_success, on_failure, content, problem_id);
 					}
 				});
+				
+				$('#edit_problem_cancel_button').click({
+					content: $('#edit_problem_content')
+				}, function(event) {
+					CKEDITOR.instances.edit_problem_content.setData(logic_memory.problem_bbcode);
+
+					$("#problem_edit_button").show();
+					$("#problem_problem_content").show();
+					$('#edit_problem_form').hide();
+					
+					hideAllTooltips();
+				});
+				
 			</script>
 		<% end template %>
 		
@@ -315,8 +329,9 @@
 					var content = $.trim(event.data.content.val());
 					var description = $.trim(event.data.description.val());
 					var problem_id =  '<%= problem_id %>';
-					
-					var on_invalid_input = onInvalidInputCreateSolution(event.data.content, event.data.description);
+
+					hideAllTooltips();
+					var on_invalid_input = onInvalidInputCreateSolution($('#cke_' + CKEDITOR.instances.create_solution_content.name), event.data.description);
 					if (validateCreateSolutionInput(on_invalid_input, content, description)) {
 						var on_success = onSuccessCreateSolution();
 						var on_failure = onFailureCreateSolution();

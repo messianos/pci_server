@@ -294,7 +294,27 @@ void Server::postEditProblem() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		// TODO
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			string content = postRequestData("content");
+			trim(content);
+			string problem_id = postRequestData("problem_id");
+
+			ErrorCode *error_code;
+			error_code = InputValidator::validateEditProblemInput(content, problem_id);
+			if (error_code->isAnError())
+				response().status(http::response::bad_request, error_code->getErrorDescription());
+			else {
+				//error_code = DatabaseInterface::updateProblemContent(problem_id, content); // FIXME: implement this method
+				if (error_code->isAnError())
+					response().status(http::response::internal_server_error, error_code->getErrorDescription());
+				else
+					response().status(http::response::ok);
+			}
+		}
 	}
 }
 
@@ -351,7 +371,6 @@ void Server::postVoteProblem() {
 
 			ErrorCode *error_code;
 			error_code = InputValidator::validateVoteProblemInput(is_positive, problem_id);
-
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {

@@ -33,6 +33,7 @@ public:
 	static ErrorCode *validateUserVoteOnProblem(std::string problem_id);
 	static ErrorCode *validateCreateUserInput(std::string birth_date, std::string email, std::string first_name, std::string genre, std::string last_name, std::string location, std::string password, std::string user_name);
 	static ErrorCode *validateCreateProblemInput(std::string content, std::string description);
+	static ErrorCode *validateEditProblemInput(std::string content, std::string problem_id);
 	//static ErrorCode *validateDeleteProblemInput(std::string problem_id);
 	static ErrorCode *validateVoteProblemInput(std::string is_positive, std::string problem_id);
 	static ErrorCode *validateSetAcceptedSolutionInput(std::string problem_id, std::string solution_id);

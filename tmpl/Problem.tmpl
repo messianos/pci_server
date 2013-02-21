@@ -34,36 +34,25 @@
 					$("#problem_edit_button").show();
 					$("#problem_problem_content").show();
 					$("#ckeditor_container").hide();
-					
-					var ck_editor = CKEDITOR.instances.textfield;
-					$('#problem_problem_content').html(XBBCODE.process({ text: ck_editor.getData()}).html);
 				}
 				
 				$(document).ready(function() {
 					
 					logic_memory.problem_bbcode = $('#problem_problem_content').html();
 					var html_code = XBBCODE.process({
-						text: logic_memory.problem_bbcode
+						text: logic_memory.problem_bbcode,
+						addInLineBreaks: true
 					}).html;
 					
 					$('#problem_problem_content').empty();
 					$('#problem_problem_content').append(html_code);
 					
-					configureTexteditor("textfield");
-
-					$("#ckeditor_container").hide();
+					$('#edit_problem_form').hide();
 					
-					$("#problem_edit_button").click(function(){
-						showEditor();
-					});
-	
-					$("#problem_cancel_edit_button").click(function(){
-						hideEditor();
-					});
-	
-					$("#problem_finish_edit_button").click(function(){
-						hideEditor();
-						alert('Edition submit dumb method to be replaced with AJAX');
+					$("#problem_edit_button").click(function() {
+						$("#problem_edit_button").hide();
+						$("#problem_problem_content").hide();
+						$('#edit_problem_form').show();
 					});
 				});
 			</script>
@@ -104,78 +93,52 @@
 							</div>
 						</div>
 						<div class="solution-sidebar">
-							<a onclick="animate()">Animar</a>
 							<ul class="nav">
-									<li>
-										<% if user_signed_in %>
-											<% include template_view::toolbar_problem(problem->id) %>
-										<% end %>
-									</li>
-									<li>
-										<% if problem->is_solved  %>
-											<div class="box_description accepted_solution problem_solution_description">
-												<% include template_view::solution_description(problem, accepted_solution) %>
+								<li>
+									<% if user_signed_in %>
+										<% include template_view::toolbar_problem(problem->id) %>
+									<% end %>
+								</li>
+								<li>
+									<% if problem->is_solved  %>
+										<div class="box_description accepted_solution problem_solution_description">
+											<% include template_view::solution_description(problem, accepted_solution) %>
+											<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
+												<% include unset_accepted_solution_form(problem->id, accepted_solution->id) %>
+											<% else %>
+												<div class="tick on"></div>
+											<% end %>
+										</div>
+									<% end %>
+								</li>
+								<li>
+									<% foreach solution in *solutions %>
+					 					<% item %>
+											<div class="box_description problem_solution_description">
+												<% include template_view::solution_description(problem, solution) %>
 												<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-													<% include unset_accepted_solution_form(problem->id, accepted_solution->id) %>
+													<% include set_accepted_solution_form(problem->id, solution->id) %>
 												<% else %>
-													<div class="tick on"></div>
+													<div class="tick"></div>
 												<% end %>
 											</div>
-										<% end %>
-									</li>
-									<li>
-										<% foreach solution in *solutions %>
-						 					<% item %>
-												<div class="box_description problem_solution_description">
-													<% include template_view::solution_description(problem, solution) %>
-													<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-														<% include set_accepted_solution_form(problem->id, solution->id) %>
-													<% else %>
-														<div class="tick"></div>
-													<% end %>
-												</div>
-						  					<% end %>
-										<% end %>
+					  					<% end %>
+									<% end %>
 
-									</li>
-								</ul>
+								</li>
+							</ul>
 						</div>
 						<div class="problem-content">
 							<div id="problem">
-								<div id="ckeditor_container">
-									<textfield id="textfield"></textfield>
-									<a id="problem_finish_edit_button" class="pull-right btn btn-primary">Finalizar</a>
-									<a id="problem_cancel_edit_button" class="pull-right btn">Cancelar</a>
-								</div>
-								
 								<div id="problem_problem_content">
 									<%= problem->content %>
 								</div>
+								<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
+									<% include edit_problem_form(problem->id, problem->content) %>
+								<% end %>
 								<% include template_view::clarifications(clarifications, problem) %>
 							</div>
 						</div>
-						<script type="text/javascript">
-						function animate(){
-							$("#problem").animate({
-								opacity: "0",
-								queue: false
-							},function(){
-								$('#problem').toggle();
-							});
-							$('#solution').css('position','absolute');
-							$('#solution').css('left','1280px');
-							$('#solution').css('width',$("#problem").css('width'));
-							$('#solution').css('height',$("#problem").css('height'));
-							$('#solution').css('padding-top',$("#problem").css('padding-top'));
-							$('#solution').toggle();
-							$("#solution").animate({
-								left: "150px",
-								queue: false
-							},800, function(){
-								$('#solution').css('position','static');
-							});
-						}
-						</script>
 					</div>
 				</div>
 		<% end template %>

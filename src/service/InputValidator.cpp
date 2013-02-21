@@ -178,6 +178,16 @@ ErrorCode *InputValidator::validateCreateProblemInput(string content, string des
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
+ErrorCode *InputValidator::validateEditProblemInput(string content, string problem_id) {
+	if (! isValidPublicationContent(content))
+		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_CONTENT);
+
+	if (! isValidProblemId(problem_id))
+		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
 /*ErrorCode *InputValidator::validateDeleteProblemInput(string problem_id) {
 	if (! isValidProblemId(problem_id))
 		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
