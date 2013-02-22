@@ -522,7 +522,7 @@ void Server::postCreateSolution() {
 					set<string, NotificationAnnouncer::classcomp> *notified_users = NotificationAnnouncer::postSolution(user_name, problem_id);
 
 					int i = 0;
-					for (set<string>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
+					for (set<string, NotificationAnnouncer::classcomp>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
 						Notification *notification = new Notification();
 						notification->user_name = *iterator;
 						notification->url = "/publication/" + solution->id;

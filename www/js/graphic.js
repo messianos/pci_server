@@ -162,10 +162,10 @@ function configureToast(toast) {
 	toast.css('bottom', getToastOffset(toast.outerHeight()));
 	
 	toast.fadeIn(2000);
-	/*setTimeout(function() {
+	setTimeout(function() {
 		toast.fadeOut({
 			duration: 4000,
 			complete: function() { removeToast(toast); }
 		});
-	}, 4000);*/ // TODO: Uncomment this
+	}, 4000);
 }
