@@ -5,6 +5,7 @@
 // Includes
 #include "../auxiliar/ErrorCode.h"
 #include "../entity/Clarification.h"
+#include "../entity/Notification.h"
 #include "../entity/Problem.h"
 #include "../entity/Solution.h"
 #include "../entity/Proposal.h"
@@ -109,6 +110,13 @@ public:
 	static std::list<Publication *> * getRecentActivityByUser(std::string user_name);
 
 	/*
+	 * Notifications operations
+	 */
+	static ErrorCode* insertNotification(Notification* notification);
+	static std::list<Notification *> *getUnseenNotifications(std::string user_name);
+
+
+	/*
 	 * Generalized data structure fetchers
 	 */
 	static Clarification* fetchClarification(cppdb::result result);
@@ -116,6 +124,8 @@ public:
 	static Solution* fetchSolution(cppdb::result result);
 	static Proposal* fetchProposal(cppdb::result result);
 	static User* fetchUser(cppdb::result result);
+	static Notification* fetchNotification(cppdb::result result);
+
 
 };
 

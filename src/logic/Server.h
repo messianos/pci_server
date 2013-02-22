@@ -4,8 +4,12 @@
 
 // Includes
 #include "../entity/Clarification.h"
+#include "../entity/Notification.h"
+#include "../entity/Problem.h"
+#include "../entity/Solution.h"
 #include "../logic/ViewContent.h"
 #include "../service/DatabaseInterface.h"
+#include "../service/NotificationAnnouncer.h"
 #include "../service/IdManager.h"
 #include "../service/InputValidator.h"
 #include "../service/PasswordManager.h"
@@ -19,6 +23,7 @@
 #include <cppcms/session_interface.h>
 #include <cppcms/url_dispatcher.h>
 #include <cppcms/url_mapper.h>
+#include <list>
 #include <string>
 
 class Server : public cppcms::application {
@@ -39,6 +44,7 @@ public:
 	void postSignIn();
 	void postSignOut();
 	void postToggleAnonymousMode();
+	void postUnseenNotifications();
 	void postCreateUser();
 	//void postDeleteUser();
 	void postCreateProblem();

@@ -12,6 +12,7 @@ logic_memory.url.root = '/pci';
 logic_memory.url.sign_in = logic_memory.url.root + '/sign_in';
 logic_memory.url.sign_out = logic_memory.url.root + '/sign_out';
 logic_memory.url.toggle_anonymous_mode = logic_memory.url.root + '/toggle_anonymous_mode';
+logic_memory.url.unseen_notifications = logic_memory.url.root + '/unseen_notifications';
 logic_memory.url.create_user = logic_memory.url.root + '/create_user';
 logic_memory.url.create_problem = logic_memory.url.root + '/create_problem';
 logic_memory.url.edit_problem = logic_memory.url.root + '/edit_problem';
@@ -296,6 +297,13 @@ function postToggleAnonymousMode(on_success_callback_function, on_failure_callba
 	request.fail(on_failure_callback_function);
 }
 
+function postUnseenNotifications(on_success_callback_function, on_failure_callback_function) {
+	var request = postRequest({
+	}, logic_memory.url.unseen_notifications);
+	request.done(on_success_callback_function);
+	request.fail(on_failure_callback_function);
+}
+
 function postCreateUser(on_success_callback_function, on_failure_callback_function, birth_date, email, first_name, genre, last_name, location, password, user_name) {
 	var request = postRequest({
 		birth_date: birth_date,
@@ -464,6 +472,27 @@ function onSuccessToggleAnonymousMode(toggle_button) {
 function onFailureToggleAnonymousMode() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
+	};
+}
+
+
+
+// TODO: REMOVE THISSSSS
+postUnseenNotifications(onSuccessUnseenNotifications(), onFailureUnseenNotifications());
+function onSuccessUnseenNotifications() {
+	return function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		
+		var length = data['unseen_notifications'].length;
+		for (var i = 0; i < length; i++)
+			// TODO: DO SOMETHING ELSE --> this is just a test
+			showNotificationToast('URL: ' + data['unseen_notifications'][i]['url'] + ' - Message: ' + data['unseen_notifications'][i]['message']);
+	}
+}
+
+function onFailureUnseenNotifications() {
+	return function(jq_xhr, text_status, error_thrown) {
+		// TODO: what should be done?
 	};
 }
 

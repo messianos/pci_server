@@ -3,13 +3,13 @@
 
 //TODO
 #include <iostream>
-
 // Namespaces
 using namespace cppdb;
 using namespace std;
 
 // Initializations
-session DatabaseInterface::database_handler = session("mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
+session DatabaseInterface::database_handler = session(
+		"mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
 //session DatabaseInterface::database_handler = session("mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
 
 // Attributes strings for objects
@@ -64,6 +64,12 @@ const string user_attributes = ""
 		"		rank,"
 		"		UNIX_TIMESTAMP(sign_up_datetime) AS sign_up_datetime,"
 		"		user_name";
+
+const string notification_attributes = ""
+		"		user_name,"
+		"		seen,"
+		"		url,"
+		"		message";
 
 // TODO: Define share mode on SELECT statements
 
@@ -919,7 +925,7 @@ int DatabaseInterface::getProblemVoteBalance(string problem_id) {
 
 	result result = database_handler << query << problem_id;
 
-	if(!result.next())
+	if (!result.next())
 		// FIXME: Throw exception?
 		return 0;
 
@@ -940,7 +946,7 @@ int DatabaseInterface::getSolutionVoteBalance(string solution_id) {
 
 	result result = database_handler << query << solution_id;
 
-	if(!result.next())
+	if (!result.next())
 		// TODO: Throw exception?
 		return 0;
 
@@ -960,7 +966,7 @@ int DatabaseInterface::getUserVoteOnProblem(string user_name, string problem_id)
 
 	result result = database_handler << query << problem_id << user_name;
 
-	if(!result.next())
+	if (!result.next())
 		return 0;
 
 	int is_positive;
@@ -971,25 +977,25 @@ int DatabaseInterface::getUserVoteOnProblem(string user_name, string problem_id)
 
 int DatabaseInterface::getUserVoteOnSolution(string user_name, string solution_id) {
 	string query = ""
-				"	SELECT"
-				"		is_positive"
-				"	FROM"
-				"		solution_votes"
-				"	WHERE"
-				"		solution_id = UNHEX(?) AND username LIKE BINARY ?";
-		result result = database_handler << query << solution_id << user_name;
+			"	SELECT"
+			"		is_positive"
+			"	FROM"
+			"		solution_votes"
+			"	WHERE"
+			"		solution_id = UNHEX(?) AND username LIKE BINARY ?";
+	result result = database_handler << query << solution_id << user_name;
 
-		if(!result.next())
-			return 0;
+	if (!result.next())
+		return 0;
 
-		int is_positive;
-		result.fetch("is_positive", is_positive);
+	int is_positive;
+	result.fetch("is_positive", is_positive);
 
-		return is_positive ? 1 : -1;
+	return is_positive ? 1 : -1;
 }
 
 Publication* DatabaseInterface::searchPublication(string publication_id) {
-	if(publication_id[1] == '3')
+	if (publication_id[1] == '3')
 		// Publication is a Solution
 		return searchSolution(publication_id);
 	else
@@ -1007,7 +1013,6 @@ ErrorCode* DatabaseInterface::answerClarification(string id, string answer) {
 			"		id = UNHEX(?)";
 
 	database_handler << query << answer << id << exec;
-
 
 	// TODO
 	return new ErrorCode(ErrorCode::CODE_NONE);
@@ -1067,6 +1072,38 @@ std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::
 	return clarification_list;
 }
 
+ErrorCode* DatabaseInterface::insertNotification(Notification* notification) {
+
+	string query = ""
+			"	INSERT INTO"
+			"		Notification(user_name, seen, url, message)"
+			"	VALUES"
+			"		(?, ?, ?, ?)";
+
+	database_handler << query << notification->user_name << "0" << notification->url << notification->message << exec;
+
+	// TODO: Return error correctly
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+list<Notification *> *DatabaseInterface::getUnseenNotifications(string user_name) {
+	stringstream query;
+	query << " SELECT" << notification_attributes << "	FROM"
+			"		Notification "
+			"	WHERE user_name = ?"
+			"		AND seen = 0";
+
+	result result = database_handler << query.str() << user_name << user_name;
+
+	list<Notification *> *notification_list = new list<Notification *>();
+
+	while (result.next()) {
+		notification_list->push_back(fetchNotification(result));
+	}
+
+	return notification_list;
+}
+
 User* DatabaseInterface::fetchUser(result result) {
 
 	User *user = new User();
@@ -1099,4 +1136,20 @@ User* DatabaseInterface::fetchUser(result result) {
 
 	return user;
 }
+Notification* DatabaseInterface::fetchNotification(result result) {
 
+	Notification *notification = new Notification();
+	try {
+
+		result.fetch("user_name", notification->user_name);
+		result.fetch("seen", notification->seen);
+		result.fetch("url", notification->url);
+		result.fetch("message", notification->message);
+
+	} catch (exception const &e) {
+		cerr << "ERROR: " << e.what() << " in fetchNotification" << endl;
+		return NULL;
+	}
+
+	return notification;
+}

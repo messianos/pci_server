@@ -59,6 +59,8 @@ Server::Server(cppcms::service &service) :
 	mapper().assign("toggle_anonymous_mode", "/toggle_anonymous_mode");
 
 	// Database-querying services
+	dispatcher().assign("/unseen_notifications", &Server::postUnseenNotifications, this);
+	mapper().assign("unseen_notifications", "/unseen_notifications");
 
 	// Database-updating services
 	dispatcher().assign("/create_user", &Server::postCreateUser, this);
@@ -197,6 +199,32 @@ void Server::postToggleAnonymousMode() {
 			response().out() << json_response;
 			response().status(http::response::ok);
 		}
+}
+
+void Server::postUnseenNotifications() {
+	if (!postRequestReceived())
+		response().status(http::response::method_not_allowed);
+	else {
+		string user_name = session()["session_user_name"];
+
+		if (!session().is_set("session_user_signed_in"))
+			response().status(http::response::unauthorized);
+		else {
+			list<Notification *> *unseen_notifications = DatabaseInterface::getUnseenNotifications(user_name);
+
+			json::value json_response = json::value();
+			int i = 0;
+			for (list<Notification *>::const_iterator iterator = unseen_notifications->begin(); iterator != unseen_notifications->end(); ++iterator) {
+				// TODO: do something with iterator
+				json_response["unseen_notifications"][i]["message"] = (*iterator)->message;
+				json_response["unseen_notifications"][i]["url"] = (*iterator)->url;
+				i++;
+			}
+
+			response().out() << json_response;
+			response().status(http::response::ok);
+		}
+	}
 }
 
 void Server::postCreateUser() {
@@ -491,6 +519,18 @@ void Server::postCreateSolution() {
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
+					list<User *> * notified_users = NotificationAnnouncer::postSolution(problem_id);
+
+					int i = 0;
+					for (list<User *>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
+						Notification *notification = new Notification();
+						notification->user_name = (*iterator)->user_name;
+						notification->url = "/publication/" + solution->id;
+						notification->message = "Mensaje loco (te crearon una solución a uno de tus problemas, pibe)"; // TODO
+						DatabaseInterface::insertNotification(notification);
+						i++;
+					}
+
 					json::value json_response = json::value();
 					json_response["solution_id"] = solution->id;
 					response().out() << json_response;

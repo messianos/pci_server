@@ -112,16 +112,14 @@ CREATE TABLE IF NOT EXISTS Proposal (
         FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
  
-/*
+
 CREATE TABLE IF NOT EXISTS Notification (
-        notification_username VARCHAR(31),
+        user_name VARCHAR(31),
         seen BOOLEAN,
-        url
-        message
-       
-        FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
+        url VARCHAR(255),
+        message VARCHAR(255),
+        FOREIGN KEY(user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
-*/
  
  
 CREATE TABLE IF NOT EXISTS problem_solutions (
