@@ -277,7 +277,7 @@ function onSuccessUnseenNotifications(notification_container) {
 		data = $.parseJSON(data);
 		
 		notification_container.empty();
-		var length = data['unseen_notifications'].length;
+		var length = data['notification_count'];
 		for (var i = 0; i < length; i++)
 			appendNotification(notification_container, data['unseen_notifications'][i]['url'], data['unseen_notifications'][i]['message']);
 	}

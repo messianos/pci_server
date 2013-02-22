@@ -526,10 +526,11 @@
 		        	</div>
 		     	</div>
 		    </div>
-		    i
-		    <script>
-		    	checkNotificationsPeriodically($('#notification-panel'));
-		    </script>
+		    <% if user_signed_in %>
+			    <script>
+			    	checkNotificationsPeriodically($('#notification-panel'));
+			    </script>
+			<% end %>
 		<% end template %>
 
 		<% template old_header_bar() %>
@@ -820,6 +821,10 @@
 				</body>
 			</html>
 		<% end template %>
+
+
+	<% end view %>
+<% end skin %>te %>
 
 
 	<% end view %>

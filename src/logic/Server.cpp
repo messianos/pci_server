@@ -213,9 +213,9 @@ void Server::postUnseenNotifications() {
 			list<Notification *> *unseen_notifications = DatabaseInterface::getUnseenNotifications(user_name);
 
 			json::value json_response = json::value();
+			json_response["notification_count"] = unseen_notifications->size();
 			int i = 0;
 			for (list<Notification *>::const_iterator iterator = unseen_notifications->begin(); iterator != unseen_notifications->end(); ++iterator) {
-				// TODO: do something with iterator
 				json_response["unseen_notifications"][i]["message"] = (*iterator)->message;
 				json_response["unseen_notifications"][i]["url"] = (*iterator)->url;
 				i++;
