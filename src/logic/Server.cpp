@@ -519,7 +519,7 @@ void Server::postCreateSolution() {
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
-					set<string> *notified_users = NotificationAnnouncer::postSolution(user_name, problem_id);
+					set<string, NotificationAnnouncer::classcomp> *notified_users = NotificationAnnouncer::postSolution(user_name, problem_id);
 
 					int i = 0;
 					for (set<string>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
