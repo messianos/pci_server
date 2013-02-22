@@ -577,6 +577,20 @@ div.problems_votes .number {
 	line-height: 30px;
 	max-width: 750px;
 }
+
+/* Notifications */
+
+#notification-panel {
+	display: none;
+	position: fixed;
+	width: 300px;
+	height: 500px;
+	background-color: white;
+	border: 1px solid black;
+	box-shadow: 0 0 5px 2px #888;
+	z-index:-3;
+}
+
 /*
 ----------------------------------------------------------------------------------------------
 	Clarifications

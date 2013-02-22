@@ -229,6 +229,7 @@ User *DatabaseInterface::searchUserByProblem(string problem_id) {
 
 }
 
+// TODO: Revise
 User *DatabaseInterface::searchUserBySolution(string solution_id) {
 	stringstream query;
 
@@ -1088,12 +1089,12 @@ ErrorCode* DatabaseInterface::insertNotification(Notification* notification) {
 
 list<Notification *> *DatabaseInterface::getUnseenNotifications(string user_name) {
 	stringstream query;
-	query << " SELECT" << notification_attributes << "	FROM"
+	query << " SELECT " << notification_attributes << "	FROM"
 			"		Notification "
-			"	WHERE user_name = ?"
+			"	WHERE user_name LIKE BINARY ?"
 			"		AND seen = 0";
 
-	result result = database_handler << query.str() << user_name << user_name;
+	result result = database_handler << query.str() << user_name;
 
 	list<Notification *> *notification_list = new list<Notification *>();
 

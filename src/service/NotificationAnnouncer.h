@@ -3,16 +3,25 @@
 
 //Includes
 #include <list>
+#include <set>
 #include <string>
 #include "../entity/User.h"
 #include "../entity/Solution.h"
 #include "../service/DatabaseInterface.h"
+#include <iosfwd>
 
 class NotificationAnnouncer {
 public:
 	NotificationAnnouncer();
 	virtual ~NotificationAnnouncer();
-	static std::list<User *> *postSolution(std::string problem_id);
+
+	struct classcomp {
+		bool operator()(const std::string& lhs, const std::string& rhs) const {
+			return lhs.compare(rhs) < 0;
+		}
+	};
+
+	static std::set<std::string, NotificationAnnouncer::classcomp> *postSolution(std::string user_name, std::string problem_id);
 	static std::list<User *> *postProposal(std::string solution_id);
 	static std::list<User *> *postClarificationInProblem(std::string problem_id);
 	static std::list<User *> *postClarificationInSolution(std::string solution_id);
@@ -24,6 +33,7 @@ public:
 	static std::list<User *> *voteProposal(std::string proposal_id);
 
 	static std::list<User *> *acceptSolution(std::string solution_id);
+
 };
 
 #endif /* NOTIFICATIONANNOUNCER_H_ */

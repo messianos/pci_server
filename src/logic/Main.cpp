@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
 		service.applications_pool().mount(applications_factory<Server>());
 		cerr << "Server started!" << endl;
 
-		database_operations_tester();
+		//database_operations_tester();
 
 		service.run();
 

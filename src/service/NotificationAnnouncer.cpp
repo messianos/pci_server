@@ -1,10 +1,3 @@
-/*
- * NotificationAnnouncer.cpp
- *
- *  Created on: Feb 13, 2013
- *      Author: GNZ
- */
-
 #include "NotificationAnnouncer.h"
 
 
@@ -23,19 +16,21 @@ NotificationAnnouncer::~NotificationAnnouncer() {
  * Return a list of interested users about posting a solution in a problem which id is problem_id
  * they are 1) the problem creator. 2) the users that posted a solution in the problem.
  */
-list<User *> *NotificationAnnouncer::postSolution(string problem_id){
+set<string, NotificationAnnouncer::classcomp> *NotificationAnnouncer::postSolution(string user_name, string problem_id){
 
-	list<User *> *interestedUser = new list<User *>();
-	User *problem_creator = DatabaseInterface::searchUserByProblem(problem_id);
-	if (problem_creator != NULL)
-		interestedUser->push_back(problem_creator);
+	set<string,classcomp> *interestedUser = new set<string,classcomp>();
+	string problem_creator = DatabaseInterface::searchProblem(problem_id)->creator_user_name;
+	if (problem_creator.compare(user_name) != 0)
+		interestedUser->insert(problem_creator);
 
 	list<Solution *> *solutionPostList = DatabaseInterface::searchSolutions(problem_id);
 	list<Solution *>::iterator iteration;
 
 	//For each user that post a solution in the problem!
 	for(iteration = solutionPostList->begin(); iteration != solutionPostList->end(); iteration++){
-		interestedUser->push_back(DatabaseInterface::searchUserBySolution( (*iteration)->id ) );
+		string user = (*iteration)->creator_user_name;
+		if (user.compare(user_name) != 0)
+			interestedUser->insert(user);
 	}
 
 	return interestedUser;
@@ -179,5 +174,7 @@ list<User *> *NotificationAnnouncer::acceptSolution(string solution_id){
 
 	return interestedUser;
 }
+
+
 
 

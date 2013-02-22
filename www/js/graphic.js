@@ -83,6 +83,18 @@ function showNotificationToast(content) {
 
 /*
 ----------------------------------------------------------------------------------------------
+	Notification functions
+----------------------------------------------------------------------------------------------
+*/
+
+function appendNotification(notification_container, url, message) {
+	var notification = $('<a href="' + logic_memory.url.root + url + '">' + message + '</a><br />');
+	notification_container.append(notification);
+}
+
+
+/*
+----------------------------------------------------------------------------------------------
 	Auxiliar functions
 ----------------------------------------------------------------------------------------------
 */
@@ -150,10 +162,10 @@ function configureToast(toast) {
 	toast.css('bottom', getToastOffset(toast.outerHeight()));
 	
 	toast.fadeIn(2000);
-	setTimeout(function() {
+	/*setTimeout(function() {
 		toast.fadeOut({
 			duration: 4000,
 			complete: function() { removeToast(toast); }
 		});
-	}, 4000);
+	}, 4000);*/ // TODO: Uncomment this
 }

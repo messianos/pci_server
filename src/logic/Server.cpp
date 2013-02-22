@@ -519,14 +519,14 @@ void Server::postCreateSolution() {
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
-					list<User *> * notified_users = NotificationAnnouncer::postSolution(problem_id);
+					set<string> *notified_users = NotificationAnnouncer::postSolution(user_name, problem_id);
 
 					int i = 0;
-					for (list<User *>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
+					for (set<string>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
 						Notification *notification = new Notification();
-						notification->user_name = (*iterator)->user_name;
+						notification->user_name = *iterator;
 						notification->url = "/publication/" + solution->id;
-						notification->message = "Mensaje loco (te crearon una solución a uno de tus problemas, pibe)"; // TODO
+						notification->message = "Solución recibida";
 						DatabaseInterface::insertNotification(notification);
 						i++;
 					}

@@ -61,211 +61,7 @@ logic_memory.error.description.description = 'description';
 logic_memory.error.description.question = 'question';
 logic_memory.error.description.answer = 'answer';
 
-
-/*
-----------------------------------------------------------------------------------------------
-	Validation functions
-----------------------------------------------------------------------------------------------
-*/
-
-function isValidBirthDate(birth_date) {
-	return birth_date.length > 0;
-}
-
-function isValidEmail(email) {
-	if (email.length > 255)
-		return false;
-
-	return email.match(/^[A-Z0-9._+-]+@[A-Z0-9.]+\.[A-Z0-9]{2,}$/i);
-}
-
-function isValidFirstName(first_name) {
-	return first_name.length > 0 && first_name.length <= 31;
-}
-
-function isValidLastName(last_name) {
-	return last_name.length > 0 && last_name.length <= 31;
-}
-
-function isValidLocation(location) {
-	return location.length <= 15; // TODO: to define
-}
-
-function isValidPassword(password) {
-	if (password.length < 6)
-		return false;
-	
-	return password.match(/^[\x21-\x7E]*$/);
-}
-
-function isValidUserName(user_name) {
-	if (user_name.length < 4 || user_name.length > 31)
-		return false;
-
-	return user_name.match(/^[A-Z][A-Z0-9_]*$/i);
-}
-
-function isValidPublicationContent(content) {
-	return content.length > 0 && content.length <= 4194304;
-}
-
-function isValidPublicationDescription(description) {
-	return description.length > 0 && description.length <= 400;
-}
-
-function isValidClarificationContent(content) {
-	return content.length > 0 && content.length <= 2000;
-}
-
-function validateSignInInput(on_invalid_input_callback_function, password, user_name) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPassword(password)) {
-		error_information[logic_memory.error.id.password] = logic_memory.error.description.password;
-		invalid_input = true;
-	}
-	
-	if (! isValidUserName(user_name)) {
-		error_information[logic_memory.error.id.user_name] = logic_memory.error.description.user_name;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateUserInput(on_invalid_input_callback_function, birth_date, email, first_name, last_name, location, password, user_name) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidBirthDate(birth_date)) {
-		error_information[logic_memory.error.id.birth_date] = logic_memory.error.description.birth_date;
-		invalid_input = true;
-	}
-	
-	if (! isValidEmail(email)) {
-		error_information[logic_memory.error.id.email] = logic_memory.error.description.email;
-		invalid_input = true;
-	}
-	
-	if (! isValidFirstName(first_name)) {
-		error_information[logic_memory.error.id.first_name] = logic_memory.error.description.first_name;
-		invalid_input = true;
-	}
-	
-	if (! isValidLastName(last_name)) {
-		error_information[logic_memory.error.id.last_name] = logic_memory.error.description.last_name;
-		invalid_input = true;
-	}
-	
-	if (! isValidLocation(location)) {
-		error_information[logic_memory.error.id.location] = logic_memory.error.description.location;
-		invalid_input = true;
-	}
-	
-	if (! isValidPassword(password)) {
-		error_information[logic_memory.error.id.password] = logic_memory.error.description.password;
-		invalid_input = true;
-	}
-	
-	if (! isValidUserName(user_name)) {
-		error_information[logic_memory.error.id.user_name] = logic_memory.error.description.user_name;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateProblemInput(on_invalid_input_callback_function, content, description) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPublicationContent(content)) {
-		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
-		invalid_input = true;
-	}
-	
-	if (! isValidPublicationDescription(description)) {
-		error_information[logic_memory.error.id.description] = logic_memory.error.description.description;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateEditProblemInput(on_invalid_input_callback_function, content) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPublicationContent(content)) {
-		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateSolutionInput(on_invalid_input_callback_function, content, description) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPublicationContent(content)) {
-		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
-		invalid_input = true;
-	}
-	
-	if (! isValidPublicationDescription(description)) {
-		error_information[logic_memory.error.id.description] = logic_memory.error.description.description;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateClarificationInput(on_invalid_input_callback_function, question) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidClarificationContent(question)) {
-		error_information[logic_memory.error.id.question] = logic_memory.error.description.question;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateAnswerClarificationInput(on_invalid_input_callback_function, answer) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidClarificationContent(answer)) {
-		error_information[logic_memory.error.id.answer] = logic_memory.error.description.answer;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
+logic_memory.notification_check_interval = 5000;
 
 
 /*
@@ -408,6 +204,7 @@ function postAnswerClarification(on_success_callback_function, on_failure_callba
 	request.fail(on_failure_callback_function);
 }
 
+
 /*
 ----------------------------------------------------------------------------------------------
 	Callback functions
@@ -475,25 +272,19 @@ function onFailureToggleAnonymousMode() {
 	};
 }
 
-
-
-// TODO: REMOVE THISSSSS
-postUnseenNotifications(onSuccessUnseenNotifications(), onFailureUnseenNotifications());
-function onSuccessUnseenNotifications() {
+function onSuccessUnseenNotifications(notification_container) {
 	return function(data, text_status, jq_xhr) {
 		data = $.parseJSON(data);
 		
+		notification_container.empty();
 		var length = data['unseen_notifications'].length;
 		for (var i = 0; i < length; i++)
-			// TODO: DO SOMETHING ELSE --> this is just a test
-			showNotificationToast('URL: ' + data['unseen_notifications'][i]['url'] + ' - Message: ' + data['unseen_notifications'][i]['message']);
+			appendNotification(notification_container, data['unseen_notifications'][i]['url'], data['unseen_notifications'][i]['message']);
 	}
 }
 
 function onFailureUnseenNotifications() {
-	return function(jq_xhr, text_status, error_thrown) {
-		// TODO: what should be done?
-	};
+	return null;
 }
 
 function onInvalidInputCreateUser(birth_date_textfield, email_textfield, first_name_textfield, last_name_textfield, location_textfield, password_passwordfield, user_name_textfield) {
@@ -742,6 +533,227 @@ function onFailureAnswerClarification() {
 	return function(jq_xhr, text_status, error_thrown) {
 		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
 	};
+}
+
+
+/*
+----------------------------------------------------------------------------------------------
+	Validation functions
+----------------------------------------------------------------------------------------------
+*/
+
+function isValidBirthDate(birth_date) {
+	return birth_date.length > 0;
+}
+
+function isValidEmail(email) {
+	if (email.length > 255)
+		return false;
+
+	return email.match(/^[A-Z0-9._+-]+@[A-Z0-9.]+\.[A-Z0-9]{2,}$/i);
+}
+
+function isValidFirstName(first_name) {
+	return first_name.length > 0 && first_name.length <= 31;
+}
+
+function isValidLastName(last_name) {
+	return last_name.length > 0 && last_name.length <= 31;
+}
+
+function isValidLocation(location) {
+	return location.length <= 15; // TODO: to define
+}
+
+function isValidPassword(password) {
+	if (password.length < 6)
+		return false;
+	
+	return password.match(/^[\x21-\x7E]*$/);
+}
+
+function isValidUserName(user_name) {
+	if (user_name.length < 4 || user_name.length > 31)
+		return false;
+
+	return user_name.match(/^[A-Z][A-Z0-9_]*$/i);
+}
+
+function isValidPublicationContent(content) {
+	return content.length > 0 && content.length <= 4194304;
+}
+
+function isValidPublicationDescription(description) {
+	return description.length > 0 && description.length <= 400;
+}
+
+function isValidClarificationContent(content) {
+	return content.length > 0 && content.length <= 2000;
+}
+
+function validateSignInInput(on_invalid_input_callback_function, password, user_name) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidPassword(password)) {
+		error_information[logic_memory.error.id.password] = logic_memory.error.description.password;
+		invalid_input = true;
+	}
+	
+	if (! isValidUserName(user_name)) {
+		error_information[logic_memory.error.id.user_name] = logic_memory.error.description.user_name;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateCreateUserInput(on_invalid_input_callback_function, birth_date, email, first_name, last_name, location, password, user_name) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidBirthDate(birth_date)) {
+		error_information[logic_memory.error.id.birth_date] = logic_memory.error.description.birth_date;
+		invalid_input = true;
+	}
+	
+	if (! isValidEmail(email)) {
+		error_information[logic_memory.error.id.email] = logic_memory.error.description.email;
+		invalid_input = true;
+	}
+	
+	if (! isValidFirstName(first_name)) {
+		error_information[logic_memory.error.id.first_name] = logic_memory.error.description.first_name;
+		invalid_input = true;
+	}
+	
+	if (! isValidLastName(last_name)) {
+		error_information[logic_memory.error.id.last_name] = logic_memory.error.description.last_name;
+		invalid_input = true;
+	}
+	
+	if (! isValidLocation(location)) {
+		error_information[logic_memory.error.id.location] = logic_memory.error.description.location;
+		invalid_input = true;
+	}
+	
+	if (! isValidPassword(password)) {
+		error_information[logic_memory.error.id.password] = logic_memory.error.description.password;
+		invalid_input = true;
+	}
+	
+	if (! isValidUserName(user_name)) {
+		error_information[logic_memory.error.id.user_name] = logic_memory.error.description.user_name;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateCreateProblemInput(on_invalid_input_callback_function, content, description) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidPublicationContent(content)) {
+		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
+		invalid_input = true;
+	}
+	
+	if (! isValidPublicationDescription(description)) {
+		error_information[logic_memory.error.id.description] = logic_memory.error.description.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateEditProblemInput(on_invalid_input_callback_function, content) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidPublicationContent(content)) {
+		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateCreateSolutionInput(on_invalid_input_callback_function, content, description) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidPublicationContent(content)) {
+		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
+		invalid_input = true;
+	}
+	
+	if (! isValidPublicationDescription(description)) {
+		error_information[logic_memory.error.id.description] = logic_memory.error.description.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateCreateClarificationInput(on_invalid_input_callback_function, question) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidClarificationContent(question)) {
+		error_information[logic_memory.error.id.question] = logic_memory.error.description.question;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+function validateAnswerClarificationInput(on_invalid_input_callback_function, answer) {
+	var invalid_input = false;
+	var error_information = new Object();
+	
+	if (! isValidClarificationContent(answer)) {
+		error_information[logic_memory.error.id.answer] = logic_memory.error.description.answer;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(error_information);
+	
+	return ! invalid_input;
+}
+
+
+/*
+----------------------------------------------------------------------------------------------
+	Notification functions
+----------------------------------------------------------------------------------------------
+*/
+
+function checkNotificationsPeriodically(notification_container) {
+	setInterval(function() {
+		var on_success = onSuccessUnseenNotifications(notification_container);
+		var on_failure = onFailureUnseenNotifications();
+		postUnseenNotifications(on_success, on_failure);
+	}, logic_memory.notification_check_interval);
 }
 
 
