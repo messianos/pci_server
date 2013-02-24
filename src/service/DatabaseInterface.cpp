@@ -8,9 +8,8 @@ using namespace cppdb;
 using namespace std;
 
 // Initializations
-session DatabaseInterface::database_handler = session(
-		"mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
-//session DatabaseInterface::database_handler = session("mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
+//session DatabaseInterface::database_handler = session("mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
+session DatabaseInterface::database_handler = session("mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
 
 // Attributes strings for objects
 const string clarification_attributes = ""

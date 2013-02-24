@@ -61,7 +61,7 @@ logic_memory.error.description.description = 'description';
 logic_memory.error.description.question = 'question';
 logic_memory.error.description.answer = 'answer';
 
-logic_memory.notification_check_interval = 5000;
+logic_memory.notification_check_interval = 2000;
 
 
 /*
@@ -377,6 +377,8 @@ function onSuccessVoteProblem(display, vote_offset) {
 		data = $.parseJSON(data);
 		display.html(data['vote_balance'].toString());
 		logic_memory.user_vote = logic_memory.user_vote + vote_offset;
+		// TODO: Confirm the following line goes here
+		refreshVotesButtonsColors();
 	};
 }
 

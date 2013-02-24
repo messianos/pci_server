@@ -819,9 +819,10 @@ void Server::getFetchProblemPage(string problem_id) {
 					content.clarifications = DatabaseInterface::searchAnsweredClarifications(problem_id, user_name);
 
 				content.user_vote = DatabaseInterface::getUserVoteOnProblem(user_name, problem_id);
-			} else
+			} else {
+				content.user_vote = 0;
 				content.clarifications = DatabaseInterface::searchAnsweredClarifications(problem_id);
-
+			}
 			render("problem_view", content);
 			response().status(http::response::ok);
 		}

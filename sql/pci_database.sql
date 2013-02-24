@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS Notification (
         user_name VARCHAR(31),
         seen BOOLEAN,
         url VARCHAR(255),
-        message VARCHAR(255),
+        message VARCHAR(255) CHARACTER SET utf8,
         FOREIGN KEY(user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
  

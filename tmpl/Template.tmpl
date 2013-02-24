@@ -259,6 +259,21 @@
 						postVoteProblem(on_success, on_failure, false, problem_id);
 					}
 				});
+				
+				function refreshVotesButtonsColors(){
+					console.log("user vote: " + logic_memory.user_vote);
+					$('#vote_down').removeClass('on');
+					$('#vote_up').removeClass('on');
+					if(logic_memory.user_vote == 1){
+						$('#vote_up').addClass('on');
+						$('#vote_down').removeClass('on');
+					}else if(logic_memory.user_vote == -1){
+						$('#vote_down').addClass('on');
+						$('#vote_up').removeClass('on');		
+					}
+				};
+				
+				$(document).ready(refreshVotesButtonsColors());
 			</script>
 		<% end template %>
 		
@@ -532,35 +547,7 @@
 			    </script>
 			<% end %>
 		<% end template %>
-
-		<% template old_header_bar() %>
-			<div id="header_bar_main_container">
-					<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
-					<div id="header_bar_sign_container">
-					 	<% if user_signed_in %>
-							<% include sign_out_form() %>
-					 		<div id="header_bar_user_name_container">
-								<a href="<% url "/user" using user_name %>">
-						 			<span id="header_bar_user_name">
-						 				<%= user_first_name %> <%= user_last_name %>
-						 			</span>
-					 			</a>
-				 			</div>
-					 		<% include toggle_anonymous_mode_form(anonymous_mode) %>
-						<% else %>
-							<a>
-								<div class="button_classic header_bar_button" id="header_bar_button_sign_in">
-									Ingresar
-								</div>
-							</a>
-							<div id="header_bar_sign_in_container">
-								<% include sign_in_form() %>
-							</div>
-						<% end %>
-					</div>
-				</div>
-			</div>
-		<% end template %>
+		
 	
 		<% template information_footer() %>
 			<div id="information_footer_main_container">
@@ -678,7 +665,7 @@
 					</div>
 					<div class="span9">
 						<div class="row-fluid">				
-							<a class="link_description" href="<% url "/publication" using problem->id %>">
+							<a class="link_description ellipsis" href="<% url "/publication" using problem->id %>">
 								<%= problem->description %>
 							</a>
 							<span class="text_description">
@@ -715,7 +702,7 @@
 		<% end template %>		
 		
 		<% template solution_description(ProblemPointer problem, SolutionPointer solution) %>
-			<a class="link_description" href="<% url "/publication" using solution->id %>">
+			<a class="link_description ellipsis" href="<% url "/publication" using solution->id %>">
 				<%= solution->description %>
 			</a>
 			<span class="text_description">
@@ -728,14 +715,13 @@
 						</a>
 					</i>
 				<% end %>
-				- <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
 			</span>
 		<% end template %>
 		
 		
 		<% template toolbar_problems() %>
 			<div id="toolbar_problems_container">
-				<a class="btn" id="toolbar_problems_new_problem_button"
+				<a class="btn btn-large" id="toolbar_problems_new_problem_button"
 					href="<% url "/new_problem" %>">
 					Nuevo problema
 				</a>
@@ -746,7 +732,7 @@
 		<% template toolbar_problem(std::string problem_id) %>
 			<div id="toolbar_problem_container">
 				<a href="<% url "/new_solution" using problem_id %>">
-					<div class="button_icon toolbar_problem_button" id="toolbar_problem_new_solution_button">
+					<div class="btn btn-large btn-block " id="toolbar_problem_new_solution_button">
 						Plantear solución
 					</div>
 				</a>

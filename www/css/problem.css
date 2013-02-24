@@ -20,6 +20,35 @@ div.fixed_box_container{
 	padding:16px;
 }
 
+div.solution_box_description {
+	padding: 10px 3px;
+	background-color:white;
+	background-image: -webkit-linear-gradient(top,whiteSmoke,lightGrey);
+	box-shadow: inset 0 7px 5px rgba(255, 255, 255, 0.2),2px 1px 0px rgba(0, 0, 0, 0.05), 0 2px 5px -3px #888;
+	margin-bottom: 2px;
+}
+
+div.solution_box_description:hover {
+	background-color:lightGrey;
+	background-image:none;
+}
+
+div.solution_box_description.accepted_solution{
+	background-image: -webkit-linear-gradient(top,#DEFDC8,#AAFF89);	
+}
+
+div.solution_box_description.accepted_solution:hover {
+	background-color: #AAFF89;
+	background-image:none;
+}
+
+div.horizontal_solution_div{
+	background-color: white;
+	height: 1px;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 1);
+	padding: 0 20px;
+}
+
 .fixed-right-sidebar{
 	position:fixed;
 	right:25px;
@@ -33,9 +62,6 @@ div.fixed_box_container{
 	margin:8px 0px 0px 0px;
 }
 
-div.problem_solution_description {
-	margin:16px 0px 0px 8px;
-}
 .fixed-right{
 	position:fixed;
 	right:25px;
