@@ -22,17 +22,17 @@ public:
 	};
 
 	static std::set<std::string, NotificationAnnouncer::classcomp> *postSolution(std::string user_name, std::string problem_id);
-	static std::list<User *> *postProposal(std::string solution_id);
-	static std::list<User *> *postClarificationInProblem(std::string problem_id);
-	static std::list<User *> *postClarificationInSolution(std::string solution_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *postProposal(std::string user_name, std::string solution_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *postClarificationInProblem(std::string problem_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *postClarificationInSolution(std::string solution_id);
 
-	static std::list<User *> *replyClarification(std::string id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *replyClarification(std::string id);
 
-	static std::list<User *> *voteProblem(std::string problem_id);
-	static std::list<User *> *voteSolution(std::string solution_id);
-	static std::list<User *> *voteProposal(std::string proposal_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *voteProblem(std::string problem_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *voteSolution(std::string solution_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *voteProposal(std::string proposal_id);
 
-	static std::list<User *> *acceptSolution(std::string solution_id);
+	static std::set<std::string, NotificationAnnouncer::classcomp> *acceptSolution(std::string solution_id);
 
 };
 
