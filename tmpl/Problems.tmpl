@@ -23,9 +23,9 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div class="container-fluid">
-				<% include template_view::navigation_menu() %>
-				<div class="main-container">
+			<% include template_view::navigation_menu() %>
+			<div class="main-container">
+				<div class="header-padding">
 					<% if user_signed_in %>
 						<% include template_view::toolbar_problems() %>
 					<% end %>

@@ -169,3 +169,39 @@ function configureToast(toast) {
 		});
 	}, 4000);
 }
+
+/*
+---------------------------------------------------------------
+	Problem-Solution animation functions
+---------------------------------------------------------------
+*/
+function fly(){
+	
+	var flying_problem = $('#problem');
+
+	/* hacks */
+	var main_container = $(".main-container");
+	main_container.position('relative');
+	main_container.css('overflowX', 'hidden');
+
+	/* save width and pos with static position */
+	var pos = flying_problem.offset();
+	var width = flying_problem.width();
+	
+	flying_problem.css('position', 'absolute');
+	flying_problem.offset(pos);
+    flying_problem.width(width);
+
+	flying_problem.animate({
+		left: "-1000px" 
+		},
+		1500, 
+		function(){
+			//$(this).css('left', '0px');
+
+			/* Restore position and width */
+			flying_problem.css('position', 'static');
+			flying_problem.width('auto');
+		}
+	);
+}

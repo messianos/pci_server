@@ -261,7 +261,6 @@
 				});
 				
 				function refreshVotesButtonsColors(){
-					console.log("user vote: " + logic_memory.user_vote);
 					$('#vote_down').removeClass('on');
 					$('#vote_up').removeClass('on');
 					if(logic_memory.user_vote == 1){
@@ -518,6 +517,7 @@
 			                      		<input type="text" class="search-query span2" placeholder="Buscar">
 			                    	</form>
 	                    		</li>
+	                    		<li><img id="profile-picture" style="display:none;" /></li>
 							 	<% if user_signed_in %>
 							      	<li><% include toggle_anonymous_mode_form(anonymous_mode) %></li>
 									<li>
@@ -638,7 +638,7 @@
               <% if user_signed_in %>
 					<li><div class="horizontal_line" ></div></li>
 					<li>
-						<a class="button_square navigation_menu_button" id="navigation_menu_profile_button"
+						<a class="button_square navigation_menu_button after_div" id="navigation_menu_profile_button"
 							href="<% url "/user" using user_name %>">
 							Perfil
 						</a>
@@ -803,6 +803,9 @@
 			    	</title>
 				</head>
 				<body>
+					<div id="fb-root"></div>
+					<script src="/lib/facebook/all.js"></script>
+					<script src="/js/facebook.js"></script>
 					<% include page_content() %>
 				</body>
 			</html>

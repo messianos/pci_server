@@ -56,85 +56,83 @@
 					});
 				});
 			</script>
-		<% end template %>	
+		<% end template %>
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div class="container-fluid">
-				<% include template_view::navigation_menu() %>
-				<div class="main-container">
-						<div class="fixed-title-wrapper">
-							<% include vote_problem_form(problem->id, problem->vote_balance, user_vote) %>
-							<div class="title-container">
-								<div class="title"><%= problem->description %></div>
-								<span class="text_description">
-									Creado el <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
-								</span>
-							</div>
-							<div class="statistics">
-								<% if problem->is_anonymous %>
-									<div class="user_image_name">
-										<a href="#">
-											<h3>Anónimo</h3>
-										</a>
-									</div>
+			<% include template_view::navigation_menu() %>
+			<div class="main-container">
+					<div class="fixed-title-wrapper">
+						<% include vote_problem_form(problem->id, problem->vote_balance, user_vote) %>
+						<div class="title-container">
+							<div class="title"><%= problem->description %></div>
+							<span class="text_description">
+								Creado el <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+							</span>
+						</div>
+						<div class="statistics">
+							<% if problem->is_anonymous %>
+								<div class="user_image_name">
+									<a href="#">
+										<h3>Anónimo</h3>
+									</a>
+								</div>
+							<% else %>
+								<div class="user_image_name">
+									<a href="<% url "/user" using problem->creator_user_name %>">
+										<h3><%= problem->creator_user_name %></h3>
+									</a>
+								</div>
+							<% end %>
+							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
+								<a id="problem_edit_button" class="btn">
+									<i class="icon-pencil"></i> Editar
+								</a>
+								<a class="btn">
+									Agregar Imagen
+								</a>
+							<% end %>
+						</div>
+					</div>
+					<div class="solution-sidebar">
+						<% if user_signed_in %>
+							<% include template_view::toolbar_problem(problem->id) %>
+						<% end %>
+						<% if problem->is_solved  %>
+							<div class="solution_box_description accepted_solution">
+								<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
+									<% include unset_accepted_solution_form(problem->id, accepted_solution->id) %>
 								<% else %>
-									<div class="user_image_name">
-										<a href="<% url "/user" using problem->creator_user_name %>">
-											<h3><%= problem->creator_user_name %></h3>
-										</a>
-									</div>
+									<div class="tick on"></div>
 								<% end %>
-								<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-									<a id="problem_edit_button" class="btn">
-										<i class="icon-pencil"></i> Editar
-									</a>
-									<a class="btn">
-										Agregar Imagen
-									</a>
-								<% end %>
+								<% include template_view::solution_description(problem, accepted_solution) %>
 							</div>
-						</div>
-						<div class="solution-sidebar">
-							<% if user_signed_in %>
-								<% include template_view::toolbar_problem(problem->id) %>
-							<% end %>
-							<% if problem->is_solved  %>
-								<div class="solution_box_description accepted_solution">
+						<% end %>
+						<% foreach solution in *solutions %>
+		 					<% item %>
+								<div class="solution_box_description problem_solution_description">
 									<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-										<% include unset_accepted_solution_form(problem->id, accepted_solution->id) %>
+										<% include set_accepted_solution_form(problem->id, solution->id) %>
 									<% else %>
-										<div class="tick on"></div>
+										<div class="tick"></div>
 									<% end %>
-									<% include template_view::solution_description(problem, accepted_solution) %>
+									<% include template_view::solution_description(problem, solution) %>
 								</div>
-							<% end %>
-							<% foreach solution in *solutions %>
-			 					<% item %>
-									<div class="solution_box_description problem_solution_description">
-										<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-											<% include set_accepted_solution_form(problem->id, solution->id) %>
-										<% else %>
-											<div class="tick"></div>
-										<% end %>
-										<% include template_view::solution_description(problem, solution) %>
-									</div>
-			  					<% end %>
-			  					<% empty %>
-			  						<h4>Aun hay soluciones!</h4>
-			  						<!-- TODO: Add new solution button here -->
-							<% end %>
-						</div>
-						<div class="problem-content">
-							<div id="problem">
-								<div id="problem_problem_content">
-									<%= problem->content %>
-								</div>
-								<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-									<% include edit_problem_form(problem->id, problem->content) %>
-								<% end %>
-								<% include template_view::clarifications(clarifications, problem) %>
+		  					<% end %>
+		  					<% empty %>
+		  						<h4>¡Aun no hay soluciones!</h4>
+		  						<!-- TODO: Add new solution button here -->
+						<% end %>
+					</div>
+					<div class="problem-content">
+						<div id="problem">
+							<div id="problem_problem_content">
+								<%= problem->content %>
 							</div>
+							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
+								<% include edit_problem_form(problem->id, problem->content) %>
+							<% end %>
+							<% include template_view::clarifications(clarifications, problem) %>
 						</div>
 					</div>
 				</div>

@@ -29,9 +29,9 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div class="container-fluid">
-				<% include template_view::navigation_menu() %>
-				<div class="main-container">
+			<% include template_view::navigation_menu() %>
+			<div class="main-container">
+				<div class="header-padding">
 					<% include create_solution_form(problem_id) %>
 				</div>
 			</div>

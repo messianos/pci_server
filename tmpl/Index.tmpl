@@ -13,14 +13,16 @@
 	
 		<% template page_content() %>
 			<% include template_view::header_bar() %>
-			<div class="main-container">
-				<a href="<% url "/problems" %>">
-					<img src="img/community.jpg" >
-				</a>
-				<div id="index_sign_up_container">
-					<% include template_view::create_user_form() %>
+			<div class="main-container wide">
+				<div class="header-padding">
+					<a href="<% url "/problems" %>">
+						<img src="img/community.jpg" >
+					</a>
+					<div id="index_sign_up_container">
+						<% include template_view::create_user_form() %>
+					</div>
+					<% include template_view::information_footer() %>
 				</div>
-				<% include template_view::information_footer() %>
 			</div>
 		<% end template %>
 	
