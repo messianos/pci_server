@@ -1163,6 +1163,25 @@ BEGIN
         COMMIT;
        
 END; !
+
+CREATE PROCEDURE update_all_users_rank()
+BEGIN
+	DECLARE done INT DEFAULT 0;
+	DECLARE user_name VARCHAR(31);
+	DECLARE cur1 CURSOR FOR SELECT user_name FROM User;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+	
+	OPEN cur1;
+	
+	REPEAT 
+		FETCH cur1 INTO user_name;
+		IF NOT done THEN
+			CALL rank_update(user_name);
+		END IF;
+	UNTIL done END REPEAT;
+	
+	CLOSE cur1;
+END; !
  
  
 DELIMITER ;
@@ -1225,6 +1244,17 @@ END; !
  
  
 DELIMITER ;
+
+-- EVENT -------------------------------------------------------------------
+
+/*
+* Update ranking event
+*/
+
+CREATE EVENT myevent
+    ON SCHEDULE EVERY 5 SECOND
+    DO
+      update_all_users_rank();
  
  
  

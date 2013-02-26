@@ -7,7 +7,6 @@ using namespace cppcms;
 using namespace std;
 using namespace ViewContent;
 
-
 bool Server::getRequestReceived() {
 	return request().request_method() == "GET";
 }
@@ -66,13 +65,13 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/create_user", &Server::postCreateUser, this);
 	mapper().assign("create_user", "/create_user");
 	/*dispatcher().assign("/delete_user", &Server::postDeleteUser, this);
-	mapper().assign("delete_user", "/delete_user");*/
+	 mapper().assign("delete_user", "/delete_user");*/
 	dispatcher().assign("/create_problem", &Server::postCreateProblem, this);
 	mapper().assign("create_problem", "/create_problem");
 	dispatcher().assign("/edit_problem", &Server::postEditProblem, this);
 	mapper().assign("edit_problem", "/edit_problem");
 	/*dispatcher().assign("/delete_problem", &Server::postDeleteProblem, this);
-	mapper().assign("delete_problem", "/delete_problem");*/
+	 mapper().assign("delete_problem", "/delete_problem");*/
 	dispatcher().assign("/vote_problem", &Server::postVoteProblem, this);
 	mapper().assign("vote_problem", "/vote_problem");
 	dispatcher().assign("/create_solution", &Server::postCreateSolution, this);
@@ -80,7 +79,7 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/edit_solution", &Server::postEditSolution, this);
 	mapper().assign("edit_solution", "/edit_solution");
 	/*dispatcher().assign("/delete_solution", &Server::postDeleteSolution, this);
-	mapper().assign("delete_solution", "/delete_solution");*/
+	 mapper().assign("delete_solution", "/delete_solution");*/
 	dispatcher().assign("/vote_solution", &Server::postVoteSolution, this);
 	mapper().assign("vote_solution", "/vote_solution");
 	dispatcher().assign("/create_clarification", &Server::postCreateClarification, this);
@@ -88,14 +87,13 @@ Server::Server(cppcms::service &service) :
 	dispatcher().assign("/answer_clarification", &Server::postAnswerClarification, this);
 	mapper().assign("answer_clarification", "/answer_clarification");
 	/*dispatcher().assign("/delete_clarification", &Server::postDeleteClarification, this);
-	mapper().assign("delete_clarification", "/delete_clarification");*/
+	 mapper().assign("delete_clarification", "/delete_clarification");*/
 
 	dispatcher().assign("/set_accepted_solution", &Server::postSetAcceptedSolution, this);
 	mapper().assign("set_accepted_solution", "/set_accepted_solution");
 
 	dispatcher().assign("/unset_accepted_solution", &Server::postUnsetAcceptedSolution, this);
 	mapper().assign("unset_accepted_solution", "/unset_accepted_solution");
-
 
 	// Page-fetching services
 	dispatcher().assign("", &Server::getFetchMainPage, this);
@@ -122,7 +120,7 @@ Server::~Server() {
 }
 
 void Server::main(string url) {
-	if (! dispatcher().dispatch(url))
+	if (!dispatcher().dispatch(url))
 		renderError404Page();
 }
 
@@ -170,35 +168,33 @@ void Server::postSignIn() {
 void Server::postSignOut() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
-	else
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			session().clear();
-			response().status(http::response::ok);
-		}
+	else if (!session().is_set("session_user_signed_in"))
+		response().status(http::response::unauthorized);
+	else {
+		session().clear();
+		response().status(http::response::ok);
+	}
 }
 
 void Server::postToggleAnonymousMode() {
 	if (!postRequestReceived())
 		response().status(http::response::method_not_allowed);
-	else
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			json::value json_response = json::value();
+	else if (!session().is_set("session_user_signed_in"))
+		response().status(http::response::unauthorized);
+	else {
+		json::value json_response = json::value();
 
-			if (session().is_set("session_anonymous_mode")) {
-				session().erase("session_anonymous_mode");
-				json_response["anonymous_mode"] = false;
-			} else {
-				session()["session_anonymous_mode"] = "";
-				json_response["anonymous_mode"] = true;
-			}
-
-			response().out() << json_response;
-			response().status(http::response::ok);
+		if (session().is_set("session_anonymous_mode")) {
+			session().erase("session_anonymous_mode");
+			json_response["anonymous_mode"] = false;
+		} else {
+			session()["session_anonymous_mode"] = "";
+			json_response["anonymous_mode"] = true;
 		}
+
+		response().out() << json_response;
+		response().status(http::response::ok);
+	}
 }
 
 void Server::postUnseenNotifications() {
@@ -215,7 +211,8 @@ void Server::postUnseenNotifications() {
 			json::value json_response = json::value();
 			json_response["notification_count"] = unseen_notifications->size();
 			int i = 0;
-			for (list<Notification *>::const_iterator iterator = unseen_notifications->begin(); iterator != unseen_notifications->end(); ++iterator) {
+			for (list<Notification *>::const_iterator iterator = unseen_notifications->begin();
+					iterator != unseen_notifications->end(); ++iterator) {
 				json_response["unseen_notifications"][i]["message"] = (*iterator)->message;
 				json_response["unseen_notifications"][i]["url"] = (*iterator)->url;
 				i++;
@@ -270,12 +267,12 @@ void Server::postCreateUser() {
 }
 
 /*void Server::postDeleteUser() {
-	if (!postRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		// TODO
-	}
-}*/
+ if (!postRequestReceived())
+ response().status(http::response::method_not_allowed);
+ else {
+ // TODO
+ }
+ }*/
 
 void Server::postCreateProblem() {
 	if (!postRequestReceived())
@@ -347,36 +344,36 @@ void Server::postEditProblem() {
 }
 
 /*void Server::postDeleteProblem() {
-	if (!postRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		string user_name = session()["session_user_name"];
+ if (!postRequestReceived())
+ response().status(http::response::method_not_allowed);
+ else {
+ string user_name = session()["session_user_name"];
 
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			string problem_id = postRequestData("problem_id");
+ if (!session().is_set("session_user_signed_in"))
+ response().status(http::response::unauthorized);
+ else {
+ string problem_id = postRequestData("problem_id");
 
-			ErrorCode *error_code;
-			error_code = InputValidator::validateDeleteProblemInput(problem_id);
-			if (error_code->isAnError())
-				response().status(http::response::bad_request, error_code->getErrorDescription());
-			else {
-				Problem *problem = DatabaseInterface::searchProblem(problem_id);
+ ErrorCode *error_code;
+ error_code = InputValidator::validateDeleteProblemInput(problem_id);
+ if (error_code->isAnError())
+ response().status(http::response::bad_request, error_code->getErrorDescription());
+ else {
+ Problem *problem = DatabaseInterface::searchProblem(problem_id);
 
-				if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
-					response().status(http::response::forbidden);
-				else {
-					error_code = DatabaseInterface::deleteProblem(problem_id);
-					if (error_code->isAnError())
-						response().status(http::response::internal_server_error, error_code->getErrorDescription());
-					else
-						response().status(http::response::ok);
-				}
-			}
-		}
-	}
-}*/
+ if (problem == NULL || user_name.compare(problem->creator_user_name) != 0)
+ response().status(http::response::forbidden);
+ else {
+ error_code = DatabaseInterface::deleteProblem(problem_id);
+ if (error_code->isAnError())
+ response().status(http::response::internal_server_error, error_code->getErrorDescription());
+ else
+ response().status(http::response::ok);
+ }
+ }
+ }
+ }
+ }*/
 
 void Server::postVoteProblem() {
 	if (!postRequestReceived())
@@ -519,16 +516,16 @@ void Server::postCreateSolution() {
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else {
-					set<string, NotificationAnnouncer::classcomp> *notified_users = NotificationAnnouncer::postSolution(user_name, problem_id);
+					set<string, NotificationAnnouncer::classcomp> *notified_users = NotificationAnnouncer::postSolution(
+							user_name, problem_id);
 
-					int i = 0;
-					for (set<string, NotificationAnnouncer::classcomp>::const_iterator iterator = notified_users->begin(); iterator != notified_users->end(); ++iterator) {
+					for (set<string, NotificationAnnouncer::classcomp>::const_iterator iterator =
+							notified_users->begin(); iterator != notified_users->end(); ++iterator) {
 						Notification *notification = new Notification();
 						notification->user_name = *iterator;
 						notification->url = "/publication/" + solution->id;
 						notification->message = "Solución recibida";
 						DatabaseInterface::insertNotification(notification);
-						i++;
 					}
 
 					json::value json_response = json::value();
@@ -550,37 +547,37 @@ void Server::postEditSolution() {
 }
 
 /*void Server::postDeleteSolution() {
-	if (!postRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		string user_name = session()["session_user_name"];
+ if (!postRequestReceived())
+ response().status(http::response::method_not_allowed);
+ else {
+ string user_name = session()["session_user_name"];
 
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			string solution_id = postRequestData("solution_id");
+ if (!session().is_set("session_user_signed_in"))
+ response().status(http::response::unauthorized);
+ else {
+ string solution_id = postRequestData("solution_id");
 
-			ErrorCode *error_code;
-			error_code = InputValidator::validateDeleteSolutionInput(solution_id);
-			if (error_code->isAnError())
-				response().status(http::response::bad_request, error_code->getErrorDescription());
-			else {
-				Solution *solution = DatabaseInterface::searchSolution(solution_id);
+ ErrorCode *error_code;
+ error_code = InputValidator::validateDeleteSolutionInput(solution_id);
+ if (error_code->isAnError())
+ response().status(http::response::bad_request, error_code->getErrorDescription());
+ else {
+ Solution *solution = DatabaseInterface::searchSolution(solution_id);
 
-				if (solution == NULL || user_name.compare(solution->creator_user_name) != 0)
-					response().status(http::response::forbidden);
-				else {
+ if (solution == NULL || user_name.compare(solution->creator_user_name) != 0)
+ response().status(http::response::forbidden);
+ else {
 
-					error_code = DatabaseInterface::deleteSolution(solution_id);
-					if (error_code->isAnError())
-						response().status(http::response::internal_server_error, error_code->getErrorDescription());
-					else
-						response().status(http::response::ok);
-				}
-			}
-		}
-	}
-}*/
+ error_code = DatabaseInterface::deleteSolution(solution_id);
+ if (error_code->isAnError())
+ response().status(http::response::internal_server_error, error_code->getErrorDescription());
+ else
+ response().status(http::response::ok);
+ }
+ }
+ }
+ }
+ }*/
 
 void Server::postVoteSolution() {
 	if (!postRequestReceived())
@@ -606,17 +603,17 @@ void Server::postVoteSolution() {
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {/* TODO
-				bool is_positive_boolean = is_positive.compare("true") == 0;
+			 bool is_positive_boolean = is_positive.compare("true") == 0;
 
-				error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean);
-				if (error_code->isAnError())
-					response().status(http::response::internal_server_error, error_code->getErrorDescription());
-				else {
-					json::value json_response = json::value();
-					json_response["vote_balance"] = DatabaseInterface::getSolutionVoteBalance(solution_id);
-					response().out() << json_response;
-					response().status(http::response::ok);
-				}*/
+			 error_code = DatabaseInterface::voteSolution(solution_id, user_name, is_positive_boolean);
+			 if (error_code->isAnError())
+			 response().status(http::response::internal_server_error, error_code->getErrorDescription());
+			 else {
+			 json::value json_response = json::value();
+			 json_response["vote_balance"] = DatabaseInterface::getSolutionVoteBalance(solution_id);
+			 response().out() << json_response;
+			 response().status(http::response::ok);
+			 }*/
 			}
 		}
 	}
@@ -649,8 +646,26 @@ void Server::postCreateClarification() {
 				error_code = DatabaseInterface::insertClarification(clarification);
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
-				else
+				else {
+
+					set<string, NotificationAnnouncer::classcomp> *notified_users;
+
+					// TODO: Make this smartly
+					if (associated_publication_id[1] == '0')
+						notified_users = NotificationAnnouncer::postClarificationInProblem(associated_publication_id);
+					else
+						notified_users = NotificationAnnouncer::postClarificationInSolution(associated_publication_id);
+
+					for (set<string, NotificationAnnouncer::classcomp>::const_iterator iterator =
+							notified_users->begin(); iterator != notified_users->end(); ++iterator) {
+						Notification *notification = new Notification();
+						notification->user_name = *iterator;
+						notification->url = "/publication/" + associated_publication_id;
+						notification->message = "Solicitud de aclaracion recibida";
+						DatabaseInterface::insertNotification(notification);
+					}
 					response().status(http::response::ok);
+				}
 			}
 		}
 	}
@@ -679,7 +694,8 @@ void Server::postAnswerClarification() {
 				if (clarification == NULL)
 					response().status(http::response::bad_request, error_code->getErrorDescription());
 				else {
-					Publication *publication = DatabaseInterface::searchPublication(clarification->associated_publication_id);
+					Publication *publication = DatabaseInterface::searchPublication(
+							clarification->associated_publication_id);
 
 					if (user_name.compare(publication->creator_user_name) != 0)
 						response().status(http::response::forbidden);
@@ -697,36 +713,36 @@ void Server::postAnswerClarification() {
 }
 
 /*void Server::postDeleteClarification() {
-	if (!postRequestReceived())
-		response().status(http::response::method_not_allowed);
-	else {
-		string user_name = session()["session_user_name"];
+ if (!postRequestReceived())
+ response().status(http::response::method_not_allowed);
+ else {
+ string user_name = session()["session_user_name"];
 
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			string clarification_id = postRequestData("clarification_id");
+ if (!session().is_set("session_user_signed_in"))
+ response().status(http::response::unauthorized);
+ else {
+ string clarification_id = postRequestData("clarification_id");
 
-			ErrorCode *error_code;
-			error_code = InputValidator::validateDeleteClarificationInput(clarification_id);
-			if (error_code->isAnError())
-				response().status(http::response::bad_request, error_code->getErrorDescription());
-			else {
-				Clarification *clarification = DatabaseInterface::searchClarification(clarification_id);
+ ErrorCode *error_code;
+ error_code = InputValidator::validateDeleteClarificationInput(clarification_id);
+ if (error_code->isAnError())
+ response().status(http::response::bad_request, error_code->getErrorDescription());
+ else {
+ Clarification *clarification = DatabaseInterface::searchClarification(clarification_id);
 
-				if (clarification == NULL || user_name.compare(clarification->creator_user_name) != 0)
-					response().status(http::response::forbidden);
-				else {
-					error_code = DatabaseInterface::deleteClarification(clarification_id);
-					if (error_code->isAnError())
-						response().status(http::response::internal_server_error, error_code->getErrorDescription());
-					else
-						response().status(http::response::ok);
-				}
-			}
-		}
-	}
-}*/
+ if (clarification == NULL || user_name.compare(clarification->creator_user_name) != 0)
+ response().status(http::response::forbidden);
+ else {
+ error_code = DatabaseInterface::deleteClarification(clarification_id);
+ if (error_code->isAnError())
+ response().status(http::response::internal_server_error, error_code->getErrorDescription());
+ else
+ response().status(http::response::ok);
+ }
+ }
+ }
+ }
+ }*/
 
 void Server::getFetchMainPage() {
 	if (!getRequestReceived())
@@ -859,36 +875,34 @@ void Server::getFetchSolutionPage(string solution_id) {
 void Server::getFetchNewProblemPage() {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
-	else
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			TemplateContent content;
+	else if (!session().is_set("session_user_signed_in"))
+		response().status(http::response::unauthorized);
+	else {
+		TemplateContent content;
 
-			setSessionProperties(content);
-			content.page_title = "Nuevo problema";
+		setSessionProperties(content);
+		content.page_title = "Nuevo problema";
 
-			render("new_problem_view", content);
-			response().status(http::response::ok);
-		}
+		render("new_problem_view", content);
+		response().status(http::response::ok);
+	}
 }
 
 void Server::getFetchNewSolutionPage(string problem_id) {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
-	else
-		if (!session().is_set("session_user_signed_in"))
-			response().status(http::response::unauthorized);
-		else {
-			NewSolutionContent content;
+	else if (!session().is_set("session_user_signed_in"))
+		response().status(http::response::unauthorized);
+	else {
+		NewSolutionContent content;
 
-			setSessionProperties(content);
-			content.page_title = "Nueva solución";
-			content.problem_id = problem_id;
+		setSessionProperties(content);
+		content.page_title = "Nueva solución";
+		content.problem_id = problem_id;
 
-			render("new_solution_view", content);
-			response().status(http::response::ok);
-		}
+		render("new_solution_view", content);
+		response().status(http::response::ok);
+	}
 }
 
 void Server::getFetchIdeasPage() {
