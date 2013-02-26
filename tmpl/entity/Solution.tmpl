@@ -1,0 +1,110 @@
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view solution_services uses ViewContent::TemplateContent %>
+
+		<% template create_solution_form(String problem_id) %>
+			<legend>Crear solución</legend>
+			<form id="create_solution_form">
+				<input id="create_solution_description" placeholder="Descripción de la solución" type="text" /><br />
+				<textarea id="create_solution_content"></textarea><br />
+				<input class="btn" type="submit" value="Crear solución" />
+			</form>
+			<script>
+				CKEDITOR.replace(create_solution_content, {
+					customConfig: '',
+					extraPlugins: 'bbcode',
+					fontSize_sizes: "10/100%; 12/120%; 14/140%; 16/160%; 18/180%; 20/200%",
+					language: 'es',
+					removePlugins: 'elementspath, colordialog',
+					resize_enabled: false,
+					skin: 'moono-dark',
+					toolbar: [
+						[ 'Undo', '-', 'Redo' ],
+						[ 'FontSize' ],
+						[ 'Bold', 'Italic', 'Underline', '-', 'TextColor' ],
+						[ 'RemoveFormat' ],
+						[ 'Link', '-', 'Unlink' ],
+						[ 'NumberedList', 'BulletedList', '-', 'Blockquote' ]
+					]
+				});
+			
+				$('#create_solution_form').submit({
+					content: $('#create_solution_content'),
+					description: $('#create_solution_description')
+				}, function(event) {
+					event.preventDefault();
+					CKEDITOR.instances.create_solution_content.updateElement();
+					
+					var content = $.trim(event.data.content.val());
+					var description = $.trim(event.data.description.val());
+					var problem_id =  '<%= problem_id %>';
+
+					hideAllTooltips();
+					var on_invalid_input = onInvalidInputCreateSolution($('#cke_' + CKEDITOR.instances.create_solution_content.name), event.data.description);
+					if (validateCreateSolutionInput(on_invalid_input, content, description)) {
+						var on_success = onSuccessCreateSolution();
+						var on_failure = onFailureCreateSolution();
+						postCreateSolution(on_success, on_failure, content, description, problem_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template solution_description(SolutionPointer solution) %>
+			<a class="link_description ellipsis" href="<% url "/publication" using solution->id %>">
+				<%= solution->description %>
+			</a>
+			<span class="text_description">
+				<% if solution->is_anonymous %>
+					<i>Publicado anónimamente</i>
+				<% else %>
+					<i>Por 
+						<a class="link_user_name" href="<% url "/user" using solution->creator_user_name %>">
+							<%= solution->creator_user_name %>
+						</a>
+					</i>
+				<% end %>
+			</span>
+		<% end template %>
+		
+		<% template vote_solution_form(SolutionPointer solution) %>
+			<a class="btn" id="vote_solution_positive_button">Votar positivamente</a>
+			<div id="vote_solution_display"><%= solution->vote_balance %></div>
+			<a class="btn" id="vote_solution_negative_button">Votar negativamente</a>
+			<script>
+				$('#vote_solution_positive_button').click({
+					display: $('#vote_solution_display')
+				}, function(event) {
+					var solution_id = '<%= solution->id %>';
+					
+					var on_success = onSuccessVoteSolution(event.data.display);
+					var on_failure = onFailureVoteSolution();
+					postVoteSolution(on_success, on_failure, true, solution_id);
+				});
+				
+				$('#vote_solution_negative_button').click({
+					display: $('#vote_solution_display')
+				}, function(event) {
+					var solution_id = '<%= solution->id %>';
+					
+					var on_success = onSuccessVoteSolution(event.data.display);
+					var on_failure = onFailureVoteSolution();
+					postVoteSolution(on_success, on_failure, false, solution_id);
+				});
+			</script>
+		<% end %>
+		
+		
+		<% template toolbar_solution(SolutionPointer solution) %>
+			<div id="toolbar_solution_container">
+				<a href="<% url "/publication" using solution->problem_id %>">
+					<div class="button_icon toolbar_solution_button" id="toolbar_solution_go_back_button">
+						Volver al problema
+					</div>
+				</a>
+			</div>
+		<% end template %>
+		
+	<% end view %>
+<% end skin %>

@@ -27,7 +27,7 @@
 			<div class="main-container">
 				<div class="header-padding">
 					<% if user_signed_in %>
-						<% include template_view::toolbar_problems() %>
+						<% include toolbar_problems() %>
 					<% end %>
 					<ul class="nav nav-tabs">
 						<li class="active"><a href="#tab1" data-toggle="tab">Al azar</a></li>
@@ -38,7 +38,7 @@
 						<div class="tab-pane active" id="tab1">
 							<% foreach problem in *random_problems %>
 								<% item %>
-									<% include template_view::problem_description(problem) %>
+									<% include problem_description(problem) using problem_services %>
 								<% end %>
 							<% empty %>
 								No se encontraron problemas
@@ -47,7 +47,7 @@
 						<div class="tab-pane" id="tab2">
 							<% foreach problem in *latest_problems %>
 								<% item %>
-									<% include template_view::problem_description(problem) %>
+									<% include problem_description(problem) using problem_services %>
 								<% end %>
 							<% empty %>
 								No se encontraron problemas sin resolver
@@ -56,7 +56,7 @@
 						<div class="tab-pane" id="tab3">
 							<% foreach problem in *unsolved_problems %>
 								<% item %>
-									<% include template_view::problem_description(problem) %>
+									<% include problem_description(problem) using problem_services %>
 								<% end %>
 							<% empty %>
 								No se encontraron problemas sin resolver
@@ -66,7 +66,15 @@
 				</div>
 			</div>
 		<% end template %>
-	
+		
+		<% template toolbar_problems() %>
+			<div id="toolbar_problems_container">
+				<a class="btn btn-large" id="toolbar_problems_new_problem_button"
+					href="<% url "/new_problem" %>">
+					Nuevo problema
+				</a>
+			</div>
+		<% end template %>	
 	
 	<% end view %>
 <% end skin %>

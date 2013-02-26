@@ -32,7 +32,7 @@
 			<% include template_view::navigation_menu() %>
 			<div class="main-container">
 				<div class="header-padding">
-					<% include template_view::toolbar_solution(problem_id) %>
+					<% include toolbar_solution(solution) using solution_services %>
 					<div class="horizontal_line"></div>
 					<div id="solution_header_container">
 						<h2>
@@ -42,7 +42,7 @@
 					<div class="box_content" id="solution_solution_content">
 						<%= solution->content %>
 					</div>
-					<% include template_view::clarifications(clarifications, solution) %>
+					<% include clarifications_descriptions(clarifications, solution) using clarification_services %>
 				</div>
 			</div>
 		<% end template %>

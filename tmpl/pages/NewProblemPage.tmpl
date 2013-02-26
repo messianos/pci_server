@@ -2,7 +2,7 @@
 <% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
-	<% view new_problem_view uses ViewContent::NewProblemContent extends template_view %>
+	<% view new_problem_view uses ViewContent::TemplateContent extends template_view %>
 	
 	
 		<% template css_links() %>
@@ -32,7 +32,7 @@
 			<% include template_view::navigation_menu() %>
 			<div class="main-container">
 				<div class="header-padding">
-					<% include create_problem_form() %>
+					<% include create_problem_form() using problem_services %>
 				</div>
 			</div>
 		<% end template %>

@@ -32,7 +32,7 @@
 			<% include template_view::navigation_menu() %>
 			<div class="main-container">
 				<div class="header-padding">
-					<% include create_solution_form(problem_id) %>
+					<% include create_solution_form(problem_id) using solution_services %>
 				</div>
 			</div>
 		<% end template %>

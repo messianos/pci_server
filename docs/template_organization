@@ -1,0 +1,20 @@
+Nueva organizacion para los Templates:
+	Carpetas:
+			* entity:
+				Templates que proveen servicios agrupados por entidades:
+				
+					Template name		|	View name
+				-------------------------------------------------------
+					Clarifications 		|	clarification_service
+					Problem				|	problem_services
+					Solution			|	solution_services
+					User				|	user_services
+					
+			* pages:
+				Templates correspondientes a las paginas a renderizar, utilizan
+				los servicios de los templates ubicados en entity de la siguiente
+				forma:
+					<% include service_name(parameters) using entity_service %>
+					
+				Ejemplo
+					<% include solution_description(solution) using solution_service %>

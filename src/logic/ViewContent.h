@@ -27,12 +27,6 @@ namespace ViewContent {
 		TemplateContent();
 	};
 
-	struct IdeasContent : TemplateContent {
-	};
-
-	struct IndexContent : TemplateContent {
-	};
-
 	struct ProblemContent : TemplateContent {
 		Problem *problem;
 		Solution *accepted_solution;
@@ -40,9 +34,6 @@ namespace ViewContent {
 		std::list<Clarification *> *clarifications;
 
 		int user_vote;
-	};
-
-	struct NewProblemContent : TemplateContent {
 	};
 
 	struct ProblemsContent : TemplateContent {
@@ -58,7 +49,6 @@ namespace ViewContent {
 	struct SolutionContent: TemplateContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
-		std::string problem_id;
 	};
 
 	struct NewSolutionContent : TemplateContent {
@@ -80,6 +70,7 @@ typedef std::string String;
 typedef Publication *PublicationPointer;
 typedef Problem *ProblemPointer;
 typedef Solution *SolutionPointer;
+typedef Clarification *ClarificationPointer;
 typedef std::list<Problem *> *ProblemList;
 typedef std::list<Solution *> *SolutionList;
 typedef std::list<Clarification *> *ClarificationList;

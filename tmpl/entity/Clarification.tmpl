@@ -1,0 +1,111 @@
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view clarification_services uses ViewContent::TemplateContent %>
+
+		<% template create_clarification_form(std::string associated_publication_id) %>
+			<form id="create_clarification_form">
+				<textarea id="create_clarification_question" placeholder="Solicitar una aclaración..."></textarea>
+				<input class="btn" type="submit" value="Publicar pregunta" />
+			</form>
+			<script>
+				$('#create_clarification_form').submit({
+					question: $('#create_clarification_question')
+				}, function(event) {
+					event.preventDefault();
+					
+					var associated_publication_id = '<%= associated_publication_id %>';
+					var question = $.trim(event.data.question.val());
+					
+					var on_invalid_input = onInvalidInputCreateClarification(event.data.question);
+					if (validateCreateClarificationInput(on_invalid_input, question)) {
+						var on_success = onSuccessCreateClarification($('#clarifications_main_container'), event.data.question, question);
+						var on_failure = onFailureCreateClarification();
+						postCreateClarification(on_success, on_failure, associated_publication_id, question);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		<% template answer_clarification_form(std::string clarification_id) %>
+			<form id="answer_clarification_form_<%= clarification_id %>">
+				<textarea id="answer_clarification_answer_<%= clarification_id %>" placeholder="Responder..."></textarea>
+				<input class="btn" type="submit" value="Publicar respuesta" />
+			</form>
+			<script>
+				$('#answer_clarification_form_<%= clarification_id %>').submit({
+					answer: $('#answer_clarification_answer_<%= clarification_id %>')
+				}, function(event) {
+					event.preventDefault();
+					
+					var answer = $.trim(event.data.answer.val());
+					var clarification_id = '<%= clarification_id %>';
+					
+					var on_invalid_input = onInvalidInputAnswerClarification(event.data.answer);
+					if (validateAnswerClarificationInput(on_invalid_input, answer)) {
+						var on_success = onSuccessAnswerClarification($(this), answer);
+						var on_failure = onFailureAnswerClarification();
+						postAnswerClarification(on_success, on_failure, answer, clarification_id);
+					}
+				});
+			</script>
+		<% end template %>
+
+
+		<% template clarifications_descriptions(ClarificationList clarifications, PublicationPointer publication) %>
+			<div id="clarifications_main_container">
+				<div class="horizontal_line"></div>
+				<h4>Aclaraciones</h4>
+				<div class="clarifications_row_container">
+					<div class="clarifications_question_container">
+						<div class="clarifications_column_header clarifications_question_content">
+							Pregunta
+						</div>
+					</div>
+					<div class="clarifications_answer_container">
+						<div class="clarifications_answer_content clarifications_column_header">
+							Respuesta
+						</div>
+					</div>
+				</div>
+				<% if (! clarifications->empty()) %>
+					<% foreach clarification in *clarifications %>
+						<% item %>
+							<% include clarification_description(clarification, publication) %>
+	  					<% end %>
+					<% end %>
+				<% end %>
+			</div>
+			<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
+				<% include create_clarification_form(publication->id) %>
+			<% end %>
+		<% end template %>
+		
+		<% template clarification_description(ClarificationPointer clarification, PublicationPointer publication) %>
+			<div class="clarifications_row_container">
+				<div class="clarifications_question_container">
+					<div class="box_content clarifications_question_content">
+						<span class="text_clarification">
+							<%= clarification->question %>
+						</span>
+					</div>
+				</div>
+				<div class="clarifications_answer_container">
+					<% if (! clarification->answer.empty()) %>
+						<div class="box_content clarifications_answer_content">
+							<span class="text_clarification">
+								<%= clarification->answer %>
+							</span>
+						</div>
+					<% else %>
+						<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
+							<div class="clarifications_answer_content">
+								<% include answer_clarification_form(clarification->id) %>
+							</div>
+						<% end %>
+					<% end %>
+				</div>
+			</div>
+		<% end template %>
+	<% end view %>
+<% end skin %>

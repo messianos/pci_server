@@ -1,0 +1,108 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view index_view uses ViewContent::TemplateContent extends template_view %>
+	
+	
+		<% template css_links() %>
+			<% include template_view::css_links() %>
+			<link href="/css/index.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+	
+	
+		<% template page_content() %>
+			<% include template_view::header_bar() %>
+			<div class="main-container wide">
+				<div class="header-padding">
+					<a href="<% url "/problems" %>">
+						<img src="img/community.jpg" >
+					</a>
+					<div id="index_sign_up_container">
+						<% include create_user_form() using user_services %>
+					</div>
+					<% include information_footer() %>
+				</div>
+			</div>
+		<% end template %>
+	
+		<% template information_footer() %>
+				<div id="information_footer_main_container">
+					<div id="information_footer_central_container">
+						<div id="information_footer_logo_extended_container">
+							<div id="information_footer_logo_extended"></div>
+						</div>
+						<div id="information_footer_link_container">
+							<div class="information_footer_column_container">
+								<div class="information_footer_column_header">
+									<span class="text_footer">
+										PCI
+									</span>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Acerca de
+									</a>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Filosofía
+									</a>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Link 3
+									</a>
+								</div>
+							</div>
+							<div class="information_footer_column_container">
+								<div class="information_footer_column_header">
+									<span class="text_footer">
+										Header 2
+									</span>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Link 1
+									</a>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Link 2
+									</a>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Link 3
+									</a>
+								</div>
+							</div>
+							<div class="information_footer_column_container">
+								<div class="information_footer_column_header">
+									<span class="text_footer">
+										Soporte
+									</span>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Ayuda
+									</a>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Condiciones de servicio
+									</a>
+								</div>
+								<div class="information_footer_link">
+									<a class="link_footer" href="<% url "" %>">
+										Copyright
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<% end template %>
+		
+	<% end view %>
+<% end skin %>

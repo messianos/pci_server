@@ -732,7 +732,7 @@ void Server::getFetchMainPage() {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		IndexContent content;
+		TemplateContent content;
 
 		setSessionProperties(content);
 		content.page_title = "PCI";
@@ -850,8 +850,6 @@ void Server::getFetchSolutionPage(string solution_id) {
 			else
 				content.clarifications = DatabaseInterface::searchAnsweredClarifications(solution_id);
 
-			content.problem_id = solution->problem_id;
-
 			render("solution_view", content);
 			response().status(http::response::ok);
 		}
@@ -865,7 +863,7 @@ void Server::getFetchNewProblemPage() {
 		if (!session().is_set("session_user_signed_in"))
 			response().status(http::response::unauthorized);
 		else {
-			NewProblemContent content;
+			TemplateContent content;
 
 			setSessionProperties(content);
 			content.page_title = "Nuevo problema";
@@ -897,7 +895,7 @@ void Server::getFetchIdeasPage() {
 	if (!getRequestReceived())
 		response().status(http::response::method_not_allowed);
 	else {
-		IdeasContent content;
+		TemplateContent content;
 
 		setSessionProperties(content);
 		content.page_title = "PCI - Ideas";

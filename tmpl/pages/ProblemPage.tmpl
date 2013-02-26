@@ -63,7 +63,7 @@
 			<% include template_view::navigation_menu() %>
 			<div class="main-container">
 					<div class="fixed-title-wrapper">
-						<% include vote_problem_form(problem->id, problem->vote_balance, user_vote) %>
+						<% include vote_problem_form(problem, user_vote) using problem_services %>
 						<div class="title-container">
 							<div class="title"><%= problem->description %></div>
 							<span class="text_description">
@@ -96,27 +96,27 @@
 					</div>
 					<div class="solution-sidebar">
 						<% if user_signed_in %>
-							<% include template_view::toolbar_problem(problem->id) %>
+							<% include toolbar_problem(problem) using problem_services %>
 						<% end %>
 						<% if problem->is_solved  %>
 							<div class="solution_box_description accepted_solution">
 								<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-									<% include unset_accepted_solution_form(problem->id, accepted_solution->id) %>
+									<% include unset_accepted_solution_form(problem, accepted_solution->id) using problem_services %>
 								<% else %>
 									<div class="tick on"></div>
 								<% end %>
-								<% include template_view::solution_description(problem, accepted_solution) %>
+								<% include solution_description(accepted_solution) using solution_services %>
 							</div>
 						<% end %>
 						<% foreach solution in *solutions %>
 		 					<% item %>
 								<div class="solution_box_description problem_solution_description">
 									<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-										<% include set_accepted_solution_form(problem->id, solution->id) %>
+										<% include set_accepted_solution_form(problem, solution->id) using problem_services %>
 									<% else %>
 										<div class="tick"></div>
 									<% end %>
-									<% include template_view::solution_description(problem, solution) %>
+									<% include solution_description(solution) using solution_services %>
 								</div>
 		  					<% end %>
 		  					<% empty %>
@@ -130,9 +130,9 @@
 								<%= problem->content %>
 							</div>
 							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-								<% include edit_problem_form(problem->id, problem->content) %>
+								<% include edit_problem_form(problem) using problem_services %>
 							<% end %>
-							<% include template_view::clarifications(clarifications, problem) %>
+							<% include clarifications_descriptions(clarifications, problem) using clarification_services %>
 						</div>
 					</div>
 				</div>
