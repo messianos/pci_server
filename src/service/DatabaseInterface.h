@@ -57,6 +57,7 @@ public:
 
 	static ErrorCode *insertProblem(Problem *problem);
 	static ErrorCode *deleteProblem(std::string id);
+	static ErrorCode *updateProblemContent(std::string id, std::string content);
 
 	static ErrorCode *voteProblem(std::string problem_id, std::string user_name, bool is_positive);
 
@@ -107,6 +108,7 @@ public:
 	static int numberOfSolutionsByUser(std::string user_name);
 	static int numberOfProblemsByUser(std::string user_name);
 	static int numberOfAcceptedSolutionsByUser(std::string user_name);
+	static int numberOfSolutions(std::string problem_id);
 	static std::list<Publication *> * getRecentActivityByUser(std::string user_name);
 
 	/*

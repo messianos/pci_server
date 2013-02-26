@@ -57,24 +57,24 @@
 				<div class="horizontal_line"></div>
 				<h4>Aclaraciones</h4>
 				<div class="clarifications_row_container">
-					<div class="clarifications_question_container">
-						<div class="clarifications_column_header clarifications_question_content">
-							Pregunta
-						</div>
-					</div>
-					<div class="clarifications_answer_container">
-						<div class="clarifications_answer_content clarifications_column_header">
-							Respuesta
-						</div>
-					</div>
-				</div>
-				<% if (! clarifications->empty()) %>
 					<% foreach clarification in *clarifications %>
+						<div class="clarifications_question_container">
+							<div class="clarifications_column_header clarifications_question_content">
+								Pregunta
+							</div>
+						</div>
+						<div class="clarifications_answer_container">
+							<div class="clarifications_answer_content clarifications_column_header">
+								Respuesta
+							</div>
+						</div>
 						<% item %>
 							<% include clarification_description(clarification, publication) %>
 	  					<% end %>
+	  					<% empty %>
+	  					<h5>No hay aclaraciones</h5>
 					<% end %>
-				<% end %>
+				</div>				
 			</div>
 			<% if (content.user_signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
 				<% include create_clarification_form(publication->id) %>

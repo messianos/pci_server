@@ -85,11 +85,8 @@
 								</div>
 							<% end %>
 							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-								<a id="problem_edit_button" class="btn">
+								<a id="problem_edit_button" class="btn btn-large">
 									<i class="icon-pencil"></i> Editar
-								</a>
-								<a class="btn">
-									Agregar Imagen
 								</a>
 							<% end %>
 						</div>
@@ -120,7 +117,7 @@
 								</div>
 		  					<% end %>
 		  					<% empty %>
-		  						<h4>¡Aun no hay soluciones!</h4>
+		  						<h4>¡Aún no hay soluciones!</h4>
 		  						<!-- TODO: Add new solution button here -->
 						<% end %>
 					</div>

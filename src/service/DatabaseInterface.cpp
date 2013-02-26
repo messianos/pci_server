@@ -1136,6 +1136,43 @@ User* DatabaseInterface::fetchUser(result result) {
 
 	return user;
 }
+
+ErrorCode* DatabaseInterface::updateProblemContent(std::string id, std::string content) {
+	string query = ""
+			"	UPDATE"
+			"		Problem"
+			"	SET"
+			"		content = ?"
+			"	WHERE"
+			"		id = UNHEX(?)";
+
+	database_handler << query << content << id << exec;
+
+	// TODO
+	return new ErrorCode(ErrorCode::CODE_NONE);
+}
+
+int DatabaseInterface::numberOfSolutions(std::string problem_id) {
+	string query = "	SELECT"
+				"		count(*) AS number_of_solutions"
+				"	FROM"
+				"		problem_solutions"
+				"	WHERE"
+				"		problem_id = UNHEX(?)";
+
+		result result = database_handler << query << problem_id;
+
+		if(!result.next())
+			// TODO
+			return new ErrorCode(ErrorCode::CODE_NONE);
+
+		int number_of_solutions;
+
+		result.fetch("number_of_solutions", number_of_solutions);
+
+		return number_of_solutions;
+}
+
 Notification* DatabaseInterface::fetchNotification(result result) {
 
 	Notification *notification = new Notification();

@@ -336,7 +336,7 @@ void Server::postEditProblem() {
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {
-				//error_code = DatabaseInterface::updateProblemContent(problem_id, content); // FIXME: implement this method
+				error_code = DatabaseInterface::updateProblemContent(problem_id, content); // FIXME: implement this method
 				if (error_code->isAnError())
 					response().status(http::response::internal_server_error, error_code->getErrorDescription());
 				else
