@@ -1164,7 +1164,7 @@ int DatabaseInterface::numberOfSolutions(std::string problem_id) {
 
 		if(!result.next())
 			// TODO
-			return new ErrorCode(ErrorCode::CODE_NONE);
+			return 0;
 
 		int number_of_solutions;
 

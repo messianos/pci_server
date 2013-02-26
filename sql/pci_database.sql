@@ -1071,98 +1071,98 @@ END; !
  */
 CREATE PROCEDURE rank_update(IN in_user_name VARCHAR(31))
 BEGIN
-	DECLARE v_rank INT DEFAULT 0;
-	
-	DECLARE v_proposal_weight INT DEFAULT 4;
-	DECLARE v_problem_weight INT DEFAULT 8;
-	DECLARE v_solution_weight INT DEFAULT 12;
-	DECLARE v_vote_weight INT DEFAULT 1;
-	DECLARE v_accepted_solution_weight INT DEFAULT 40;
-	
-	DECLARE v_count INT;
-	
-	START TRANSACTION;
-	-- Proposal
-	SELECT 
-		count(*)
-	FROM 
-		Proposal
-	WHERE user_name = in_user_name AND vote_balance > 0
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_proposal_weight;
-	
-	-- Problem
-	SELECT 
-		count(*)
-	FROM 
-		Problem
-	WHERE user_name = in_user_name AND vote_balance > 0
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_problem_weight; 
-	
-		-- Solution
-	SELECT 
-		count(*)
-	FROM 
-		Solution
-	WHERE user_name = in_user_name AND vote_balance > 0
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_solution_weight;
-	
-		-- Problem vote
-	SELECT 
-		count(*)
-	FROM 
-		problem_votes
-	WHERE username = in_user_name
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_vote_weight;
-	
-	
-		-- Solution vote
-	SELECT 
-		count(*)
-	FROM 
-		solution_votes
-	WHERE username = in_user_name
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_vote_weight;
-	
-		-- Problem vote
-	SELECT 
-		count(*)
-	FROM 
-		proposal_votes
-	WHERE username = in_user_name
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_vote_weight;
-	
-		-- Accepted solutions
-	SELECT 
-		count(*)
-	FROM 
-		problem_solved JOIN Solution
-	ON Solution.id = problem_solved.solution_id
-	WHERE Solution.user_name = in_user_name AND Solution.vote_balance > 0
-	INTO v_count;
-	
-	SET v_rank = v_rank + v_count*v_accepted_solution_weight;
-	
-	-- Rank update
-	
-	UPDATE User
-	SET rank = v_rank
-	WHERE user_name = in_user_name;
-	
-	COMMIT;
-	
-END;
+        DECLARE v_rank INT DEFAULT 0;
+       
+        DECLARE v_proposal_weight INT DEFAULT 4;
+        DECLARE v_problem_weight INT DEFAULT 8;
+        DECLARE v_solution_weight INT DEFAULT 12;
+        DECLARE v_vote_weight INT DEFAULT 1;
+        DECLARE v_accepted_solution_weight INT DEFAULT 40;
+       
+        DECLARE v_count INT;
+       
+        START TRANSACTION;
+        -- Proposal
+        SELECT
+                count(*)
+        FROM
+                Proposal
+        WHERE creator_user_name = in_user_name AND vote_balance > 0
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_proposal_weight;
+       
+        -- Problem
+        SELECT
+                count(*)
+        FROM
+                Problem
+        WHERE creator_user_name = in_user_name AND vote_balance > 0
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_problem_weight;
+       
+                -- Solution
+        SELECT
+                count(*)
+        FROM
+                Solution
+        WHERE creator_user_name = in_user_name AND vote_balance > 0
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_solution_weight;
+       
+                -- Problem vote
+        SELECT
+                count(*)
+        FROM
+                problem_votes
+        WHERE username = in_user_name
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_vote_weight;
+       
+       
+                -- Solution vote
+        SELECT
+                count(*)
+        FROM
+                solution_votes
+        WHERE username = in_user_name
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_vote_weight;
+       
+                -- Proposal vote
+        SELECT
+                count(*)
+        FROM
+                proposal_votes
+        WHERE username = in_user_name
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_vote_weight;
+       
+                -- Accepted solutions
+        SELECT
+                count(*)
+        FROM
+                problem_solved JOIN Solution
+        ON Solution.id = problem_solved.solution_id
+        WHERE Solution.creator_user_name = in_user_name AND Solution.vote_balance > 0
+        INTO v_count;
+       
+        SET v_rank = v_rank + v_count*v_accepted_solution_weight;
+       
+        -- Rank update
+       
+        UPDATE User
+        SET rank = v_rank
+        WHERE user_name = in_user_name;
+       
+        COMMIT;
+       
+END; !
  
  
 DELIMITER ;
