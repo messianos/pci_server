@@ -14,7 +14,7 @@ session DatabaseInterface::database_handler = session("mysql: host=pci-server.no
 // Attributes strings for objects
 const string clarification_attributes = ""
 		"		answer,"
-		"		HEX(associated_publication_id) AS associated_publication_id,"
+		"		HEX(publication_id) AS publication_id,"
 		"		creator_user_name,"
 		"		HEX(id) AS id,"
 		"		question";
@@ -425,7 +425,7 @@ list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount) {
 
 	problem_list->sort(&Publication::publicationComparator);
 
-	while (problem_list->size() > amount) {
+	while (problem_list->size() > (unsigned int) amount) {
 		problem_list->pop_back();
 	}
 
@@ -636,13 +636,13 @@ ErrorCode *DatabaseInterface::deleteProposal(string id) {
 	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-list<Clarification *> *DatabaseInterface::searchClarifications(string associated_publication_id) {
+list<Clarification *> *DatabaseInterface::searchClarifications(string publication_id) {
 
 	stringstream query;
 	query << "	SELECT" << clarification_attributes << "	FROM Clarification"
-			"	WHERE associated_publication_id = UNHEX(?)";
+			"	WHERE publication_id = UNHEX(?)";
 
-	result result = database_handler << query.str() << associated_publication_id;
+	result result = database_handler << query.str() << publication_id;
 
 	list<Clarification *> *clarification_list = new list<Clarification *>();
 
@@ -661,7 +661,7 @@ ErrorCode * DatabaseInterface::insertClarification(Clarification *clarification)
 			"		?"
 			"	)";
 
-	database_handler << query << clarification->associated_publication_id << clarification->creator_user_name
+	database_handler << query << clarification->publication_id << clarification->creator_user_name
 			<< clarification->id << clarification->question << exec;
 
 	// TODO
@@ -788,7 +788,7 @@ Clarification* DatabaseInterface::fetchClarification(result result) {
 	Clarification *clarification = new Clarification();
 	try {
 		result.fetch("answer", clarification->answer);
-		result.fetch("associated_publication_id", clarification->associated_publication_id);
+		result.fetch("publication_id", clarification->publication_id);
 		result.fetch("creator_user_name", clarification->creator_user_name);
 		result.fetch("id", clarification->id);
 		result.fetch("question", clarification->question);
@@ -866,8 +866,6 @@ Proposal *DatabaseInterface::fetchProposal(result result) {
 		result.fetch("last_edition_datetime", timestamp);
 		proposal->last_edition_datetime = new Datetime(timestamp);
 		result.fetch("vote_balance", proposal->vote_balance);
-		//Description always is null ('cause proposal doesn't have)
-		proposal->description = "";
 
 	} catch (exception const &e) {
 		cerr << "ERROR: " << e.what() << " in fetchSolution" << endl;
@@ -1035,7 +1033,7 @@ std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::
 
 	stringstream query;
 	query << "	SELECT" << clarification_attributes << "	FROM Clarification"
-			"	WHERE associated_publication_id = UNHEX(?) AND answer IS NOT NULL";
+			"	WHERE publication_id = UNHEX(?) AND answer IS NOT NULL";
 
 	result result = database_handler << query.str() << problem_id;
 
@@ -1057,7 +1055,7 @@ std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::
 			"	FROM"
 			"		Clarification"
 			"	WHERE"
-			"		associated_publication_id = UNHEX(?) AND "
+			"		publication_id = UNHEX(?) AND "
 			"		( answer IS NOT NULL OR "
 			"		creator_user_name LIKE BINARY ? )";
 

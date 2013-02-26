@@ -4,6 +4,7 @@
 
 // Includes
 #include "../auxiliar/Datetime.h"
+#include "User.h"
 #include <string>
 
 class Publication {
@@ -17,6 +18,7 @@ public:
 	short int is_anonymous;
 	Datetime *last_edition_datetime;
 	int vote_balance;
+	User *link_user;
 	Publication();
 	virtual ~Publication();
 

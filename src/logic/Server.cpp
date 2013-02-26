@@ -628,17 +628,17 @@ void Server::postCreateClarification() {
 		if (!session().is_set("session_user_signed_in"))
 			response().status(http::response::unauthorized);
 		else {
-			string associated_publication_id = postRequestData("associated_publication_id");
+			string publication_id = postRequestData("publication_id");
 			string question = postRequestData("question");
 			trim(question);
 
 			ErrorCode *error_code;
-			error_code = InputValidator::validateCreateClarificationInput(associated_publication_id, question);
+			error_code = InputValidator::validateCreateClarificationInput(publication_id, question);
 			if (error_code->isAnError())
 				response().status(http::response::bad_request, error_code->getErrorDescription());
 			else {
 				Clarification *clarification = new Clarification();
-				clarification->associated_publication_id = associated_publication_id;
+				clarification->publication_id = publication_id;
 				clarification->creator_user_name = user_name;
 				clarification->id = IdManager::generateClarificationID();
 				clarification->question = question;
@@ -651,16 +651,16 @@ void Server::postCreateClarification() {
 					set<string, NotificationAnnouncer::classcomp> *notified_users;
 
 					// TODO: Make this smartly
-					if (associated_publication_id[1] == '0')
-						notified_users = NotificationAnnouncer::postClarificationInProblem(associated_publication_id);
+					if (publication_id[1] == '0')
+						notified_users = NotificationAnnouncer::postClarificationInProblem(publication_id);
 					else
-						notified_users = NotificationAnnouncer::postClarificationInSolution(associated_publication_id);
+						notified_users = NotificationAnnouncer::postClarificationInSolution(publication_id);
 
 					for (set<string, NotificationAnnouncer::classcomp>::const_iterator iterator =
 							notified_users->begin(); iterator != notified_users->end(); ++iterator) {
 						Notification *notification = new Notification();
 						notification->user_name = *iterator;
-						notification->url = "/publication/" + associated_publication_id;
+						notification->url = "/publication/" + publication_id;
 						notification->message = "Solicitud de aclaracion recibida";
 						DatabaseInterface::insertNotification(notification);
 					}
@@ -695,7 +695,7 @@ void Server::postAnswerClarification() {
 					response().status(http::response::bad_request, error_code->getErrorDescription());
 				else {
 					Publication *publication = DatabaseInterface::searchPublication(
-							clarification->associated_publication_id);
+							clarification->publication_id);
 
 					if (user_name.compare(publication->creator_user_name) != 0)
 						response().status(http::response::forbidden);

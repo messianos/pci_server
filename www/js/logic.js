@@ -186,9 +186,9 @@ function postVoteSolution(on_success_callback_function, on_failure_callback_func
 	request.fail(on_failure_callback_function);
 }
 
-function postCreateClarification(on_success_callback_function, on_failure_callback_function, associated_publication_id, question) {
+function postCreateClarification(on_success_callback_function, on_failure_callback_function, publication_id, question) {
 	var request = postRequest({
-		associated_publication_id: associated_publication_id,
+		publication_id: publication_id,
 		question: question
 	}, logic_memory.url.create_clarification);
 	request.done(on_success_callback_function);

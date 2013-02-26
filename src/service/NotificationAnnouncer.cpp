@@ -94,7 +94,7 @@ set<string,NotificationAnnouncer::classcomp> *NotificationAnnouncer::replyClarif
 	if (clarification_creator != NULL)
 			interestedUser->insert(clarification_creator);*/
 
-	string associated_publication_id = clarification->associated_publication_id;
+	string associated_publication_id = clarification->publication_id;
 
 	list<Clarification *> *clarificationPostList = DatabaseInterface::searchClarifications(associated_publication_id);
 	list<Clarification *>::iterator iteration;

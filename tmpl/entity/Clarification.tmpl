@@ -3,7 +3,7 @@
 <% skin pci_skin %>
 	<% view clarification_services uses ViewContent::TemplateContent %>
 
-		<% template create_clarification_form(std::string associated_publication_id) %>
+		<% template create_clarification_form(std::string publication_id) %>
 			<form id="create_clarification_form">
 				<textarea id="create_clarification_question" placeholder="Solicitar una aclaración..."></textarea>
 				<input class="btn" type="submit" value="Publicar pregunta" />
@@ -14,14 +14,14 @@
 				}, function(event) {
 					event.preventDefault();
 					
-					var associated_publication_id = '<%= associated_publication_id %>';
+					var publication_id = '<%= publication_id %>';
 					var question = $.trim(event.data.question.val());
 					
 					var on_invalid_input = onInvalidInputCreateClarification(event.data.question);
 					if (validateCreateClarificationInput(on_invalid_input, question)) {
 						var on_success = onSuccessCreateClarification($('#clarifications_main_container'), event.data.question, question);
 						var on_failure = onFailureCreateClarification();
-						postCreateClarification(on_success, on_failure, associated_publication_id, question);
+						postCreateClarification(on_success, on_failure, publication_id, question);
 					}
 				});
 			</script>

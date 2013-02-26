@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS problem_solutions (
  
 CREATE TABLE IF NOT EXISTS Clarification (
         answer TEXT CHARACTER SET utf8,
-        associated_publication_id BINARY(17),
+        publication_id BINARY(17),
         creator_user_name VARCHAR(31),
         id BINARY(17),
         question TEXT CHARACTER SET utf8,
@@ -253,7 +253,7 @@ FROM problem_solutions;
 CREATE VIEW Clarification_printable_view AS
 SELECT
         answer,
-        HEX(associated_publication_id) AS associated_publication_id,
+        HEX(publication_id) AS publication_id,
         creator_user_name,
         HEX(id) AS id,
         question
@@ -850,28 +850,28 @@ END; !
  
 /*
  * Inserts a new clarification.
- * Note: in_associated_publication_id and in_id must be strings representing hexadecimal numbers.
+ * Note: in_publication_id and in_id must be strings representing hexadecimal numbers.
  */
 CREATE PROCEDURE insert_clarification(
-        IN in_associated_publication_id BINARY(34),
+        IN in_publication_id BINARY(34),
         IN in_creator_user_name VARCHAR(31),
         IN in_id BINARY(34),
         IN in_question TEXT CHARACTER SET utf8
 )
 BEGIN
-        DECLARE v_associated_publication_id_binary BINARY(17) DEFAULT UNHEX(in_associated_publication_id);
+        DECLARE v_publication_id_binary BINARY(17) DEFAULT UNHEX(in_publication_id);
         DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
        
         INSERT INTO Clarification(
                 answer,
-                associated_publication_id,
+                publication_id,
                 creator_user_name,
                 id,
                 question
         )
         VALUES (
                 NULL,
-                v_associated_publication_id_binary,
+                v_publication_id_binary,
                 in_creator_user_name,
                 v_id_binary,
                 in_question
@@ -1201,7 +1201,7 @@ FOR EACH ROW
 BEGIN
         -- Deletes the associated Clarification rows
         DELETE FROM Clarification
-        WHERE associated_publication_id = OLD.id;
+        WHERE publication_id = OLD.id;
 END; !
  
  
@@ -1214,7 +1214,7 @@ FOR EACH ROW
 BEGIN
         -- Deletes the associated Clarification rows
         DELETE FROM Clarification
-        WHERE associated_publication_id = OLD.id;
+        WHERE publication_id = OLD.id;
        
         -- Deletes the associated Proposal rows
         DELETE FROM Proposal
