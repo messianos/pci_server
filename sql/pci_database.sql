@@ -1081,7 +1081,7 @@ BEGIN
 	
 	DECLARE v_count INT;
 	
-	START TRANSACTION
+	START TRANSACTION;
 	-- Proposal
 	SELECT 
 		count(*)
@@ -1090,7 +1090,7 @@ BEGIN
 	WHERE user_name = in_user_name AND vote_balance > 0
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_proposal_weight;
+	SET v_rank = v_rank + v_count*v_proposal_weight;
 	
 	-- Problem
 	SELECT 
@@ -1100,7 +1100,7 @@ BEGIN
 	WHERE user_name = in_user_name AND vote_balance > 0
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_problem_weight; 
+	SET v_rank = v_rank + v_count*v_problem_weight; 
 	
 		-- Solution
 	SELECT 
@@ -1110,7 +1110,7 @@ BEGIN
 	WHERE user_name = in_user_name AND vote_balance > 0
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_solution_weight;
+	SET v_rank = v_rank + v_count*v_solution_weight;
 	
 		-- Problem vote
 	SELECT 
@@ -1120,7 +1120,7 @@ BEGIN
 	WHERE username = in_user_name
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_vote_weight;
+	SET v_rank = v_rank + v_count*v_vote_weight;
 	
 	
 		-- Solution vote
@@ -1131,7 +1131,7 @@ BEGIN
 	WHERE username = in_user_name
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_vote_weight;
+	SET v_rank = v_rank + v_count*v_vote_weight;
 	
 		-- Problem vote
 	SELECT 
@@ -1141,7 +1141,7 @@ BEGIN
 	WHERE username = in_user_name
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_vote_weight;
+	SET v_rank = v_rank + v_count*v_vote_weight;
 	
 		-- Accepted solutions
 	SELECT 
@@ -1152,7 +1152,7 @@ BEGIN
 	WHERE Solution.user_name = in_user_name AND Solution.vote_balance > 0
 	INTO v_count;
 	
-	v_rank = v_rank + v_count*v_accepted_solution_weight;
+	SET v_rank = v_rank + v_count*v_accepted_solution_weight;
 	
 	-- Rank update
 	
