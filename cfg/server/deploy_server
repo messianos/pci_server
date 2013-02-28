@@ -1,0 +1,18 @@
+#!/bin/sh
+
+export STATIC_FILES_DIR=/var/www/pci_server
+export INSTALL_DIR=/opt/pci_server
+export BRANCH=master
+
+############ Call download script ###########
+./download_source
+
+############ Call build script ##############
+./build_source
+
+############ Call install script ############
+./install_pci
+
+echo Restarting server...
+
+service lighttpd restart

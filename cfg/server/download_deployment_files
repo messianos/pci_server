@@ -1,0 +1,18 @@
+#!/bin/sh
+###### Downloads deployment script from github ######
+
+echo -- Cleaning old files
+
+rm -f download_deployment_files
+rm -f deploy_server
+rm -f download_source
+rm -f build_source
+rm -f install_pci
+
+echo -- Downloading new files
+
+wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/download_deployment_files
+wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/deploy_server
+wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/download_source
+wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/build_source
+wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/install_pci

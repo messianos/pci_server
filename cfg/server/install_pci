@@ -1,0 +1,36 @@
+#!/bin/sh
+################ PCI INSTALL SCRIPT ################
+
+echo "###########################################################"
+echo "		Installing binaries in "$INSTALL_DIR 
+echo "      and static files in "$STATIC_FILES_DIR
+echo "###########################################################"
+
+cd pci_deploy_temp/pci_server-$BRANCH
+
+echo -- Cleaning old files...
+
+rm -rf $STATIC_FILES_DIR
+rm -rf $INSTALL_DIR
+
+echo -- Copying files...
+
+mkdir $STATIC_FILES_DIR
+mkdir $INSTALL_DIR
+
+cp -r www/* $STATIC_FILES_DIR
+cp -r pci_server $INSTALL_DIR
+cp -r lib/ $INSTALL_DIR
+cp -r cfg/ $INSTALL_DIR
+
+echo -- Copying sql scripts to pci_deploy_temp/sql
+
+cp -r sql/ ..
+
+echo -- Cleaning...
+
+cd ../..
+rm -rf pci_deploy_temp/pci_server-$BRANCH
+rm -f $BRANCH.zip
+
+echo -- Finish!!

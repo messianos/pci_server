@@ -1,0 +1,19 @@
+#!/bin/sh
+################ SOURCE DOWNLOAD SCRIPT ################
+
+rm -rf pci_deploy_temp
+rm -f master.zip
+
+echo -- Getting source from Git...
+
+echo "###########################################################"
+echo "		Downloading branch: "$BRANCH
+echo "###########################################################"
+
+wget https://github.com/messianos/pci_server/archive/$BRANCH.zip -nv
+
+mkdir pci_deploy_temp
+
+echo -- Unzipping...
+
+unzip -q $BRANCH.zip -d pci_deploy_temp

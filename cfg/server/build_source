@@ -1,0 +1,15 @@
+#!/bin/sh
+################ SOURCE BUILD SCRIPT ################
+
+echo "###########################################################"
+echo "              Building source and templates"
+echo "###########################################################"
+
+cd pci_deploy_temp/pci_server-$BRANCH/tmpl/
+
+./build_templates.sh
+
+cd ..
+echo -- Building src files...
+
+find src/ -name *.cpp -exec g++ -rdynamic -lcppcms -lboost_regex -lcrypto -lcppdb -lbooster {} \+
