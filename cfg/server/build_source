@@ -12,4 +12,17 @@ cd pci_deploy_temp/pci_server-$BRANCH/tmpl/
 cd ..
 echo -- Building src files...
 
-find src/ -name *.cpp -exec g++ -rdynamic -lcppcms -lboost_regex -lcrypto -lcppdb -lbooster {} \+
+COMPILER_COMMAND="g++ -rdynamic -o \"pci_server\" \\"
+LIBRARIES=" -lcppcms -lboost_regex -lcrypto -lcppdb -lbooster"
+
+echo $COMPILER_COMMAND > tmp_file
+
+find . -name *.cpp -exec echo {} \\ \; >> tmp_file
+
+echo $LIBRARIES >> tmp_file
+
+chmod +x tmp_file
+
+./tmp_file
+
+rm tmp_file
