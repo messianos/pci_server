@@ -16,3 +16,5 @@ wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/deploy_se
 wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/download_source
 wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/build_source
 wget -nv https://raw.github.com/messianos/pci_server/master/cfg/server/install_pci
+
+chmod +x *
