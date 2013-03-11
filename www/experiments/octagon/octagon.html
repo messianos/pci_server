@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<script src="jquery/jquery-1.9.0.min.js"></script>
+		<script src="octagon.js"></script>
+		<script src="ornament.js"></script>
+		<style>
+		
+			* {
+				margin:0px;
+				outline-style:none;
+				outline-width:0px;
+				padding:0px;
+			}
+			
+			body {
+				background-color:#F1F1F1;
+			}
+			
+			#container {
+				position: absolute;
+				left: 32px;
+				top: 32px;
+			}
+			
+			#background {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			
+			#main_container {
+				height: 576px;
+				width: 576px;
+			}
+			
+		</style>
+		<script>
+		
+			$(document).ready(function() {
+			
+				var octagon_information = {
+					inner_length: 256,
+					frame_width: 128,
+					z_index: 1,
+					color: '#FFFFFF'
+				};
+
+				var border_information = {
+					width: 2,
+					color: '#D0D0D0'
+				}
+				
+				appendBorderedOctagon($('#container'), octagon_information, border_information);
+				
+				var block_dimensions = {
+					width: 24,
+					height: 24,
+					margin: 4
+				};
+				
+				var block_decorations = {
+					'border-radius': 12,
+					'box-shadow': '0px 0px 1px 0px #333333 inset, 1px 2px 5px 0px #222222'
+				};
+				
+				var color_set = new Array(
+					'#983636',
+					'#6DA5C8',
+					'#BEC89B',
+					'#8D7DC8',
+					'#C8A899',
+					'#27403D',
+					'#0D3566',
+					'#D6CDF4',
+					'#F4B674'
+				);
+				
+				appendOrnament($('#background'), 18, 18, block_dimensions, block_decorations, color_set);
+			});
+			
+			
+		</script>
+		
+	</head>
+	<body>
+		<div id="frame">
+		</div>
+		<div id="main_container">
+			<div id="background"></div>
+			<div id="container">
+				Contenido
+			</div>
+		</div>
+	</body>
+</html>
