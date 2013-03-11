@@ -1,78 +1,66 @@
-
+﻿
 #ifndef VIEWCONTENT_H_
 #define VIEWCONTENT_H_
 
 // Includes
-#include "../auxiliar/ErrorCode.h"
 #include "../entity/Clarification.h"
 #include "../entity/Problem.h"
 #include "../entity/Solution.h"
 #include "../entity/User.h"
-#include <cppcms/form.h>
-#include <cppcms/view.h>
+#include <cppcms/base_content.h>
 #include <list>
-#include <sstream>
 #include <string>
 
 namespace ViewContent {
 
-	struct TemplateContent: public cppcms::base_content {
-		std::string page_title;
-		bool user_signed_in;
-		bool anonymous_mode;
+	struct SessionContent : public cppcms::base_content {
+		bool signed_in;
 		std::string user_name;
-		std::string user_first_name;
-		std::string user_last_name;
-
-		TemplateContent();
+		bool anonymous_mode;
+		std::string first_name;
+		std::string last_name;
 	};
 
-	struct ProblemContent : TemplateContent {
+	struct ErrorPageContent : SessionContent {
+		int http_error_code;
+		std::string server_error_code;
+	};
+
+	struct UserContent : SessionContent {
+		User* user;
+		int publication_count;
+		int problem_count;
+		int solution_count;
+		int accepted_solution_count;
+		std::list<Publication *> *recent_publications;
+	};
+	
+	struct ProblemsContent : SessionContent {
+		std::list<Problem *> *random_problems;
+		std::list<Problem *> *latest_problems;
+		std::list<Problem *> *unsolved_problems;
+
+		// TODO: Not implemented!
+		/*std::list<Problem *> *nosolutions_problems;
+		std::list<Problem *> *most_voted_problems;*/
+	};
+
+	struct ProblemContent : SessionContent {
 		Problem *problem;
 		Solution *accepted_solution;
 		std::list<Solution *> *solutions;
 		std::list<Clarification *> *clarifications;
-
 		int user_vote;
 	};
 
-	struct ProblemsContent : TemplateContent {
-		std::list<Problem *> *random_problems;
-		std::list<Problem *> *unsolved_problems;
-		std::list<Problem *> *latest_problems;
-
-		// TODO: Not implemented!
-		std::list<Problem *> *nosolutions_problems;
-		std::list<Problem *> *most_voted_problems;
-	};
-
-	struct SolutionContent: TemplateContent {
+	struct SolutionContent: SessionContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
 	};
 
-	struct NewSolutionContent : TemplateContent {
+	struct NewSolutionContent : SessionContent {
 		std::string problem_id;
 	};
-
-	struct UserContent : TemplateContent {
-		User* user;
-		int number_of_solutions;
-		int number_of_problems;
-		int number_of_publications;
-		int number_of_accepted_solutions;
-		std::list<Publication*>* recent_activity;
-	};
 }
-
-// Type definitions
-typedef std::string String;
-typedef Publication *PublicationPointer;
-typedef Problem *ProblemPointer;
-typedef Solution *SolutionPointer;
-typedef Clarification *ClarificationPointer;
-typedef std::list<Problem *> *ProblemList;
-typedef std::list<Solution *> *SolutionList;
-typedef std::list<Clarification *> *ClarificationList;
 
 #endif /* VIEWCONTENT_H_ */

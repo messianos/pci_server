@@ -1,0 +1,875 @@
+﻿
+ SERVICIOS OFRECIDOS POR EL SERVIDOR
+ -----------------------------------
+
+ Observaciones de servicios GET:
+
+ - Todos los datos de entrada se reciben como strings (es la única forma disponible).
+ - Todos los datos de salida se envían utilizando HTML. Éstos se renderizan a partir de los
+   datos de entrada y de los valores almacenados en la sesión y no se indican en la
+   documentación.
+
+ Observaciones de servicios POST:
+
+ - Todos los datos de entrada se reciben como strings (es la única forma disponible).
+ - Todos los datos de salida se envían utilizando el formato JSON. Se indica entre paréntesis
+   el tipo de dato de JSON de cada parámetro de salida.
+
+
+==============================================================================================
+ sign_in
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Permite al usuario loguearse en el sistema.
+ Si ya hay un usuario logueado en la sesión, éste es previamente deslogueado.
+
+
+ Entrada:
+ password  - La contraseña no encriptada del usuario.
+ user_name - El nombre de usuario.
+
+
+ Salida:
+ signed_in (boolean) - Indica si la operación superó los controles (esto es, si el usuario fue
+                       autenticado).
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+ Error 400 (INVALID_PARAMETERS) - Si alguno de los datos de entrada es inválido.
+
+
+
+==============================================================================================
+ sign_out
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Permite al usuario desloguearse del sistema.
+ Si no hay un usuario logueado en la sesión, la operación no tiene ningún efecto.
+
+
+ Entrada: ---
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+
+
+
+==============================================================================================
+ toggle_anonymous_mode
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Permite al usuario cambiar entre el modo anónimo y el modo no anónimo.
+
+
+ Entrada: ---
+
+
+ Salida:
+ anonymous_mode (boolean) - Indica si el modo anónimo quedó activado luego de la operación.
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)      - Si el usuario no se encuentra logueado.
+
+
+
+==============================================================================================
+ user_exists
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Determina si existe un usuario en el sistema con un cierto user_name.
+
+
+ Entrada:
+ user_name - Nombre de usuario.
+
+
+ Salida:
+ user_exists (boolean) - Indica si el usuario existe.
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+ Error 400 (INVALID_PARAMETERS) - Si alguno de los datos de entrada es inválido.
+
+
+
+==============================================================================================
+ unseen_notifications
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Retorna las notificaciones no vistas del usuario.
+
+
+ Entrada: ---
+
+
+ Salida:
+ notification_count (number) - Cantidad de notificaciones retornadas.
+ notifications (array)       - Arreglo con la información de las notificaciones no vistas.
+                               Cada objeto del arreglo tiene:
+                               event_code (string) - Código del evento que se notifica.
+                               url (string)        - URL de redirección de la notificación.
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)      - Si el usuario no se encuentra logueado.
+
+
+
+==============================================================================================
+ sign_up
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Registra un usuario en el sistema.
+ Si ya existe un usuario registrado con el mismo user_name, el servidor responde con un error.
+
+
+ Entrada:
+ birth_date - Fecha de nacimiento. Formato: "%d/%m/%Y".
+ email      - Correo electrónico.
+ first_name - Nombre.
+ genre      - Género. Valores válidos: "F" y "M".
+ last_name  - Apellido.
+ location   - Ubicación geográfica.
+ password   - Contraseña.
+ user_name  - Nombre de usuario.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+ Error 400 (INVALID_PARAMETERS) - Si alguno de los datos de entrada es inválido.
+ Error 403 (EXISTING_USER)      - Si ya hay un usuario registrado con el mismo user_name.
+
+
+
+==============================================================================================
+ publicate_problem
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Publica un problema.
+
+
+ Entrada:
+ content     - Contenido del problema.
+ description - Descripción del problema.
+
+
+ Salida:
+ problem_id (string) - ID del problema creado.
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)      - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS) - Si alguno de los datos de entrada es inválido.
+
+
+
+==============================================================================================
+ edit_problem
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Edita un problema existente.
+ Esta operación puede ser realizada únicamente por el creador del problema.
+
+
+ Entrada:
+ content     - Nuevo contenido del problema.
+ description - Nueva descripción del problema.
+ problem_id  - ID del problema a editar.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)       - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)  - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+ Error 403 (UNAUTHORIZED_USER)   - Si el usuario no es el creador del problema.
+
+
+
+==============================================================================================
+ make_problem_creator_visible
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Hace visible al creador de un problema anónimo.
+ Esta operación no puede ser revertida. En otras palabras, el problema no puede volver a
+ establecerse como anónimo.
+ Si el problema indicado no es anónimo, la operación no tiene ningún efecto.
+
+
+ Entrada:
+ problem_id  - ID del problema a sacar del anonimato.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)       - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)  - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+ Error 403 (UNAUTHORIZED_USER)   - Si el usuario no es el creador del problema.
+
+
+
+==============================================================================================
+ vote_problem
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Vota un problema.
+ El voto puede ser positivo o negativo, y actúa como un offset (si un usuario votó
+ positivamente un problema, un posterior voto negativo deja su voto en "cero").
+ Esta operación no puede ser realizada por el creador del problema.
+
+
+ Entrada:
+ is_positive - Si el voto es positivo.
+ problem_id  - ID del problema votado.
+
+
+ Salida:
+ vote_balance (number) - El balance de votos del problema, posterior al cómputo de este voto.
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)       - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)  - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+ Error 403 (UNAUTHORIZED_USER)   - Si el usuario es el creador del problema.
+
+
+
+==============================================================================================
+ set_accepted_solution
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Establece la solución aceptada de un problema.
+ Esta operación puede ser realizada únicamente por el creador del problema.
+ Si el problema ya tiene una solución aceptada, ésta se desestablece, siendo reemplazada por
+ la nueva solución.
+
+
+ Entrada:
+ problem_id  - ID del problema.
+ solution_id - ID de la solución aceptada.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM)  - Si el problema indicado no existe.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la solución indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario no es el creador del problema.
+
+
+
+==============================================================================================
+ unset_accepted_solution
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Desestablece la solución aceptada de un problema.
+ Esta operación puede ser realizada únicamente por el creador del problema.
+ Si el problema no tiene una solución aceptada, la operación no tiene ningún efecto.
+
+
+ Entrada:
+ problem_id - ID del problema.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)       - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)  - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+ Error 403 (UNAUTHORIZED_USER)   - Si el usuario no es el creador del problema.
+
+
+
+==============================================================================================
+ publicate_solution
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Publica una solución a un problema.
+
+
+ Entrada:
+ content     - Contenido de la solución.
+ description - Descripción de la solución.
+ problem_id  - ID del problema solucionado.
+
+
+ Salida:
+ solution_id (string) - ID de la solución creada.
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)       - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)  - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+
+
+
+==============================================================================================
+ edit_solution
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Edita una solución existente.
+ Esta operación puede ser realizada únicamente por el creador de la solución.
+
+
+ Entrada:
+ content     - Nuevo contenido de la solución.
+ description - Nueva descripción de la solución.
+ solution_id - ID de la solución a editar.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la solución indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario no es el creador de la solución.
+
+
+
+==============================================================================================
+ make_solution_creator_visible
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Hace visible al creador de una solución anónima.
+ Esta operación no puede ser revertida. En otras palabras, la solución no puede volver a
+ establecerse como anónima.
+ Si la solución indicada no es anónima, la operación no tiene ningún efecto.
+
+
+ Entrada:
+ solution_id  - ID de la solución a sacar del anonimato.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la solución indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario no es el creador de la solución.
+
+
+
+==============================================================================================
+ vote_solution
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Vota una solución.
+ El voto puede ser positivo o negativo, y actúa como un offset (si un usuario votó
+ positivamente una solución, un posterior voto negativo deja su voto en "cero").
+ Esta operación no puede ser realizada por el creador de la solución.
+
+
+ Entrada:
+ is_positive - Si el voto es positivo.
+ solution_id - ID de la solución votada.
+
+
+ Salida:
+ vote_balance (number) - Indica el balance de votos de la solución (habiendo computado ya este
+                         voto).
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la solución indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario es el creador de la solución.
+
+
+
+==============================================================================================
+ ask_clarification
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Solicita una aclaración sobre una publicación (un problema o una solución).
+ Esta operación no puede ser realizada por el creador de la publicación.
+
+
+ Entrada:
+ publication_id - ID de la publicación.
+ question       - Pregunta realizada.
+
+
+ Salida:
+ clarification_id (string) - ID de la clarificación creada.
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROBLEM)  - Si la publicación indicada es un problema, pero no existe.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la publicación indicada es una solución, pero no
+                                    existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario es el creador de la publicación.
+
+
+
+==============================================================================================
+ answer_clarification
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Responde una pregunta recibida sobre una publicación (un problema o una solución).
+ Esta operación puede ser realizada únicamente por el creador de la publicación asociada a la
+ clarificación.
+
+
+ Entrada:
+ answer           - Respuesta.
+ clarification_id - ID de la clarificación respondida.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)                   - Si se produce un error inesperado por una razón
+                                         desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)        - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)             - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)        - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_CLARIFICATION) - Si la clarificación indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)         - Si el usuario no es el creador de la publicación
+                                         asociada a la clarificación.
+
+
+
+==============================================================================================
+ publicate_proposal
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Publica una propuesta de mejora de una solución.
+
+
+ Entrada:
+ content     - Contenido de la propuesta.
+ solution_id - ID de la solución sobre la que se propone la mejora.
+
+
+ Salida:
+ proposal_id (string) - ID de la propuesta creada.
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la solución indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario es el creador de la solución.
+
+
+
+==============================================================================================
+ edit_proposal
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Edita una propuesta existente.
+ Esta operación puede ser realizada únicamente por el creador de la propuesta.
+
+
+ Entrada:
+ content     - Nuevo contenido de la propuesta.
+ proposal_id - ID de la propuesta a editar.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROPOSAL) - Si la propuesta indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario no es el creador de la propuesta.
+
+
+
+==============================================================================================
+ make_proposal_creator_visible
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Hace visible al creador de una propuesta anónima.
+ Esta operación no puede ser revertida. En otras palabras, la propuesta no puede volver a
+ establecerse como anónima.
+ Si la propuesta indicada no es anónima, la operación no tiene ningún efecto.
+
+
+ Entrada:
+ proposal_id  - ID de la propuesta a sacar del anonimato.
+
+
+ Salida: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROPOSAL) - Si la propuesta indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario no es el creador de la propuesta.
+
+
+
+==============================================================================================
+ vote_proposal
+==============================================================================================
+
+ Método: POST
+
+
+ Descripción:
+ Vota una propuesta.
+ El voto puede ser positivo o negativo, y actúa como un offset (si un usuario votó
+ positivamente una propuesta, un posterior voto negativo deja su voto en "cero").
+ Esta operación no puede ser realizada por el creador de la propuesta.
+
+
+ Entrada:
+ is_positive - Si el voto es positivo.
+ proposal_id - ID de la propuesta votada.
+
+
+ Salida:
+ vote_balance (number) - Indica el balance de votos de la propuesta (habiendo computado ya
+                         este voto).
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método POST.
+ Error 401 (NOT_SIGNED_IN)        - Si el usuario no se encuentra logueado.
+ Error 400 (INVALID_PARAMETERS)   - Si alguno de los datos de entrada es inválido.
+ Error 404 (NONEXISTENT_PROPOSAL) - Si la propuesta indicada no existe.
+ Error 403 (UNAUTHORIZED_USER)    - Si el usuario es el creador de la propuesta.
+
+
+
+==============================================================================================
+ fetch_main_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página de inicio del sitio.
+
+
+ Entrada: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método GET.
+
+
+
+==============================================================================================
+ fetch_user_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página de pérfil de un usuario.
+
+
+ Entrada:
+ user_name - Nombre de usuario.
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método GET.
+ Error 404 (NONEXISTENT_USER)   - Si el usuario indicado no existe.
+
+
+
+==============================================================================================
+ fetch_problems_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página principal de problemas.
+
+
+ Entrada: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método GET.
+
+
+
+==============================================================================================
+ fetch_problem_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página de un problema.
+
+
+ Entrada:
+ problem_id - ID del problema.
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método GET.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+
+
+
+==============================================================================================
+ fetch_solution_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página de una solución.
+
+
+ Entrada:
+ solution_id - ID de la solución.
+
+
+ Errores:
+ Error 500 (UNKNOWN)              - Si se produce un error inesperado por una razón
+                                    desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)   - Si el servicio no se solicita con el método GET.
+ Error 404 (NONEXISTENT_SOLUTION) - Si la solución indicada no existe.
+
+
+
+==============================================================================================
+ fetch_new_problem_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página de creación de un nuevo problema.
+
+
+ Entrada: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método GET.
+ Error 401 (NOT_SIGNED_IN)      - Si el usuario no se encuentra logueado.
+
+
+
+==============================================================================================
+ fetch_new_solution_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página de creación de una nueva solución.
+
+
+ Entrada:
+ problem_id - ID del problema a solucionar.
+
+
+ Errores:
+ Error 500 (UNKNOWN)             - Si se produce un error inesperado por una razón
+                                   desconocida.
+ Error 405 (METHOD_NOT_ALLOWED)  - Si el servicio no se solicita con el método GET.
+ Error 401 (NOT_SIGNED_IN)       - Si el usuario no se encuentra logueado.
+ Error 404 (NONEXISTENT_PROBLEM) - Si el problema indicado no existe.
+
+
+
+==============================================================================================
+ fetch_ideas_page
+==============================================================================================
+
+ Método: GET
+
+
+ Descripción:
+ Obtiene la página principal de ideas.
+
+
+ Entrada: ---
+
+
+ Errores:
+ Error 500 (UNKNOWN)            - Si se produce un error inesperado por una razón desconocida.
+ Error 405 (METHOD_NOT_ALLOWED) - Si el servicio no se solicita con el método GET.
+ 
+ 
+ 

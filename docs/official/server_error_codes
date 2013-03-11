@@ -1,0 +1,32 @@
+﻿
+ CÓDIGOS DE ERROR DEL SERVIDOR
+ -----------------------------
+
+ La siguiente tabla resume los errores que el servidor puede retornar cuando se le solicita un
+ servicio. Cada uno de éstos posee un código que el servidor utiliza en los mensajes de
+ respuesta para reportar el error al cliente. En ningún caso los errores se reportan a partir
+ de sus nombres.
+
+        -------------------------------------------
+          Código |  Nombre
+        ---------|---------------------------------
+                 |
+          40001  |  INVALID_PARAMETERS
+                 |
+          40101  |  NOT_SIGNED_IN
+                 |
+          40301  |  EXISTING_USER
+          40302  |  UNAUTHORIZED_USER
+                 |
+          40401  |  BAD_URL
+          40402  |  NONEXISTENT_CLARIFICATION
+          40403  |  NONEXISTENT_PROBLEM
+          40404  |  NONEXISTENT_PROPOSAL
+          40405  |  NONEXISTENT_SOLUTION
+          40406  |  NONEXISTENT_USER
+                 |
+          40501  |  METHOD_NOT_ALLOWED
+                 |
+          50001  |  UNKNOWN
+                 |
+        -------------------------------------------

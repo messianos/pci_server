@@ -1,4 +1,4 @@
-
+﻿
 // Includes
 #include "InputValidator.h"
 
@@ -6,26 +6,31 @@
 using namespace boost;
 using namespace std;
 
+bool InputValidator::hasValidBoundaries(string string, int min, int max) {
+	if (max < 0)
+		return string.length() >= min;
+	
+	return string.length() >= min && string.length() <= max;
+}
+
 bool InputValidator::isValidBoolean(string boolean) {
 	return regex_match(boolean, regex("^true$|^false$"));
 }
 
-bool InputValidator::isValidBirthDate(string birth_date) {
-	if (! regex_match(birth_date, regex("^[0-9]{2,2}/[0-9]{2,2}/[0-9]{4,4}$")))
+bool InputValidator::isValidDate(string date) {
+	if (! regex_match(date, regex("^[0-9]{2,2}/[0-9]{2,2}/[0-9]{4,4}$")))
 		return false;
 
-	Date *date = new Date("%d-%m-%Y", birth_date);
-	int day = date->getDay();
-	int month = date->getMonth();
-	int year = date->getYear();
+	Date *date_object = new Date("%d/%m/%Y", date);
+	int day = date_object->getDay();
+	int month = date_object->getMonth();
+	int year = date_object->getYear();
 
 	if (day < 1 || day > 31)
 		return false;
 
 	if (month < 1 || month > 12)
 		return false;
-
-	// TODO: Perhaps check year boundaries
 
 	switch (month) {
 		case 2 : {
@@ -53,228 +58,236 @@ bool InputValidator::isValidEmail(string email) {
 	return regex_match(email, regex("^[A-Z0-9._+-]+@[A-Z0-9.]+\\.[A-Z0-9]{2,}$", regex_constants::icase));
 }
 
-bool InputValidator::isValidFirstName(string first_name) {
-	return first_name.length() > 0 && first_name.length() <= 31;
-}
-
 bool InputValidator::isValidGenre(string genre) {
 	return regex_match(genre, regex("^[FM]$"));
 }
 
-bool InputValidator::isValidLastName(string last_name) {
-	return last_name.length() > 0 && last_name.length() <= 31;
-}
-
-bool InputValidator::isValidLocation(string location) {
-	return location.length() <= 15; // TODO: to define
-}
-
 bool InputValidator::isValidPassword(string password) {
-	if (password.length() < 6)
-		return false;
-
-	return regex_match(password, regex("^[\x21-\x7E]*$"));
+	return regex_match(password, regex("^[\x21-\x7E]{6,}$"));
 }
 
 bool InputValidator::isValidUserName(string user_name) {
-	if (user_name.length() < 4 || user_name.length() > 31)
-		return false;
+	return regex_match(user_name, regex("^[A-Z][A-Z0-9_]{3,30}$", regex_constants::icase));
+}
 
-	return regex_match(user_name, regex("^[A-Z][A-Z0-9_]*$", regex_constants::icase));
+bool InputValidator::isValidPublicationId(string publication_id) {
+	return regex_match(publication_id, regex("^5[03][A-F0-9]{32,32}$", regex_constants::icase));
 }
 
 bool InputValidator::isValidProblemId(string problem_id) {
-	if (problem_id.length() != 34)
-		return false;
-
-	return regex_match(problem_id, regex("^50[A-F0-9]*$", regex_constants::icase));
+	return regex_match(problem_id, regex("^50[A-F0-9]{32,32}$", regex_constants::icase));
 }
 
 bool InputValidator::isValidSolutionId(string solution_id) {
-	if (solution_id.length() != 34)
-		return false;
-
-	return regex_match(solution_id, regex("^53[A-F0-9]*$", regex_constants::icase));
+	return regex_match(solution_id, regex("^53[A-F0-9]{32,32}$", regex_constants::icase));
 }
 
 bool InputValidator::isValidClarificationId(string clarification_id) {
-	if (clarification_id.length() != 34)
+	return regex_match(clarification_id, regex("^43[A-F0-9]{32,32}$", regex_constants::icase));
+}
+
+bool InputValidator::isValidProposalId(string proposal_id) {
+	return regex_match(proposal_id, regex("^52[A-F0-9]{32,32}$", regex_constants::icase));
+}
+
+bool InputValidator::isValidSignInInput(string password, string user_name) {
+	if (! hasValidBoundaries(password, 1, -1))
+		return false;
+	
+	if (! hasValidBoundaries(user_name, 1, -1))
 		return false;
 
-	return regex_match(clarification_id, regex("^43[A-F0-9]*$", regex_constants::icase));
+	return true;
 }
 
-bool InputValidator::isValidPublicationContent(string content) {
-	return content.length() > 0 && content.length() <= 4194304;
-}
-
-bool InputValidator::isValidPublicationDescription(string description) {
-	return description.length() > 0 && description.length() <= 400;
-}
-
-bool InputValidator::isValidClarificationAssociatedPublicationId(string associated_publication_id) {
-	if (associated_publication_id.length() != 34)
+bool InputValidator::isValidUserExistsInput(string user_name) {
+	if (! hasValidBoundaries(user_name, 1, -1))
 		return false;
-
-	return regex_match(associated_publication_id, regex("^5[03][A-F0-9]*$", regex_constants::icase));
+	
+	return true;
 }
 
-bool InputValidator::isValidClarificationContent(string content) {
-	return content.length() > 0 && content.length() <= 2000;
-}
-
-ErrorCode *InputValidator::validateSignInInput(string user_name, string password) {
-	if (! isValidUserName(user_name))
-		return new ErrorCode(ErrorCode::CODE_INVALID_USER_NAME);
-
-	if (! isValidPassword(password))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PASSWORD);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
-}
-
-ErrorCode *InputValidator::validateUserVoteOnProblem(string problem_id) {
-	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
-}
-
-ErrorCode *InputValidator::validateCreateUserInput(string birth_date, string email, string first_name, string genre, string last_name, string location, string password, string user_name) {
-	if (! isValidBirthDate(birth_date))
-		return new ErrorCode(ErrorCode::CODE_INVALID_BIRTH_DATE);
-
+bool InputValidator::isValidSignUpInput(string birth_date, string email, string first_name, string genre, string last_name, string location, string password, string user_name) {
+	if (! isValidDate(birth_date))
+		return false;
+	
 	if (! isValidEmail(email))
-		return new ErrorCode(ErrorCode::CODE_INVALID_EMAIL);
-
-	if (! isValidFirstName(first_name))
-		return new ErrorCode(ErrorCode::CODE_INVALID_FIRST_NAME);
-
+		return false;
+	
+	if (! hasValidBoundaries(first_name, 1, 31))
+		return false;
+	
 	if (! isValidGenre(genre))
-		return new ErrorCode(ErrorCode::CODE_INVALID_GENRE);
-
-	if (! isValidLastName(last_name))
-		return new ErrorCode(ErrorCode::CODE_INVALID_LAST_NAME);
-
-	if (! isValidLocation(location))
-		return new ErrorCode(ErrorCode::CODE_INVALID_LOCATION);
-
+		return false;
+	
+	if (! hasValidBoundaries(last_name, 1, 31))
+		return false;
+	
+	if (! hasValidBoundaries(location, 0, 15)) // TODO: to define
+		return false;
+	
 	if (! isValidPassword(password))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PASSWORD);
-
+		return false;
+	
 	if (! isValidUserName(user_name))
-		return new ErrorCode(ErrorCode::CODE_INVALID_USER_NAME);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateCreateProblemInput(string content, string description) {
-	if (! isValidPublicationContent(content))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_CONTENT);
-
-	if (! isValidPublicationDescription(description))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+bool InputValidator::isValidPublicateProblemInput(string content, string description) {
+	if (! hasValidBoundaries(content, 1, 4194304))
+		return false;
+	
+	if (! hasValidBoundaries(description, 1, 400))
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateEditProblemInput(string content, string problem_id) {
-	if (! isValidPublicationContent(content))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_CONTENT);
-
+bool InputValidator::isValidEditProblemInput(string content, string description, string problem_id) {
+	if (! hasValidBoundaries(content, 1, 4194304))
+		return false;
+	
+	if (! hasValidBoundaries(description, 1, 400))
+		return false;
+	
 	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-/*ErrorCode *InputValidator::validateDeleteProblemInput(string problem_id) {
+bool InputValidator::isValidMakeProblemCreatorVisibleInput(string problem_id) {
 	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
+		return false;
+	
+	return true;
+}
 
-	return new ErrorCode(ErrorCode::CODE_NONE);
-}*/
-
-ErrorCode *InputValidator::validateVoteProblemInput(string is_positive, string problem_id) {
+bool InputValidator::isValidVoteProblemInput(string is_positive, string problem_id) {
 	if (! isValidBoolean(is_positive))
-		return new ErrorCode(ErrorCode::CODE_INVALID_IS_POSITIVE);
-
+		return false;
+	
 	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateSetAcceptedSolutionInput(string problem_id, string solution_id) {
+bool InputValidator::isValidSetAcceptedSolutionInput(string problem_id, string solution_id) {
 	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
-
+		return false;
+		
 	if (! isValidSolutionId(solution_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateUnsetAcceptedSolutionInput(string problem_id) {
+bool InputValidator::isValidUnsetAcceptedSolutionInput(string problem_id) {
 	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateCreateSolutionInput(string content, string description, string problem_id) {
-	if (! isValidPublicationContent(content))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_CONTENT);
-
-	if (! isValidPublicationDescription(description))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PUBLICATION_DESCRIPTION);
-
+bool InputValidator::isValidPublicateSolutionInput(string content, string description, string problem_id) {
+	if (! hasValidBoundaries(content, 1, 4194304))
+		return false;
+	
+	if (! hasValidBoundaries(description, 1, 400))
+		return false;
+	
 	if (! isValidProblemId(problem_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_PROBLEM_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-/*ErrorCode* InputValidator::validateDeleteSolutionInput(string solution_id) {
+bool InputValidator::isValidEditSolutionInput(string content, string description, string solution_id) {
+	if (! hasValidBoundaries(content, 1, 4194304))
+		return false;
+	
+	if (! hasValidBoundaries(description, 1, 400))
+		return false;
+	
 	if (! isValidSolutionId(solution_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
+		return false;
+	
+	return true;
+}
 
-	return new ErrorCode(ErrorCode::CODE_NONE);
-}*/
+bool InputValidator::isValidMakeSolutionCreatorVisibleInput(string solution_id) {
+	if (! isValidSolutionId(solution_id))
+		return false;
+	
+	return true;
+}
 
-ErrorCode *InputValidator::validateVoteSolutionInput(string is_positive, string solution_id) {
+bool InputValidator::isValidVoteSolutionInput(string is_positive, string solution_id) {
 	if (! isValidBoolean(is_positive))
-		return new ErrorCode(ErrorCode::CODE_INVALID_IS_POSITIVE);
-
+		return false;
+	
 	if (! isValidSolutionId(solution_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_SOLUTION_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateCreateClarificationInput(string associated_publication_id, string question) {
-	if (! isValidClarificationAssociatedPublicationId(associated_publication_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ASSOCIATED_PUBLICATION_ID);
-
-	if (! isValidClarificationContent(question))
-		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_QUESTION);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+bool InputValidator::isValidAskClarificationInput(string publication_id, string question) {
+	if (! hasValidBoundaries(question, 1, 2000))
+		return false;
+	
+	if (! isValidPublicationId(publication_id))
+		return false;
+	
+	return true;
 }
 
-ErrorCode *InputValidator::validateAnswerClarificationInput(string answer, string clarification_id) {
-	if (! isValidClarificationContent(answer))
-		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ANSWER);
-
+bool InputValidator::isValidAnswerClarificationInput(string answer, string clarification_id) {
+	if (! hasValidBoundaries(answer, 1, 2000))
+		return false;
+	
 	if (! isValidClarificationId(clarification_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ID);
-
-	return new ErrorCode(ErrorCode::CODE_NONE);
+		return false;
+	
+	return true;
 }
 
-/*ErrorCode *InputValidator::validateDeleteClarificationInput(string clarification_id) {
-	if (! isValidClarificationId(clarification_id))
-		return new ErrorCode(ErrorCode::CODE_INVALID_CLARIFICATION_ID);
+bool InputValidator::isValidPublicateProposalInput(string content, string solution_id) {
+	if (! hasValidBoundaries(content, 1, 4194304))
+		return false;
+	
+	if (! isValidSolutionId(solution_id))
+		return false;
+		
+	return true;
+}
 
-	return new ErrorCode(ErrorCode::CODE_NONE);
-}*/
+bool InputValidator::isValidEditProposalInput(string content, string proposal_id) {
+	if (! hasValidBoundaries(content, 1, 4194304))
+		return false;
+	
+	if (! isValidProposalId(proposal_id))
+		return false;
+	
+	return true;
+}
+
+bool InputValidator::isValidMakeProposalCreatorVisibleInput(string proposal_id) {
+	if (! isValidProposalId(proposal_id))
+		return false;
+	
+	return true;
+}
+
+bool InputValidator::isValidVoteProposalInput(string is_positive, string proposal_id) {
+	if (! isValidBoolean(is_positive))
+		return false;
+	
+	if (! isValidProposalId(proposal_id))
+		return false;
+	
+	return true;
+}

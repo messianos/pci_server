@@ -1,107 +1,561 @@
 ﻿
 /*
-----------------------------------------------------------------------------------------------
-	Global variables/constants
-----------------------------------------------------------------------------------------------
+
+	InputValidator
+		Input
+			SignIn
+				password
+				user_name
+			SignUp
+				birth_date
+				email
+				first_name
+				last_name
+				location
+				password
+				password_confirmation
+				user_name
+			Problem
+				content
+				description
+			Solution
+				content
+				description
+			Clarification
+				content
+			Proposal
+				content
+		hasValidBoundaries
+		isValidEmail
+		isValidPassword
+		isValidUserName
+		validateSignInInput
+		validateSignUpInput
+		validateProblemInput
+		validateSolutionInput
+		validateClarificationInput
+		validateProposalInput
+
 */
 
-var logic_memory = new Object();
+var InputValidator = new Object();
+InputValidator.Input = new Object();
+InputValidator.Input.SignIn = new Object();
+InputValidator.Input.SignUp = new Object();
+InputValidator.Input.Problem = new Object();
+InputValidator.Input.Solution = new Object();
+InputValidator.Input.Clarification = new Object();
+InputValidator.Input.Proposal = new Object();
 
-logic_memory.url = new Object();
-logic_memory.url.root = '/pci';
-logic_memory.url.sign_in = logic_memory.url.root + '/sign_in';
-logic_memory.url.sign_out = logic_memory.url.root + '/sign_out';
-logic_memory.url.toggle_anonymous_mode = logic_memory.url.root + '/toggle_anonymous_mode';
-logic_memory.url.unseen_notifications = logic_memory.url.root + '/unseen_notifications';
-logic_memory.url.create_user = logic_memory.url.root + '/create_user';
-logic_memory.url.create_problem = logic_memory.url.root + '/create_problem';
-logic_memory.url.edit_problem = logic_memory.url.root + '/edit_problem';
-logic_memory.url.vote_problem = logic_memory.url.root + '/vote_problem';
-logic_memory.url.set_accepted_solution = logic_memory.url.root + '/set_accepted_solution';
-logic_memory.url.unset_accepted_solution = logic_memory.url.root + '/unset_accepted_solution';
-logic_memory.url.create_solution = logic_memory.url.root + '/create_solution';
-logic_memory.url.edit_solution = logic_memory.url.root + '/edit_solution';
-logic_memory.url.vote_solution = logic_memory.url.root + '/vote_solution';
-logic_memory.url.create_clarification = logic_memory.url.root + '/create_clarification';
-logic_memory.url.answer_clarification = logic_memory.url.root + '/answer_clarification';
-logic_memory.url.fetch_main_page = logic_memory.url.root;
-logic_memory.url.fetch_user_page = logic_memory.url.root + '/user';
-logic_memory.url.fetch_problems_page = logic_memory.url.root + '/problems';
-logic_memory.url.fetch_problem_page = logic_memory.url.root + '/publication';
-logic_memory.url.fetch_solution_page = logic_memory.url.root + '/publication';
-logic_memory.url.fetch_new_problem_page = logic_memory.url.root + '/new_problem';
-logic_memory.url.fetch_new_solution_page = logic_memory.url.root + '/new_solution';
-logic_memory.url.fetch_ideas_page = logic_memory.url.root + '/ideas';
+InputValidator.Input.SignIn.password = {
+	code: 'password',
+	description: 'password' // TODO
+	isValid = function(password) {
+		return InputValidator.hasValidBoundaries(password, 1, -1);
+	}
+}
 
-logic_memory.error = new Object();
+InputValidator.Input.SignIn.user_name = {
+	code: 'user_name',
+	description: 'user_name' // TODO
+	isValid = function(user_name) {
+		return InputValidator.hasValidBoundaries(user_name, 1, -1);
+	}
+}
 
-logic_memory.error.id = new Object();
-logic_memory.error.id.birth_date = 'birth_date';
-logic_memory.error.id.email = 'email';
-logic_memory.error.id.first_name = 'first_name';
-logic_memory.error.id.last_name = 'last_name';
-logic_memory.error.id.location = 'location';
-logic_memory.error.id.password = 'password';
-logic_memory.error.id.user_name = 'user_name';
-logic_memory.error.id.content = 'content';
-logic_memory.error.id.description = 'description';
-logic_memory.error.id.question = 'question';
-logic_memory.error.id.answer = 'answer';
+InputValidator.Input.SignUp.birth_date = {
+	code: 'birth_date',
+	description: 'birth_date' // TODO
+	isValid = function(birth_date) {
+		return InputValidator.hasValidBoundaries(birth_date, 10, 10);
+	}
+}
 
-logic_memory.error.description = new Object();
-logic_memory.error.description.birth_date = 'birth_date';
-logic_memory.error.description.email = 'email';
-logic_memory.error.description.first_name = 'first_name';
-logic_memory.error.description.last_name = 'last_name';
-logic_memory.error.description.location = 'location';
-logic_memory.error.description.password = 'password';
-logic_memory.error.description.user_name = 'user_name';
-logic_memory.error.description.content = 'content';
-logic_memory.error.description.description = 'description';
-logic_memory.error.description.question = 'question';
-logic_memory.error.description.answer = 'answer';
+InputValidator.Input.SignUp.email = {
+	code: 'email',
+	description: 'email' // TODO
+	isValid = function(email) {
+		return InputValidator.isValidEmail(email);
+	}
+}
 
-logic_memory.notification_check_interval = 2000;
+InputValidator.Input.SignUp.first_name = {
+	code: 'first_name',
+	description: 'first_name' // TODO
+	isValid = function(first_name) {
+		return InputValidator.hasValidBoundaries(first_name, 1, 31);
+	}
+}
+
+InputValidator.Input.SignUp.last_name = {
+	code: 'last_name',
+	description: 'last_name' // TODO
+	isValid = function(last_name) {
+		return InputValidator.hasValidBoundaries(last_name, 1, 31);
+	}
+}
+
+InputValidator.Input.SignUp.location = {
+	code: 'location',
+	description: 'location' // TODO
+	isValid = function(location) {
+		return InputValidator.hasValidBoundaries(location, 0, 15); // TODO: to define
+	}
+}
+
+InputValidator.Input.SignUp.password = {
+	code: 'password',
+	description: 'password' // TODO
+	isValid = function(password) {
+		return InputValidator.isValidPassword(password);
+	}
+}
+
+InputValidator.Input.SignUp.password_confirmation = {
+	code: 'password_confirmation',
+	description: 'password_confirmation' // TODO
+	isValid = function(password, password_confirmation) {
+		return password == password_confirmation;
+	}
+}
+
+InputValidator.Input.SignUp.user_name = {
+	code: 'user_name',
+	description: 'user_name' // TODO
+	isValid = function(user_name) {
+		return InputValidator.isValidUserName(user_name);
+	}
+}
+
+InputValidator.Input.Problem.content = {
+	code: 'content',
+	description: 'content' // TODO
+	isValid = function(content) {
+		return InputValidator.hasValidBoundaries(content, 1, 4194304);
+	}
+}
+
+InputValidator.Input.Problem.description = {
+	code: 'description',
+	description: 'description' // TODO
+	isValid = function(description) {
+		return InputValidator.hasValidBoundaries(description, 1, 400);
+	}
+}
+
+InputValidator.Input.Solution.content = {
+	code: 'content',
+	description: 'content' // TODO
+	isValid = function(content) {
+		return InputValidator.hasValidBoundaries(content, 1, 4194304);
+	}
+}
+
+InputValidator.Input.Solution.description = {
+	code: 'description',
+	description: 'description' // TODO
+	isValid = function(description) {
+		return InputValidator.hasValidBoundaries(description, 1, 400);
+	}
+}
+
+InputValidator.Input.Clarification.content = {
+	code: 'content',
+	description: 'content' // TODO
+	isValid = function(content) {
+		return InputValidator.hasValidBoundaries(content, 1, 2000);
+	}
+}
+
+InputValidator.Input.Proposal.content = {
+	code: 'content',
+	description: 'content' // TODO
+	isValid = function(content) {
+		return InputValidator.hasValidBoundaries(content, 1, 4194304);
+	}
+}
+
+InputValidator.hasValidBoundaries = function(string, min, max) {
+	if (max < 0)
+		return string.length >= min;
+	
+	return string.length >= min && string.length <= max;
+}
+
+InputValidator.isValidEmail = function(email) {
+	if (email.length > 255)
+		return false;
+
+	return email.match(/^[A-Z0-9._+-]+@[A-Z0-9.]+\.[A-Z0-9]{2,}$/i);
+}
+
+InputValidator.isValidPassword = function(password) {
+	return password.match(/^[\x21-\x7E]{6,}$/);
+}
+
+InputValidator.isValidUserName = function(user_name) {
+	return user_name.match(/^[A-Z][A-Z0-9_]{3,30}$/i);
+}
+
+InputValidator.validateSignInInput = function(on_invalid_input_callback_function, password, user_name) {
+	var invalid_input = false;
+	var invalid_input_descriptions = new Object();
+	
+	if (! InputValidator.Input.SignIn.password.isValid(password)) {
+		invalid_input_descriptions[InputValidator.Input.SignIn.password.code] = InputValidator.Input.SignIn.password.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignIn.user_name.isValid(user_name)) {
+		invalid_input_descriptions[InputValidator.Input.SignIn.user_name.code] = InputValidator.Input.SignIn.user_name.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(invalid_input_descriptions);
+	
+	return ! invalid_input;
+}
+
+InputValidator.validateSignUpInput = function(on_invalid_input_callback_function, birth_date, email, first_name, last_name, location, password, password_confirmation, user_name) {
+	var invalid_input = false;
+	var invalid_input_descriptions = new Object();
+	
+	if (! InputValidator.Input.SignUp.birth_date.isValid(birth_date)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.birth_date.code] = InputValidator.Input.SignUp.birth_date.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.email.isValid(email)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.email.code] = InputValidator.Input.SignUp.email.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.first_name.isValid(first_name)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.first_name.code] = InputValidator.Input.SignUp.first_name.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.last_name.isValid(last_name)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.last_name.code] = InputValidator.Input.SignUp.last_name.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.location.isValid(location)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.location.code] = InputValidator.Input.SignUp.location.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.password.isValid(password)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.password.code] = InputValidator.Input.SignUp.password.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.password_confirmation.isValid(password, password_confirmation)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.password_confirmation.code] = InputValidator.Input.SignUp.password_confirmation.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.SignUp.user_name.isValid(user_name)) {
+		invalid_input_descriptions[InputValidator.Input.SignUp.user_name.code] = InputValidator.Input.SignUp.user_name.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(invalid_input_descriptions);
+	
+	return ! invalid_input;
+}
+
+InputValidator.validateProblemInput = function(on_invalid_input_callback_function, content, description) {
+	var invalid_input = false;
+	var invalid_input_descriptions = new Object();
+	
+	if (! InputValidator.Input.Problem.content.isValid(content)) {
+		invalid_input_descriptions[InputValidator.Input.Problem.content.code] = InputValidator.Input.Problem.content.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.Problem.description.isValid(description)) {
+		invalid_input_descriptions[InputValidator.Input.Problem.description.code] = InputValidator.Input.Problem.description.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(invalid_input_descriptions);
+	
+	return ! invalid_input;
+}
+
+InputValidator.validateSolutionInput = function(on_invalid_input_callback_function, content, description) {
+	var invalid_input = false;
+	var invalid_input_descriptions = new Object();
+	
+	if (! InputValidator.Input.Solution.content.isValid(content)) {
+		invalid_input_descriptions[InputValidator.Input.Solution.content.code] = InputValidator.Input.Solution.content.description;
+		invalid_input = true;
+	}
+	
+	if (! InputValidator.Input.Solution.description.isValid(description)) {
+		invalid_input_descriptions[InputValidator.Input.Solution.description.code] = InputValidator.Input.Solution.description.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(invalid_input_descriptions);
+	
+	return ! invalid_input;
+}
+
+InputValidator.validateClarificationInput = function(on_invalid_input_callback_function, content) {
+	var invalid_input = false;
+	var invalid_input_descriptions = new Object();
+	
+	if (! InputValidator.Input.Clarification.content.isValid(content)) {
+		invalid_input_descriptions[InputValidator.Input.Clarification.content.code] = InputValidator.Input.Clarification.content.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(invalid_input_descriptions);
+	
+	return ! invalid_input;
+}
+
+InputValidator.validateProposalInput = function(on_invalid_input_callback_function, content) {
+	var invalid_input = false;
+	var invalid_input_descriptions = new Object();
+	
+	if (! InputValidator.Input.Proposal.content.isValid(content)) {
+		invalid_input_descriptions[InputValidator.Input.Proposal.content.code] = InputValidator.Input.Proposal.content.description;
+		invalid_input = true;
+	}
+	
+	if (invalid_input)
+		on_invalid_input_callback_function(invalid_input_descriptions);
+	
+	return ! invalid_input;
+}
 
 
 /*
-----------------------------------------------------------------------------------------------
-	Server-communication functions
-----------------------------------------------------------------------------------------------
+
+	Server
+		Error
+			invalid_parameters
+			not_signed_in
+			existing_user
+			unauthorized_user
+			bad_url
+			nonexistent_clarification
+			nonexistent_problem
+			nonexistent_proposal
+			nonexistent_solution
+			nonexistent_user
+			method_not_allowed
+			unknown
+			getErrorDescription
+		signIn
+		signOut
+		toggleAnonymousMode
+		userExists
+		unseenNotifications
+		signUp
+		publicateProblem
+		editProblem
+		makeProblemCreatorVisible
+		voteProblem
+		setAcceptedSolution
+		unsetAcceptedSolution
+		publicateSolution
+		editSolution
+		makeSolutionCreatorVisible
+		voteSolution
+		askClarification
+		answerClarification
+		publicateProposal
+		editProposal
+		makeProposalCreatorVisible
+		voteProposal
+
 */
 
-function postSignIn(on_success_callback_function, on_failure_callback_function, password, user_name) {
-	var request = postRequest({
+var Server = new Object();
+Server.Error = new Object();
+
+Server.Error.invalid_parameters = {
+	code: '40001',
+	description: 'invalid_parameters' // TODO
+}
+
+Server.Error.not_signed_in = {
+	code: '40101',
+	description: 'not_signed_in' // TODO
+}
+
+Server.Error.existing_user = {
+	code: '40301',
+	description: 'existing_user' // TODO
+}
+
+Server.Error.unauthorized_user = {
+	code: '40302',
+	description: 'unauthorized_user' // TODO
+}
+
+Server.Error.bad_url = {
+	code: '40401',
+	description: 'bad_url' // TODO
+}
+
+Server.Error.nonexistent_clarification = {
+	code: '40402',
+	description: 'nonexistent_clarification' // TODO
+}
+
+Server.Error.nonexistent_problem = {
+	code: '40403',
+	description: 'nonexistent_problem' // TODO
+}
+
+Server.Error.nonexistent_proposal = {
+	code: '40404',
+	description: 'nonexistent_proposal' // TODO
+}
+
+Server.Error.nonexistent_solution = {
+	code: '40405',
+	description: 'nonexistent_solution' // TODO
+}
+
+Server.Error.nonexistent_user = {
+	code: '40406',
+	description: 'nonexistent_user' // TODO
+}
+
+Server.Error.method_not_allowed = {
+	code: '40501',
+	description: 'method_not_allowed' // TODO
+}
+
+Server.Error.unknown = {
+	code: '50001',
+	description: 'unknown' // TODO
+}
+
+Server.Error.getErrorDescription = function(error_code) {
+	switch(error_code) {
+		case Server.Error.invalid_parameters.code : return Server.Error.invalid_parameters.description;
+		case Server.Error.not_signed_in.code : return Server.Error.not_signed_in.description;
+		case Server.Error.existing_user.code : return Server.Error.existing_user.description;
+		case Server.Error.unauthorized_user.code : return Server.Error.unauthorized_user.description;
+		case Server.Error.bad_url.code : return Server.Error.bad_url.description;
+		case Server.Error.nonexistent_clarification.code : return Server.Error.nonexistent_clarification.description;
+		case Server.Error.nonexistent_problem.code : return Server.Error.nonexistent_problem.description;
+		case Server.Error.nonexistent_proposal.code : return Server.Error.nonexistent_proposal.description;
+		case Server.Error.nonexistent_solution.code : return Server.Error.nonexistent_solution.description;
+		case Server.Error.nonexistent_user.code : return Server.Error.nonexistent_user.description;
+		case Server.Error.method_not_allowed.code : return Server.Error.method_not_allowed.description;
+		case Server.Error.unknown.code : return Server.Error.unknown.description;
+	}
+}
+
+Server.signIn = function(on_success_callback_function, on_error_callback_function, password, user_name) {
+	var data = {
 		password: password,
 		user_name: user_name
-	}, logic_memory.url.sign_in);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.sign_in
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['signed_in']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+};
+
+Server.signOut = function(on_success_callback_function, on_error_callback_function) {
+	var request = $.ajax({
+		type: 'POST',
+		url: Global.Url.sign_out
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
 }
 
-function postSignOut(on_success_callback_function, on_failure_callback_function) {
-	var request = postRequest({
-	}, logic_memory.url.sign_out);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
+Server.toggleAnonymousMode = function(on_success_callback_function, on_error_callback_function) {
+	var request = $.ajax({
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.toggle_anonymous_mode
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['anonymous_mode']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
 }
 
-function postToggleAnonymousMode(on_success_callback_function, on_failure_callback_function) {
-	var request = postRequest({
-	}, logic_memory.url.toggle_anonymous_mode);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
+Server.userExists = function(on_success_callback_function, on_error_callback_function, user_name) {
+	var data = {
+		user_name: user_name
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.user_exists
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['user_exists']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
 }
 
-function postUnseenNotifications(on_success_callback_function, on_failure_callback_function) {
-	var request = postRequest({
-	}, logic_memory.url.unseen_notifications);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
+Server.unseenNotifications = function(on_success_callback_function, on_error_callback_function) {
+	var request = $.ajax({
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.unseen_notifications
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['notification_count'], data['notifications']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
 }
 
-function postCreateUser(on_success_callback_function, on_failure_callback_function, birth_date, email, first_name, genre, last_name, location, password, user_name) {
-	var request = postRequest({
+Server.signUp = function(on_success_callback_function, on_error_callback_function, birth_date, email, first_name, genre, last_name, location, password, user_name) {
+	var data = {
 		birth_date: birth_date,
 		email: email,
 		first_name: first_name,
@@ -110,665 +564,392 @@ function postCreateUser(on_success_callback_function, on_failure_callback_functi
 		location: location,
 		password: password,
 		user_name: user_name
-	}, logic_memory.url.create_user);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.sign_up
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
 }
 
-function postCreateProblem(on_success_callback_function, on_failure_callback_function, content, description) {
-	var request = postRequest({
+Server.publicateProblem = function(on_success_callback_function, on_error_callback_function, content, description) {
+	var data = {
 		content: content,
 		description: description
-	}, logic_memory.url.create_problem);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.publicate_problem
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['problem_id']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
 }
 
-function postEditProblem(on_success_callback_function, on_failure_callback_function, content, problem_id) {
-	var request = postRequest({
-		content: content,
-		problem_id: problem_id
-	}, logic_memory.url.edit_problem);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postVoteProblem(on_success_callback_function, on_failure_callback_function, is_positive, problem_id) {
-	var request = postRequest({
-		is_positive: is_positive,
-		problem_id: problem_id
-	}, logic_memory.url.vote_problem);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postSetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id, solution_id) {
-	var request = postRequest({
-		problem_id: problem_id,
-		solution_id: solution_id
-	}, logic_memory.url.set_accepted_solution);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postUnsetAcceptedSolution(on_success_callback_function, on_failure_callback_function, problem_id) {
-	var request = postRequest({
-		problem_id: problem_id
-	}, logic_memory.url.unset_accepted_solution);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postCreateSolution(on_success_callback_function, on_failure_callback_function, content, description, problem_id) {
-	var request = postRequest({
+Server.editProblem = function(on_success_callback_function, on_error_callback_function, content, description, problem_id) {
+	var data = {
 		content: content,
 		description: description,
 		problem_id: problem_id
-	}, logic_memory.url.create_solution);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postEditSolution(on_success_callback_function, on_failure_callback_function) {
-	var request = postRequest({
-		// TODO
-	}, logic_memory.url.edit_solution);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postVoteSolution(on_success_callback_function, on_failure_callback_function, is_positive, solution_id) {
-	var request = postRequest({
-		is_positive: is_positive,
-		solution_id: solution_id
-	}, logic_memory.url.vote_solution);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postCreateClarification(on_success_callback_function, on_failure_callback_function, publication_id, question) {
-	var request = postRequest({
-		publication_id: publication_id,
-		question: question
-	}, logic_memory.url.create_clarification);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-function postAnswerClarification(on_success_callback_function, on_failure_callback_function, answer, clarification_id) {
-	var request = postRequest({
-		answer: answer,
-		clarification_id: clarification_id
-	}, logic_memory.url.answer_clarification);
-	request.done(on_success_callback_function);
-	request.fail(on_failure_callback_function);
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Callback functions
-----------------------------------------------------------------------------------------------
-*/
-
-function onInvalidInputSignIn(password_passwordfield, user_name_textfield) {
-	return function(error_information) {
-		// TODO: DON'T SHOW tooltip ---> just refuse sign in?
-		if (logic_memory.error.id.password in error_information)
-			showTooltip(password_passwordfield, 'left', error_information[logic_memory.error.id.password]);
-		if (logic_memory.error.id.user_name in error_information)
-			showTooltip(user_name_textfield, 'left', error_information[logic_memory.error.id.user_name]);
 	};
-}
-
-function onSuccessSignIn() {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		if (data['user_signed_in'])
-			location.reload(true);
-		else
-			alert("INVALID USER_NAME AND PASSWORD. DO SOMETHING"); // TODO: DO SOMETHING WHEN SIGN IN FAILS
-	};
-}
-
-function onFailureSignIn() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessSignOut() {
-	return function(data, text_status, jq_xhr) {
-		location.reload(true);
-	};
-}
-
-function onFailureSignOut() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessToggleAnonymousMode(toggle_button) {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-
-		$(toggle_button).tooltip('hide');
-		
-		if (data['anonymous_mode'])
-			$(toggle_button).attr('data-original-title', 'Modo anónimo activado');
-		else
-			$(toggle_button).attr('data-original-title', 'Modo anónimo desactivado');
-		
-		$(toggle_button).tooltip('fixTitle');
-		$(toggle_button).tooltip('show');
-		$(toggle_button).toggleClass('on');
-	};
-}
-
-function onFailureToggleAnonymousMode() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessUnseenNotifications(notification_container) {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		
-		notification_container.empty();
-		var length = data['notification_count'];
-		for (var i = 0; i < length; i++)
-			appendNotification(notification_container, data['unseen_notifications'][i]['url'], data['unseen_notifications'][i]['message']);
-	}
-}
-
-function onFailureUnseenNotifications() {
-	return null;
-}
-
-function onInvalidInputCreateUser(birth_date_textfield, email_textfield, first_name_textfield, last_name_textfield, location_textfield, password_passwordfield, user_name_textfield) {
-	return function(error_information) {
-		if (logic_memory.error.id.birth_date in error_information)
-			showTooltip(birth_date_textfield, 'left', error_information[logic_memory.error.id.birth_date]);
-		if (logic_memory.error.id.email in error_information)
-			showTooltip(email_textfield, 'left', error_information[logic_memory.error.id.email]);
-		if (logic_memory.error.id.first_name in error_information)
-			showTooltip(first_name_textfield, 'left', error_information[logic_memory.error.id.first_name]);
-		if (logic_memory.error.id.last_name in error_information)
-			showTooltip(last_name_textfield, 'left', error_information[logic_memory.error.id.last_name]);
-		if (logic_memory.error.id.location in error_information)
-			showTooltip(location_textfield, 'left', error_information[logic_memory.error.id.location]);
-		if (logic_memory.error.id.password in error_information)
-			showTooltip(password_passwordfield, 'left', error_information[logic_memory.error.id.password]);
-		if (logic_memory.error.id.user_name in error_information)
-			showTooltip(user_name_textfield, 'left', error_information[logic_memory.error.id.user_name]);
-	};
-}
-
-function onSuccessCreateUser(user_name) {
-	return function(data, text_status, jq_xhr) {
-		window.location.href = logic_memory.url.fetch_user_page + '/' + user_name;
-	};
-}
-
-function onFailureCreateUser() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onInvalidInputCreateProblem(content_textarea, description_textfield) {
-	return function(error_information) {
-		if (logic_memory.error.id.content in error_information)
-			showTooltip(content_textarea, 'left', error_information[logic_memory.error.id.content]);
-		if (logic_memory.error.id.description in error_information)
-			showTooltip(description_textfield, 'left', error_information[logic_memory.error.id.description]);
-	};
-}
-
-function onSuccessCreateProblem() {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		window.location.href = logic_memory.url.fetch_problem_page + '/' + data['problem_id'];
-	};
-}
-
-function onFailureCreateProblem() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onInvalidInputEditProblem(content_textarea) {
-	return function(error_information) {
-		if (logic_memory.error.id.content in error_information)
-			showTooltip(content_textarea, 'left', error_information[logic_memory.error.id.content]);
-	}
-}
-
-function onSuccessEditProblem(content) {
-	return function(data, text_status, jq_xhr) {
-		logic_memory.problem_bbcode = content;
-		CKEDITOR.instances.edit_problem_content.setData(logic_memory.problem_bbcode);
-		
-		var html_code = XBBCODE.process({
-			text: logic_memory.problem_bbcode,
-			addInLineBreaks: true
-		}).html;
-		
-		$('#problem_problem_content').empty();
-		$('#problem_problem_content').append(html_code);
-
-		$("#problem_edit_button").show();
-		$("#problem_problem_content").show();
-		$('#edit_problem_form').hide();
-	};
-}
-
-function onFailureEditProblem() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessVoteProblem(display, vote_offset) {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		display.html(data['vote_balance'].toString());
-		logic_memory.user_vote = logic_memory.user_vote + vote_offset;
-		// TODO: Confirm the following line goes here
-		refreshVotesButtonsColors();
-	};
-}
-
-function onFailureVoteProblem() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessSetAcceptedSolution(button, problem_id, solution_id) {
-	return function(data, text_status, jq_xhr) {
-		var on_button = $('.tick.on');
-		if (on_button.length > 0) {
-			on_button.parent().removeClass('accepted_solution');
-			on_button.removeClass('on');
-			on_button.unbind('click');
-			on_button.click(function() {
-				var accepted_solution_id = $(this).attr('id');
-				
-				var on_success = onSuccessSetAcceptedSolution($(this), problem_id, accepted_solution_id);
-				var on_failure = onFailureSetAcceptedSolution();
-				postSetAcceptedSolution(on_success, on_failure, problem_id, accepted_solution_id);
-			});
-		}
-		
-		button.parent().addClass('accepted_solution');
-		button.addClass('on');
-		button.unbind('click');
-		button.click(function() {
-			var on_success = onSuccessUnsetAcceptedSolution($(this), problem_id, solution_id);
-			var on_failure = onFailureUnsetAcceptedSolution();
-			postUnsetAcceptedSolution(on_success, on_failure, problem_id);
-		});
-	};
-}
-
-function onFailureSetAcceptedSolution() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessUnsetAcceptedSolution(button, problem_id, accepted_solution_id) {
-	return function(data, text_status, jq_xhr) {
-		button.parent().removeClass('accepted_solution');
-		button.removeClass('on');
-		button.unbind('click');
-		button.click(function() {
-			var on_success = onSuccessSetAcceptedSolution($(this), problem_id, accepted_solution_id);
-			var on_failure = onFailureSetAcceptedSolution();
-			postSetAcceptedSolution(on_success, on_failure, problem_id, accepted_solution_id);
-		});
-	};
-}
-
-function onFailureUnsetAcceptedSolution() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onInvalidInputCreateSolution(content_textarea, description_textfield) {
-	return function(error_information) {
-		if (logic_memory.error.id.content in error_information)
-			showTooltip(content_textarea, 'left', error_information[logic_memory.error.id.content]);
-		if (logic_memory.error.id.description in error_information)
-			showTooltip(description_textfield, 'left', error_information[logic_memory.error.id.description]);
-	};
-}
-
-function onSuccessCreateSolution() {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		window.location.href = logic_memory.url.fetch_solution_page + '/' + data['solution_id'];
-	};
-}
-
-function onFailureCreateSolution() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessEditSolution() {
-	return function(data, text_status, jq_xhr) {
-		// TODO
-	};
-}
-
-function onFailureEditSolution() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onSuccessVoteSolution(display) {
-	return function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		display.html(data['vote_balance'].toString());
-	};
-}
-
-function onFailureVoteSolution() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onInvalidInputCreateClarification(question_textarea) {
-	return function(error_information) {
-		if (logic_memory.error.id.question in error_information)
-			showTooltip(question_textarea, 'left', error_information[logic_memory.error.id.question]);
-	};
-}
-
-function onSuccessCreateClarification(row_parent, textarea, question) {
-	return function(data, text_status, jq_xhr) {
-		textarea.val('');
-		
-		var row = $('<div class="clarifications_row_container"></div>');
-		var question_container = $('<div class="clarifications_question_container"><div class="box_content clarifications_question_content"><span class="text_clarification">' + question + '</div></div></div>');
-		var answer_container = $('<div class="clarifications_answer_container"></div>');
-		
-		row.append(question_container);
-		row.append(answer_container);
-		row_parent.append(row);
-	};
-}
-
-function onFailureCreateClarification() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-function onInvalidInputAnswerClarification(answer_textarea) {
-	return function(error_information) {
-		if (logic_memory.error.id.answer in error_information)
-			showTooltip(answer_textarea, 'left', error_information[logic_memory.error.id.answer]);
-	};
-}
-
-function onSuccessAnswerClarification(form, answer) {
-	return function(data, text_status, jq_xhr) {
-		var new_node = $('<span class="text_clarification">' + answer + '</span>');
-		var parent = form.parent();
-		parent.empty();
-		parent.addClass('box_content');
-		parent.append(new_node);
-	};
-}
-
-function onFailureAnswerClarification() {
-	return function(jq_xhr, text_status, error_thrown) {
-		showErrorToast('<b>Se ha producido un error</b><br />Error ' + jq_xhr.status + ' - ' + error_thrown);
-	};
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Validation functions
-----------------------------------------------------------------------------------------------
-*/
-
-function isValidBirthDate(birth_date) {
-	return birth_date.length > 0;
-}
-
-function isValidEmail(email) {
-	if (email.length > 255)
-		return false;
-
-	return email.match(/^[A-Z0-9._+-]+@[A-Z0-9.]+\.[A-Z0-9]{2,}$/i);
-}
-
-function isValidFirstName(first_name) {
-	return first_name.length > 0 && first_name.length <= 31;
-}
-
-function isValidLastName(last_name) {
-	return last_name.length > 0 && last_name.length <= 31;
-}
-
-function isValidLocation(location) {
-	return location.length <= 15; // TODO: to define
-}
-
-function isValidPassword(password) {
-	if (password.length < 6)
-		return false;
 	
-	return password.match(/^[\x21-\x7E]*$/);
-}
-
-function isValidUserName(user_name) {
-	if (user_name.length < 4 || user_name.length > 31)
-		return false;
-
-	return user_name.match(/^[A-Z][A-Z0-9_]*$/i);
-}
-
-function isValidPublicationContent(content) {
-	return content.length > 0 && content.length <= 4194304;
-}
-
-function isValidPublicationDescription(description) {
-	return description.length > 0 && description.length <= 400;
-}
-
-function isValidClarificationContent(content) {
-	return content.length > 0 && content.length <= 2000;
-}
-
-function validateSignInInput(on_invalid_input_callback_function, password, user_name) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPassword(password)) {
-		error_information[logic_memory.error.id.password] = logic_memory.error.description.password;
-		invalid_input = true;
-	}
-	
-	if (! isValidUserName(user_name)) {
-		error_information[logic_memory.error.id.user_name] = logic_memory.error.description.user_name;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateUserInput(on_invalid_input_callback_function, birth_date, email, first_name, last_name, location, password, user_name) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidBirthDate(birth_date)) {
-		error_information[logic_memory.error.id.birth_date] = logic_memory.error.description.birth_date;
-		invalid_input = true;
-	}
-	
-	if (! isValidEmail(email)) {
-		error_information[logic_memory.error.id.email] = logic_memory.error.description.email;
-		invalid_input = true;
-	}
-	
-	if (! isValidFirstName(first_name)) {
-		error_information[logic_memory.error.id.first_name] = logic_memory.error.description.first_name;
-		invalid_input = true;
-	}
-	
-	if (! isValidLastName(last_name)) {
-		error_information[logic_memory.error.id.last_name] = logic_memory.error.description.last_name;
-		invalid_input = true;
-	}
-	
-	if (! isValidLocation(location)) {
-		error_information[logic_memory.error.id.location] = logic_memory.error.description.location;
-		invalid_input = true;
-	}
-	
-	if (! isValidPassword(password)) {
-		error_information[logic_memory.error.id.password] = logic_memory.error.description.password;
-		invalid_input = true;
-	}
-	
-	if (! isValidUserName(user_name)) {
-		error_information[logic_memory.error.id.user_name] = logic_memory.error.description.user_name;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateProblemInput(on_invalid_input_callback_function, content, description) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPublicationContent(content)) {
-		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
-		invalid_input = true;
-	}
-	
-	if (! isValidPublicationDescription(description)) {
-		error_information[logic_memory.error.id.description] = logic_memory.error.description.description;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateEditProblemInput(on_invalid_input_callback_function, content) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPublicationContent(content)) {
-		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateSolutionInput(on_invalid_input_callback_function, content, description) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidPublicationContent(content)) {
-		error_information[logic_memory.error.id.content] = logic_memory.error.description.content;
-		invalid_input = true;
-	}
-	
-	if (! isValidPublicationDescription(description)) {
-		error_information[logic_memory.error.id.description] = logic_memory.error.description.description;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateCreateClarificationInput(on_invalid_input_callback_function, question) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidClarificationContent(question)) {
-		error_information[logic_memory.error.id.question] = logic_memory.error.description.question;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-function validateAnswerClarificationInput(on_invalid_input_callback_function, answer) {
-	var invalid_input = false;
-	var error_information = new Object();
-	
-	if (! isValidClarificationContent(answer)) {
-		error_information[logic_memory.error.id.answer] = logic_memory.error.description.answer;
-		invalid_input = true;
-	}
-	
-	if (invalid_input)
-		on_invalid_input_callback_function(error_information);
-	
-	return ! invalid_input;
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Notification functions
-----------------------------------------------------------------------------------------------
-*/
-
-function checkNotificationsPeriodically(notification_container) {
-	setInterval(function() {
-		var on_success = onSuccessUnseenNotifications(notification_container);
-		var on_failure = onFailureUnseenNotifications();
-		postUnseenNotifications(on_success, on_failure);
-	}, logic_memory.notification_check_interval);
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Auxiliar functions
-----------------------------------------------------------------------------------------------
-*/
-
-function postRequest(data, url) {
-	return $.ajax({
+	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: url
+		url: Global.Url.edit_problem
 	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.makeProblemCreatorVisible = function(on_success_callback_function, on_error_callback_function, problem_id) {
+	var data = {
+		problem_id: problem_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.make_problem_creator_visible
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.voteProblem = function(on_success_callback_function, on_error_callback_function, is_positive, problem_id) {
+	var data = {
+		is_positive: is_positive,
+		problem_id: problem_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.vote_problem
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['vote_balance']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.setAcceptedSolution = function(on_success_callback_function, on_error_callback_function, problem_id, solution_id) {
+	var data = {
+		problem_id: problem_id,
+		solution_id: solution_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.set_accepted_solution
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.unsetAcceptedSolution = function(on_success_callback_function, on_error_callback_function, problem_id) {
+	var data = {
+		problem_id: problem_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.unset_accepted_solution
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.publicateSolution = function(on_success_callback_function, on_error_callback_function, content, description, problem_id) {
+	var data = {
+		content: content,
+		description: description,
+		problem_id: problem_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.publicate_solution
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['solution_id']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.editSolution = function(on_success_callback_function, on_error_callback_function, content, description, solution_id) {
+	var data = {
+		content: content,
+		description: description,
+		solution_id: solution_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.edit_solution
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.makeSolutionCreatorVisible = function(on_success_callback_function, on_error_callback_function, solution_id) {
+	var data = {
+		solution_id: solution_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.make_solution_creator_visible
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.voteSolution = function(on_success_callback_function, on_error_callback_function, is_positive, solution_id) {
+	var data = {
+		is_positive: is_positive,
+		solution_id: solution_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.vote_solution
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['vote_balance']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.askClarification = function(on_success_callback_function, on_error_callback_function, publication_id, question) {
+	var data = {
+		publication_id: publication_id,
+		question: question
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.ask_clarification
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['clarification_id']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.answerClarification = function(on_success_callback_function, on_error_callback_function, answer, clarification_id) {
+	var data = {
+		answer: answer,
+		clarification_id: clarification_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.answer_clarification
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.publicateProposal = function(on_success_callback_function, on_error_callback_function, content, solution_id) {
+	var data = {
+		content: content,
+		solution_id: solution_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.publicate_proposal
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['proposal_id']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.editProposal = function(on_success_callback_function, on_error_callback_function, content, proposal_id) {
+	var data = {
+		content: content,
+		proposal_id: proposal_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.edit_proposal
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.makeProposalCreatorVisible = function(on_success_callback_function, on_error_callback_function, proposal_id) {
+	var data = {
+		proposal_id: proposal_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		type: 'POST',
+		url: Global.Url.make_proposal_creator_visible
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		on_success_callback_function();
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+Server.voteProposal = function(on_success_callback_function, on_error_callback_function, is_positive, proposal_id) {
+	var data = {
+		is_positive: is_positive,
+		proposal_id: proposal_id
+	};
+	
+	var request = $.ajax({
+		data: data,
+		dataType: 'json',
+		type: 'POST',
+		url: Global.Url.vote_proposal
+	});
+	
+	request.done(function(data, text_status, jq_xhr) {
+		data = $.parseJSON(data);
+		on_success_callback_function(data['vote_balance']);
+	});
+	
+	request.fail(function(jq_xhr, text_status, error_thrown) {
+		on_error_callback_function(jq_xhr.status, error_thrown);
+	});
+}
+
+
+/*
+
+	Notification
+		Event
+			<completar>
+			getNotificationMessage
+
+*/
+
+var Notification = new Object();
+Notification.Event = new Object();
+
+Notification.Event. = {
+	code: '',
+	message: function() {}
+}
+
+Notification.Event.getNotificationMessage = function(event_code) {
+	switch(event_code) {
+		case Server.Event..code : return Server.Event..message();
+	}
 }
