@@ -1,4 +1,3 @@
-
 // Includes
 #include "IdManager.h"
 
@@ -10,6 +9,7 @@ using namespace std;
 const char IdManager::PROBLEM_ID_PREFIX = 'P';
 const char IdManager::SOLUTION_ID_PREFIX = 'S';
 const char IdManager::CLARIFICATION_ID_PREFIX = 'C';
+const char IdManager::PROPOSAL_ID_PREFIX = 'R';
 random_generator IdManager::uuid_generator = random_generator();
 
 string IdManager::generateID(const char prefix) {
@@ -38,4 +38,8 @@ string IdManager::generateSolutionID() {
 
 string IdManager::generateClarificationID() {
 	return generateID(CLARIFICATION_ID_PREFIX);
+}
+
+string IdManager::generateProposalID() {
+	return generateID(PROPOSAL_ID_PREFIX);
 }
