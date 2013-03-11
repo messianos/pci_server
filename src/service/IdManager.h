@@ -1,4 +1,3 @@
-
 #ifndef IDMANAGER_H_
 #define IDMANAGER_H_
 
@@ -21,6 +20,7 @@ public:
 	static std::string generateProblemID();
 	static std::string generateSolutionID();
 	static std::string generateClarificationID();
+	static std::string generateProposalID();
 };
 
 #endif /* IDMANAGER_H_ */
