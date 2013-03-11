@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<script src="jquery/jquery-1.9.0.min.js"></script>
+		<style>
+			
+			a {
+				cursor: pointer;
+			}
+			
+			#bubble_container {
+				background-color: #DDDDDD;
+				border-color: #000000;
+				border-style: solid;
+				border-width: 1px;
+				height: 640px;
+				margin: 0px auto;
+				position: relative;
+				width: 1024px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="bubble_container"></div>
+		
+		
+		<script>
+			
+			
+			function appendBubble(container, content, diameter) {
+				
+				var bubble = $('<a>' + content + '</a>');
+				
+				var max_x = container.width() - diameter;
+				var max_y = container.height() - diameter;
+				var max_z = 800; // TODO: receive someway else
+				var x = Math.floor(Math.random() * max_x);
+				var y = Math.floor(Math.random() * max_y);
+				var z = Math.floor(Math.random() * max_z);
+				
+				bubble.css('border-radius', diameter);
+				bubble.css('box-shadow', '-12px -12px 64px 4px #666666 inset');
+				bubble.css('height', diameter);
+				bubble.css('left', x);
+				bubble.css('position', 'absolute');
+				bubble.css('text-align', 'center');
+				bubble.css('top', y);
+				bubble.css('width', diameter);
+				bubble.css('z-index', z);
+				
+				// TODO: do someway else
+				bubble.css('background-color', '#000000');
+				bubble.css('color', '#FFFFFF');
+				bubble.css('line-height', diameter + 'px'); // What about multiple lines? // TODO
+				
+				container.css('position', 'relative');
+				container.append(bubble);
+			}
+			
+			appendBubble($('#bubble_container'), 'Contenido 1', 256);
+			appendBubble($('#bubble_container'), 'Contenido 2', 192);
+			
+		</script>
+		
+		
+	</body>
+</html>
