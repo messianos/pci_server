@@ -13,6 +13,7 @@ private:
 	static const char PROBLEM_ID_PREFIX;
 	static const char SOLUTION_ID_PREFIX;
 	static const char CLARIFICATION_ID_PREFIX;
+	static const char PROPOSAL_ID_PREFIX;
 	static boost::uuids::random_generator uuid_generator;
 	static std::string generateID(const char prefix);
 
