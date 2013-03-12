@@ -3,6 +3,11 @@
 
 	Toast
 		Temp
+			separation
+			initial_offset
+			z_index
+			current_offset
+			toasts
 		Aux
 			getToastOffset
 			removeToast
@@ -20,6 +25,7 @@ Toast.Temp.separation = 8;
 Toast.Temp.initial_offset = 64;
 Toast.Temp.z_index = 1500;
 Toast.Temp.current_offset = Toast.Temp.initial_offset;
+Toast.Temp.toasts = new Array();
 
 Toast.Aux.getToastOffset = function(toast_height) {
 	var offset = Toast.Temp.current_offset;
@@ -34,13 +40,13 @@ Toast.Aux.removeToast = function(toast) {
 	if (toast_offset + toast_height + Toast.Temp.separation == Toast.Temp.current_offset) {
 		var max_offset = Toast.Temp.initial_offset;
 		var highest_toast = null;
-		$.each($('.graphic_toast'), function() {
-			var offset = parseInt($(this).css('bottom'));
+		for (var i = 0; i < Toast.Temp.toasts.length; i++) {
+			var offset = parseInt(Toast.Temp.toasts[i].css('bottom'));
 			if (offset > max_offset) {
 				max_offset = offset;
-				highest_toast = $(this);
+				highest_toast = Toast.Temp.toasts[i];
 			}
-		});
+		}
 		
 		if (highest_toast != null)
 			Toast.Temp.current_offset = max_offset + highest_toast.outerHeight() + Toast.Temp.separation;
@@ -93,7 +99,8 @@ Toast.Aux.configureToast = function(toast) {
 }
 
 Toast.showErrorToast = function(content) {
-	var toast = $('<div class="graphic_toast">' + content + '</div>');
+	var toast = $('<div>' + content + '</div>');
+	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
 	toast.css({
 		'background-color': '#CD1B1B',
 		'border-top-color': '#F22020',
@@ -115,7 +122,8 @@ Toast.showErrorToast = function(content) {
 }
 
 Toast.showNotificationToast = function(content) {
-	var toast = $('<div class="graphic_toast">' + content + '</div>');
+	var toast = $('<div>' + content + '</div>');
+	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
 	toast.css({
 		'background-color': '#1A1A1A',
 		'border-top-color': '#666666',
@@ -140,15 +148,19 @@ Toast.showNotificationToast = function(content) {
 /*
 
 	Tooltip
+		Temp
+			tooltips
 		showTooltip
 		hideAllTooltips
 
 */
 
 var Tooltip = new Object();
+Tooltip.Temp = new Object();
+Tooltip.Temp.tooltips = new Array();
 
 Tooltip.showTooltip = function(element, placement, text) {
-	element.addClass('graphic_tooltip');
+	Tooltip.Temp.tooltips[Tooltip.Temp.tooltips.length] = element;
 	element.tooltip({
 		placement: placement,
 		title: text,
@@ -160,7 +172,8 @@ Tooltip.showTooltip = function(element, placement, text) {
 }
 
 Tooltip.hideAllTooltips = function() {
-	$('.graphic_tooltip').tooltip('destroy');
+	for (var i = 0; i < Tooltip.Temp.tooltips.length; i++)
+		Tooltip.Temp.tooltips[i].tooltip('destroy');
 }
 
 

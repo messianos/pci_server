@@ -355,6 +355,38 @@ InputValidator.validateProposalInput = function(on_invalid_input_callback_functi
 			method_not_allowed
 			unknown
 			getErrorDescription
+		Url
+			root
+			sign_in
+			sign_out
+			toggle_anonymous_mode
+			user_exists
+			unseen_notifications
+			sign_up
+			publicate_problem
+			edit_problem
+			make_problem_creator_visible
+			vote_problem
+			set_accepted_solution
+			unset_accepted_solution
+			publicate_solution
+			edit_solution
+			make_solution_creator_visible
+			vote_solution
+			ask_clarification
+			answer_clarification
+			publicate_proposal
+			edit_proposal
+			make_proposal_creator_visible
+			vote_proposal
+			fetch_main_page
+			fetch_user_page
+			fetch_problems_page
+			fetch_problem_page
+			fetch_solution_page
+			fetch_new_problem_page
+			fetch_new_solution_page
+			fetch_ideas_page
 		signIn
 		signOut
 		toggleAnonymousMode
@@ -382,6 +414,7 @@ InputValidator.validateProposalInput = function(on_invalid_input_callback_functi
 
 var Server = new Object();
 Server.Error = new Object();
+Server.Url = new Object();
 
 Server.Error.invalid_parameters = {
 	code: '40001',
@@ -460,6 +493,38 @@ Server.Error.getErrorDescription = function(error_code) {
 	}
 }
 
+Server.Url.root = '/pci';  // TODO: when ready, change this to "/"
+Server.Url.sign_in = Server.Url.root + '/sign_in';
+Server.Url.sign_out = Server.Url.root + '/sign_out';
+Server.Url.toggle_anonymous_mode = Server.Url.root + '/toggle_anonymous_mode';
+Server.Url.user_exists = Server.Url.root + '/user_exists';
+Server.Url.unseen_notifications = Server.Url.root + '/unseen_notifications';
+Server.Url.sign_up = Server.Url.root + '/sign_up';
+Server.Url.publicate_problem = Server.Url.root + '/publicate_problem';
+Server.Url.edit_problem = Server.Url.root + '/edit_problem';
+Server.Url.make_problem_creator_visible = Server.Url.root + '/make_problem_creator_visible';
+Server.Url.vote_problem = Server.Url.root + '/vote_problem';
+Server.Url.set_accepted_solution = Server.Url.root + '/set_accepted_solution';
+Server.Url.unset_accepted_solution = Server.Url.root + '/unset_accepted_solution';
+Server.Url.publicate_solution = Server.Url.root + '/publicate_solution';
+Server.Url.edit_solution = Server.Url.root + '/edit_solution';
+Server.Url.make_solution_creator_visible = Server.Url.root + '/make_solution_creator_visible';
+Server.Url.vote_solution = Server.Url.root + '/vote_solution';
+Server.Url.ask_clarification = Server.Url.root + '/ask_clarification';
+Server.Url.answer_clarification = Server.Url.root + '/answer_clarification';
+Server.Url.publicate_proposal = Server.Url.root + '/publicate_proposal';
+Server.Url.edit_proposal = Server.Url.root + '/edit_proposal';
+Server.Url.make_proposal_creator_visible = Server.Url.root + '/make_proposal_creator_visible';
+Server.Url.vote_proposal = Server.Url.root + '/vote_proposal';
+Server.Url.fetch_main_page = Server.Url.root;
+Server.Url.fetch_user_page = function(user_name) { return Server.Url.root + '/user/' + user_name; };
+Server.Url.fetch_problems_page = Server.Url.root + '/problems';
+Server.Url.fetch_problem_page = function(problem_id) { return Server.Url.root + '/publication/' + problem_id; };
+Server.Url.fetch_solution_page = function(solution_id) { return Server.Url.root + '/publication/' + solution_id; };
+Server.Url.fetch_new_problem_page = Server.Url.root + '/new_problem';
+Server.Url.fetch_new_solution_page = function(problem_id) { return Server.Url.root + '/new_solution/' + problem_id; };
+Server.Url.fetch_ideas_page = Server.Url.root + '/ideas';
+
 Server.signIn = function(on_success_callback_function, on_error_callback_function, password, user_name) {
 	var data = {
 		password: password,
@@ -470,7 +535,7 @@ Server.signIn = function(on_success_callback_function, on_error_callback_functio
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.sign_in
+		url: Server.Url.sign_in
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -486,7 +551,7 @@ Server.signIn = function(on_success_callback_function, on_error_callback_functio
 Server.signOut = function(on_success_callback_function, on_error_callback_function) {
 	var request = $.ajax({
 		type: 'POST',
-		url: Global.Url.sign_out
+		url: Server.Url.sign_out
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -502,7 +567,7 @@ Server.toggleAnonymousMode = function(on_success_callback_function, on_error_cal
 	var request = $.ajax({
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.toggle_anonymous_mode
+		url: Server.Url.toggle_anonymous_mode
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -524,7 +589,7 @@ Server.userExists = function(on_success_callback_function, on_error_callback_fun
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.user_exists
+		url: Server.Url.user_exists
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -541,7 +606,7 @@ Server.unseenNotifications = function(on_success_callback_function, on_error_cal
 	var request = $.ajax({
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.unseen_notifications
+		url: Server.Url.unseen_notifications
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -569,7 +634,7 @@ Server.signUp = function(on_success_callback_function, on_error_callback_functio
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.sign_up
+		url: Server.Url.sign_up
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -591,7 +656,7 @@ Server.publicateProblem = function(on_success_callback_function, on_error_callba
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.publicate_problem
+		url: Server.Url.publicate_problem
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -614,7 +679,7 @@ Server.editProblem = function(on_success_callback_function, on_error_callback_fu
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.edit_problem
+		url: Server.Url.edit_problem
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -634,7 +699,7 @@ Server.makeProblemCreatorVisible = function(on_success_callback_function, on_err
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.make_problem_creator_visible
+		url: Server.Url.make_problem_creator_visible
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -656,7 +721,7 @@ Server.voteProblem = function(on_success_callback_function, on_error_callback_fu
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.vote_problem
+		url: Server.Url.vote_problem
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -678,7 +743,7 @@ Server.setAcceptedSolution = function(on_success_callback_function, on_error_cal
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.set_accepted_solution
+		url: Server.Url.set_accepted_solution
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -698,7 +763,7 @@ Server.unsetAcceptedSolution = function(on_success_callback_function, on_error_c
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.unset_accepted_solution
+		url: Server.Url.unset_accepted_solution
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -721,7 +786,7 @@ Server.publicateSolution = function(on_success_callback_function, on_error_callb
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.publicate_solution
+		url: Server.Url.publicate_solution
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -744,7 +809,7 @@ Server.editSolution = function(on_success_callback_function, on_error_callback_f
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.edit_solution
+		url: Server.Url.edit_solution
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -764,7 +829,7 @@ Server.makeSolutionCreatorVisible = function(on_success_callback_function, on_er
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.make_solution_creator_visible
+		url: Server.Url.make_solution_creator_visible
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -786,7 +851,7 @@ Server.voteSolution = function(on_success_callback_function, on_error_callback_f
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.vote_solution
+		url: Server.Url.vote_solution
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -809,7 +874,7 @@ Server.askClarification = function(on_success_callback_function, on_error_callba
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.ask_clarification
+		url: Server.Url.ask_clarification
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -831,7 +896,7 @@ Server.answerClarification = function(on_success_callback_function, on_error_cal
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.answer_clarification
+		url: Server.Url.answer_clarification
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -853,7 +918,7 @@ Server.publicateProposal = function(on_success_callback_function, on_error_callb
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.publicate_proposal
+		url: Server.Url.publicate_proposal
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -875,7 +940,7 @@ Server.editProposal = function(on_success_callback_function, on_error_callback_f
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.edit_proposal
+		url: Server.Url.edit_proposal
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -895,7 +960,7 @@ Server.makeProposalCreatorVisible = function(on_success_callback_function, on_er
 	var request = $.ajax({
 		data: data,
 		type: 'POST',
-		url: Global.Url.make_proposal_creator_visible
+		url: Server.Url.make_proposal_creator_visible
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
@@ -917,7 +982,7 @@ Server.voteProposal = function(on_success_callback_function, on_error_callback_f
 		data: data,
 		dataType: 'json',
 		type: 'POST',
-		url: Global.Url.vote_proposal
+		url: Server.Url.vote_proposal
 	});
 	
 	request.done(function(data, text_status, jq_xhr) {
