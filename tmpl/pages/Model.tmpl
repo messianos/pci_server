@@ -1,0 +1,30 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view <TO_DEFINE>_view uses ViewContent::<TO_DEFINE> %>
+		
+		
+		<% template page_title() %>
+		<% end template %>
+		
+		
+		<% template head_content() %>
+			<% include <% include template_view::head_content() %>
+		<% end template %>
+		
+		
+		<% template body_content() %>
+		<% end template %>
+		
+		
+		<% template js_head_code() %>
+		<% end template %>
+		
+		
+		<% template js_body_code() %>
+		<% end template %>
+		
+		
+	<% end view %>
+<% end skin %>

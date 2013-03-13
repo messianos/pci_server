@@ -426,8 +426,7 @@ void Server::editProblem() {
 		}
 		
 		DatabaseInterface::editProblem(problem_id, description, content); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::editPost(problem_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -470,8 +469,7 @@ void Server::makeProblemCreatorVisible() {
 		}
 		
 		DatabaseInterface::makeProblemCreatorVisible(problem_id); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::makePostCreatorVisible(problem_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -515,8 +513,7 @@ void Server::voteProblem() {
 		}
 		
 		DatabaseInterface::voteProblem(problem_id, user_name, is_positive.compare("true") == 0); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::votePost(problem_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["vote_balance"] = DatabaseInterface::getProblemVoteBalance(problem_id); // TODO: check
@@ -570,8 +567,7 @@ void Server::setAcceptedSolution() {
 		}
 		
 		DatabaseInterface::setAcceptedSolution(problem_id, solution_id); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::setAcceptedSolution(problem_id, solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -614,8 +610,7 @@ void Server::unsetAcceptedSolution() {
 		}
 		
 		DatabaseInterface::unsetAcceptedSolution(problem_id, solution_id); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::unsetAcceptedSolution(problem_id, solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -664,8 +659,7 @@ void Server::publicateSolution() {
 		solution->id = IdManager::generateSolutionID();
 		solution->is_anonymous = is_anonymous;
 		DatabaseInterface::insertSolution(solution, problem_id); // TODO: check
-
-		// TODO: NOTIFICATION
+		NotificationAnnouncer::publicatePost(solution_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["solution_id"] = solution->id;
@@ -715,8 +709,7 @@ void Server::editSolution() {
 		}
 		
 		DatabaseInterface::editSolution(solution_id, description, content); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::editPost(solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -759,8 +752,7 @@ void Server::makeSolutionCreatorVisible() {
 		}
 		
 		DatabaseInterface::makeSolutionCreatorVisible(solution_id); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::makePostCreatorVisible(solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -804,8 +796,7 @@ void Server::voteSolution() {
 		}
 		
 		DatabaseInterface::voteSolution(solution_id, user_name, is_positive.compare("true") == 0); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::votePost(solution_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["vote_balance"] = DatabaseInterface::getSolutionVoteBalance(solution_id); // TODO: check
@@ -867,8 +858,7 @@ void Server::askClarification() {
 		clarification->question = question;
 		clarification->publication_id = publication_id;
 		DatabaseInterface::insertClarification(clarification); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::askClarification(publication_id); // TODO: check --> what if it fails
 
 		json::value json_response = json::value();
 		json_response["clarification_id"] = clarification->id;
@@ -922,7 +912,8 @@ void Server::answerClarification() {
 			return;
 		}
 		
-		// TODO: NOTIFICATIONS
+		DatabaseInterface::answerClarification(clarification_id, answer); // TODO: check
+		NotificationAnnouncer::answerClarification(clarification_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -973,8 +964,7 @@ void Server::publicateProposal() {
 		proposal->id = IdManager::generateProposalID();
 		proposal->is_anonymous = is_anonymous;
 		DatabaseInterface::insertProposal(proposal, solution_id); // TODO: check
-
-		// TODO: NOTIFICATION
+		NotificationAnnouncer::publicatePost(proposal_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["proposal_id"] = proposal->id;
@@ -1022,8 +1012,7 @@ void Server::editProposal() {
 		}
 		
 		DatabaseInterface::editProposal(proposal_id, content); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::editPost(proposal_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -1066,8 +1055,7 @@ void Server::makeProposalCreatorVisible() {
 		}
 		
 		DatabaseInterface::makeProposalCreatorVisible(proposal_id); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::makePostCreatorVisible(proposal_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
@@ -1111,8 +1099,7 @@ void Server::voteProposal() {
 		}
 		
 		DatabaseInterface::voteProposal(proposal_id, user_name, is_positive.compare("true") == 0); // TODO: check
-		
-		// TODO: NOTIFICATIONS
+		NotificationAnnouncer::votePost(proposal_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["vote_balance"] = DatabaseInterface::getProposalVoteBalance(proposal_id); // TODO: check
@@ -1187,6 +1174,9 @@ void Server::fetchProblemsPage() {
 			return;
 		}
 		
+
+		// TODO: check efficiency ---> multiple searches (and possible redundant)
+
 		EntityLinker *entityLinker = new EntityLinker();
 		int i;
 		

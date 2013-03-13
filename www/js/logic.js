@@ -438,42 +438,42 @@ Server.Error.unauthorized_user = {
 
 Server.Error.bad_url = {
 	code: '40401',
-	description: 'bad_url' // TODO
+	description: 'Página no encontrada'
 }
 
 Server.Error.nonexistent_clarification = {
 	code: '40402',
-	description: 'nonexistent_clarification' // TODO
+	description: 'Aclaración no encontrada'
 }
 
 Server.Error.nonexistent_problem = {
 	code: '40403',
-	description: 'nonexistent_problem' // TODO
+	description: 'Problema no encontrado'
 }
 
 Server.Error.nonexistent_proposal = {
 	code: '40404',
-	description: 'nonexistent_proposal' // TODO
+	description: 'Propuesta de mejora no encontrada'
 }
 
 Server.Error.nonexistent_solution = {
 	code: '40405',
-	description: 'nonexistent_solution' // TODO
+	description: 'Solución no encontrada'
 }
 
 Server.Error.nonexistent_user = {
 	code: '40406',
-	description: 'nonexistent_user' // TODO
+	description: 'Usuario no encontrado'
 }
 
 Server.Error.method_not_allowed = {
 	code: '40501',
-	description: 'method_not_allowed' // TODO
+	description: 'method_not_allowed'
 }
 
 Server.Error.unknown = {
 	code: '50001',
-	description: 'unknown' // TODO
+	description: 'Error desconocido'
 }
 
 Server.Error.getErrorDescription = function(error_code) {

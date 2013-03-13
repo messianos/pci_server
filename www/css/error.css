@@ -1,0 +1,15 @@
+
+.error-container {
+	margin: 0px auto;
+	width: 600px;
+}
+
+.error-description-container {
+	float: left;
+	margin: 48px 0px 0px 48px;
+	width: 300px;
+}
+
+#error-ornament {
+	float: left;
+}

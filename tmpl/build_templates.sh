@@ -18,7 +18,7 @@ cppcms_tmpl_cc 	entity/User.tmpl \
 				pages/IndexPage.tmpl \
 				pages/IdeasPage.tmpl \
 				pages/NewProblemPage.tmpl \
-				pages/Error404Page.tmpl \
+				pages/ErrorPage.tmpl \
 				pages/ProblemsPage.tmpl \
 				pages/DebugPage.tmpl \
 				pages/SolutionPage.tmpl \

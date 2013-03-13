@@ -1,0 +1,98 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view template_services uses ViewContent::SessionContent %>
+	
+	
+	<% template header_bar() %>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
+					<% if signed_in %>
+						<ul class="nav pull-left">
+							<li class="active" id="notification-button">
+								<a>Notificaciones</a>
+								<div id="notification-container"></div>
+								<script>
+									$('#notification-button').click(function() {
+										$('#notification-container').toggle();
+									});
+								</script>
+							</li>
+						</ul>
+					<% end %>
+					<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<div class="nav-collapse collapse">
+						<ul class="nav pull-right">
+							<li>
+								<form class="navbar-search pull-right" action="">
+									<input type="text" class="search-query span2" placeholder="Buscar">
+								</form>
+							</li>
+							<li>
+								<img id="profile-picture" style="display:none;" />
+							</li>
+							<% if signed_in %>
+								<li>
+									<% include toggle_anonymous_mode_form(anonymous_mode) using user_services %>
+								</li>
+								<li>
+									<a id="header_bar_user_name" href="<% url "/user" using user_name %>"><%= user_first_name %> <%= user_last_name %></a>
+								</li>
+								<li>
+									<% include sign_out_form() using user_services %>
+								</li>		 		
+							<% else %>
+								<li>									
+									<button class="btn pull-right" id="header_bar_button_sign_in">
+										Ingresar
+									</button>
+									<div id="header_bar_sign_in_container">
+										<% include sign_in_form() using user_services %>
+									</div>
+								</li>
+							<% end %>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<% if signed_in %>
+			<script>
+				checkNotificationsPeriodically($('#notification-container'));
+			</script>
+		<% end %>
+	<% end template %>
+	
+	
+	<% template navigation_menu() %>
+		<div class="sidebar-nav pull-left" id="navigation_menu">
+			<ul class="nav nav-list">
+				<li>
+					<a class="button_square navigation_menu_button" id="navigation_menu_problems_button" href="<% url "/problems" %>">Problemas</a>
+				</li>
+				<li>
+					<a class="button_square navigation_menu_button" id="navigation_menu_ideas_button" href="<% url "/ideas" %>">Ideas</a>
+				</li>
+				<% if signed_in %>
+					<li>
+						<div class="horizontal_line"></div>
+					</li>
+					<li>
+						<a class="button_square navigation_menu_button after_div" id="navigation_menu_profile_button" href="<% url "/user" using user_name %>">Perfil</a>
+					</li>
+				<% end %>
+			</ul>
+		</div>
+	<% end template %>
+	
+	
+	<% end view %>
+<% end skin %>

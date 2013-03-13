@@ -1,0 +1,43 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view error_view uses ViewContent::ErrorPageContent extends template_view %>
+		
+		
+		<% template page_title() %>
+			Error <%= http_error_code %> - PCI
+		<% end template %>
+		
+		
+		<% template head_content() %>
+			<% include template_view::head_content() %>
+			<link href="/css/error.css" rel="stylesheet" type="text/css" />
+		<% end template %>
+		
+		
+		<% template body_content() %>
+			<% include header_bar() using template_services %>
+			<div class="main_container wide">
+				<div class="error-container header-padding">
+					<div id="error-ornament"></div>
+					<div class="error-description-container">
+						<h1>Error <%= http_error_code %></h1>
+						<p class="lead" id="error-description"></p>
+						<br />
+						<p class="muted">¿Desea volver a la <a href="<% url "/" %>">página inicial</a>?</p>
+					</div>
+				</div>
+			</div>
+		<% end template %>
+		
+		
+		<% template js_body_code() %>
+			var error_description = Server.Error.getErrorDescription('<%= server_error_code %>');
+			$('#error-description').html(error_description);
+			Ornament.appendErrorOrnament($('#error-ornament'));
+		<% end template %>
+		
+		
+	<% end view %>
+<% end skin %>
