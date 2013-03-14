@@ -49,128 +49,128 @@ InputValidator.Input.Proposal = new Object();
 
 InputValidator.Input.SignIn.password = {
 	code: 'password',
-	description: 'password' // TODO
-	isValid = function(password) {
+	description: 'password', // TODO
+	isValid: function(password) {
 		return InputValidator.hasValidBoundaries(password, 1, -1);
 	}
 }
 
 InputValidator.Input.SignIn.user_name = {
 	code: 'user_name',
-	description: 'user_name' // TODO
-	isValid = function(user_name) {
+	description: 'user_name', // TODO
+	isValid: function(user_name) {
 		return InputValidator.hasValidBoundaries(user_name, 1, -1);
 	}
 }
 
 InputValidator.Input.SignUp.birth_date = {
 	code: 'birth_date',
-	description: 'birth_date' // TODO
-	isValid = function(birth_date) {
+	description: 'birth_date', // TODO
+	isValid: function(birth_date) {
 		return InputValidator.hasValidBoundaries(birth_date, 10, 10);
 	}
 }
 
 InputValidator.Input.SignUp.email = {
 	code: 'email',
-	description: 'email' // TODO
-	isValid = function(email) {
+	description: 'email', // TODO
+	isValid: function(email) {
 		return InputValidator.isValidEmail(email);
 	}
 }
 
 InputValidator.Input.SignUp.first_name = {
 	code: 'first_name',
-	description: 'first_name' // TODO
-	isValid = function(first_name) {
+	description: 'first_name', // TODO
+	isValid: function(first_name) {
 		return InputValidator.hasValidBoundaries(first_name, 1, 31);
 	}
 }
 
 InputValidator.Input.SignUp.last_name = {
 	code: 'last_name',
-	description: 'last_name' // TODO
-	isValid = function(last_name) {
+	description: 'last_name', // TODO
+	isValid: function(last_name) {
 		return InputValidator.hasValidBoundaries(last_name, 1, 31);
 	}
 }
 
 InputValidator.Input.SignUp.location = {
 	code: 'location',
-	description: 'location' // TODO
-	isValid = function(location) {
+	description: 'location', // TODO
+	isValid: function(location) {
 		return InputValidator.hasValidBoundaries(location, 0, 15); // TODO: to define
 	}
 }
 
 InputValidator.Input.SignUp.password = {
 	code: 'password',
-	description: 'password' // TODO
-	isValid = function(password) {
+	description: 'password', // TODO
+	isValid: function(password) {
 		return InputValidator.isValidPassword(password);
 	}
 }
 
 InputValidator.Input.SignUp.password_confirmation = {
 	code: 'password_confirmation',
-	description: 'password_confirmation' // TODO
-	isValid = function(password, password_confirmation) {
+	description: 'password_confirmation', // TODO
+	isValid: function(password, password_confirmation) {
 		return password == password_confirmation;
 	}
 }
 
 InputValidator.Input.SignUp.user_name = {
 	code: 'user_name',
-	description: 'user_name' // TODO
-	isValid = function(user_name) {
+	description: 'user_name', // TODO
+	isValid: function(user_name) {
 		return InputValidator.isValidUserName(user_name);
 	}
 }
 
 InputValidator.Input.Problem.content = {
 	code: 'content',
-	description: 'content' // TODO
-	isValid = function(content) {
+	description: 'content', // TODO
+	isValid: function(content) {
 		return InputValidator.hasValidBoundaries(content, 1, 4194304);
 	}
 }
 
 InputValidator.Input.Problem.description = {
 	code: 'description',
-	description: 'description' // TODO
-	isValid = function(description) {
+	description: 'description', // TODO
+	isValid: function(description) {
 		return InputValidator.hasValidBoundaries(description, 1, 400);
 	}
 }
 
 InputValidator.Input.Solution.content = {
 	code: 'content',
-	description: 'content' // TODO
-	isValid = function(content) {
+	description: 'content', // TODO
+	isValid: function(content) {
 		return InputValidator.hasValidBoundaries(content, 1, 4194304);
 	}
 }
 
 InputValidator.Input.Solution.description = {
 	code: 'description',
-	description: 'description' // TODO
-	isValid = function(description) {
+	description: 'description', // TODO
+	isValid: function(description) {
 		return InputValidator.hasValidBoundaries(description, 1, 400);
 	}
 }
 
 InputValidator.Input.Clarification.content = {
 	code: 'content',
-	description: 'content' // TODO
-	isValid = function(content) {
+	description: 'content', // TODO
+	isValid: function(content) {
 		return InputValidator.hasValidBoundaries(content, 1, 2000);
 	}
 }
 
 InputValidator.Input.Proposal.content = {
 	code: 'content',
-	description: 'content' // TODO
-	isValid = function(content) {
+	description: 'content', // TODO
+	isValid: function(content) {
 		return InputValidator.hasValidBoundaries(content, 1, 4194304);
 	}
 }
@@ -538,14 +538,16 @@ Server.signIn = function(on_success_callback_function, on_error_callback_functio
 		url: Server.Url.sign_in
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['signed_in']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['signed_in']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 };
 
 Server.signOut = function(on_success_callback_function, on_error_callback_function) {
@@ -554,13 +556,15 @@ Server.signOut = function(on_success_callback_function, on_error_callback_functi
 		url: Server.Url.sign_out
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.toggleAnonymousMode = function(on_success_callback_function, on_error_callback_function) {
@@ -570,14 +574,16 @@ Server.toggleAnonymousMode = function(on_success_callback_function, on_error_cal
 		url: Server.Url.toggle_anonymous_mode
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['anonymous_mode']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['anonymous_mode']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.userExists = function(on_success_callback_function, on_error_callback_function, user_name) {
@@ -592,14 +598,16 @@ Server.userExists = function(on_success_callback_function, on_error_callback_fun
 		url: Server.Url.user_exists
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['user_exists']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['user_exists']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.unseenNotifications = function(on_success_callback_function, on_error_callback_function) {
@@ -609,14 +617,16 @@ Server.unseenNotifications = function(on_success_callback_function, on_error_cal
 		url: Server.Url.unseen_notifications
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['notification_count'], data['notifications']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['notification_count'], data['notifications']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.signUp = function(on_success_callback_function, on_error_callback_function, birth_date, email, first_name, genre, last_name, location, password, user_name) {
@@ -637,13 +647,15 @@ Server.signUp = function(on_success_callback_function, on_error_callback_functio
 		url: Server.Url.sign_up
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.publicateProblem = function(on_success_callback_function, on_error_callback_function, content, description) {
@@ -659,14 +671,16 @@ Server.publicateProblem = function(on_success_callback_function, on_error_callba
 		url: Server.Url.publicate_problem
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['problem_id']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['problem_id']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.editProblem = function(on_success_callback_function, on_error_callback_function, content, description, problem_id) {
@@ -682,13 +696,15 @@ Server.editProblem = function(on_success_callback_function, on_error_callback_fu
 		url: Server.Url.edit_problem
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.makeProblemCreatorVisible = function(on_success_callback_function, on_error_callback_function, problem_id) {
@@ -702,13 +718,15 @@ Server.makeProblemCreatorVisible = function(on_success_callback_function, on_err
 		url: Server.Url.make_problem_creator_visible
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.voteProblem = function(on_success_callback_function, on_error_callback_function, is_positive, problem_id) {
@@ -724,14 +742,16 @@ Server.voteProblem = function(on_success_callback_function, on_error_callback_fu
 		url: Server.Url.vote_problem
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['vote_balance']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['vote_balance']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.setAcceptedSolution = function(on_success_callback_function, on_error_callback_function, problem_id, solution_id) {
@@ -746,13 +766,15 @@ Server.setAcceptedSolution = function(on_success_callback_function, on_error_cal
 		url: Server.Url.set_accepted_solution
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.unsetAcceptedSolution = function(on_success_callback_function, on_error_callback_function, problem_id) {
@@ -766,13 +788,15 @@ Server.unsetAcceptedSolution = function(on_success_callback_function, on_error_c
 		url: Server.Url.unset_accepted_solution
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.publicateSolution = function(on_success_callback_function, on_error_callback_function, content, description, problem_id) {
@@ -789,14 +813,16 @@ Server.publicateSolution = function(on_success_callback_function, on_error_callb
 		url: Server.Url.publicate_solution
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['solution_id']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['solution_id']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.editSolution = function(on_success_callback_function, on_error_callback_function, content, description, solution_id) {
@@ -812,13 +838,15 @@ Server.editSolution = function(on_success_callback_function, on_error_callback_f
 		url: Server.Url.edit_solution
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.makeSolutionCreatorVisible = function(on_success_callback_function, on_error_callback_function, solution_id) {
@@ -832,13 +860,15 @@ Server.makeSolutionCreatorVisible = function(on_success_callback_function, on_er
 		url: Server.Url.make_solution_creator_visible
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.voteSolution = function(on_success_callback_function, on_error_callback_function, is_positive, solution_id) {
@@ -854,14 +884,16 @@ Server.voteSolution = function(on_success_callback_function, on_error_callback_f
 		url: Server.Url.vote_solution
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['vote_balance']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['vote_balance']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.askClarification = function(on_success_callback_function, on_error_callback_function, publication_id, question) {
@@ -877,14 +909,16 @@ Server.askClarification = function(on_success_callback_function, on_error_callba
 		url: Server.Url.ask_clarification
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['clarification_id']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['clarification_id']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.answerClarification = function(on_success_callback_function, on_error_callback_function, answer, clarification_id) {
@@ -899,13 +933,15 @@ Server.answerClarification = function(on_success_callback_function, on_error_cal
 		url: Server.Url.answer_clarification
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.publicateProposal = function(on_success_callback_function, on_error_callback_function, content, solution_id) {
@@ -921,14 +957,16 @@ Server.publicateProposal = function(on_success_callback_function, on_error_callb
 		url: Server.Url.publicate_proposal
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['proposal_id']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['proposal_id']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.editProposal = function(on_success_callback_function, on_error_callback_function, content, proposal_id) {
@@ -943,13 +981,15 @@ Server.editProposal = function(on_success_callback_function, on_error_callback_f
 		url: Server.Url.edit_proposal
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.makeProposalCreatorVisible = function(on_success_callback_function, on_error_callback_function, proposal_id) {
@@ -963,13 +1003,15 @@ Server.makeProposalCreatorVisible = function(on_success_callback_function, on_er
 		url: Server.Url.make_proposal_creator_visible
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		on_success_callback_function();
-	});
-	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			on_success_callback_function();
+		});
+
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 Server.voteProposal = function(on_success_callback_function, on_error_callback_function, is_positive, proposal_id) {
@@ -985,28 +1027,38 @@ Server.voteProposal = function(on_success_callback_function, on_error_callback_f
 		url: Server.Url.vote_proposal
 	});
 	
-	request.done(function(data, text_status, jq_xhr) {
-		data = $.parseJSON(data);
-		on_success_callback_function(data['vote_balance']);
-	});
+	if (on_success_callback_function != null)
+		request.done(function(data, text_status, jq_xhr) {
+			data = $.parseJSON(data);
+			on_success_callback_function(data['vote_balance']);
+		});
 	
-	request.fail(function(jq_xhr, text_status, error_thrown) {
-		on_error_callback_function(jq_xhr.status, error_thrown);
-	});
+	if (on_error_callback_function != null)
+		request.fail(function(jq_xhr, text_status, error_thrown) {
+			on_error_callback_function(jq_xhr.status, error_thrown);
+		});
 }
 
 
 /*
 
 	Notification
+		Aux
+			check_interval
 		Event
 			<completar>
 			getNotificationMessage
+		checkNotificationsPeriodically
 
 */
 
 var Notification = new Object();
+Notification.Aux = new Object();
 Notification.Event = new Object();
+
+Notification.Aux.check_interval = 2000;
+
+/*
 
 Notification.Event. = {
 	code: '',
@@ -1017,4 +1069,20 @@ Notification.Event.getNotificationMessage = function(event_code) {
 	switch(event_code) {
 		case Server.Event..code : return Server.Event..message();
 	}
+}
+*/
+
+Notification.checkNotificationsPeriodically = function(container) {
+	setInterval(function() {
+		var on_success = function(notification_count, notifications) {
+			NotificationContainer.emptyContainer(container);
+			for (var i = 0; i < notification_count; i++) {
+				var notification = notifications[i];
+				var url = Server.Url.root + notification['url'];
+				var message = Notification.Event.getNotificationMessage(notification['event_code']);
+				NotificationContainer.appendNotification(container, url, message);
+			}
+		};
+		Server.unseenNotifications(on_success, null);
+	}, Notification.Aux.check_interval);
 }

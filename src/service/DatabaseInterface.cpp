@@ -95,7 +95,7 @@ bool DatabaseInterface::signInUser(string user_name, string encrypted_password) 
 }
 
 // FIXME: This may return success or fail
-ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) {
+void *DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query = "	CALL sign_up_user("
 			"		?,"
 			"		?,"
@@ -112,10 +112,7 @@ ErrorCode *DatabaseInterface::signUpUser(User *user, string encrypted_password) 
 				<< user->genre << user->last_name << user->location << user->user_name << encrypted_password << exec;
 	} catch (exception const &e) {
 		cerr << "ERROR: " << e.what() << " in signUp" << endl;
-		return new ErrorCode(ErrorCode::CODE_INVALID_GENRE);
 	}
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 Clarification *DatabaseInterface::searchClarification(string id) {
@@ -461,7 +458,7 @@ Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id) 
 	return fetchProblem(result);
 }
 
-ErrorCode * DatabaseInterface::insertProblem(Problem *problem) {
+void * DatabaseInterface::insertProblem(Problem *problem) {
 	string query = "	CALL insert_problem("
 			"		?,"
 			"		?,"
@@ -472,17 +469,11 @@ ErrorCode * DatabaseInterface::insertProblem(Problem *problem) {
 
 	database_handler << query << problem->content << problem->creator_user_name << problem->description << problem->id
 			<< problem->is_anonymous << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode * DatabaseInterface::deleteProblem(string id) {
+void * DatabaseInterface::deleteProblem(string id) {
 	string query = "CALL delete_problem(?)";
 	database_handler << query << id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 // FIXME: READ FROM problems_solved
@@ -538,7 +529,7 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 	return solution_list;
 }
 
-ErrorCode * DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
+void * DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 	string query = "	CALL insert_solution("
 			"		?,"
 			"		?,"
@@ -550,17 +541,11 @@ ErrorCode * DatabaseInterface::insertSolution(Solution *solution, string problem
 
 	database_handler << query << problem_id << solution->content << solution->creator_user_name << solution->description
 			<< solution->id << solution->is_anonymous << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode * DatabaseInterface::deleteSolution(string id) {
+void * DatabaseInterface::deleteSolution(string id) {
 	string query = "CALL delete_solution(?)";
 	database_handler << query << id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 list<Proposal *> *DatabaseInterface::searchProposals(string solution_id) {
@@ -612,7 +597,7 @@ list<Proposal *> *DatabaseInterface::searchProposalsByUser(string user_name) {
 	return proposal_list;
 }
 
-ErrorCode *DatabaseInterface::insertProposal(Proposal *proposal, string solution_id) {
+void *DatabaseInterface::insertProposal(Proposal *proposal, string solution_id) {
 	string query = "	CALL insert_proposal("
 			"		?,"
 			"		?,"
@@ -623,17 +608,11 @@ ErrorCode *DatabaseInterface::insertProposal(Proposal *proposal, string solution
 
 	database_handler << query << solution_id << proposal->content << proposal->creator_user_name << proposal->id
 			<< proposal->is_anonymous << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode *DatabaseInterface::deleteProposal(string id) {
+void *DatabaseInterface::deleteProposal(string id) {
 	string query = "CALL delete_proposal(?)";
 	database_handler << query << id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 list<Clarification *> *DatabaseInterface::searchClarifications(string publication_id) {
@@ -653,7 +632,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string publicatio
 	return clarification_list;
 }
 
-ErrorCode * DatabaseInterface::insertClarification(Clarification *clarification) {
+void * DatabaseInterface::insertClarification(Clarification *clarification) {
 	string query = "	CALL insert_clarification("
 			"		?,"
 			"		?,"
@@ -663,17 +642,11 @@ ErrorCode * DatabaseInterface::insertClarification(Clarification *clarification)
 
 	database_handler << query << clarification->publication_id << clarification->creator_user_name
 			<< clarification->id << clarification->question << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode * DatabaseInterface::deleteClarification(string id) {
+void * DatabaseInterface::deleteClarification(string id) {
 	string query = "CALL delete_clarification(?)";
 	database_handler << query << id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 int DatabaseInterface::numberOfSolutionsByUser(string user_name) {
@@ -875,7 +848,7 @@ Proposal *DatabaseInterface::fetchProposal(result result) {
 	return proposal;
 }
 
-ErrorCode* DatabaseInterface::voteProblem(string problem_id, string user_name, bool is_positive) {
+void* DatabaseInterface::voteProblem(string problem_id, string user_name, bool is_positive) {
 	string query = "	CALL vote_problem("
 			"		?,"
 			"		?,"
@@ -883,32 +856,23 @@ ErrorCode* DatabaseInterface::voteProblem(string problem_id, string user_name, b
 			"	)";
 
 	database_handler << query << problem_id << user_name << is_positive << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode* DatabaseInterface::setAcceptedSolution(string problem_id, string solution_id) {
+void* DatabaseInterface::setAcceptedSolution(string problem_id, string solution_id) {
 	string query = "	CALL set_accepted_solution("
 			"		?,"
 			"		?"
 			"	)";
 
 	database_handler << query << problem_id << solution_id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode* DatabaseInterface::unsetAcceptedSolution(string problem_id) {
+void* DatabaseInterface::unsetAcceptedSolution(string problem_id) {
 	string query = "	CALL unset_accepted_solution("
 			"		?"
 			"	)";
 
 	database_handler << query << problem_id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 int DatabaseInterface::getProblemVoteBalance(string problem_id) {
@@ -1001,7 +965,7 @@ Publication* DatabaseInterface::searchPublication(string publication_id) {
 		return searchProblem(publication_id);
 }
 
-ErrorCode* DatabaseInterface::answerClarification(string id, string answer) {
+void* DatabaseInterface::answerClarification(string id, string answer) {
 	string query = ""
 			"	UPDATE"
 			"		Clarification"
@@ -1011,12 +975,9 @@ ErrorCode* DatabaseInterface::answerClarification(string id, string answer) {
 			"		id = UNHEX(?)";
 
 	database_handler << query << answer << id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
-ErrorCode* DatabaseInterface::voteSolution(string solution_id, string user_name, bool is_positive) {
+void* DatabaseInterface::voteSolution(string solution_id, string user_name, bool is_positive) {
 	string query = "	CALL vote_solution("
 			"		?,"
 			"		?,"
@@ -1024,9 +985,6 @@ ErrorCode* DatabaseInterface::voteSolution(string solution_id, string user_name,
 			"	)";
 
 	database_handler << query << solution_id << user_name << is_positive << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::string problem_id) {
@@ -1070,7 +1028,7 @@ std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::
 	return clarification_list;
 }
 
-ErrorCode* DatabaseInterface::insertNotification(Notification* notification) {
+void* DatabaseInterface::insertNotification(Notification* notification) {
 
 	string query = ""
 			"	INSERT INTO"
@@ -1079,9 +1037,6 @@ ErrorCode* DatabaseInterface::insertNotification(Notification* notification) {
 			"		(?, ?, ?, ?)";
 
 	database_handler << query << notification->user_name << "0" << notification->url << notification->message << exec;
-
-	// TODO: Return error correctly
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 list<Notification *> *DatabaseInterface::getUnseenNotifications(string user_name) {
@@ -1135,7 +1090,7 @@ User* DatabaseInterface::fetchUser(result result) {
 	return user;
 }
 
-ErrorCode* DatabaseInterface::updateProblemContent(std::string id, std::string content) {
+void* DatabaseInterface::updateProblemContent(std::string id, std::string content) {
 	string query = ""
 			"	UPDATE"
 			"		Problem"
@@ -1145,9 +1100,6 @@ ErrorCode* DatabaseInterface::updateProblemContent(std::string id, std::string c
 			"		id = UNHEX(?)";
 
 	database_handler << query << content << id << exec;
-
-	// TODO
-	return new ErrorCode(ErrorCode::CODE_NONE);
 }
 
 int DatabaseInterface::numberOfSolutions(std::string problem_id) {

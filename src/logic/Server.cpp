@@ -190,7 +190,7 @@ void Server::signIn() {
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -205,7 +205,7 @@ void Server::signOut() {
 		clearSessionData();
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -234,7 +234,7 @@ void Server::toggleAnonymousMode() {
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -254,11 +254,11 @@ void Server::userExists() {
 		}
 		
 		json::value json_response = json::value();
-		json_response["user_exists"] = DatabaseInterface::userExists(user_name); // TODO: check
+		//json_response["user_exists"] = DatabaseInterface::userExists(user_name); // TODO: check
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -283,7 +283,7 @@ void Server::unseenNotifications() {
 		json_response["notification_count"] = notifications->size();
 		int i = 0;
 		for (list<Notification *>::const_iterator it = notifications->begin(); it != notifications->end(); ++it) {
-			json_response["notifications"][i]["event_code"] = (*it)->event_code;
+			//json_response["notifications"][i]["event_code"] = (*it)->event_code;
 			json_response["notifications"][i]["url"] = (*it)->url;
 			i++;
 		}
@@ -291,7 +291,7 @@ void Server::unseenNotifications() {
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -321,10 +321,10 @@ void Server::signUp() {
 			return;
 		}
 		
-		if (DatabaseInterface::userExists(user_name)) { // TODO: check
+		/*if (DatabaseInterface::userExists(user_name)) { // TODO: check
 			setErrorResponseStatus(http::response::forbidden, ServerError::EXISTING_USER);
 			return;
-		}
+		}*/
 		
 		// TODO: check
 		User *user = new User();
@@ -340,7 +340,7 @@ void Server::signUp() {
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -383,7 +383,7 @@ void Server::publicateProblem() {
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -425,12 +425,12 @@ void Server::editProblem() {
 			return;
 		}
 		
-		DatabaseInterface::editProblem(problem_id, description, content); // TODO: check
-		NotificationAnnouncer::editPost(problem_id); // TODO: check --> what if it fails
+		//DatabaseInterface::editProblem(problem_id, description, content); // TODO: check
+		//NotificationAnnouncer::editPost(problem_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -468,12 +468,12 @@ void Server::makeProblemCreatorVisible() {
 			return;
 		}
 		
-		DatabaseInterface::makeProblemCreatorVisible(problem_id); // TODO: check
-		NotificationAnnouncer::makePostCreatorVisible(problem_id); // TODO: check --> what if it fails
+		//DatabaseInterface::makeProblemCreatorVisible(problem_id); // TODO: check
+		//NotificationAnnouncer::makePostCreatorVisible(problem_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -513,14 +513,14 @@ void Server::voteProblem() {
 		}
 		
 		DatabaseInterface::voteProblem(problem_id, user_name, is_positive.compare("true") == 0); // TODO: check
-		NotificationAnnouncer::votePost(problem_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::votePost(problem_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["vote_balance"] = DatabaseInterface::getProblemVoteBalance(problem_id); // TODO: check
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -567,11 +567,11 @@ void Server::setAcceptedSolution() {
 		}
 		
 		DatabaseInterface::setAcceptedSolution(problem_id, solution_id); // TODO: check
-		NotificationAnnouncer::setAcceptedSolution(problem_id, solution_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::setAcceptedSolution(problem_id, solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -609,12 +609,12 @@ void Server::unsetAcceptedSolution() {
 			return;
 		}
 		
-		DatabaseInterface::unsetAcceptedSolution(problem_id, solution_id); // TODO: check
-		NotificationAnnouncer::unsetAcceptedSolution(problem_id, solution_id); // TODO: check --> what if it fails
+		//DatabaseInterface::unsetAcceptedSolution(problem_id, solution_id); // TODO: check
+		//NotificationAnnouncer::unsetAcceptedSolution(problem_id, solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -659,14 +659,14 @@ void Server::publicateSolution() {
 		solution->id = IdManager::generateSolutionID();
 		solution->is_anonymous = is_anonymous;
 		DatabaseInterface::insertSolution(solution, problem_id); // TODO: check
-		NotificationAnnouncer::publicatePost(solution_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::publicatePost(solution_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["solution_id"] = solution->id;
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -708,12 +708,12 @@ void Server::editSolution() {
 			return;
 		}
 		
-		DatabaseInterface::editSolution(solution_id, description, content); // TODO: check
-		NotificationAnnouncer::editPost(solution_id); // TODO: check --> what if it fails
+		//DatabaseInterface::editSolution(solution_id, description, content); // TODO: check
+		//NotificationAnnouncer::editPost(solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -751,12 +751,12 @@ void Server::makeSolutionCreatorVisible() {
 			return;
 		}
 		
-		DatabaseInterface::makeSolutionCreatorVisible(solution_id); // TODO: check
-		NotificationAnnouncer::makePostCreatorVisible(solution_id); // TODO: check --> what if it fails
+		//DatabaseInterface::makeSolutionCreatorVisible(solution_id); // TODO: check
+		//NotificationAnnouncer::makePostCreatorVisible(solution_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -796,14 +796,14 @@ void Server::voteSolution() {
 		}
 		
 		DatabaseInterface::voteSolution(solution_id, user_name, is_positive.compare("true") == 0); // TODO: check
-		NotificationAnnouncer::votePost(solution_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::votePost(solution_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["vote_balance"] = DatabaseInterface::getSolutionVoteBalance(solution_id); // TODO: check
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -831,15 +831,17 @@ void Server::askClarification() {
 			return;
 		}
 		
+		Publication *publication;
+
 		if (publication_id[1] == '0') {
-			Problem *publication = DatabaseInterface::searchProblem(publication_id); // TODO: check
+			publication = DatabaseInterface::searchProblem(publication_id); // TODO: check
 			
 			if (publication == NULL) {
 				setErrorResponseStatus(http::response::not_found, ServerError::NONEXISTENT_PROBLEM);
 				return;
 			}
 		} else {
-			Solution *publication = DatabaseInterface::searchSolution(publication_id); // TODO: check
+			publication = DatabaseInterface::searchSolution(publication_id); // TODO: check
 			
 			if (publication == NULL) {
 				setErrorResponseStatus(http::response::not_found, ServerError::NONEXISTENT_SOLUTION);
@@ -858,14 +860,14 @@ void Server::askClarification() {
 		clarification->question = question;
 		clarification->publication_id = publication_id;
 		DatabaseInterface::insertClarification(clarification); // TODO: check
-		NotificationAnnouncer::askClarification(publication_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::askClarification(publication_id); // TODO: check --> what if it fails
 
 		json::value json_response = json::value();
 		json_response["clarification_id"] = clarification->id;
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -902,10 +904,12 @@ void Server::answerClarification() {
 
 		string publication_id = clarification->publication_id;
 		
+		Publication *publication;
+
 		if (publication_id[1] == '0')
-			Problem *publication = DatabaseInterface::searchProblem(publication_id); // TODO: check
+			publication = DatabaseInterface::searchProblem(publication_id); // TODO: check
 		else
-			Solution *publication = DatabaseInterface::searchSolution(publication_id); // TODO: check
+			publication = DatabaseInterface::searchSolution(publication_id); // TODO: check
 		
 		if (user_name.compare(publication->creator_user_name) != 0) {
 			setErrorResponseStatus(http::response::forbidden, ServerError::UNAUTHORIZED_USER);
@@ -913,11 +917,11 @@ void Server::answerClarification() {
 		}
 		
 		DatabaseInterface::answerClarification(clarification_id, answer); // TODO: check
-		NotificationAnnouncer::answerClarification(clarification_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::answerClarification(clarification_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -964,14 +968,14 @@ void Server::publicateProposal() {
 		proposal->id = IdManager::generateProposalID();
 		proposal->is_anonymous = is_anonymous;
 		DatabaseInterface::insertProposal(proposal, solution_id); // TODO: check
-		NotificationAnnouncer::publicatePost(proposal_id); // TODO: check --> what if it fails
+		//NotificationAnnouncer::publicatePost(proposal_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
 		json_response["proposal_id"] = proposal->id;
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -1011,12 +1015,12 @@ void Server::editProposal() {
 			return;
 		}
 		
-		DatabaseInterface::editProposal(proposal_id, content); // TODO: check
-		NotificationAnnouncer::editPost(proposal_id); // TODO: check --> what if it fails
+		//DatabaseInterface::editProposal(proposal_id, content); // TODO: check
+		//NotificationAnnouncer::editPost(proposal_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -1054,12 +1058,12 @@ void Server::makeProposalCreatorVisible() {
 			return;
 		}
 		
-		DatabaseInterface::makeProposalCreatorVisible(proposal_id); // TODO: check
-		NotificationAnnouncer::makePostCreatorVisible(proposal_id); // TODO: check --> what if it fails
+		//DatabaseInterface::makeProposalCreatorVisible(proposal_id); // TODO: check
+		//NotificationAnnouncer::makePostCreatorVisible(proposal_id); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -1098,15 +1102,15 @@ void Server::voteProposal() {
 			return;
 		}
 		
-		DatabaseInterface::voteProposal(proposal_id, user_name, is_positive.compare("true") == 0); // TODO: check
-		NotificationAnnouncer::votePost(proposal_id); // TODO: check --> what if it fails
+		//DatabaseInterface::voteProposal(proposal_id, user_name, is_positive.compare("true") == 0); // TODO: check
+		//NotificationAnnouncer::votePost(proposal_id); // TODO: check --> what if it fails
 		
 		json::value json_response = json::value();
-		json_response["vote_balance"] = DatabaseInterface::getProposalVoteBalance(proposal_id); // TODO: check
+		//json_response["vote_balance"] = DatabaseInterface::getProposalVoteBalance(proposal_id); // TODO: check
 		writeJsonResponse(json_response);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }
@@ -1126,7 +1130,7 @@ void Server::fetchMainPage() {
 		render("main_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1161,7 +1165,7 @@ void Server::fetchUserPage(string user_name) {
 		render("user_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1180,7 +1184,7 @@ void Server::fetchProblemsPage() {
 		EntityLinker *entityLinker = new EntityLinker();
 		int i;
 		
-		list<Problem *> *random_problems = DatabaseInterface::searchRandomProblems(20); // TODO: check
+		/*list<Problem *> *random_problems = DatabaseInterface::searchRandomProblems(20); // TODO: check
 		i = 0;
 		for (list<Problem *>::const_iterator it = random_problems->begin(); it != random_problems->end(); ++it) {
 			Problem *problem = *it;
@@ -1207,17 +1211,17 @@ void Server::fetchProblemsPage() {
 			i++;
 		}
 		
-		entityLinker->linkEntities();
+		entityLinker->linkEntities();*/
 		
 		ProblemsContent content;
 		setSessionDataOnViewContent(content);
-		content.random_problems = random_problems;
-		content.latest_problems = latest_problems;
-		content.unsolved_problems = unsolved_problems;
+		//content.random_problems = random_problems;
+		//content.latest_problems = latest_problems;
+		//content.unsolved_problems = unsolved_problems;
 		render("problems_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1251,7 +1255,7 @@ void Server::fetchProblemPage(string problem_id) {
 		render("problem_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1282,7 +1286,7 @@ void Server::fetchSolutionPage(string solution_id) {
 		render("solution_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1306,7 +1310,7 @@ void Server::fetchNewProblemPage() {
 		render("new_problem_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1339,7 +1343,7 @@ void Server::fetchNewSolutionPage(string problem_id) {
 		render("new_solution_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
@@ -1357,7 +1361,7 @@ void Server::fetchIdeasPage() {
 		render("ideas_view", content);
 		setSuccessResponseStatus();
 		
-	} catch (exception &e) {
+	} catch (std::exception &e) {
 		renderErrorPage(http::response::internal_server_error, ServerError::UNKNOWN);
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}

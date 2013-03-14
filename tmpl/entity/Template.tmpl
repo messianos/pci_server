@@ -6,67 +6,75 @@
 	
 	
 	<% template header_bar() %>
-		<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar navbar-inverse navbar-fixed-top" id="header-bar">
 			<div class="navbar-inner">
 				<div class="container-fluid">
-					<a class="pull-left header_bar_logo" href="<% url "/" %>"></a>
+					
+					<a class="pull-left" href="" id="header-bar-logo"></a>
+					
 					<% if signed_in %>
 						<ul class="nav pull-left">
-							<li class="active" id="notification-button">
-								<a>Notificaciones</a>
-								<div id="notification-container"></div>
-								<script>
-									$('#notification-button').click(function() {
-										$('#notification-container').toggle();
-									});
-								</script>
-							</li>
+							<li><a id="notification-button">Notificaciones</a></li>
 						</ul>
 					<% end %>
-					<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</a>
-					<div class="nav-collapse collapse">
-						<ul class="nav pull-right">
+					
+					<div class="nav-collapse collapse pull-right">
+						<ul class="nav">
 							<li>
-								<form class="navbar-search pull-right" action="">
-									<input type="text" class="search-query span2" placeholder="Buscar">
+								<form class="navbar-search" action="">
+									<input class="search-query span2" placeholder="Buscar" type="text">
 								</form>
 							</li>
-							<li>
-								<img id="profile-picture" style="display:none;" />
-							</li>
+							
 							<% if signed_in %>
-								<li>
-									<% include toggle_anonymous_mode_form(anonymous_mode) using user_services %>
-								</li>
-								<li>
-									<a id="header_bar_user_name" href="<% url "/user" using user_name %>"><%= user_first_name %> <%= user_last_name %></a>
-								</li>
-								<li>
-									<% include sign_out_form() using user_services %>
-								</li>		 		
+								<!-- TODO: Falta el boton de modo anonimo -->
+								<li><a href="<% url "/user" using user_name %>"><%= first_name %> <%= last_name %></a></li>
+								<li><button class="btn" id="sign-out-button">Salir</button></li>
 							<% else %>
-								<li>									
-									<button class="btn pull-right" id="header_bar_button_sign_in">
-										Ingresar
-									</button>
-									<div id="header_bar_sign_in_container">
-										<% include sign_in_form() using user_services %>
-									</div>
-								</li>
+								<li><button class="btn" id="sign-in-button">Ingresar</button></li>
 							<% end %>
 						</ul>
 					</div>
+					
 				</div>
 			</div>
 		</div>
+		
 		<% if signed_in %>
+			<div id="notification-container-content">
+				<div id="notification-main-container">
+					<legend>Notificaciones</legend>
+					<div id="notification-container"></div>
+				</div>
+			</div>
 			<script>
-				checkNotificationsPeriodically($('#notification-container'));
+				Global.Temp.notification_popover_visible = false;
+				$('#notification-button').click(function() {
+					$(this).toggleClass('active');
+					
+					if (Global.Temp.notification_popover_visible)
+						Popover.hidePopover($(this));
+					else
+						Popover.showPopover($(this), $('#header-bar'), 'bottom', $('#notification-container-content').html());
+					
+					Global.Temp.notification_popover_visible = ! Global.Temp.notification_popover_visible;
+				});
+				
+				Notification.checkNotificationsPeriodically($('#notification-container'));
+				
+				$('#sign-out-button').click(function() {
+					// TODO
+				});
+			</script>
+		<% else %>
+			<div id="sign-in-container">
+				<!-- TODO -->
+			</div>
+			<script>
+				$('#sign-in-button').click(function() {
+					$(this).toggleClass('active');
+					$('#sign-in-container').toggle();
+				});
 			</script>
 		<% end %>
 	<% end template %>

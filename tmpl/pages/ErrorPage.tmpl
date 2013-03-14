@@ -18,10 +18,10 @@
 		
 		<% template body_content() %>
 			<% include header_bar() using template_services %>
-			<div class="main_container wide">
-				<div class="error-container header-padding">
-					<div id="error-ornament"></div>
-					<div class="error-description-container">
+			<div class="header-bar-padding" id="main_container">
+				<div id="error-container">
+					<div class="pull-left" id="error-ornament"></div>
+					<div class="pull-left" id="error-description-container">
 						<h1>Error <%= http_error_code %></h1>
 						<p class="lead" id="error-description"></p>
 						<br />

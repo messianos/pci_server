@@ -3,12 +3,12 @@
 
 	Toast
 		Temp
-			separation
-			initial_offset
-			z_index
 			current_offset
 			toasts
 		Aux
+			separation
+			initial_offset
+			z_index
 			getToastOffset
 			removeToast
 			configureToast
@@ -18,18 +18,18 @@
 */
 
 var Toast = new Object();
-Toast.Aux = new Object();
 Toast.Temp = new Object();
+Toast.Aux = new Object();
 
-Toast.Temp.separation = 8;
-Toast.Temp.initial_offset = 64;
-Toast.Temp.z_index = 1500;
-Toast.Temp.current_offset = Toast.Temp.initial_offset;
+Toast.Aux.separation = 8;
+Toast.Aux.initial_offset = 64;
+Toast.Aux.z_index = 1500;
+Toast.Temp.current_offset = Toast.Aux.initial_offset;
 Toast.Temp.toasts = new Array();
 
 Toast.Aux.getToastOffset = function(toast_height) {
 	var offset = Toast.Temp.current_offset;
-	Toast.Temp.current_offset += toast_height + Toast.Temp.separation;
+	Toast.Temp.current_offset += toast_height + Toast.Aux.separation;
 	return offset;
 }
 
@@ -37,8 +37,8 @@ Toast.Aux.removeToast = function(toast) {
 	var toast_offset = parseInt(toast.css('bottom'));
 	var toast_height = toast.outerHeight();
 	toast.remove();
-	if (toast_offset + toast_height + Toast.Temp.separation == Toast.Temp.current_offset) {
-		var max_offset = Toast.Temp.initial_offset;
+	if (toast_offset + toast_height + Toast.Aux.separation == Toast.Temp.current_offset) {
+		var max_offset = Toast.Aux.initial_offset;
 		var highest_toast = null;
 		for (var i = 0; i < Toast.Temp.toasts.length; i++) {
 			var offset = parseInt(Toast.Temp.toasts[i].css('bottom'));
@@ -49,7 +49,7 @@ Toast.Aux.removeToast = function(toast) {
 		}
 		
 		if (highest_toast != null)
-			Toast.Temp.current_offset = max_offset + highest_toast.outerHeight() + Toast.Temp.separation;
+			Toast.Temp.current_offset = max_offset + highest_toast.outerHeight() + Toast.Aux.separation;
 		else
 			Toast.Temp.current_offset = max_offset;
 	}
@@ -113,8 +113,8 @@ Toast.showErrorToast = function(content) {
 		'max-width': '288px',
 		'padding': '14px 20px 14px 16px',
 		'position': 'fixed',
-		'left': Toast.Temp.initial_offset,
-		'z-index': Toast.Temp.z_index,
+		'left': Toast.Aux.initial_offset,
+		'z-index': Toast.Aux.z_index,
 		'display': 'none'
 	});
 	
@@ -136,8 +136,8 @@ Toast.showNotificationToast = function(content) {
 		'max-width': '288px',
 		'padding': '14px 20px 14px 16px',
 		'position': 'fixed',
-		'left': Toast.Temp.initial_offset,
-		'z-index': Toast.Temp.z_index,
+		'left': Toast.Aux.initial_offset,
+		'z-index': Toast.Aux.z_index,
 		'display': 'none'
 	});
 	
@@ -159,13 +159,13 @@ var Tooltip = new Object();
 Tooltip.Temp = new Object();
 Tooltip.Temp.tooltips = new Array();
 
-Tooltip.showTooltip = function(element, placement, text) {
+Tooltip.showTooltip = function(element, container, placement, text) {
 	Tooltip.Temp.tooltips[Tooltip.Temp.tooltips.length] = element;
 	element.tooltip({
+		container: container,
 		placement: placement,
 		title: text,
-		trigger: 'manual',
-		container: 'body'
+		trigger: 'manual'
 	});
 
 	element.tooltip('show');
@@ -174,6 +174,33 @@ Tooltip.showTooltip = function(element, placement, text) {
 Tooltip.hideAllTooltips = function() {
 	for (var i = 0; i < Tooltip.Temp.tooltips.length; i++)
 		Tooltip.Temp.tooltips[i].tooltip('destroy');
+}
+
+
+/*
+
+	Popover
+		showPopover
+		hidePopover
+
+*/
+
+var Popover = new Object();
+
+Popover.showPopover = function(element, container, placement, html_content) {
+	element.popover({
+		container: container,
+		content: html_content,
+		html: true,
+		placement: placement,
+		trigger: 'manual'
+	});
+	
+	element.popover('show');
+}
+
+Popover.hidePopover = function(element) {
+	element.popover('destroy');
 }
 
 
@@ -302,21 +329,26 @@ Ornament.appendErrorOrnament = function(container) {
 		'transparent'
 	);
 
-	Ornament.Aux.appendOrnament(container, 3, 12, block_dimensions, color_set);
+	Ornament.Aux.appendOrnament(container, 3, 12, block_dimensions, null, color_set);
 }
 
 
 /*
 
-	Notification
+	NotificationContainer
+		emptyContainer
 		appendNotification
 
 */
 
-var Notification = new Object();
+var NotificationContainer = new Object();
 
-Notification.appendNotification = function(container, url, message) {
-	var notification = $('<a href="' + logic_memory.url.root + url + '">' + message + '</a><br />');
+NotificationContainer.emptyContainer = function(container) {
+	container.empty();
+}
+
+NotificationContainer.appendNotification = function(container, url, message) {
+	var notification = $('<a href="' + url + '">' + message + '</a><br />');
 	container.append(notification);
 }
 

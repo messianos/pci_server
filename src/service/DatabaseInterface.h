@@ -3,7 +3,6 @@
 #define DATABASEINTERFACE_H_
 
 // Includes
-#include "../auxiliar/ErrorCode.h"
 #include "../entity/Clarification.h"
 #include "../entity/Notification.h"
 #include "../entity/Problem.h"
@@ -28,7 +27,7 @@ public:
 	 */
 	static User *searchUser(std::string user_name);
 	static bool signInUser(std::string user_name, std::string encrypted_password);
-	static ErrorCode *signUpUser(User *user, std::string encrypted_password);
+	static void *signUpUser(User *user, std::string encrypted_password);
 	static User *searchUserByProblem(std::string problem_id);
 	static User *searchUserBySolution(std::string solution_id);
 	static User *searchUserByProposal(std::string proposal_id);
@@ -55,14 +54,14 @@ public:
 	static std::list<Problem *> *searchProblemsMostVoted(int amount);
 	static Problem *searchProblemByAcceptedSolution(std::string solution_id);
 
-	static ErrorCode *insertProblem(Problem *problem);
-	static ErrorCode *deleteProblem(std::string id);
-	static ErrorCode *updateProblemContent(std::string id, std::string content);
+	static void *insertProblem(Problem *problem);
+	static void *deleteProblem(std::string id);
+	static void *updateProblemContent(std::string id, std::string content);
 
-	static ErrorCode *voteProblem(std::string problem_id, std::string user_name, bool is_positive);
+	static void *voteProblem(std::string problem_id, std::string user_name, bool is_positive);
 
-	static ErrorCode *setAcceptedSolution(std::string problem_id, std::string solution_id);
-	static ErrorCode *unsetAcceptedSolution(std::string problem_id);
+	static void *setAcceptedSolution(std::string problem_id, std::string solution_id);
+	static void *unsetAcceptedSolution(std::string problem_id);
 
 	static int getProblemVoteBalance(std::string problem_id);
 
@@ -74,10 +73,10 @@ public:
 	static std::list<Solution *> *searchSolutions(std::string problem_id);
 	static std::list<Solution *> *searchSolutionsByUser(std::string user_name);
 
-	static ErrorCode *insertSolution(Solution *solution, std::string problem_id);
-	static ErrorCode *deleteSolution(std::string id);
+	static void *insertSolution(Solution *solution, std::string problem_id);
+	static void *deleteSolution(std::string id);
 
-	static ErrorCode *voteSolution(std::string solution_id, std::string user_name, bool is_positive);
+	static void *voteSolution(std::string solution_id, std::string user_name, bool is_positive);
 	static int getSolutionVoteBalance(std::string solution_id);
 
 
@@ -87,18 +86,18 @@ public:
 	static Proposal *searchProposal(std::string id);
 	static std::list<Proposal *> *searchProposals(std::string solution_id);
 	static std::list<Proposal *> *searchProposalsByUser(std::string user_name);
-	static ErrorCode *insertProposal(Proposal *proposal, std::string solution_id);
-	static ErrorCode *deleteProposal(std::string id);
+	static void *insertProposal(Proposal *proposal, std::string solution_id);
+	static void *deleteProposal(std::string id);
 
 	/*
 	 * Clarification operations
 	 */
 	static Clarification *searchClarification(std::string id);
 	static std::list<Clarification *> *searchClarifications(std::string associated_publication_id);
-	static ErrorCode *insertClarification(Clarification *clarification);
-	static ErrorCode *deleteClarification(std::string id);
+	static void *insertClarification(Clarification *clarification);
+	static void *deleteClarification(std::string id);
 
-	static ErrorCode *answerClarification(std::string id, std::string answer);
+	static void *answerClarification(std::string id, std::string answer);
 	static std::list<Clarification*>* searchAnsweredClarifications(std::string problem_id);
 	static std::list<Clarification*>* searchAnsweredClarifications(std::string problem_id, std::string user_name);
 
@@ -114,7 +113,7 @@ public:
 	/*
 	 * Notifications operations
 	 */
-	static ErrorCode* insertNotification(Notification* notification);
+	static void* insertNotification(Notification* notification);
 	static std::list<Notification *> *getUnseenNotifications(std::string user_name);
 
 
