@@ -1,0 +1,135 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view forms_view uses ViewContent::SessionContent %>
+	
+	
+		<% template sign_in_form() %>
+			<form id="sign-in-form">
+				<input id="sign-in-user-name" placeholder="Nombre de usuario" type="text" /><br />
+				<input id="sign-in-password" placeholder="Contraseña" type="password" /><br />
+				<input class="btn pull-right" type="submit" value="Ingresar" />
+			</form>
+			<script>
+				$('#sign-in-form').submit(function(event) {
+					event.preventDefault();
+
+					var form = $(this);
+					
+					var password_field = $('#sign-in-password');
+					var user_name_field = $('#sign-in-user-name');
+					
+					var password = $.trim(password_field.val());
+					var user_name = $.trim(user_name_field.val());
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.SignIn.password.code in invalid_input_descriptions)
+							Tooltip.showTooltip(password_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignIn.password.code]);
+						if (InputValidator.Input.SignIn.user_name.code in invalid_input_descriptions)
+							Tooltip.showTooltip(user_name_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignIn.user_name.code]);
+					};
+					
+					if (InputValidator.validateSignInInput(on_invalid_input, password, user_name)) {
+						var on_success = function(signed_in) {
+							if (signed_in)
+								location.reload(true);
+							else
+								alert('<div class="alert alert-error">Nombre de usuario desconocido o contraseña inválida</div>');
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.signIn(on_success, on_error, password, user_name);
+					}
+				});
+			</script>
+		<% end template %>
+	
+	
+		<% template sign_up_form() %>
+			<form id="sign-up-form">
+				<input id="sign-up-user-name" placeholder="Nombre de usuario" type="text" /><br />
+				<input id="sign-up-first-name" placeholder="Nombre" type="text" /><br />
+				<input id="sign-up-last-name" placeholder="Apellido" type="text" /><br />
+				<input id="sign-up-location" placeholder="Localidad" type="text" /><br />
+				<input id="sign-up-email" placeholder="E-mail" type="text" /><br />
+				<input id="sign-up-password" placeholder="Contraseña" type="password" /><br />
+				<input id="sign-up-password-confirmation" placeholder="Confirmar contraseña" type="password" /><br />
+				<input id="sign-up-birth-date" placeholder="Fecha de nacimiento" readonly type="text" /><br />
+				<select id="sign-up-genre">
+					<option value="F">Mujer</option>
+					<option value="M">Hombre</option>
+				</select><br />
+				<input class="btn pull-right" type="submit" value="Registrar" />
+			</form>
+			<script>
+				Misc.configureDatepicker($('#sign-up-birth-date'));
+				$('#sign-up-form').submit(function(event) {
+					event.preventDefault();
+
+					var form = $(this);
+					
+					var birth_date_field = $('#sign-up-birth-date');
+					var email_field = $('#sign-up-email');
+					var first_name_field = $('#sign-up-first-name');
+					var genre_field = $('#sign-up-genre');
+					var last_name_field = $('#sign-up-last-name');
+					var location_field = $('#sign-up-location');
+					var password_field = $('#sign-up-password');
+					var password_confirmation_field = $('#sign-up-password-confirmation');
+					var user_name_field = $('#sign-up-user-name');
+					
+					var birth_date = birth_date_field.val();
+					var email = email_field.val();
+					var first_name = $.trim(first_name_field.val());
+					var genre = genre_field.val();
+					var last_name = $.trim(last_name_field.val());
+					var location = $.trim(location_field.val());
+					var password = password_field.val();
+					var password_confirmation = password_confirmation_field.val();
+					var user_name = user_name_field.val();
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.SignUp.birth_date.code in invalid_input_descriptions)
+							Tooltip.showTooltip(birth_date_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.birth_date.code]);
+						if (InputValidator.Input.SignUp.email.code in invalid_input_descriptions)
+							Tooltip.showTooltip(email_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.email.code]);
+						if (InputValidator.Input.SignUp.first_name.code in invalid_input_descriptions)
+							Tooltip.showTooltip(first_name_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.first_name.code]);
+						if (InputValidator.Input.SignUp.last_name.code in invalid_input_descriptions)
+							Tooltip.showTooltip(last_name_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.last_name.code]);
+						if (InputValidator.Input.SignUp.location.code in invalid_input_descriptions)
+							Tooltip.showTooltip(location_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.location.code]);
+						if (InputValidator.Input.SignUp.password.code in invalid_input_descriptions)
+							Tooltip.showTooltip(password_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.password.code]);
+						if (InputValidator.Input.SignUp.password_confirmation.code in invalid_input_descriptions)
+							Tooltip.showTooltip(password_confirmation_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.password_confirmation.code]);
+						if (InputValidator.Input.SignUp.user_name.code in invalid_input_descriptions)
+							Tooltip.showTooltip(user_name_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.SignUp.user_name.code]);
+					};
+					
+					// TODO: call userExists and check for user_name availability
+					
+					if (InputValidator.validateSignUpInput(on_invalid_input, birth_date, email, first_name, last_name, location, password, password_confirmation, user_name)) {
+						var on_success = function() {
+							window.location.href = Server.Url.fetch_user_page(user_name);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.signUp(on_success, on_error, birth_date, email, first_name, genre, last_name, location, password, user_name);
+					}
+				});
+			</script>
+		<% end template %>
+	
+	
+	<% end view %>
+<% end skin %>

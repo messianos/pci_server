@@ -197,7 +197,7 @@ InputValidator.isValidUserName = function(user_name) {
 	return user_name.match(/^[A-Z][A-Z0-9_]{3,30}$/i);
 }
 
-InputValidator.validateSignInInput = function(on_invalid_input_callback_function, password, user_name) {
+InputValidator.validateSignInInput = function(on_invalid_input, password, user_name) {
 	var invalid_input = false;
 	var invalid_input_descriptions = new Object();
 	
@@ -212,12 +212,12 @@ InputValidator.validateSignInInput = function(on_invalid_input_callback_function
 	}
 	
 	if (invalid_input)
-		on_invalid_input_callback_function(invalid_input_descriptions);
+		on_invalid_input(invalid_input_descriptions);
 	
 	return ! invalid_input;
 }
 
-InputValidator.validateSignUpInput = function(on_invalid_input_callback_function, birth_date, email, first_name, last_name, location, password, password_confirmation, user_name) {
+InputValidator.validateSignUpInput = function(on_invalid_input, birth_date, email, first_name, last_name, location, password, password_confirmation, user_name) {
 	var invalid_input = false;
 	var invalid_input_descriptions = new Object();
 	
@@ -262,12 +262,12 @@ InputValidator.validateSignUpInput = function(on_invalid_input_callback_function
 	}
 	
 	if (invalid_input)
-		on_invalid_input_callback_function(invalid_input_descriptions);
+		on_invalid_input(invalid_input_descriptions);
 	
 	return ! invalid_input;
 }
 
-InputValidator.validateProblemInput = function(on_invalid_input_callback_function, content, description) {
+InputValidator.validateProblemInput = function(on_invalid_input, content, description) {
 	var invalid_input = false;
 	var invalid_input_descriptions = new Object();
 	
@@ -282,12 +282,12 @@ InputValidator.validateProblemInput = function(on_invalid_input_callback_functio
 	}
 	
 	if (invalid_input)
-		on_invalid_input_callback_function(invalid_input_descriptions);
+		on_invalid_input(invalid_input_descriptions);
 	
 	return ! invalid_input;
 }
 
-InputValidator.validateSolutionInput = function(on_invalid_input_callback_function, content, description) {
+InputValidator.validateSolutionInput = function(on_invalid_input, content, description) {
 	var invalid_input = false;
 	var invalid_input_descriptions = new Object();
 	
@@ -302,12 +302,12 @@ InputValidator.validateSolutionInput = function(on_invalid_input_callback_functi
 	}
 	
 	if (invalid_input)
-		on_invalid_input_callback_function(invalid_input_descriptions);
+		on_invalid_input(invalid_input_descriptions);
 	
 	return ! invalid_input;
 }
 
-InputValidator.validateClarificationInput = function(on_invalid_input_callback_function, content) {
+InputValidator.validateClarificationInput = function(on_invalid_input, content) {
 	var invalid_input = false;
 	var invalid_input_descriptions = new Object();
 	
@@ -317,12 +317,12 @@ InputValidator.validateClarificationInput = function(on_invalid_input_callback_f
 	}
 	
 	if (invalid_input)
-		on_invalid_input_callback_function(invalid_input_descriptions);
+		on_invalid_input(invalid_input_descriptions);
 	
 	return ! invalid_input;
 }
 
-InputValidator.validateProposalInput = function(on_invalid_input_callback_function, content) {
+InputValidator.validateProposalInput = function(on_invalid_input, content) {
 	var invalid_input = false;
 	var invalid_input_descriptions = new Object();
 	
@@ -332,7 +332,7 @@ InputValidator.validateProposalInput = function(on_invalid_input_callback_functi
 	}
 	
 	if (invalid_input)
-		on_invalid_input_callback_function(invalid_input_descriptions);
+		on_invalid_input(invalid_input_descriptions);
 	
 	return ! invalid_input;
 }
@@ -525,7 +525,7 @@ Server.Url.fetch_new_problem_page = Server.Url.root + '/new_problem';
 Server.Url.fetch_new_solution_page = function(problem_id) { return Server.Url.root + '/new_solution/' + problem_id; };
 Server.Url.fetch_ideas_page = Server.Url.root + '/ideas';
 
-Server.signIn = function(on_success_callback_function, on_error_callback_function, password, user_name) {
+Server.signIn = function(on_success, on_error, password, user_name) {
 	var data = {
 		password: password,
 		user_name: user_name
@@ -533,103 +533,99 @@ Server.signIn = function(on_success_callback_function, on_error_callback_functio
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.sign_in
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['signed_in']);
+			on_success(data['signed_in']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 };
 
-Server.signOut = function(on_success_callback_function, on_error_callback_function) {
+Server.signOut = function(on_success, on_error) {
 	var request = $.ajax({
 		type: 'POST',
 		url: Server.Url.sign_out
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.toggleAnonymousMode = function(on_success_callback_function, on_error_callback_function) {
+Server.toggleAnonymousMode = function(on_success, on_error) {
 	var request = $.ajax({
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.toggle_anonymous_mode
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['anonymous_mode']);
+			on_success(data['anonymous_mode']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.userExists = function(on_success_callback_function, on_error_callback_function, user_name) {
+Server.userExists = function(on_success, on_error, user_name) {
 	var data = {
 		user_name: user_name
 	};
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.user_exists
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['user_exists']);
+			on_success(data['user_exists']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.unseenNotifications = function(on_success_callback_function, on_error_callback_function) {
+Server.unseenNotifications = function(on_success, on_error) {
 	var request = $.ajax({
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.unseen_notifications
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['notification_count'], data['notifications']);
+			on_success(data['notification_count'], data['notifications']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.signUp = function(on_success_callback_function, on_error_callback_function, birth_date, email, first_name, genre, last_name, location, password, user_name) {
+Server.signUp = function(on_success, on_error, birth_date, email, first_name, genre, last_name, location, password, user_name) {
 	var data = {
 		birth_date: birth_date,
 		email: email,
@@ -647,18 +643,18 @@ Server.signUp = function(on_success_callback_function, on_error_callback_functio
 		url: Server.Url.sign_up
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.publicateProblem = function(on_success_callback_function, on_error_callback_function, content, description) {
+Server.publicateProblem = function(on_success, on_error, content, description) {
 	var data = {
 		content: content,
 		description: description
@@ -666,24 +662,23 @@ Server.publicateProblem = function(on_success_callback_function, on_error_callba
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.publicate_problem
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['problem_id']);
+			on_success(data['problem_id']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.editProblem = function(on_success_callback_function, on_error_callback_function, content, description, problem_id) {
+Server.editProblem = function(on_success, on_error, content, description, problem_id) {
 	var data = {
 		content: content,
 		description: description,
@@ -696,18 +691,18 @@ Server.editProblem = function(on_success_callback_function, on_error_callback_fu
 		url: Server.Url.edit_problem
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.makeProblemCreatorVisible = function(on_success_callback_function, on_error_callback_function, problem_id) {
+Server.makeProblemCreatorVisible = function(on_success, on_error, problem_id) {
 	var data = {
 		problem_id: problem_id
 	};
@@ -718,18 +713,18 @@ Server.makeProblemCreatorVisible = function(on_success_callback_function, on_err
 		url: Server.Url.make_problem_creator_visible
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.voteProblem = function(on_success_callback_function, on_error_callback_function, is_positive, problem_id) {
+Server.voteProblem = function(on_success, on_error, is_positive, problem_id) {
 	var data = {
 		is_positive: is_positive,
 		problem_id: problem_id
@@ -737,24 +732,23 @@ Server.voteProblem = function(on_success_callback_function, on_error_callback_fu
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.vote_problem
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['vote_balance']);
+			on_success(data['vote_balance']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.setAcceptedSolution = function(on_success_callback_function, on_error_callback_function, problem_id, solution_id) {
+Server.setAcceptedSolution = function(on_success, on_error, problem_id, solution_id) {
 	var data = {
 		problem_id: problem_id,
 		solution_id: solution_id
@@ -766,18 +760,18 @@ Server.setAcceptedSolution = function(on_success_callback_function, on_error_cal
 		url: Server.Url.set_accepted_solution
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.unsetAcceptedSolution = function(on_success_callback_function, on_error_callback_function, problem_id) {
+Server.unsetAcceptedSolution = function(on_success, on_error, problem_id) {
 	var data = {
 		problem_id: problem_id
 	};
@@ -788,18 +782,18 @@ Server.unsetAcceptedSolution = function(on_success_callback_function, on_error_c
 		url: Server.Url.unset_accepted_solution
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.publicateSolution = function(on_success_callback_function, on_error_callback_function, content, description, problem_id) {
+Server.publicateSolution = function(on_success, on_error, content, description, problem_id) {
 	var data = {
 		content: content,
 		description: description,
@@ -808,24 +802,23 @@ Server.publicateSolution = function(on_success_callback_function, on_error_callb
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.publicate_solution
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['solution_id']);
+			on_success(data['solution_id']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.editSolution = function(on_success_callback_function, on_error_callback_function, content, description, solution_id) {
+Server.editSolution = function(on_success, on_error, content, description, solution_id) {
 	var data = {
 		content: content,
 		description: description,
@@ -838,18 +831,18 @@ Server.editSolution = function(on_success_callback_function, on_error_callback_f
 		url: Server.Url.edit_solution
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.makeSolutionCreatorVisible = function(on_success_callback_function, on_error_callback_function, solution_id) {
+Server.makeSolutionCreatorVisible = function(on_success, on_error, solution_id) {
 	var data = {
 		solution_id: solution_id
 	};
@@ -860,18 +853,18 @@ Server.makeSolutionCreatorVisible = function(on_success_callback_function, on_er
 		url: Server.Url.make_solution_creator_visible
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.voteSolution = function(on_success_callback_function, on_error_callback_function, is_positive, solution_id) {
+Server.voteSolution = function(on_success, on_error, is_positive, solution_id) {
 	var data = {
 		is_positive: is_positive,
 		solution_id: solution_id
@@ -879,24 +872,23 @@ Server.voteSolution = function(on_success_callback_function, on_error_callback_f
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.vote_solution
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['vote_balance']);
+			on_success(data['vote_balance']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.askClarification = function(on_success_callback_function, on_error_callback_function, publication_id, question) {
+Server.askClarification = function(on_success, on_error, publication_id, question) {
 	var data = {
 		publication_id: publication_id,
 		question: question
@@ -904,24 +896,23 @@ Server.askClarification = function(on_success_callback_function, on_error_callba
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.ask_clarification
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['clarification_id']);
+			on_success(data['clarification_id']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.answerClarification = function(on_success_callback_function, on_error_callback_function, answer, clarification_id) {
+Server.answerClarification = function(on_success, on_error, answer, clarification_id) {
 	var data = {
 		answer: answer,
 		clarification_id: clarification_id
@@ -933,18 +924,18 @@ Server.answerClarification = function(on_success_callback_function, on_error_cal
 		url: Server.Url.answer_clarification
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.publicateProposal = function(on_success_callback_function, on_error_callback_function, content, solution_id) {
+Server.publicateProposal = function(on_success, on_error, content, solution_id) {
 	var data = {
 		content: content,
 		solution_id: solution_id
@@ -952,24 +943,23 @@ Server.publicateProposal = function(on_success_callback_function, on_error_callb
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.publicate_proposal
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['proposal_id']);
+			on_success(data['proposal_id']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.editProposal = function(on_success_callback_function, on_error_callback_function, content, proposal_id) {
+Server.editProposal = function(on_success, on_error, content, proposal_id) {
 	var data = {
 		content: content,
 		proposal_id: proposal_id
@@ -981,18 +971,18 @@ Server.editProposal = function(on_success_callback_function, on_error_callback_f
 		url: Server.Url.edit_proposal
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.makeProposalCreatorVisible = function(on_success_callback_function, on_error_callback_function, proposal_id) {
+Server.makeProposalCreatorVisible = function(on_success, on_error, proposal_id) {
 	var data = {
 		proposal_id: proposal_id
 	};
@@ -1003,18 +993,18 @@ Server.makeProposalCreatorVisible = function(on_success_callback_function, on_er
 		url: Server.Url.make_proposal_creator_visible
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
-			on_success_callback_function();
+			on_success();
 		});
 
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 
-Server.voteProposal = function(on_success_callback_function, on_error_callback_function, is_positive, proposal_id) {
+Server.voteProposal = function(on_success, on_error, is_positive, proposal_id) {
 	var data = {
 		is_positive: is_positive,
 		proposal_id: proposal_id
@@ -1022,20 +1012,19 @@ Server.voteProposal = function(on_success_callback_function, on_error_callback_f
 	
 	var request = $.ajax({
 		data: data,
-		dataType: 'json',
 		type: 'POST',
 		url: Server.Url.vote_proposal
 	});
 	
-	if (on_success_callback_function != null)
+	if (on_success != null)
 		request.done(function(data, text_status, jq_xhr) {
 			data = $.parseJSON(data);
-			on_success_callback_function(data['vote_balance']);
+			on_success(data['vote_balance']);
 		});
 	
-	if (on_error_callback_function != null)
+	if (on_error != null)
 		request.fail(function(jq_xhr, text_status, error_thrown) {
-			on_error_callback_function(jq_xhr.status, error_thrown);
+			on_error(jq_xhr.status, error_thrown);
 		});
 }
 

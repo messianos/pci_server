@@ -2,7 +2,7 @@
 <% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
-	<% view error_view uses ViewContent::ErrorPageContent extends template_view %>
+	<% view error_page_view uses ViewContent::ErrorPageContent extends page_template_view %>
 		
 		
 		<% template page_title() %>
@@ -11,14 +11,14 @@
 		
 		
 		<% template head_content() %>
-			<% include template_view::head_content() %>
+			<% include page_template_view::head_content() %>
 			<link href="/css/error.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 		
 		
 		<% template body_content() %>
-			<% include header_bar() using template_services %>
-			<div class="header-bar-padding" id="main_container">
+			<% include header_bar() using template_view %>
+			<div class="header-bar-padding" id="main-container">
 				<div id="error-container">
 					<div class="pull-left" id="error-ornament"></div>
 					<div class="pull-left" id="error-description-container">

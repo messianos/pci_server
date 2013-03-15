@@ -7,7 +7,7 @@
 #include "../entity/Problem.h"
 #include "../entity/Solution.h"
 #include "../entity/User.h"
-#include <cppcms/base_content.h>
+#include <cppcms/view.h>
 #include <list>
 #include <string>
 
@@ -26,7 +26,7 @@ namespace ViewContent {
 		std::string server_error_code;
 	};
 
-	struct UserContent : SessionContent {
+	struct UserPageContent : SessionContent {
 		User* user;
 		int publication_count;
 		int problem_count;
@@ -35,17 +35,17 @@ namespace ViewContent {
 		std::list<Publication *> *recent_publications;
 	};
 	
-	struct ProblemsContent : SessionContent {
+	struct ProblemsPageContent : SessionContent {
 		std::list<Problem *> *random_problems;
 		std::list<Problem *> *latest_problems;
 		std::list<Problem *> *unsolved_problems;
 
 		// TODO: Not implemented!
-		/*std::list<Problem *> *nosolutions_problems;
-		std::list<Problem *> *most_voted_problems;*/
+		//std::list<Problem *> *nosolutions_problems;
+		//std::list<Problem *> *most_voted_problems;
 	};
 
-	struct ProblemContent : SessionContent {
+	struct ProblemPageContent : SessionContent {
 		Problem *problem;
 		Solution *accepted_solution;
 		std::list<Solution *> *solutions;
@@ -53,12 +53,12 @@ namespace ViewContent {
 		int user_vote;
 	};
 
-	struct SolutionContent: SessionContent {
+	struct SolutionPageContent: SessionContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
 	};
 
-	struct NewSolutionContent : SessionContent {
+	struct NewSolutionPageContent : SessionContent {
 		std::string problem_id;
 	};
 }

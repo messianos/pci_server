@@ -7,9 +7,18 @@ pwd
 
 echo -- Building Templates from `pwd`...
 
-cppcms_tmpl_cc 	entity/Template.tmpl \
-				pages/TemplatePage.tmpl \
+cppcms_tmpl_cc	auxiliar/PageTemplate.tmpl \
+				auxiliar/Forms.tmpl \
+				auxiliar/Template.tmpl \
 				pages/ErrorPage.tmpl \
+				pages/MainPage.tmpl \
+				pages/UserPage.tmpl \
+				pages/ProblemsPage.tmpl \
+				pages/ProblemPage.tmpl \
+				pages/SolutionPage.tmpl \
+				pages/NewProblemPage.tmpl \
+				pages/NewSolutionPage.tmpl \
+				pages/IdeasPage.tmpl \
 				-o $OUTPUT_FILE;
 
 echo -- Templates built to $OUTPUT_FILE

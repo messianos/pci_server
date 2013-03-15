@@ -2,79 +2,31 @@
 <% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
-	<% view problems_view uses ViewContent::ProblemsContent extends template_view %>
-	
-	
-		<% template css_links() %>
-			<% include template_view::css_links() %>
-			<link href="/css/problems.css" rel="stylesheet" type="text/css" />
+	<% view problems_page_view uses ViewContent::ProblemsPageContent extends page_template_view %>
+		
+		
+		<% template page_title() %>
 		<% end template %>
-	
-	
-		<% template javascript_code() %>
-			<% include template_view::javascript_code() %>
-			<script>
-			$(document).ready(function() {
-				setActiveNavigationButton('navigation_menu_problems_button');
-			});
-			</script>
+		
+		
+		<% template head_content() %>
+			<% include page_template_view::head_content() %>
 		<% end template %>
-	
-	
-		<% template page_content() %>
-			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div class="main-container">
-				<div class="header-padding">
-					<% if user_signed_in %>
-						<% include toolbar_problems() %>
-					<% end %>
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1" data-toggle="tab">Al azar</a></li>
-						<li><a href="#tab2" data-toggle="tab">Recientes</a></li>
-						<li><a href="#tab3" data-toggle="tab">Sin resolver</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="tab1">
-							<% foreach problem in *random_problems %>
-								<% item %>
-									<% include problem_description(problem) using problem_services %>
-								<% end %>
-							<% empty %>
-								No se encontraron problemas
-							<% end %>
-						</div>
-						<div class="tab-pane" id="tab2">
-							<% foreach problem in *latest_problems %>
-								<% item %>
-									<% include problem_description(problem) using problem_services %>
-								<% end %>
-							<% empty %>
-								No se encontraron problemas sin resolver
-							<% end %>							
-						</div>
-						<div class="tab-pane" id="tab3">
-							<% foreach problem in *unsolved_problems %>
-								<% item %>
-									<% include problem_description(problem) using problem_services %>
-								<% end %>
-							<% empty %>
-								No se encontraron problemas sin resolver
-							<% end %>
-						</div>
-					</div>
-				</div>
+		
+		
+		<% template body_content() %>
+			<% include header_bar() using template_view %>
+			<% include navigation_menu() using template_view %>
+			<div class="narrow header-bar-padding" id="main-container">
+				Problems
 			</div>
 		<% end template %>
 		
-		<% template toolbar_problems() %>
-			<div id="toolbar_problems_container">
-				<a class="btn btn-large" id="toolbar_problems_new_problem_button"
-					href="<% url "/new_problem" %>">
-					Nuevo problema
-				</a>
-			</div>
-		<% end template %>	
-	
+		
+		<% template js_body_code() %>
+			$('#problems-button').addClass('active');
+		<% end template %>
+		
+		
 	<% end view %>
 <% end skin %>

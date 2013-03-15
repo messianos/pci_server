@@ -65,7 +65,8 @@ a, a:active, a:hover, a:visited {
 	/*height: 100%;
 	min-height: 100%;*/
 	margin: 0px 20px;
-	padding: 0px 20px;
+	padding-left: 20px;
+	padding-right: 20px;
 	
 	overflow: hidden;
 }
@@ -99,7 +100,25 @@ a, a:active, a:hover, a:visited {
 #notification-container {
 }
 
-#sign-in-container {
+#toggle-anonymous-mode-button {
+	background-image: url('../img/anonymous_mode_off.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	height: 48px;
+	width: 48px;
+}
+
+#toggle-anonymous-mode-button.active {
+	background-image: url('../img/anonymous_mode_on.png');
+}
+
+#sign-in-button.active {
+	background-color: #F1F1F1;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+#sign-in-form-container {
 	background-color: #F1F1F1;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
@@ -108,12 +127,106 @@ a, a:active, a:hover, a:visited {
 	border-top-color: #F1F1F1;
 	border-style: solid;
 	border-width: 1px;
-	clear: both;
 	display: none;
-	float: right;
-	margin-top: -10px;
 	padding: 8px;
 	position: fixed;
-	top: 45px;
-	right: 20px;
+	top: 34px;
+	right: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+#navigation-menu {
+	position: fixed;
+	left: 20px;
+	top: 68px;
+}
+
+.navigation-menu-button {
+	background-color: #FFFFFF;
+	border-color: #D0D0D0;
+	border-radius: 8px;
+	border-style: solid;
+	border-width: 1px;
+	color: #7A7A7A;
+	font-family: font_button_square;
+	font-size: 0.875em;
+	height: 26px;
+	padding-top: 68px;
+	margin-bottom: 16px;
+	text-align: center;
+	width: 94px;
+	padding-top: 68px !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.navigation-menu-button:hover {
+	border-color: #B5B5B5;
+	color: #444444;
+}
+
+.navigation-menu-button.active {
+	border-color: #B5B5B5;
+}
+
+#problems-button {
+	background-image: url('../img/problems_off.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+#problems-button:hover {
+	background-image: url('../img/problems_on.png');
+	box-shadow: 0px 0px 64px 0px #FFF857 inset;
+}
+
+#problems-button.active {
+	background-image: url('../img/problems_on.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	box-shadow: 0px 0px 64px 0px #FFF857 inset;
+}
+
+#ideas-button {
+	background-image: url('../img/ideas_off.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+#ideas-button:hover {
+	background-image: url('../img/ideas_on.png');
+	box-shadow: 0px 0px 64px 0px #EAE1B5 inset;
+}
+
+#ideas-button.active {
+	background-image: url('../img/ideas_on.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	box-shadow: 0px 0px 64px 0px #EAE1B5 inset;
+}
+
+#profile-button {
+	background-image: url('../img/profile_off.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+#profile-button:hover {
+	background-image: url('../img/profile_on.png');
+	box-shadow: 0px 0px 64px 0px #CCEACD inset;
+}
+
+#profile-button.active {
+	background-image: url('../img/profile_on.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+	box-shadow: 0px 0px 64px 0px #CCEACD inset;
 }

@@ -1,0 +1,140 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view template_view uses ViewContent::SessionContent %>
+	
+	
+		<% template header_bar() %>
+			<div class="navbar navbar-inverse navbar-fixed-top">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						
+						<a class="pull-left" href="<% url "/" %>" id="header-bar-logo"></a>
+						
+						<% if signed_in %>
+							<ul class="nav pull-left">
+								<li>
+									<a id="notification-button">Notificaciones</a>
+									<div id="notification-container-content">
+										<div id="notification-main-container">
+											<legend>Notificaciones</legend>
+											<div id="notification-container"></div>
+										</div>
+									</div>
+									<script>
+										Global.Temp.notification_popover_visible = false;
+										$('#notification-button').click(function() {
+											$(this).toggleClass('active');
+											
+											if (Global.Temp.notification_popover_visible)
+												Popover.hidePopover($(this));
+											else
+												Popover.showPopover($(this), $(this).parent(), 'bottom', $('#notification-container-content').html());
+											
+											Global.Temp.notification_popover_visible = ! Global.Temp.notification_popover_visible;
+										});
+										
+										Notification.checkNotificationsPeriodically($('#notification-container'));
+									</script>
+								</li>
+							</ul>
+						<% end %>
+						
+						<div class="nav-collapse collapse pull-right">
+							<ul class="nav">
+								<li>
+									<form class="navbar-search" action="">
+										<input class="search-query span2" placeholder="Buscar" type="text">
+									</form>
+								</li>
+							</ul>
+								<% if signed_in %>
+									<a class="pull-left" id="toggle-anonymous-mode-button"></a>
+									<script>
+									
+										var anonymous_mode_button = $('#toggle-anonymous-mode-button');
+									
+										<% if anonymous_mode %>
+											Tooltip.configureHoverTooltip(anonymous_mode_button, anonymous_mode_button.parent(), 'bottom', 'Modo anónimo activado');
+										<% else %>
+											Tooltip.configureHoverTooltip(anonymous_mode_button, anonymous_mode_button.parent(), 'bottom', 'Modo anónimo desactivado');
+										<% end %>
+										
+										anonymous_mode_button.click(function() {
+											
+											var on_success = function(anonymous_mode) {
+												anonymous_mode_button.toggleClass('active');
+												if (anonymous_mode)
+													Tooltip.configureHoverTooltip(anonymous_mode_button, anonymous_mode_button.parent(), 'bottom', 'Modo anónimo activado');
+												else
+													Tooltip.configureHoverTooltip(anonymous_mode_button, anonymous_mode_button.parent(), 'bottom', 'Modo anónimo desactivado');
+											};
+											
+											var on_error = function(http_error_code, server_error_code) {
+												Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+											};
+											
+											Server.toggleAnonymousMode(on_success, on_error);
+										});
+									</script>
+									
+									<ul class="nav">
+										<li><a href="<% url "/user" using user_name %>"><%= first_name %> <%= last_name %></a></li>
+										<li>
+											<button class="btn" id="sign-out-button">Salir</button>
+											<script>
+												$('#sign-out-button').click(function() {
+													var on_success = function() {
+														location.reload(true);
+													};
+													
+													var on_error = function(http_error_code, server_error_code) {
+														Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+													};
+													
+													Server.signOut(on_success, on_error);
+												});
+											</script>
+										</li>
+									</ul>
+								<% else %>
+									<ul class="nav">
+										<li>
+											<button class="btn" id="sign-in-button">Ingresar</button>
+											<div id="sign-in-form-container">
+												<% include sign_in_form() using forms_view %>
+											</div>
+											<script>
+												$('#sign-in-button').click(function() {
+													$(this).toggleClass('active');
+													$('#sign-in-form-container').toggle();
+												});
+											</script>
+										</li>
+									</ul>
+								<% end %>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		<% end template %>
+		
+		
+		<% template navigation_menu() %>
+			<div class="sidebar-nav" id="navigation-menu">
+				<ul class="nav nav-list">
+					<li><a class="navigation-menu-button" id="problems-button" href="<% url "/problems" %>">Problemas</a></li>
+					<li><a class="navigation-menu-button" id="ideas-button" href="<% url "/ideas" %>">Ideas</a></li>
+					<% if signed_in %>
+						<hr />
+						<li><a class="navigation-menu-button" id="profile-button" href="<% url "/user" using user_name %>">Perfil</a></li>
+					<% end %>
+				</ul>
+			</div>
+		<% end template %>
+	
+	
+	<% end view %>
+<% end skin %>

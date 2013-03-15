@@ -2,7 +2,7 @@
 <% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
-	<% view solution_page_view uses ViewContent::SolutionPageContent extends page_template_view %>
+	<% view main_page_view uses ViewContent::SessionContent extends page_template_view %>
 		
 		
 		<% template page_title() %>
@@ -11,14 +11,17 @@
 		
 		<% template head_content() %>
 			<% include page_template_view::head_content() %>
+			<link href="/css/main.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 		
 		
 		<% template body_content() %>
 			<% include header_bar() using template_view %>
-			<% include navigation_menu() using template_view %>
-			<div class="narrow header-bar-padding" id="main-container">
-				Solution
+			<div class="header-bar-padding" id="main-container">
+				<div class="pull-right" id="sign-up-form-container">
+					<legend>Regístrate</legend>
+					<% include sign_up_form() using forms_view %>
+				</div>
 			</div>
 		<% end template %>
 		

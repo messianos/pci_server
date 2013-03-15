@@ -2,139 +2,30 @@
 <% c++ #include "../src/logic/ViewContent.h" %>
 
 <% skin pci_skin %>
-	<% view problem_view uses ViewContent::ProblemContent extends template_view %>
-	
-	
-		<% template css_links() %>
-			<% include template_view::css_links() %>
-			<link href="/css/problem.css" rel="stylesheet" type="text/css" />
+	<% view problem_page_view uses ViewContent::ProblemPageContent extends page_template_view %>
+		
+		
+		<% template page_title() %>
 		<% end template %>
 		
-		<% template js_links() %>
-			<% include template_view::js_links() %>
-			<script src="/lib/ckeditor/ckeditor.js"></script>
-		<% end template %>
-	
-		<% template javascript_code() %>
-			<% include template_view::javascript_code() %>
-			<script>
-
-				// Shows up the ckeditor
-				function showEditor() {
-					$("#problem_edit_button").hide();
-					$("#problem_problem_content").hide();
-					$("#ckeditor_container").show();
-					
-					var ck_editor = CKEDITOR.instances.textfield;
-					ck_editor.setData(logic_memory.problem_bbcode);
-				}
-				
-				// Hides the ckeditor
-				function hideEditor() {
-					$("#problem_edit_button").show();
-					$("#problem_problem_content").show();
-					$("#ckeditor_container").hide();
-				}
-				
-				$(document).ready(function() {
-					
-					logic_memory.problem_bbcode = $('#problem_problem_content').html();
-					var html_code = XBBCODE.process({
-						text: logic_memory.problem_bbcode,
-						addInLineBreaks: true
-					}).html;
-					
-					$('#problem_problem_content').empty();
-					$('#problem_problem_content').append(html_code);
-					
-					$('#edit_problem_form').hide();
-					
-					$("#problem_edit_button").click(function() {
-						$("#problem_edit_button").hide();
-						$("#problem_problem_content").hide();
-						$('#edit_problem_form').show();
-					});
-				});
-			</script>
-		<% end template %>
-	
-		<% template page_content() %>
-			<% include template_view::header_bar() %>
-			<% include template_view::navigation_menu() %>
-			<div class="main-container">
-					<div class="fixed-title-wrapper">
-						<% include vote_problem_form(problem, user_vote) using problem_services %>
-						<div class="title-container">
-							<div class="title"><%= problem->description %></div>
-							<span class="text_description">
-								Creado el <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
-							</span>
-						</div>
-						<div class="statistics">
-							<% if problem->is_anonymous %>
-								<div class="user_image_name">
-									<a href="#">
-										<h3>Anónimo</h3>
-									</a>
-								</div>
-							<% else %>
-								<div class="user_image_name">
-									<a href="<% url "/user" using problem->creator_user_name %>">
-										<h3><%= problem->creator_user_name %></h3>
-									</a>
-								</div>
-							<% end %>
-							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-								<a id="problem_edit_button" class="btn btn-large">
-									<i class="icon-pencil"></i> Editar
-								</a>
-							<% end %>
-						</div>
-					</div>
-					<div class="solution-sidebar">
-						<% if user_signed_in %>
-							<% include toolbar_problem(problem) using problem_services %>
-						<% end %>
-						<% if problem->is_solved  %>
-							<div class="solution_box_description accepted_solution">
-								<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-									<% include unset_accepted_solution_form(problem, accepted_solution->id) using problem_services %>
-								<% else %>
-									<div class="tick on"></div>
-								<% end %>
-								<% include solution_description(accepted_solution) using solution_services %>
-							</div>
-						<% end %>
-						<% foreach solution in *solutions %>
-		 					<% item %>
-								<div class="solution_box_description problem_solution_description">
-									<% if (content.user_signed_in && !content.problem->creator_user_name.compare(content.user_name))%>
-										<% include set_accepted_solution_form(problem, solution->id) using problem_services %>
-									<% else %>
-										<div class="tick"></div>
-									<% end %>
-									<% include solution_description(solution) using solution_services %>
-								</div>
-		  					<% end %>
-		  					<% empty %>
-		  						<h4>¡Aún no hay soluciones!</h4>
-		  						<!-- TODO: Add new solution button here -->
-						<% end %>
-					</div>
-					<div class="problem-content">
-						<div id="problem">
-							<div id="problem_problem_content">
-								<%= problem->content %>
-							</div>
-							<% if (content.user_signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
-								<% include edit_problem_form(problem) using problem_services %>
-							<% end %>
-							<% include clarifications_descriptions(clarifications, problem) using clarification_services %>
-						</div>
-					</div>
-				</div>
+		
+		<% template head_content() %>
+			<% include page_template_view::head_content() %>
 		<% end template %>
 		
-	
+		
+		<% template body_content() %>
+			<% include header_bar() using template_view %>
+			<% include navigation_menu() using template_view %>
+			<div class="narrow header-bar-padding" id="main-container">
+				Problem
+			</div>
+		<% end template %>
+		
+		
+		<% template js_body_code() %>
+		<% end template %>
+		
+		
 	<% end view %>
 <% end skin %>

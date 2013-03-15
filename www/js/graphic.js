@@ -98,8 +98,16 @@ Toast.Aux.configureToast = function(toast) {
 	}, 4000);
 }
 
-Toast.showErrorToast = function(content) {
-	var toast = $('<div>' + content + '</div>');
+Toast.showErrorToast = function(http_error_code, server_error_code, error_description) {
+	var html_content = '<div>';
+	html_content += '<b>Se ha producido un error</b>';
+	html_content += '<br />[http_error_code]   = ' + http_error_code;
+	html_content += '<br />[server_error_code] = ' + server_error_code;
+	html_content += '<br />';
+	html_content += '<br />Descripción: <i>' + error_description + '</i>';
+	html_content += '</div>';
+	
+	var toast = $(html_content);
 	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
 	toast.css({
 		'background-color': '#CD1B1B',
@@ -121,8 +129,8 @@ Toast.showErrorToast = function(content) {
 	Toast.Aux.configureToast(toast);
 }
 
-Toast.showNotificationToast = function(content) {
-	var toast = $('<div>' + content + '</div>');
+Toast.showNotificationToast = function(html_content) {
+	var toast = $('<div>' + html_content + '</div>');
 	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
 	toast.css({
 		'background-color': '#1A1A1A',
@@ -152,6 +160,7 @@ Toast.showNotificationToast = function(content) {
 			tooltips
 		showTooltip
 		hideAllTooltips
+		configureHoverTooltip
 
 */
 
@@ -174,6 +183,16 @@ Tooltip.showTooltip = function(element, container, placement, text) {
 Tooltip.hideAllTooltips = function() {
 	for (var i = 0; i < Tooltip.Temp.tooltips.length; i++)
 		Tooltip.Temp.tooltips[i].tooltip('destroy');
+}
+
+Tooltip.configureHoverTooltip = function(element, container, placement, text) {
+	element.tooltip('destroy');
+	element.tooltip({
+		container: container,
+		placement: placement,
+		title: text,
+		trigger: 'hover'
+	});
 }
 
 
@@ -355,25 +374,15 @@ NotificationContainer.appendNotification = function(container, url, message) {
 
 /*
 
-	Effect
-	TODO
+	Misc
+		configureTexteditor
+		configureDatepicker
 
 */
 
-var Effect = new Object();
+var Misc = new Object();
 
-Effect.configureActiveNavigationButton = function(button) {
-	button.addClass('active');
-}
-
-Effect.configureSignInFormContainer = function(container, button) {
-	button.click(function() {
-		container.toggle();
-		button.toggleClass('active'); // TODO: ?????
-	});
-}
-
-Effect.configureTexteditor = function(textarea_name_or_id) {
+Misc.configureTexteditor = function(textarea_name_or_id) {
 	CKEDITOR.replace(textarea_name_or_id, {
 		customConfig: '',
 		extraPlugins: 'bbcode',
@@ -393,7 +402,7 @@ Effect.configureTexteditor = function(textarea_name_or_id) {
 	});
 }
 
-Effect.configureDatepicker = function(textfield) {
+Misc.configureDatepicker = function(textfield) {
 	var current_year = new Date().getFullYear();
 	textfield.datepicker({
 		showOn:'focus',

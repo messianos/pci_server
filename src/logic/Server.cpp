@@ -57,7 +57,7 @@ void Server::renderErrorPage(int http_error_code, string server_error_code) {
 	setSessionDataOnViewContent(content);
 	content.http_error_code = http_error_code;
 	content.server_error_code = server_error_code;
-	render("error_view", content);
+	render("error_page_view", content);
 }
 
 void Server::writeJsonResponse(json::value json_response) {
@@ -127,17 +127,17 @@ Server::Server(cppcms::service &service) : application(service) {
 	// Page-fetching services
 	dispatcher().assign("", &Server::fetchMainPage, this);
 	mapper().assign("");
-	dispatcher().assign("/user/(/^[A-Z][A-Z0-9_]{3,30}$/i)", &Server::fetchUserPage, this, 1);
+	dispatcher().assign("/user/([A-Za-z][A-Za-z0-9_]{3,30})", &Server::fetchUserPage, this, 1);
 	mapper().assign("user", "/user/{1}");
 	dispatcher().assign("/problems", &Server::fetchProblemsPage, this);
 	mapper().assign("problems", "/problems");
-	dispatcher().assign("/publication/(/^50[A-F0-9]{32,32}$/i)", &Server::fetchProblemPage, this, 1);
+	dispatcher().assign("/publication/(50[A-Fa-f0-9]{32,32})", &Server::fetchProblemPage, this, 1);
 	mapper().assign("publication", "/publication/{1}");
-	dispatcher().assign("/publication/(/^53[A-F0-9]{32,32}$/i)", &Server::fetchSolutionPage, this, 1);
+	dispatcher().assign("/publication/(53[A-Fa-f0-9]{32,32})", &Server::fetchSolutionPage, this, 1);
 	mapper().assign("publication", "/publication/{1}");
 	dispatcher().assign("/new_problem", &Server::fetchNewProblemPage, this);
 	mapper().assign("new_problem", "/new_problem");
-	dispatcher().assign("/new_solution/(/^50[A-F0-9]{32,32}$/i)", &Server::fetchNewSolutionPage, this, 1);
+	dispatcher().assign("/new_solution/(50[A-Fa-f0-9]{32,32})", &Server::fetchNewSolutionPage, this, 1);
 	mapper().assign("new_solution", "/new_solution/{1}");
 	dispatcher().assign("/ideas", &Server::fetchIdeasPage, this);
 	mapper().assign("ideas", "/ideas");
@@ -163,7 +163,9 @@ void Server::signIn() {
 		
 		// TODO: password should be send using HTTPS (does that change this method?)
 		string password = fetchPostData("password");
+		trim(password);
 		string user_name = fetchPostData("user_name");
+		trim(user_name);
 
 		if (! InputValidator::isValidSignInInput(password, user_name)) {
 			setErrorResponseStatus(http::response::bad_request, ServerError::INVALID_PARAMETERS);
@@ -1127,7 +1129,7 @@ void Server::fetchMainPage() {
 		// TODO: maybe fork this: a view for the main_view when the user is signed in, and other when is not
 		// TODO: maybe render another existent view when the user is signed in (according to user preferences).
 		//       example: render Problems as default
-		render("main_view", content);
+		render("main_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1151,7 +1153,7 @@ void Server::fetchUserPage(string user_name) {
 			return;
 		}
 
-		UserContent content;
+		UserPageContent content;
 		setSessionDataOnViewContent(content);
 		// TODO: set content attributes
 		/*
@@ -1162,7 +1164,7 @@ void Server::fetchUserPage(string user_name) {
 			int accepted_solution_count;
 			std::list<Publication *> *recent_publications;
 		*/
-		render("user_view", content);
+		render("user_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1213,12 +1215,12 @@ void Server::fetchProblemsPage() {
 		
 		entityLinker->linkEntities();*/
 		
-		ProblemsContent content;
+		ProblemsPageContent content;
 		setSessionDataOnViewContent(content);
 		//content.random_problems = random_problems;
 		//content.latest_problems = latest_problems;
 		//content.unsolved_problems = unsolved_problems;
-		render("problems_view", content);
+		render("problems_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1242,7 +1244,7 @@ void Server::fetchProblemPage(string problem_id) {
 			return;
 		}
 
-		ProblemContent content;
+		ProblemPageContent content;
 		setSessionDataOnViewContent(content);
 		// TODO: set content attributes
 		/*
@@ -1252,7 +1254,7 @@ void Server::fetchProblemPage(string problem_id) {
 			std::list<Clarification *> *clarifications;
 			int user_vote;
 		*/
-		render("problem_view", content);
+		render("problem_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1276,14 +1278,14 @@ void Server::fetchSolutionPage(string solution_id) {
 			return;
 		}
 
-		SolutionContent content;
+		SolutionPageContent content;
 		setSessionDataOnViewContent(content);
 		// TODO: set content attributes
 		/*
 			Solution *solution;
 			std::list<Clarification *> *clarifications;
 		*/
-		render("solution_view", content);
+		render("solution_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1307,7 +1309,7 @@ void Server::fetchNewProblemPage() {
 		
 		SessionContent content; // TODO: check (IdeasContent?)
 		setSessionDataOnViewContent(content);
-		render("new_problem_view", content);
+		render("new_problem_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1337,10 +1339,10 @@ void Server::fetchNewSolutionPage(string problem_id) {
 			return;
 		}
 		
-		NewSolutionContent content;
+		NewSolutionPageContent content;
 		setSessionDataOnViewContent(content);
 		content.problem_id = problem_id;
-		render("new_solution_view", content);
+		render("new_solution_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
@@ -1358,7 +1360,7 @@ void Server::fetchIdeasPage() {
 		
 		SessionContent content; // TODO: check (IdeasContent?)
 		setSessionDataOnViewContent(content);
-		render("ideas_view", content);
+		render("ideas_page_view", content);
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
