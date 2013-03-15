@@ -1,0 +1,15 @@
+
+#problems-toolbar-container {
+	
+}
+
+#new-problem-button {
+	background-image: url('../img/new_problem_off.png');
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 40px;
+}
+
+#new-problem-button:hover {
+	background-image: url('../img/new_problem_on.png');
+}

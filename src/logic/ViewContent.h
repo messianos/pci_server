@@ -7,11 +7,14 @@
 #include "../entity/Problem.h"
 #include "../entity/Solution.h"
 #include "../entity/User.h"
+#include <boost/algorithm/string.hpp>
 #include <cppcms/view.h>
 #include <list>
 #include <string>
 
 namespace ViewContent {
+
+	std::string escapeConflictingChars(std::string text);
 
 	struct SessionContent : public cppcms::base_content {
 		bool signed_in;
@@ -62,5 +65,10 @@ namespace ViewContent {
 		std::string problem_id;
 	};
 }
+
+// Type definitions
+typedef std::string String;
+typedef Problem *ProblemPointer;
+typedef Solution *SolutionPointer;
 
 #endif /* VIEWCONTENT_H_ */

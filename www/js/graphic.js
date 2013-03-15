@@ -413,7 +413,12 @@ Misc.configureDatepicker = function(textfield) {
 	});
 }
 
-
+Misc.parseBbcodeToHtml = function(bbcode) {
+	return XBBCODE.process({
+		text: bbcode,
+		addInLineBreaks: true
+	}).html;
+}
 
 
 

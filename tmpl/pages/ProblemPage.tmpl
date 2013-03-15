@@ -11,6 +11,8 @@
 		
 		<% template head_content() %>
 			<% include page_template_view::head_content() %>
+			<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
+			<script src="/lib/xbbcode/xbbcode.js"></script>
 		<% end template %>
 		
 		
@@ -18,7 +20,14 @@
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
 			<div class="narrow header-bar-padding" id="main-container">
-				Problem
+				Esto es temporal:<br />
+				<%= problem->description %>
+				<script>
+					var bbcode = '<% c++ out() << ViewContent::escapeConflictingChars(content.problem->content); %>';
+					var html = Misc.parseBbcodeToHtml(bbcode);
+					// TODO: temporal
+					$('#main-container').append(html);
+				</script>
 			</div>
 		<% end template %>
 		

@@ -11,6 +11,7 @@
 		
 		<% template head_content() %>
 			<% include page_template_view::head_content() %>
+			<script src="/lib/ckeditor/ckeditor.js"></script>
 		<% end template %>
 		
 		
@@ -18,7 +19,8 @@
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
 			<div class="narrow header-bar-padding" id="main-container">
-				New solution
+				<legend>Nueva solución</legend>
+				<% include publicate_solution_form() using forms_view %>
 			</div>
 		<% end template %>
 		

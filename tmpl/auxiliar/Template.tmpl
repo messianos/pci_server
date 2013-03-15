@@ -134,6 +134,50 @@
 				</ul>
 			</div>
 		<% end template %>
+		
+		
+		<% template problem_description_box(ProblemPointer problem) %>
+			<div class="problem-description-box-container">
+				<div class="row-fluid">
+					<div class="span2">
+						<div class="problem-votes-container row-fluid">
+							<div class="span6">
+								<div><%= problem->vote_balance %></div>
+								<div>Votos</div>
+							</div>
+							<div class="span6">
+								<div>N/A</div>
+								<div>Soluciones</div>
+							</div>
+						</div>
+					</div>
+					<div class="span9">
+						<div class="row-fluid">
+							<a href="<% url "/publication" using problem->id %>">
+								<%= problem->description %>
+							</a>
+							<span>
+								<% if problem->is_anonymous %>
+									<i>Publicado anónimamente</i>
+								<% else %>
+									<i>Por <a href="<% url "/user" using problem->creator_user_name %>"><%= problem->creator_user_name %></a></i>
+								<% end %>
+								- <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+							</span>
+						</div>
+					</div>
+					<% if problem->is_solved %>
+						<div class="span1">
+							<div class="problem-solved-tick active"></div>
+						</div>
+					<% end %>
+				</div>				
+			</div>
+		<% end template %>
+		
+		
+		<% template solution_description_box(SolutionPointer problem) %>
+		<% end template %>
 	
 	
 	<% end view %>

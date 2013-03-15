@@ -423,7 +423,7 @@ Server.Error.invalid_parameters = {
 
 Server.Error.not_signed_in = {
 	code: '40101',
-	description: 'not_signed_in' // TODO
+	description: 'El usuario no inició sesión' // TODO
 }
 
 Server.Error.existing_user = {

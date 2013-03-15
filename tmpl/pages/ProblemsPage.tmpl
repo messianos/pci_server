@@ -11,6 +11,7 @@
 		
 		<% template head_content() %>
 			<% include page_template_view::head_content() %>
+			<link href="/css/problems.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 		
 		
@@ -18,7 +19,47 @@
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
 			<div class="narrow header-bar-padding" id="main-container">
-				Problems
+				<% if signed_in %>
+					<div id="problems-toolbar-container">
+						<a class="btn btn-large" href="<% url "/new_problem" %>" id="new-problem-button">
+							Nuevo problema
+						</a>
+					</div>
+				<% end %>
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#random-problems-tab" data-toggle="tab">Al azar</a></li>
+					<li><a href="#latest-problems-tab" data-toggle="tab">Recientes</a></li>
+					<li><a href="#unsolved-problems-tab" data-toggle="tab">Sin resolver</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="random-problems-tab">
+						<% foreach problem in *random_problems %>
+							<% item %>
+								<% include problem_description_box(problem) using template_view %>
+							<% end %>
+						<% empty %>
+							No se encontraron problemas
+						<% end %>
+					</div>
+					<div class="tab-pane" id="latest-problems-tab">
+						<% foreach problem in *latest_problems %>
+							<% item %>
+								<% include problem_description_box(problem) using template_view %>
+							<% end %>
+						<% empty %>
+							No se encontraron problemas
+						<% end %>
+					</div>
+					<div class="tab-pane" id="unsolved-problems-tab">
+						<% foreach problem in *unsolved_problems %>
+							<% item %>
+								<% include problem_description_box(problem) using template_view %>
+							<% end %>
+						<% empty %>
+							No se encontraron problemas sin resolver
+						<% end %>
+					</div>
+				</div>
 			</div>
 		<% end template %>
 		

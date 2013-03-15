@@ -129,6 +129,100 @@
 				});
 			</script>
 		<% end template %>
+		
+		
+		<% template publicate_problem_form() %>
+			<form id="publicate-problem-form">
+				<input id="publicate-problem-description" placeholder="Descripción del problema" type="text" /><br />
+				<textarea id="publicate-problem-content"></textarea><br />
+				<input class="btn pull-right" type="submit" value="Publicar" />
+			</form>
+			<script>
+				Misc.configureTexteditor('publicate-problem-content');
+				$('#publicate-problem-form').submit(function(event) {
+					event.preventDefault();
+					
+					var form = $(this);
+					
+					var editor_instance = CKEDITOR.instances['publicate-problem-content'];
+					var editor_inner_div = $('#cke_' + editor_instance.name);
+					editor_instance.updateElement();
+					
+					var content_field = $('#publicate-problem-content');
+					var description_field = $('#publicate-problem-description');
+					
+					var content = content_field.val();
+					var description = description_field.val();
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.Problem.content.code in invalid_input_descriptions)
+							Tooltip.showTooltip(editor_inner_div, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.Problem.content.code]);
+						if (InputValidator.Input.Problem.description.code in invalid_input_descriptions)
+							Tooltip.showTooltip(description_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.Problem.description.code]);
+					};
+					
+					if (InputValidator.validateProblemInput(on_invalid_input, content, description)) {
+						var on_success = function(problem_id) {
+							window.location.href = Server.Url.fetch_problem_page(problem_id);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.publicateProblem(on_success, on_error, content, description);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template publicate_solution_form() %>
+			<form id="publicate-solution-form">
+				<input id="publicate-solution-description" placeholder="Descripción de la solución" type="text" /><br />
+				<textarea id="publicate-solution-content"></textarea><br />
+				<input class="btn pull-right" type="submit" value="Publicar" />
+			</form>
+			<script>
+				Misc.configureTexteditor('publicate-solution-content');
+				$('#publicate-solution-form').submit(function(event) {
+					event.preventDefault();
+					
+					var form = $(this);
+					
+					var editor_instance = CKEDITOR.instances['publicate-solution-content'];
+					var editor_inner_div = $('#cke_' + editor_instance.name);
+					editor_instance.updateElement();
+					
+					var content_field = $('#publicate-solution-content');
+					var description_field = $('#publicate-solution-description');
+					
+					var content = content_field.val();
+					var description = description_field.val();
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.Solution.content.code in invalid_input_descriptions)
+							Tooltip.showTooltip(editor_inner_div, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.Solution.content.code]);
+						if (InputValidator.Input.Solution.description.code in invalid_input_descriptions)
+							Tooltip.showTooltip(description_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.Solution.description.code]);
+					};
+					
+					if (InputValidator.validateSolutionInput(on_invalid_input, content, description)) {
+						var on_success = function(solution_id) {
+							window.location.href = Server.Url.fetch_solution_page(solution_id);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.publicateSolution(on_success, on_error, content, description);
+					}
+				});
+			</script>
+		<% end template %>
 	
 	
 	<% end view %>
