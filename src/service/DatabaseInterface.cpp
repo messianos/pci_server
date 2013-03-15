@@ -1,6 +1,6 @@
 // Includes
 #include "DatabaseInterface.h"
-
+#include <boost/cast.hpp>
 //TODO
 #include <iostream>
 // Namespaces
@@ -9,7 +9,8 @@ using namespace std;
 
 // Initializations
 //session DatabaseInterface::database_handler = session("mysql: host=pci-server.no-ip.org; database=pci_database; user=pci_user; password=pci_password");
-session DatabaseInterface::database_handler = session("mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
+session DatabaseInterface::database_handler = session(
+		"mysql: host=localhost; database=pci_database; user=pci_user; password=pci_password");
 
 // Attributes strings for objects
 const string clarification_attributes = ""
@@ -67,8 +68,9 @@ const string user_attributes = ""
 const string notification_attributes = ""
 		"		user_name,"
 		"		seen,"
+		"		originator_user_name,"
 		"		url,"
-		"		message";
+		"		event_code";
 
 // TODO: Define share mode on SELECT statements
 
@@ -95,7 +97,7 @@ bool DatabaseInterface::signInUser(string user_name, string encrypted_password) 
 }
 
 // FIXME: This may return success or fail
-void *DatabaseInterface::signUpUser(User *user, string encrypted_password) {
+void DatabaseInterface::signUpUser(User *user, string encrypted_password) {
 	string query = "	CALL sign_up_user("
 			"		?,"
 			"		?,"
@@ -189,129 +191,6 @@ User *DatabaseInterface::searchUser(string user_name) {
 
 	if (!result.next())
 		// User not found
-		return NULL;
-
-	return fetchUser(result);
-}
-
-User *DatabaseInterface::searchUserByProblem(string problem_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Problem"
-			"   ON Problem.creator_user_name = User.user_name "
-			"	WHERE Problem.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << problem_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-
-}
-
-// TODO: Revise
-User *DatabaseInterface::searchUserBySolution(string solution_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Solution"
-			"   ON Solution.creator_user_name = User.user_name "
-			"	WHERE Solution.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << solution_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-
-}
-
-User *DatabaseInterface::searchUserByProposal(string proposal_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Proposal"
-			"   ON Proposal.creator_user_name = User.user_name "
-			"	WHERE Proposal.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << proposal_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-}
-
-User *DatabaseInterface::searchUserByClarification(string clarification_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Clarification"
-			"   ON Clarification.creator_user_name = User.user_name "
-			"	WHERE Clarification.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << clarification_id;
-
-	if (!result.next())
-		// problem not found
 		return NULL;
 
 	return fetchUser(result);
@@ -458,7 +337,7 @@ Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id) 
 	return fetchProblem(result);
 }
 
-void * DatabaseInterface::insertProblem(Problem *problem) {
+void  DatabaseInterface::insertProblem(Problem *problem) {
 	string query = "	CALL insert_problem("
 			"		?,"
 			"		?,"
@@ -471,7 +350,7 @@ void * DatabaseInterface::insertProblem(Problem *problem) {
 			<< problem->is_anonymous << exec;
 }
 
-void * DatabaseInterface::deleteProblem(string id) {
+void  DatabaseInterface::deleteProblem(string id) {
 	string query = "CALL delete_problem(?)";
 	database_handler << query << id << exec;
 }
@@ -529,7 +408,7 @@ list<Solution *> *DatabaseInterface::searchSolutionsByUser(string user_name) {
 	return solution_list;
 }
 
-void * DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
+void  DatabaseInterface::insertSolution(Solution *solution, string problem_id) {
 	string query = "	CALL insert_solution("
 			"		?,"
 			"		?,"
@@ -543,7 +422,7 @@ void * DatabaseInterface::insertSolution(Solution *solution, string problem_id) 
 			<< solution->id << solution->is_anonymous << exec;
 }
 
-void * DatabaseInterface::deleteSolution(string id) {
+void  DatabaseInterface::deleteSolution(string id) {
 	string query = "CALL delete_solution(?)";
 	database_handler << query << id << exec;
 }
@@ -597,7 +476,7 @@ list<Proposal *> *DatabaseInterface::searchProposalsByUser(string user_name) {
 	return proposal_list;
 }
 
-void *DatabaseInterface::insertProposal(Proposal *proposal, string solution_id) {
+void DatabaseInterface::insertProposal(Proposal *proposal, string solution_id) {
 	string query = "	CALL insert_proposal("
 			"		?,"
 			"		?,"
@@ -610,7 +489,7 @@ void *DatabaseInterface::insertProposal(Proposal *proposal, string solution_id) 
 			<< proposal->is_anonymous << exec;
 }
 
-void *DatabaseInterface::deleteProposal(string id) {
+void DatabaseInterface::deleteProposal(string id) {
 	string query = "CALL delete_proposal(?)";
 	database_handler << query << id << exec;
 }
@@ -632,7 +511,7 @@ list<Clarification *> *DatabaseInterface::searchClarifications(string publicatio
 	return clarification_list;
 }
 
-void * DatabaseInterface::insertClarification(Clarification *clarification) {
+void  DatabaseInterface::insertClarification(Clarification *clarification) {
 	string query = "	CALL insert_clarification("
 			"		?,"
 			"		?,"
@@ -640,11 +519,11 @@ void * DatabaseInterface::insertClarification(Clarification *clarification) {
 			"		?"
 			"	)";
 
-	database_handler << query << clarification->publication_id << clarification->creator_user_name
-			<< clarification->id << clarification->question << exec;
+	database_handler << query << clarification->publication_id << clarification->creator_user_name << clarification->id
+			<< clarification->question << exec;
 }
 
-void * DatabaseInterface::deleteClarification(string id) {
+void  DatabaseInterface::deleteClarification(string id) {
 	string query = "CALL delete_clarification(?)";
 	database_handler << query << id << exec;
 }
@@ -776,6 +655,7 @@ Clarification* DatabaseInterface::fetchClarification(result result) {
 Problem* DatabaseInterface::fetchProblem(result result) {
 
 	Problem *problem = new Problem();
+
 	try {
 		time_t timestamp;
 
@@ -838,6 +718,7 @@ Proposal *DatabaseInterface::fetchProposal(result result) {
 		result.fetch("is_anonymous", proposal->is_anonymous);
 		result.fetch("last_edition_datetime", timestamp);
 		proposal->last_edition_datetime = new Datetime(timestamp);
+		result.fetch("solution_id", proposal->solution_id);
 		result.fetch("vote_balance", proposal->vote_balance);
 
 	} catch (exception const &e) {
@@ -848,7 +729,7 @@ Proposal *DatabaseInterface::fetchProposal(result result) {
 	return proposal;
 }
 
-void* DatabaseInterface::voteProblem(string problem_id, string user_name, bool is_positive) {
+void DatabaseInterface::voteProblem(string problem_id, string user_name, bool is_positive) {
 	string query = "	CALL vote_problem("
 			"		?,"
 			"		?,"
@@ -858,7 +739,7 @@ void* DatabaseInterface::voteProblem(string problem_id, string user_name, bool i
 	database_handler << query << problem_id << user_name << is_positive << exec;
 }
 
-void* DatabaseInterface::setAcceptedSolution(string problem_id, string solution_id) {
+void DatabaseInterface::setAcceptedSolution(string problem_id, string solution_id) {
 	string query = "	CALL set_accepted_solution("
 			"		?,"
 			"		?"
@@ -867,7 +748,7 @@ void* DatabaseInterface::setAcceptedSolution(string problem_id, string solution_
 	database_handler << query << problem_id << solution_id << exec;
 }
 
-void* DatabaseInterface::unsetAcceptedSolution(string problem_id) {
+void DatabaseInterface::unsetAcceptedSolution(string problem_id) {
 	string query = "	CALL unset_accepted_solution("
 			"		?"
 			"	)";
@@ -965,7 +846,7 @@ Publication* DatabaseInterface::searchPublication(string publication_id) {
 		return searchProblem(publication_id);
 }
 
-void* DatabaseInterface::answerClarification(string id, string answer) {
+void DatabaseInterface::answerClarification(string id, string answer) {
 	string query = ""
 			"	UPDATE"
 			"		Clarification"
@@ -977,7 +858,7 @@ void* DatabaseInterface::answerClarification(string id, string answer) {
 	database_handler << query << answer << id << exec;
 }
 
-void* DatabaseInterface::voteSolution(string solution_id, string user_name, bool is_positive) {
+void DatabaseInterface::voteSolution(string solution_id, string user_name, bool is_positive) {
 	string query = "	CALL vote_solution("
 			"		?,"
 			"		?,"
@@ -1028,15 +909,16 @@ std::list<Clarification*>* DatabaseInterface::searchAnsweredClarifications(std::
 	return clarification_list;
 }
 
-void* DatabaseInterface::insertNotification(Notification* notification) {
+void DatabaseInterface::insertNotification(Notification* notification) {
 
 	string query = ""
 			"	INSERT INTO"
-			"		Notification(user_name, seen, url, message)"
+			"		Notification(event_code, user_name, originator_user_name, seen, url)"
 			"	VALUES"
-			"		(?, ?, ?, ?)";
+			"		(?, ?, ?, ?, ?)";
 
-	database_handler << query << notification->user_name << "0" << notification->url << notification->message << exec;
+	database_handler << query << notification->event_code << notification->user_name
+			<< notification->originator_user_name << "0" << notification->url << exec;
 }
 
 list<Notification *> *DatabaseInterface::getUnseenNotifications(string user_name) {
@@ -1090,7 +972,7 @@ User* DatabaseInterface::fetchUser(result result) {
 	return user;
 }
 
-void* DatabaseInterface::updateProblemContent(std::string id, std::string content) {
+void DatabaseInterface::updateProblemContent(std::string id, std::string content) {
 	string query = ""
 			"	UPDATE"
 			"		Problem"
@@ -1104,23 +986,23 @@ void* DatabaseInterface::updateProblemContent(std::string id, std::string conten
 
 int DatabaseInterface::numberOfSolutions(std::string problem_id) {
 	string query = "	SELECT"
-				"		count(*) AS number_of_solutions"
-				"	FROM"
-				"		problem_solutions"
-				"	WHERE"
-				"		problem_id = UNHEX(?)";
+			"		count(*) AS number_of_solutions"
+			"	FROM"
+			"		problem_solutions"
+			"	WHERE"
+			"		problem_id = UNHEX(?)";
 
-		result result = database_handler << query << problem_id;
+	result result = database_handler << query << problem_id;
 
-		if(!result.next())
-			// TODO
-			return 0;
+	if (!result.next())
+		// TODO
+		return 0;
 
-		int number_of_solutions;
+	int number_of_solutions;
 
-		result.fetch("number_of_solutions", number_of_solutions);
+	result.fetch("number_of_solutions", number_of_solutions);
 
-		return number_of_solutions;
+	return number_of_solutions;
 }
 
 Notification* DatabaseInterface::fetchNotification(result result) {
@@ -1128,10 +1010,11 @@ Notification* DatabaseInterface::fetchNotification(result result) {
 	Notification *notification = new Notification();
 	try {
 
+		result.fetch("event_code", notification->event_code);
 		result.fetch("user_name", notification->user_name);
+		result.fetch("originator_user_name", notification->originator_user_name);
 		result.fetch("seen", notification->seen);
 		result.fetch("url", notification->url);
-		result.fetch("message", notification->message);
 
 	} catch (exception const &e) {
 		cerr << "ERROR: " << e.what() << " in fetchNotification" << endl;
@@ -1139,4 +1022,61 @@ Notification* DatabaseInterface::fetchNotification(result result) {
 	}
 
 	return notification;
+}
+
+list<string>* DatabaseInterface::searchProblemVoters(string problem_id) {
+	string query = ""
+			"	SELECT username"
+			"	FROM problem_votes"
+			"	WHERE problem_id = UNHEX(?) AND is_positive = 1";
+
+	result result = database_handler << query << problem_id;
+
+	list<string>* problem_voters = new list<string>();
+
+	while (result.next()) {
+		string user_name;
+		result.fetch("username", user_name);
+		problem_voters->push_back(user_name);
+	}
+
+	return problem_voters;
+}
+
+list<string>* DatabaseInterface::searchSolutionVoters(string solution_id) {
+	string query = ""
+			"	SELECT username"
+			"	FROM solution_votes"
+			"	WHERE solution_id = UNHEX(?) AND is_positive = 1";
+
+	result result = database_handler << query << solution_id;
+
+	list<string>* solution_voters = new list<string>();
+
+	while (result.next()) {
+		string user_name;
+		result.fetch("username", user_name);
+		solution_voters->push_back(user_name);
+	}
+
+	return solution_voters;
+}
+
+list<string>* DatabaseInterface::searchProposalVoters(string proposal_id) {
+	string query = ""
+			"	SELECT username"
+			"	FROM proposal_votes"
+			"	WHERE proposal_id = UNHEX(?) AND is_positive = 1";
+
+	result result = database_handler << query << proposal_id;
+
+	list<string>* proposal_voters = new list<string>();
+
+	while (result.next()) {
+		string user_name;
+		result.fetch("username", user_name);
+		proposal_voters->push_back(user_name);
+	}
+
+	return proposal_voters;
 }

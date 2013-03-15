@@ -12,6 +12,11 @@
 #include <list>
 #include <string>
 
+// Type definitions
+typedef std::string String;
+typedef Problem *ProblemPointer;
+typedef Solution *SolutionPointer;
+
 namespace ViewContent {
 
 	std::string escapeConflictingChars(std::string text);
@@ -65,10 +70,5 @@ namespace ViewContent {
 		std::string problem_id;
 	};
 }
-
-// Type definitions
-typedef std::string String;
-typedef Problem *ProblemPointer;
-typedef Solution *SolutionPointer;
 
 #endif /* VIEWCONTENT_H_ */

@@ -138,8 +138,12 @@
  notification_count (number) - Cantidad de notificaciones retornadas.
  notifications (array)       - Arreglo con la información de las notificaciones no vistas.
                                Cada objeto del arreglo tiene:
-                               event_code (string) - Código del evento que se notifica.
-                               url (string)        - URL de redirección de la notificación.
+                               event_code (string)           - Código del evento que se
+                                                               notifica.
+                               originator_user_name (string) - Nombre del usuario que originó
+                                                               el evento notificado.
+                               url (string)                  - URL de redirección de la
+                                                               notificación.
 
 
  Errores:

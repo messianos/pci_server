@@ -9,9 +9,10 @@ public:
 	Notification();
 	virtual ~Notification();
 	std::string user_name;
+	std::string originator_user_name;
 	short int seen;
 	std::string url;
-	std::string message;
+	std::string event_code;
 };
 
 #endif /* NOTIFICATION_H_ */

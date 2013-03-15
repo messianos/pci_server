@@ -416,11 +416,6 @@ var Server = new Object();
 Server.Error = new Object();
 Server.Url = new Object();
 
-Server.Error.invalid_parameters = {
-	code: '40001',
-	description: 'invalid_parameters' // TODO
-}
-
 Server.Error.not_signed_in = {
 	code: '40101',
 	description: 'El usuario no inició sesión' // TODO
@@ -1051,12 +1046,12 @@ Notification.Aux.check_interval = 2000;
 
 Notification.Event. = {
 	code: '',
-	message: function() {}
+	message: function(originator_user_name) {}
 }
 
-Notification.Event.getNotificationMessage = function(event_code) {
+Notification.Event.getNotificationMessage = function(event_code, originator_user_name) {
 	switch(event_code) {
-		case Server.Event..code : return Server.Event..message();
+		case Server.Event..code : return Server.Event..message(originator_user_name);
 	}
 }
 */

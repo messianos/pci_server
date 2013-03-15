@@ -107,17 +107,20 @@ CREATE TABLE IF NOT EXISTS Proposal (
         id BINARY(17),
         is_anonymous BOOLEAN,
         last_edition_datetime TIMESTAMP,
+        solution_id BINARY(17),
         vote_balance INT,
         PRIMARY KEY(id),
-        FOREIGN KEY(creator_user_name) REFERENCES User(user_name)
+        FOREIGN KEY(creator_user_name) REFERENCES User(user_name),
+        FOREIGN KEY(solution_id) REFERENCES Solution(id)
 ) ENGINE = InnoDB;
  
 
 CREATE TABLE IF NOT EXISTS Notification (
+        event_code INT,
         user_name VARCHAR(31),
+        originator_user_name VARCHAR(31),
         seen BOOLEAN,
         url VARCHAR(255),
-        message VARCHAR(255) CHARACTER SET utf8,
         FOREIGN KEY(user_name) REFERENCES User(user_name)
 ) ENGINE = InnoDB;
  
@@ -909,7 +912,7 @@ CREATE PROCEDURE insert_proposal(
 BEGIN
         DECLARE v_creation_datetime TIMESTAMP DEFAULT UTC_TIMESTAMP();
         DECLARE v_id_binary BINARY(17) DEFAULT UNHEX(in_id);
-        DECLARE v_solution_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
+        DECLARE v_solution_id_binary BINARY(17) DEFAULT UNHEX(in_solution_id);
        
         START TRANSACTION;
        
@@ -920,6 +923,7 @@ BEGIN
                 id,
                 is_anonymous,
                 last_edition_datetime,
+                solution_id,
                 vote_balance
         )
         VALUES (
@@ -929,13 +933,13 @@ BEGIN
                 v_id_binary,
                 in_is_anonymous,
                 v_creation_datetime,
+                v_solution_id_binary,
                 0
         );
        
         INSERT INTO solution_proposals(
                 solution_id,
                 proposal_id
-               
         )
         VALUES (
                 v_solution_id_binary,
