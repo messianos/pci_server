@@ -1080,3 +1080,104 @@ list<string>* DatabaseInterface::searchProposalVoters(string proposal_id) {
 
 	return proposal_voters;
 }
+
+bool DatabaseInterface::userExists(std::string user_id) {
+	return searchUser(user_id) != NULL;
+}
+
+void DatabaseInterface::makeProblemCreatorVisible(std::string problem_id) {
+	string query = ""
+			"	UPDATE Problem"
+			"	SET"
+			"		is_anonymous = 0"
+			"	WHERE"
+			"		id = UNHEX(?)";
+
+	database_handler << query << problem_id << exec;
+}
+
+void DatabaseInterface::makeSolutionCreatorVisible(std::string solution_id) {
+	string query = ""
+			"	UPDATE Solution"
+			"	SET"
+			"		is_anonymous = 0"
+			"	WHERE"
+			"		id = UNHEX(?)";
+
+	database_handler << query << solution_id << exec;
+}
+
+void DatabaseInterface::makeProposalCreatorVisible(std::string proposal_id) {
+	string query = ""
+			"	UPDATE Proposal"
+			"	SET"
+			"		is_anonymous = 0"
+			"	WHERE"
+			"		id = UNHEX(?)";
+
+	database_handler << query << proposal_id << exec;
+}
+
+void DatabaseInterface::editProblem(std::string problem_id, std::string description, std::string content) {
+	string query = ""
+			"	UPDATE Solution"
+			"	SET"
+			"		description = ?,"
+			"		content = ?"
+			"	WHERE id = UNHEX(?)";
+
+	database_handler << query << description << content << problem_id << exec;
+}
+
+void DatabaseInterface::editSolution(std::string solution_id, std::string description, std::string content) {
+	string query = ""
+			"	UPDATE Solution"
+			"	SET"
+			"		description = ?,"
+			"		content = ?"
+			"	WHERE id = UNHEX(?)";
+
+	database_handler << query << description << content << solution_id << exec;
+}
+
+void DatabaseInterface::editProposal(std::string proposal_id, std::string content) {
+	string query = ""
+			"	UPDATE Proposal"
+			"	SET"
+			"		content = ?"
+			"	WHERE id = UNHEX(?)";
+
+	database_handler << query << content << proposal_id << exec;
+}
+
+int DatabaseInterface::getProposalVoteBalance(std::string proposal_id) {
+	int vote_balance;
+	string query = ""
+	"	SELECT"
+	"		vote_balance"
+	"	FROM"
+	"		Proposal"
+	"	WHERE"
+	"		id = UNHEX(?)";
+
+	result result = database_handler << query << proposal_id;
+
+	if (!result.next())
+	// TODO: Throw exception?
+	return 0;
+
+	result.fetch("vote_balance", vote_balance);
+
+	return vote_balance;
+}
+
+void DatabaseInterface::voteProposal(std::string proposal_id, std::string user_name, bool is_positive) {
+	string query = "	CALL vote_proposal("
+			"		?,"
+			"		?,"
+			"		?"
+			"	)";
+
+	database_handler << query << proposal_id << user_name << is_positive << exec;
+}
+

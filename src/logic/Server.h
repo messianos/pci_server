@@ -14,6 +14,7 @@
 #include "../service/DatabaseInterface.h"
 #include "../service/IdManager.h"
 #include "../service/InputValidator.h"
+#include "../service/Notificator.h"
 #include "../service/PasswordManager.h"
 #include "ViewContent.h"
 #include <boost/algorithm/string.hpp>

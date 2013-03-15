@@ -17,15 +17,6 @@ void database_operations_tester(){
 	cerr << "	Database tester enabled" << endl;
 	cerr << "/**********************************************/" << endl;
 	cerr << "Output >>" << endl;
-
-	Notification* notification = new Notification();
-	notification->user_name = "nicoocho";
-	notification->seen = 0;
-	notification->url = "/publication/5099218C4F6FB04F1F9C5C5632C15E672A";
-	notification->message = "Notificacion de prueba";
-
-	DatabaseInterface::insertNotification(notification);
-
 	cerr << "/**********************************************/" << endl;
 }
 /***************************************/

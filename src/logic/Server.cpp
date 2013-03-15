@@ -755,7 +755,7 @@ void Server::makeSolutionCreatorVisible() {
 		}
 		
 		DatabaseInterface::makeSolutionCreatorVisible(solution_id); // TODO: check
-		Notificator::makePostCreatorVisible(solution); // TODO: check --> what if it fails
+		Notificator::editSolution(solution); // TODO: check --> what if it fails
 
 		setSuccessResponseStatus();
 		

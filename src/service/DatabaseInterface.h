@@ -131,6 +131,20 @@ public:
 	static std::list<std::string>* searchProposalVoters(std::string proposal_id);
 
 
+	static bool userExists(std::string user_id);
+
+	static void makeProblemCreatorVisible(std::string problem_id);
+	static void makeSolutionCreatorVisible(std::string solution_id);
+	static void makeProposalCreatorVisible(std::string proposal_id);
+
+	static void editSolution(std::string solution_id, std::string description, std::string content);
+	static void editProblem(std::string problem_id, std::string description, std::string content);
+	static void editProposal(std::string problem_id, std::string content);
+
+
+	static int getProposalVoteBalance(std::string proposal_id);
+
+	static void voteProposal(std::string proposal_id, std::string user_name, bool is_positive);
 };
 
 #endif /* DATABASEINTERFACE_H_ */

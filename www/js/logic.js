@@ -416,6 +416,11 @@ var Server = new Object();
 Server.Error = new Object();
 Server.Url = new Object();
 
+Server.Error.invalid_parameters = {
+	code: '40001',
+	description: 'invalid_parameters' // TODO
+}
+
 Server.Error.not_signed_in = {
 	code: '40101',
 	description: 'El usuario no inició sesión' // TODO
