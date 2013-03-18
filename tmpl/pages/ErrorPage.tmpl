@@ -5,6 +5,21 @@
 	<% view error_page_view uses ViewContent::ErrorPageContent extends page_template_view %>
 		
 		
+		<% template main_content() %>
+			<div class="main-container header-bar-padding">
+				<div class="error-container">
+					<div class="pull-left" id="error-ornament"></div>
+					<div class="error-description-container pull-left">
+						<h1>Error <%= http_error_code %></h1>
+						<p class="lead" id="error-description"></p>
+						<br />
+						<p class="muted">¿Desea volver a la <a href="<% url "/" %>">página inicial</a>?</p>
+					</div>
+				</div>
+			</div>
+		<% end template %>
+		
+		
 		<% template page_title() %>
 			Error <%= http_error_code %> - PCI
 		<% end template %>
@@ -18,17 +33,7 @@
 		
 		<% template body_content() %>
 			<% include header_bar() using template_view %>
-			<div class="header-bar-padding" id="main-container">
-				<div id="error-container">
-					<div class="pull-left" id="error-ornament"></div>
-					<div class="pull-left" id="error-description-container">
-						<h1>Error <%= http_error_code %></h1>
-						<p class="lead" id="error-description"></p>
-						<br />
-						<p class="muted">¿Desea volver a la <a href="<% url "/" %>">página inicial</a>?</p>
-					</div>
-				</div>
-			</div>
+			<% include main_content() %>
 		<% end template %>
 		
 		

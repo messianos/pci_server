@@ -5,7 +5,166 @@
 	<% view problem_page_view uses ViewContent::ProblemPageContent extends page_template_view %>
 		
 		
+		<% template problem_content() %>
+			<div id="problem-content-container"></div>
+			<script>
+				var bbcode_content = $('#problem-content-content').html();
+				var html_content = Misc.parseBbcodeToHtml(bbcode_content);
+				$('#problem-content-container').append(html_content);
+			</script>
+		<% end template %>
+		
+		
+		<% template solutions_sidebar() %>
+			Completar con soluciones
+		<% end template %>
+		
+		
+		<% template problem_vote() %>
+			<div class="text-center">
+				<a class="vote-positive-button" id="vote-positive-button">+</a>
+				<div class="vote-balance-display" id="vote-balance-display"><%= problem->vote_balance %></div>
+				<a class="vote-negative-button" id="vote-negative-button">-</a>
+			</div>
+			<script>
+				Global.Temp.user_vote = <%= user_vote %>;
+				var vote_balance_display = $('#vote-balance-display');
+				var vote_positive_button = $('#vote-positive-button');
+				var vote_negative_button = $('#vote-negative-button');
+				
+				if (Global.Temp.user_vote > 0)
+					vote_positive_button.addClass('active');
+				else
+					if (Global.Temp.user_vote < 0)
+						vote_negative_button.addClass('active');
+				
+				vote_positive_button.click(function() {
+					if (Global.Temp.user_vote < 1) {
+						var problem_id = '<%= problem->id %>';
+						
+						var on_success = function(vote_balance) {
+							Global.Temp.user_vote++;
+							vote_positive_button.addClass('active');
+							vote_negative_button.removeClass('active');
+							vote_balance_display.html(vote_balance);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.voteProblem(on_success, on_error, 'true', problem_id);
+					}
+				});
+				
+				vote_negative_button.click(function() {
+					if (Global.Temp.user_vote > -1) {
+						var problem_id = '<%= problem->id %>';
+						
+						var on_success = function(vote_balance) {
+							Global.Temp.user_vote--;
+							vote_positive_button.removeClass('active');
+							vote_negative_button.addClass('active');
+							vote_balance_display.html(vote_balance);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.voteProblem(on_success, on_error, 'false', problem_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template problem_description() %>
+			<h3><%= problem->description %></h3>
+			Creado el <%= problem->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %><br />
+			Editado por última vez el <%= problem->last_edition_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+		<% end template %>
+		
+		
+		<% template user_information() %>
+			<% if problem->is_anonymous %>
+				Anónimo
+			<% else %>
+				<a href="<% url "/user" using problem->creator_user_name %>">
+					<%= problem->creator_user_name %>
+				</a>
+			<% end %>
+		<% end template %>
+		
+		
+		<% template problem_header() %>
+			<div class="row-fluid">
+				<div class="span2">
+					<% include problem_vote() %>
+				</div>
+				<div class="span6">
+					<% include problem_description() %>
+				</div>
+				<div class="span4">
+					<% include user_information() %>
+				</div>
+			</div>
+		<% end template %>
+		
+		
+		<% template new_solution_button() %>
+			<button class="btn" id="new-solution-button"><i class="icon-plus"></i> Nueva solución</button>
+			<script>
+				$('#new-solution-button').click(function() {
+					window.location.href = Server.Url.fetch_new_solution_page('<%= problem->id %>');
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template edit_problem_button() %>
+			<button class="btn" id="edit-problem-button"><i class="icon-pencil"></i> Editar problema</button>
+			<script>
+				$('#edit-problem-button').click(function() {
+					alert("click en edit button - Completar esto");
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template problem_toolbar() %>
+			<% if (content.signed_in && content.user_name.compare(content.problem->creator_user_name) == 0) %>
+				<% include edit_problem_button() %>
+			<% else %>
+				<% include new_solution_button() %>
+			<% end %>
+		<% end template %>
+		
+		
+		<% template main_content() %>
+			<div class="main-container narrow header-bar-padding">
+				<% if signed_in %>
+					<% include problem_toolbar() %>	
+					<hr />
+				<% end %>
+				<% include problem_header() %>
+				<hr />
+				<% include solutions_sidebar() %>
+				<% include problem_content() %>
+				<% include clarifications(problem, clarifications) using clarifications_view %>
+			</div>
+		<% end template %>
+		
+		
+		<% template hide_content() %>
+			<div class="hide" id="problem-content-content">
+				<%= problem->content %>
+			</div>
+		<% end template %>
+		
+		
 		<% template page_title() %>
+			<%= problem->description %> - PCI
 		<% end template %>
 		
 		
@@ -16,23 +175,11 @@
 		<% end template %>
 		
 		
-		<% template body_content() %>
+		<% template body_content() %>	
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
-			<div class="narrow header-bar-padding" id="main-container">
-				Esto es temporal:<br />
-				<%= problem->description %>
-				<script>
-					var bbcode = '<% c++ out() << ViewContent::escapeConflictingChars(content.problem->content); %>';
-					var html = Misc.parseBbcodeToHtml(bbcode);
-					// TODO: temporal
-					$('#main-container').append(html);
-				</script>
-			</div>
-		<% end template %>
-		
-		
-		<% template js_body_code() %>
+			<% include hide_content() %>
+			<% include main_content() %>
 		<% end template %>
 		
 		

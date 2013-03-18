@@ -5,6 +5,13 @@
 	<% view ideas_page_view uses ViewContent::SessionContent extends page_template_view %>
 		
 		
+		<% template main_content() %>
+			<div class="main-container narrow header-bar-padding">
+				Ideas content (temporal)
+			</div>
+		<% end template %>
+		
+		
 		<% template page_title() %>
 			Ideas - PCI
 		<% end template %>
@@ -18,9 +25,7 @@
 		<% template body_content() %>
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
-			<div class="narrow header-bar-padding" id="main-container">
-				Ideas
-			</div>
+			<% include main_content() %>
 		<% end template %>
 		
 		

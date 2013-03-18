@@ -1,10 +1,10 @@
 
-#error-container {
+.error-container {
 	margin: 0px auto;
 	width: 600px;
 }
 
-#error-description-container {
+.error-description-container {
 	margin: 48px 0px 0px 48px;
 	width: 300px;
 }

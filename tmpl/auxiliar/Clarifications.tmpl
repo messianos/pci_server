@@ -1,0 +1,49 @@
+
+<% c++ #include "../src/logic/ViewContent.h" %>
+
+<% skin pci_skin %>
+	<% view clarifications_view uses ViewContent::SessionContent %>
+		
+		
+		<% template clarification_row(PublicationPointer publication, ClarificationPointer clarification) %>
+			(Temporal)<br />
+			Pregunta: <%= clarification->question %><br />
+			<% if (! clarification->answer.empty()) %>
+				Respuesta: <%= clarification->answer %><br />
+			<% else %>
+				<% if (content.signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
+					<% include answer_clarification_form(clarification->id) using forms_view %>
+				<% end %>
+			<% end %>
+		<% end template %>
+		
+		
+		<% template clarifications(PublicationPointer publication, ClarificationList clarifications) %>
+			<hr />
+			<h3>Aclaraciones</h3>
+			<div class="clarifications_row_container">
+				<div class="clarifications_question_container">
+					<div class="clarifications_column_header clarifications_question_content">
+						Pregunta
+					</div>
+				</div>
+				<div class="clarifications_answer_container">
+					<div class="clarifications_answer_content clarifications_column_header">
+						Respuesta
+					</div>
+				</div>
+				<% foreach clarification in *clarifications %>
+					<% item %>
+						<% include clarification_row(publication, clarification) %>
+  					<% end %>
+  					<% empty %>
+  					<% end %>
+			</div>
+			<% if (content.signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
+				<% include ask_clarification_form(publication->id) using forms_view %>
+			<% end %>
+		<% end template %>
+	
+	
+	<% end view %>
+<% end skin %>

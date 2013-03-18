@@ -1,59 +1,5 @@
 
-/* Debugging
-
-div {
-  border-color:Red;
-  border-style:solid;
-  border-width:1px;
-}
-
-*/
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Fonts
-----------------------------------------------------------------------------------------------
-*/
-
-@font-face {
-	font-family: font_default;
-	src:
-		local(Arial),
-		local(Haettenschweiler),
-		local("Franklin Gothic Bold"),
-		local(Charcoal),
-		local("Helvetica Inserat");
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Global
-----------------------------------------------------------------------------------------------
-*/
-
-* {
-	font-family: font_default;
-	margin: 0px;
-	outline-style: none;
-	outline-width: 0px;
-	padding: 0px;
-}
-
-a, a:active, a:hover, a:visited {
-	cursor: pointer;
-	text-decoration: none;
-}
-
-
-/*
-----------------------------------------------------------------------------------------------
-	Other
-----------------------------------------------------------------------------------------------
-*/
-
-#main-container {
+.main-container {
 	background-color: #FFFFFF;
 	border-color: #D0D0D0;
 	border-style: solid;
@@ -71,7 +17,7 @@ a, a:active, a:hover, a:visited {
 	overflow: hidden;
 }
 
-#main-container.narrow {
+.main-container.narrow {
 	margin-left: 136px;
 }
 
@@ -79,7 +25,21 @@ a, a:active, a:hover, a:visited {
 	padding-top: 68px;
 }
 
-#header-bar-logo {
+.tick {
+	background-image: url('../img/tick_off.png');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.tick.active {
+	background-image: url('../img/tick_on.png');
+}
+
+
+
+
+
+.pci-logo {
 	background-image: url('../img/logo.png');
 	background-position: left center;
 	background-repeat: no-repeat;
@@ -87,20 +47,13 @@ a, a:active, a:hover, a:visited {
 	width: 98px;
 }
 
-#notification-container-content {
-	display: none;
-}
-
-#notification-main-container {
+.notifications-main-container {
 	max-height: 384px;
 	width: 300px;
 	overflow-y: auto;
 }
 
-#notification-container {
-}
-
-#toggle-anonymous-mode-button {
+.toggle-anonymous-mode-button {
 	background-image: url('../img/anonymous_mode_off.png');
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -108,17 +61,17 @@ a, a:active, a:hover, a:visited {
 	width: 48px;
 }
 
-#toggle-anonymous-mode-button.active {
+.toggle-anonymous-mode-button.active {
 	background-image: url('../img/anonymous_mode_on.png');
 }
 
-#sign-in-button.active {
+.sign-in-button.active {
 	background-color: #F1F1F1;
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
 
-#sign-in-form-container {
+.sign-in-form-container {
 	background-color: #F1F1F1;
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
@@ -134,16 +87,7 @@ a, a:active, a:hover, a:visited {
 	right: 30px;
 }
 
-
-
-
-
-
-
-
-
-
-#navigation-menu {
+.navigation-menu {
 	position: fixed;
 	left: 20px;
 	top: 68px;
@@ -157,7 +101,7 @@ a, a:active, a:hover, a:visited {
 	border-width: 1px;
 	color: #7A7A7A;
 	font-family: font_button_square;
-	font-size: 0.875em;
+	font-size: 1.0625em;
 	height: 26px;
 	padding-top: 68px;
 	margin-bottom: 16px;
@@ -177,82 +121,76 @@ a, a:active, a:hover, a:visited {
 	border-color: #B5B5B5;
 }
 
-#problems-button {
+.problems-button {
 	background-image: url('../img/problems_off.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 }
 
-#problems-button:hover {
+.problems-button:hover {
 	background-image: url('../img/problems_on.png');
 	box-shadow: 0px 0px 64px 0px #FFF857 inset;
 }
 
-#problems-button.active {
+.problems-button.active {
 	background-image: url('../img/problems_on.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 	box-shadow: 0px 0px 64px 0px #FFF857 inset;
 }
 
-#ideas-button {
+.ideas-button {
 	background-image: url('../img/ideas_off.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 }
 
-#ideas-button:hover {
+.ideas-button:hover {
 	background-image: url('../img/ideas_on.png');
 	box-shadow: 0px 0px 64px 0px #EAE1B5 inset;
 }
 
-#ideas-button.active {
+.ideas-button.active {
 	background-image: url('../img/ideas_on.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 	box-shadow: 0px 0px 64px 0px #EAE1B5 inset;
 }
 
-#profile-button {
+.profile-button {
 	background-image: url('../img/profile_off.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 }
 
-#profile-button:hover {
+.profile-button:hover {
 	background-image: url('../img/profile_on.png');
 	box-shadow: 0px 0px 64px 0px #CCEACD inset;
 }
 
-#profile-button.active {
+.profile-button.active {
 	background-image: url('../img/profile_on.png');
 	background-position: center center;
 	background-repeat: no-repeat;
 	box-shadow: 0px 0px 64px 0px #CCEACD inset;
 }
 
-
-
-
-
-
-
-
-.problem-description-box-container {
+.vote-balance-display {
 	
 }
 
-.problem-votes-container {
+.vote-positive-button {
 	
 }
 
-.problem-solved-tick {
+.vote-positive-button.active {
+	color: Red;
+}
+
+.vote-negative-button {
 	
 }
 
-.problem-solved-tick.active {
-	
+.vote-negative-button.active {
+	color: Red;
 }
-
-
-

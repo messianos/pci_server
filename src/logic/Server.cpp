@@ -1244,14 +1244,29 @@ void Server::fetchProblemPage(string problem_id) {
 
 		ProblemPageContent content;
 		setSessionDataOnViewContent(content);
-		// TODO: set content attributes
-		/*
-			Problem *problem;
-			Solution *accepted_solution;
-			std::list<Solution *> *solutions;
-			std::list<Clarification *> *clarifications;
-			int user_vote;
-		*/
+		content.problem = problem;
+
+		if (problem->is_solved)
+			content.accepted_solution = DatabaseInterface::searchAcceptedSolution(problem_id);
+		else
+			content.accepted_solution = NULL;
+
+		content.solutions = DatabaseInterface::searchSolutions(problem_id);
+
+		string user_name = fetchSessionData("user_name");
+
+		if (isSessionDataSet("signed_in")) {
+			if (user_name.compare(problem->creator_user_name) == 0)
+				content.clarifications = DatabaseInterface::searchClarifications(problem_id);
+			else
+				content.clarifications = DatabaseInterface::searchAnsweredClarifications(problem_id, user_name);
+
+			content.user_vote = DatabaseInterface::getUserVoteOnProblem(user_name, problem_id);
+		} else {
+			content.user_vote = 0;
+			content.clarifications = DatabaseInterface::searchAnsweredClarifications(problem_id);
+		}
+
 		render("problem_page_view", content);
 		setSuccessResponseStatus();
 		

@@ -5,7 +5,18 @@
 	<% view main_page_view uses ViewContent::SessionContent extends page_template_view %>
 		
 		
+		<% template main_content() %>
+			<div class="main-container narrow header-bar-padding">
+				<div class="sign-up-form-container pull-right">
+					<legend>Regístrate</legend>
+					<% include sign_up_form() using forms_view %>
+				</div>
+			</div>
+		<% end template %>
+		
+		
 		<% template page_title() %>
+			PCI - Plataforma Comunitaria de Ideas
 		<% end template %>
 		
 		
@@ -17,16 +28,7 @@
 		
 		<% template body_content() %>
 			<% include header_bar() using template_view %>
-			<div class="header-bar-padding" id="main-container">
-				<div class="pull-right" id="sign-up-form-container">
-					<legend>Regístrate</legend>
-					<% include sign_up_form() using forms_view %>
-				</div>
-			</div>
-		<% end template %>
-		
-		
-		<% template js_body_code() %>
+			<% include main_content() %>
 		<% end template %>
 		
 		

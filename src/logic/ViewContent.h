@@ -5,6 +5,7 @@
 // Includes
 #include "../entity/Clarification.h"
 #include "../entity/Problem.h"
+#include "../entity/Proposal.h"
 #include "../entity/Solution.h"
 #include "../entity/User.h"
 #include <boost/algorithm/string.hpp>
@@ -14,12 +15,15 @@
 
 // Type definitions
 typedef std::string String;
+typedef Publication *PublicationPointer;
 typedef Problem *ProblemPointer;
 typedef Solution *SolutionPointer;
+typedef Clarification *ClarificationPointer;
+typedef std::list<Clarification *> *ClarificationList;
 
 namespace ViewContent {
 
-	std::string escapeConflictingChars(std::string text);
+	std::string javascriptSafeText(std::string text);
 
 	struct SessionContent : public cppcms::base_content {
 		bool signed_in;
@@ -64,6 +68,8 @@ namespace ViewContent {
 	struct SolutionPageContent: SessionContent {
 		Solution *solution;
 		std::list<Clarification *> *clarifications;
+		std::list<Proposal *> *proposals;
+		int user_vote;
 	};
 
 	struct NewSolutionPageContent : SessionContent {

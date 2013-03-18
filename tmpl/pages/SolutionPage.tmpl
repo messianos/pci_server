@@ -5,7 +5,151 @@
 	<% view solution_page_view uses ViewContent::SolutionPageContent extends page_template_view %>
 		
 		
+		<% template solution_content() %>
+			<div id="solution-content-container"></div>
+			<script>
+				var bbcode_content = $('#solution-content-content').html();
+				var html_content = Misc.parseBbcodeToHtml(bbcode_content);
+				$('#solution-content-container').append(html_content);
+			</script>
+		<% end template %>
+		
+		
+		<% template proposals_sidebar() %>
+			Completar con propuestas de mejora
+		<% end template %>
+		
+		
+		<% template solution_vote() %>
+			<div class="text-center">
+				<a class="vote-positive-button" id="vote-positive-button">+</a>
+				<div class="vote-balance-display" id="vote-balance-display"><%= solution->vote_balance %></div>
+				<a class="vote-negative-button" id="vote-negative-button">-</a>
+			</div>
+			<script>
+				Global.Temp.user_vote = <%= user_vote %>;
+				var vote_balance_display = $('#vote-balance-display');
+				var vote_positive_button = $('#vote-positive-button');
+				var vote_negative_button = $('#vote-negative-button');
+				var solution_id = '<%= solution->id %>';
+				
+				if (Global.Temp.user_vote > 0)
+					vote_positive_button.addClass('active');
+				else
+					if (Global.Temp.user_vote < 0)
+						vote_negative_button.addClass('active');
+				
+				vote_positive_button.click(function() {
+					if (Global.Temp.user_vote < 1) {
+						var on_success = function(vote_balance) {
+							Global.Temp.user_vote++;
+							vote_positive_button.addClass('active');
+							vote_negative_button.removeClass('active');
+							vote_balance_display.html(vote_balance);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.voteSolution(on_success, on_error, 'true', solution_id);
+					}
+				});
+				
+				vote_negative_button.click(function() {
+					if (Global.Temp.user_vote > -1) {
+						var on_success = function(vote_balance) {
+							Global.Temp.user_vote--;
+							vote_positive_button.removeClass('active');
+							vote_negative_button.addClass('active');
+							vote_balance_display.html(vote_balance);
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.voteSolution(on_success, on_error, 'false', solution_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template solution_description() %>
+			<h3><%= solution->description %></h3>
+			Creado el <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %><br />
+			Editado por última vez el <%= solution->last_edition_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+		<% end template %>
+		
+		
+		<% template user_information() %>
+			<% if solution->is_anonymous %>
+				Anónimo
+			<% else %>
+				<a href="<% url "/user" using solution->creator_user_name %>">
+					<%= solution->creator_user_name %>
+				</a>
+			<% end %>
+		<% end template %>
+		
+		
+		<% template solution_header() %>
+			<div class="row-fluid">
+				<div class="span2">
+					<% include solution_vote() %>
+				</div>
+				<div class="span6">
+					<% include solution_description() %>
+				</div>
+				<div class="span4">
+					<% include user_information() %>
+				</div>
+			</div>
+		<% end template %>
+		
+		
+		<% template edit_solution_button() %>
+			<button class="btn" id="edit-solution-button"><i class="icon-pencil"></i> Editar solución</button>
+			<script>
+				$('#edit-solution-button').click(function() {
+					alert("click en edit button - Completar esto");
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template solution_toolbar() %>
+			<% if (content.signed_in && content.user_name.compare(content.solution->creator_user_name) == 0) %>
+				<% include edit_solution_button() %>
+			<% end %>
+		<% end template %>
+		
+		
+		<% template main_content() %>
+			<div class="main-container narrow header-bar-padding">
+				<% if signed_in %>
+					<% include solution_toolbar() %>
+					<hr />
+				<% end %>
+				<% include solution_header() %>
+				<hr />
+				<% include proposals_sidebar() %>
+				<% include solution_content() %>
+				<% include clarifications(solution, clarifications) using clarifications_view %>
+			</div>
+		<% end template %>
+		
+		
+		<% template hide_content() %>
+			<div class="hide" id="solution-content-content">
+				<%= solution->content %>
+			</div>
+		<% end template %>
+		
+		
 		<% template page_title() %>
+			<%= solution->description %> - PCI
 		<% end template %>
 		
 		
@@ -17,11 +161,8 @@
 		<% template body_content() %>
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
-			<div class="narrow header-bar-padding" id="main-container">
-				Esto es temporal:<br />
-				<%= solution->description %>
-				<%= solution->content %>
-			</div>
+			<% include hide_content() %>
+			<% include main_content() %>
 		<% end template %>
 		
 		

@@ -3,23 +3,21 @@
 
 <% skin pci_skin %>
 	<% view forms_view uses ViewContent::SessionContent %>
-	
-	
+		
+		
 		<% template sign_in_form() %>
 			<form id="sign-in-form">
 				<input id="sign-in-user-name" placeholder="Nombre de usuario" type="text" /><br />
 				<input id="sign-in-password" placeholder="Contraseña" type="password" /><br />
-				<input class="btn pull-right" type="submit" value="Ingresar" />
+				<input class="btn pull-right" type="submit" value="Identificarse" />
 			</form>
 			<script>
 				$('#sign-in-form').submit(function(event) {
 					event.preventDefault();
-
-					var form = $(this);
 					
+					var form = $(this);
 					var password_field = $('#sign-in-password');
 					var user_name_field = $('#sign-in-user-name');
-					
 					var password = $.trim(password_field.val());
 					var user_name = $.trim(user_name_field.val());
 					
@@ -48,6 +46,24 @@
 				});
 			</script>
 		<% end template %>
+		
+		
+		<% template search_form() %>
+			<form class="navbar-search" id="search-form">
+				<input class="search-query span2" id="search-query" placeholder="Buscar" type="text">
+			</form>
+			<script>
+				$('#search-form').submit(function(event) {
+					event.preventDefault();
+					
+					var form = $(this);
+					var query_field = $('#search-query');
+					var query = $.trim(query_field.val());
+					
+					alert("Buscar: '" + query + "' - Completar esto!");
+				});
+			</script>
+		<% end template %>
 	
 	
 		<% template sign_up_form() %>
@@ -70,9 +86,8 @@
 				Misc.configureDatepicker($('#sign-up-birth-date'));
 				$('#sign-up-form').submit(function(event) {
 					event.preventDefault();
-
-					var form = $(this);
 					
+					var form = $(this);
 					var birth_date_field = $('#sign-up-birth-date');
 					var email_field = $('#sign-up-email');
 					var first_name_field = $('#sign-up-first-name');
@@ -82,7 +97,6 @@
 					var password_field = $('#sign-up-password');
 					var password_confirmation_field = $('#sign-up-password-confirmation');
 					var user_name_field = $('#sign-up-user-name');
-					
 					var birth_date = birth_date_field.val();
 					var email = email_field.val();
 					var first_name = $.trim(first_name_field.val());
@@ -135,7 +149,7 @@
 			<form id="publicate-problem-form">
 				<input id="publicate-problem-description" placeholder="Descripción del problema" type="text" /><br />
 				<textarea id="publicate-problem-content"></textarea><br />
-				<input class="btn pull-right" type="submit" value="Publicar" />
+				<input class="btn pull-right" type="submit" value="Publicar problema" />
 			</form>
 			<script>
 				Misc.configureTexteditor('publicate-problem-content');
@@ -143,16 +157,13 @@
 					event.preventDefault();
 					
 					var form = $(this);
-					
 					var editor_instance = CKEDITOR.instances['publicate-problem-content'];
-					var editor_inner_div = $('#cke_' + editor_instance.name);
 					editor_instance.updateElement();
-					
+					var editor_inner_div = $('#cke_' + editor_instance.name);
 					var content_field = $('#publicate-problem-content');
 					var description_field = $('#publicate-problem-description');
-					
-					var content = content_field.val();
-					var description = description_field.val();
+					var content = $.trim(content_field.val());
+					var description = $.trim(description_field.val());
 					
 					Tooltip.hideAllTooltips();
 					var on_invalid_input = function(invalid_input_descriptions) {
@@ -182,7 +193,7 @@
 			<form id="publicate-solution-form">
 				<input id="publicate-solution-description" placeholder="Descripción de la solución" type="text" /><br />
 				<textarea id="publicate-solution-content"></textarea><br />
-				<input class="btn pull-right" type="submit" value="Publicar" />
+				<input class="btn pull-right" type="submit" value="Publicar solución" />
 			</form>
 			<script>
 				Misc.configureTexteditor('publicate-solution-content');
@@ -190,16 +201,13 @@
 					event.preventDefault();
 					
 					var form = $(this);
-					
 					var editor_instance = CKEDITOR.instances['publicate-solution-content'];
-					var editor_inner_div = $('#cke_' + editor_instance.name);
 					editor_instance.updateElement();
-					
+					var editor_inner_div = $('#cke_' + editor_instance.name);
 					var content_field = $('#publicate-solution-content');
 					var description_field = $('#publicate-solution-description');
-					
-					var content = content_field.val();
-					var description = description_field.val();
+					var content = $.trim(content_field.val());
+					var description = $.trim(description_field.val());
 					
 					Tooltip.hideAllTooltips();
 					var on_invalid_input = function(invalid_input_descriptions) {
@@ -219,6 +227,114 @@
 						};
 						
 						Server.publicateSolution(on_success, on_error, content, description);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template ask_clarification_form(String publication_id) %>
+			<form id="ask-clarification-form">
+				<textarea id="ask-clarification-question" placeholder="Solicitar una aclaración..."></textarea><br />
+				<input class="btn pull-right" type="submit" value="Publicar pregunta" />
+			</form>
+			<script>
+				$('#ask-clarification-form').submit(function(event) {
+					event.preventDefault();
+					
+					var form = $(this);
+					var question_field = $('#ask-clarification-question');
+					var publication_id = '<%= publication_id %>';
+					var question = $.trim(question_field.val());
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.Clarification.content.code in invalid_input_descriptions)
+							Tooltip.showTooltip(question_field, form.parent(), 'right', invalid_input_descriptions[InputValidator.Input.Clarification.content.code]);
+					};
+					
+					if (InputValidator.validateClarificationInput(on_invalid_input, question)) {
+						var on_success = function(clarification_id) {
+							alert("askClarification OK, completar acciones aqui");
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.askClarification(on_success, on_error, publication_id, question);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template answer_clarification_form(String clarification_id) %>
+			<form id="answer-clarification-form">
+				<textarea id="answer-clarification-answer" placeholder="Responder..."></textarea><br />
+				<input class="btn pull-right" type="submit" value="Publicar respuesta" />
+			</form>
+			<script>
+				$('#answer-clarification-form').submit(function(event) {
+					event.preventDefault();
+					
+					var form = $(this);
+					var answer_field = $('#answer-clarification-answer');
+					var answer = $.trim(answer_field.val());
+					var clarification_id = '<%= clarification_id %>';
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.Clarification.content.code in invalid_input_descriptions)
+							Tooltip.showTooltip(question_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.Clarification.content.code]);
+					};
+					
+					if (InputValidator.validateClarificationInput(on_invalid_input, answer)) {
+						var on_success = function() {
+							alert("answerClarification OK, completar acciones aqui");
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.answerClarification(on_success, on_error, answer, clarification_id);
+					}
+				});
+			</script>
+		<% end template %>
+		
+		
+		<% template publicate_proposal_form(String solution_id) %>
+			<form id="publicate-proposal-form">
+				<textarea id="publicate-proposal-content" placeholder="Proponer una mejora..."></textarea><br />
+				<input class="btn pull-right" type="submit" value="Publicar propuesta" />
+			</form>
+			<script>
+				$('#publicate-proposal-form').submit(function(event) {
+					event.preventDefault();
+					
+					var form = $(this);
+					var content_field = $('#publicate-proposal-content');
+					var content = $.trim(content_field.val());
+					var solution_id = '<%= solution_id %>';
+					
+					Tooltip.hideAllTooltips();
+					var on_invalid_input = function(invalid_input_descriptions) {
+						if (InputValidator.Input.Proposal.content.code in invalid_input_descriptions)
+							Tooltip.showTooltip(content_field, form.parent(), 'left', invalid_input_descriptions[InputValidator.Input.Proposal.content.code]);
+					};
+					
+					if (InputValidator.validatePublicateProposalInput(on_invalid_input, content)) {
+						var on_success = function(proposal_id) {
+							alert("publicateProposal OK, completar acciones aqui");
+						};
+						
+						var on_error = function(http_error_code, server_error_code) {
+							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
+						};
+						
+						Server.publicateProposal(on_success, on_error, content, solution_id);
 					}
 				});
 			</script>

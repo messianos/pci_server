@@ -5,7 +5,16 @@
 	<% view new_solution_page_view uses ViewContent::NewSolutionPageContent extends page_template_view %>
 		
 		
+		<% template main_content() %>
+			<div class="main-container narrow header-bar-padding">
+				<legend>Nueva solución</legend>
+				<% include publicate_solution_form() using forms_view %>
+			</div>
+		<% end template %>
+		
+		
 		<% template page_title() %>
+			Nueva solución - PCI
 		<% end template %>
 		
 		
@@ -18,14 +27,7 @@
 		<% template body_content() %>
 			<% include header_bar() using template_view %>
 			<% include navigation_menu() using template_view %>
-			<div class="narrow header-bar-padding" id="main-container">
-				<legend>Nueva solución</legend>
-				<% include publicate_solution_form() using forms_view %>
-			</div>
-		<% end template %>
-		
-		
-		<% template js_body_code() %>
+			<% include main_content() %>
 		<% end template %>
 		
 		

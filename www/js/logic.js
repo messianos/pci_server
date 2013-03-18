@@ -1061,8 +1061,9 @@ Notification.Event.getNotificationMessage = function(event_code, originator_user
 }
 */
 
+// TODO: activate
 Notification.checkNotificationsPeriodically = function(container) {
-	setInterval(function() {
+	/*setInterval(function() {
 		var on_success = function(notification_count, notifications) {
 			NotificationContainer.emptyContainer(container);
 			for (var i = 0; i < notification_count; i++) {
@@ -1073,5 +1074,5 @@ Notification.checkNotificationsPeriodically = function(container) {
 			}
 		};
 		Server.unseenNotifications(on_success, null);
-	}, Notification.Aux.check_interval);
+	}, Notification.Aux.check_interval);*/
 }

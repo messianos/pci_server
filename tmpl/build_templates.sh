@@ -10,6 +10,7 @@ echo -- Building Templates from `pwd`...
 cppcms_tmpl_cc	auxiliar/PageTemplate.tmpl \
 				auxiliar/Forms.tmpl \
 				auxiliar/Template.tmpl \
+				auxiliar/Clarifications.tmpl \
 				pages/ErrorPage.tmpl \
 				pages/MainPage.tmpl \
 				pages/UserPage.tmpl \

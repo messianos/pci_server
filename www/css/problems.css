@@ -1,15 +1,32 @@
 
-#problems-toolbar-container {
-	
+.problem-information-container {
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #E6E6E6),
+		color-stop(0.1, white) );
+	border-color: #D0D0D0;
+	border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	overflow: hidden;
+	padding: 16px;
+	margin-bottom: 10px;
 }
 
-#new-problem-button {
-	background-image: url('../img/new_problem_off.png');
-	background-position: left center;
-	background-repeat: no-repeat;
-	padding-left: 40px;
+.problem-description-link {
+	color: #333333;
+	display: block;
+	font-family: font_link_description;
+	font-size: 25px;
+	line-height: 27px;
+	text-shadow: 0px 0px 1px #999;
 }
 
-#new-problem-button:hover {
-	background-image: url('../img/new_problem_on.png');
+.problem-description-link:hover {
+	text-shadow: 0px 0px 3px #AAA;
+}
+
+.problem-description-statistic {
+	font-size: 30px;
+	color: #8BC7FF;
+	text-shadow: 1px 1px #000;
+	margin-bottom: 8px;
 }

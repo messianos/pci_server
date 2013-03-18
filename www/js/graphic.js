@@ -47,7 +47,6 @@ Toast.Aux.removeToast = function(toast) {
 				highest_toast = Toast.Temp.toasts[i];
 			}
 		}
-		
 		if (highest_toast != null)
 			Toast.Temp.current_offset = max_offset + highest_toast.outerHeight() + Toast.Aux.separation;
 		else
@@ -56,6 +55,8 @@ Toast.Aux.removeToast = function(toast) {
 }
 
 Toast.Aux.configureToast = function(toast) {
+	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
+	
 	var close_button = $('<a>X</a>');
 	close_button.css({
 		'background-color': '#1A1A1A',
@@ -108,7 +109,6 @@ Toast.showErrorToast = function(http_error_code, server_error_code, error_descri
 	html_content += '</div>';
 	
 	var toast = $(html_content);
-	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
 	toast.css({
 		'background-color': '#CD1B1B',
 		'border-top-color': '#F22020',
@@ -131,7 +131,6 @@ Toast.showErrorToast = function(http_error_code, server_error_code, error_descri
 
 Toast.showNotificationToast = function(html_content) {
 	var toast = $('<div>' + html_content + '</div>');
-	Toast.Temp.toasts[Toast.Temp.toasts.length] = toast;
 	toast.css({
 		'background-color': '#1A1A1A',
 		'border-top-color': '#666666',

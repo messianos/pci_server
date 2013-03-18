@@ -1,0 +1,37 @@
+
+/* Debugging
+
+div {
+  border-color:Red;
+  border-style:solid;
+  border-width:1px;
+}
+
+*/
+
+@font-face {
+	font-family: default-font;
+	src:
+		local(Arial),
+		local(Haettenschweiler),
+		local("Franklin Gothic Bold"),
+		local(Charcoal),
+		local("Helvetica Inserat");
+}
+
+* {
+	font-family: default-font;
+	margin: 0px;
+	outline-style: none;
+	outline-width: 0px;
+	padding: 0px;
+}
+
+a, a:active, a:hover, a:visited {
+	cursor: pointer;
+	text-decoration: none;
+}
+
+textarea {
+	resize: none;
+}
