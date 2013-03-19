@@ -197,129 +197,6 @@ User *DatabaseInterface::searchUser(string user_name) {
 	return fetchUser(result);
 }
 
-User *DatabaseInterface::searchUserByProblem(string problem_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Problem"
-			"   ON Problem.creator_user_name = User.user_name "
-			"	WHERE Problem.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << problem_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-
-}
-
-// TODO: Revise
-User *DatabaseInterface::searchUserBySolution(string solution_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Solution"
-			"   ON Solution.creator_user_name = User.user_name "
-			"	WHERE Solution.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << solution_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-
-}
-
-User *DatabaseInterface::searchUserByProposal(string proposal_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Proposal"
-			"   ON Proposal.creator_user_name = User.user_name "
-			"	WHERE Proposal.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << proposal_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-}
-
-User *DatabaseInterface::searchUserByClarification(string clarification_id) {
-	stringstream query;
-
-	query << "	SELECT"
-			"	User.birth_date AS	birth_date,"
-			"	User.email AS email,"
-			"	User.first_name AS first_name,"
-			"	User.genre AS genre,"
-			"	User.last_name AS last_name,"
-			"	User.location AS location,"
-			"	User.preferences AS preferences,"
-			"	User.profile_content AS profile_content,"
-			"	User.profile_picture_url AS profile_picture_url,"
-			"	User.rank AS rank,"
-			"	UNIX_TIMESTAMP(User.sign_up_datetime) AS sign_up_datetime,"
-			"	User.user_name AS user_name"
-			"	FROM User JOIN Clarification"
-			"   ON Clarification.creator_user_name = User.user_name "
-			"	WHERE Clarification.id = UNHEX(?) "
-			"	LIMIT 1";
-
-	result result = database_handler << query.str() << clarification_id;
-
-	if (!result.next())
-		// problem not found
-		return NULL;
-
-	return fetchUser(result);
-}
-
 list<Problem *> *DatabaseInterface::searchProblems(/* TODO: define parameters */) {
 	// TODO
 	return NULL;
@@ -343,33 +220,28 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 	return problem_list;
 }
 
+/*
+ * TODO: method to test
+ */
+
 Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
+
 	string query = ""
 			"	SELECT"
-			"		Solution.content AS content,"
-			"		UNIX_TIMESTAMP(Solution.creation_datetime) AS creation_datetime,"
-			"		Solution.creator_user_name AS creator_user_name,"
-			"		Solution.description AS description,"
-			"		HEX(Solution.id) AS id,"
-			"		Solution.is_anonymous AS is_anonymous,"
-			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
-			"		HEX(Solution.problem_id) AS problem_id,"
-			"		Solution.vote_balance AS vote_balance"
+			"		HEX(solution_id)"
 			"	FROM"
 			"		problem_solved"
-			"		JOIN"
-			"		Solution"
-			"	ON problem_solved.solution_id = Solution.id"
 			"	WHERE"
-			"		problem_solved.problem_id = UNHEX(?)";
+			"		problem_id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
 	if (!result.next())
-		// Solution not found
 		return NULL;
+	string solution_id;
+	result.fetch("HEX(solution_id)",solution_id);
 
-	return fetchSolution(result);
+	return searchSolution(solution_id);
 }
 
 list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
@@ -434,31 +306,21 @@ list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount) {
 
 Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id) {
 	string query = ""
-			"	SELECT"
-			"		Problem.content AS content,"
-			"		UNIX_TIMESTAMP(Problem.creation_datetime) AS creation_datetime,"
-			"		Problem.creator_user_name AS creator_user_name,"
-			"		Solution.description AS description,"
-			"		HEX(Problem.id) AS id,"
-			"		Problem.is_anonymous AS is_anonymous,"
-			"		Problem.is_solved AS is_solved"
-			"		UNIX_TIMESTAMP(Problem.last_edition_datetime) AS last_edition_datetime,"
-			"		Problem.vote_balance AS vote_balance"
-			"	FROM"
-			"		problem_solved"
-			"		JOIN"
-			"		Problem"
-			"	ON problem_solved.problem_id = Problem.id"
-			"	WHERE"
-			"		solution_id = UNHEX(?)";
+				"	SELECT"
+				"		HEX(problem_id)"
+				"	FROM"
+				"		problem_solved"
+				"	WHERE"
+				"		solution_id = UNHEX(?)";
 
-	result result = database_handler << query << solution_id;
+		result result = database_handler << query << solution_id;
 
-	if (!result.next())
-		// Solution not found
-		return NULL;
+		if (!result.next())
+			return NULL;
+		string problem_id;
+		result.fetch("HEX(problem_id)",problem_id);
 
-	return fetchProblem(result);
+		return searchProblem(problem_id);
 }
 
 ErrorCode * DatabaseInterface::insertProblem(Problem *problem) {

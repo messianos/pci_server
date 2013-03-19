@@ -241,7 +241,12 @@ SELECT
         is_anonymous,
         last_edition_datetime
 FROM Solution;
- 
+
+CREATE VIEW problem_solved_printable_view AS
+SELECT
+        HEX(problem_id) AS problem_id,
+        HEX(solution_id) AS solution_id
+FROM problem_solved;
  
 CREATE VIEW problem_solutions_printable_view AS
 SELECT
@@ -459,6 +464,7 @@ CREATE PROCEDURE set_accepted_solution(
         IN in_solution_id BINARY(34)
 )
 BEGIN
+        DECLARE v_has_accepted_solution INT DEFAULT 0;
         DECLARE v_found_accepted_solution_id BINARY(17) DEFAULT NULL;
         DECLARE v_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
         DECLARE v_solution_id_binary BINARY(17) DEFAULT UNHEX(in_solution_id);
@@ -466,36 +472,50 @@ BEGIN
         START TRANSACTION;
        
         -- Searches the current accepted solution
-        SELECT solution_id
+        SELECT count(*)
         FROM problem_solved
         WHERE problem_id = v_problem_id_binary
         LIMIT 1
-        INTO v_found_accepted_solution_id;
+        INTO v_has_accepted_solution;
        
-        IF v_found_accepted_solution_id IS NOT NULL THEN
-                -- The current accepted solution must be unset
-                INSERT INTO problem_solutions(
-                        problem_id,
-                        solution_id
-                )
-                VALUES (
-                        v_problem_id_binary,
-                        v_found_accepted_solution_id
-                );
+        IF v_has_accepted_solution > 0 THEN
+        
+        		-- Search the old solution id
+        		SELECT solution_id
+		        FROM problem_solved
+		        WHERE problem_id = v_problem_id_binary
+		        LIMIT 1
+		        INTO v_found_accepted_solution_id;
+		                
+        		
+        		-- Insert the old problem solution into the problem_solution table
+        		INSERT INTO problem_solutions(
+        			problem_id,
+        			solution_id) 
+        		VALUES (
+	        		v_problem_id_binary,
+	        		v_found_accepted_solution_id
+        		);
+        
+                -- Delete the old problem-solution row
+                DELETE FROM problem_solved
+                WHERE problem_id = v_problem_id_binary
+                LIMIT 1;
         END IF;
        
-        -- Delete the associated problem_solutions row (the new accepted solution)
-        DELETE FROM problem_solutions
-        WHERE
-                problem_id = v_problem_id_binary
-                AND solution_id = v_solution_id_binary
-        LIMIT 1;
-       
-        -- Updates the Problem row
-        UPDATE problem_solved 
-        SET solution_id = v_solution_id_binary
-        WHERE problem_id = v_problem_id_binary
-        LIMIT 1;
+        -- Insert the new problem-solution row
+        INSERT INTO problem_solved (
+	        problem_id, 
+	        solution_id)
+        VALUES (
+	        v_problem_id_binary, 
+	        v_solution_id_binary);
+	        
+	    -- Delete from problem_solution the new accepted solution
+	    
+	    DELETE FROM problem_solutions
+	    WHERE solution_id = v_solution_id_binary
+	    LIMIT 1;
         
         -- Sets problem as solved
         UPDATE Problem
@@ -515,41 +535,49 @@ CREATE PROCEDURE unset_accepted_solution(
         IN in_problem_id BINARY(34)
 )
 BEGIN
+        DECLARE v_has_accepted_solution INT DEFAULT 0;
         DECLARE v_found_accepted_solution_id BINARY(17) DEFAULT NULL;
         DECLARE v_problem_id_binary BINARY(17) DEFAULT UNHEX(in_problem_id);
        
         START TRANSACTION;
        
-        -- Searches the current accepted solution
-        SELECT solution_id
+        -- Searches the current accepted solution        
+        SELECT count(*)
         FROM problem_solved
         WHERE problem_id = v_problem_id_binary
         LIMIT 1
-        INTO v_found_accepted_solution_id;
+        INTO v_has_accepted_solution;
        
-        IF v_found_accepted_solution_id IS NOT NULL THEN
-                -- The current accepted solution must be unset
-                INSERT INTO problem_solutions(
-                        problem_id,
-                        solution_id
-                )
-                VALUES (
-                        v_problem_id_binary,
-                        v_found_accepted_solution_id
-                );
-        END IF;
-       
-        -- Updates the Problem row
-        UPDATE problem_solved
-        SET solution_id = NULL
-        WHERE problem_id = v_problem_id_binary
-        LIMIT 1;
+        IF v_has_accepted_solution > 0  THEN
+        		
+        		-- Search for the solution_id 
+        		SELECT solution_id
+        		FROM problem_solved
+        		WHERE
+        			problem_id = v_problem_id_binary
+        		LIMIT 1
+        		INTO v_found_accepted_solution_id;
+        		
+        		-- Insert problem_id solution_id  into problem_solution table 
+        		INSERT INTO problem_solutions (
+        			problem_id,
+        			solution_id)
+        		VALUES(
+        			v_problem_id_binary,
+        			v_found_accepted_solution_id);
         
-		-- Sets problem as unsolved
-        UPDATE Problem
-        SET is_solved = 0
-        WHERE id = v_problem_id_binary
-        LIMIT 1;
+                -- The current accepted solution must be eliminate from problem_solve table
+                DELETE FROM problem_solved
+                WHERE problem_id = v_problem_id_binary;
+		        
+				-- Sets problem as unsolved
+		        UPDATE Problem
+		        SET is_solved = 0
+		        WHERE id = v_problem_id_binary
+		        LIMIT 1;
+		END IF;
+		
+		
        
         COMMIT;
 END; !
@@ -771,7 +799,7 @@ BEGIN
         INTO v_vote_balance;
        
         -- If the user already votes
-        SELECT count(*) FROM solution_votes
+        SELECT ROW_COUNT(*) FROM solution_votes
         WHERE solution_id = v_id_binary
         AND username = in_vote_user_name
         INTO checkExist;
@@ -1227,19 +1255,6 @@ BEGIN
         -- Deletes the associated solution_proposals rows
         DELETE FROM solution_proposals
         WHERE solution_id = OLD.id;
-END; !
- 
- 
-/*
- * Triggered before a problem is insert.
- */
-CREATE TRIGGER Solution_accepted_before_insert_problem_trigger
-AFTER INSERT ON Problem
-FOR EACH ROW
-BEGIN
-        -- Create a new Problem_solved row
-        INSERT INTO problem_solved (problem_id, solution_id) VALUES
-                (NEW.id, NULL);
 END; !
  
  

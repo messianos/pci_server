@@ -29,10 +29,6 @@ public:
 	static User *searchUser(std::string user_name);
 	static bool signInUser(std::string user_name, std::string encrypted_password);
 	static ErrorCode *signUpUser(User *user, std::string encrypted_password);
-	static User *searchUserByProblem(std::string problem_id);
-	static User *searchUserBySolution(std::string solution_id);
-	static User *searchUserByProposal(std::string proposal_id);
-	static User *searchUserByClarification(std::string clarification_id);
 
 	static int getUserVoteOnProblem(std::string user_name, std::string problem_id);
 	static int getUserVoteOnSolution(std::string user_name, std::string solution_id);
