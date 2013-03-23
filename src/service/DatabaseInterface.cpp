@@ -220,32 +220,23 @@ list<Problem *> *DatabaseInterface::searchProblemsByUser(string user_name) {
 }
 
 Solution *DatabaseInterface::searchAcceptedSolution(string problem_id) {
+
 	string query = ""
 			"	SELECT"
-			"		Solution.content AS content,"
-			"		UNIX_TIMESTAMP(Solution.creation_datetime) AS creation_datetime,"
-			"		Solution.creator_user_name AS creator_user_name,"
-			"		Solution.description AS description,"
-			"		HEX(Solution.id) AS id,"
-			"		Solution.is_anonymous AS is_anonymous,"
-			"		UNIX_TIMESTAMP(Solution.last_edition_datetime) AS last_edition_datetime,"
-			"		HEX(Solution.problem_id) AS problem_id,"
-			"		Solution.vote_balance AS vote_balance"
+			"		HEX(solution_id)"
 			"	FROM"
 			"		problem_solved"
-			"		JOIN"
-			"		Solution"
-			"	ON problem_solved.solution_id = Solution.id"
 			"	WHERE"
-			"		problem_solved.problem_id = UNHEX(?)";
+			"		problem_id = UNHEX(?)";
 
 	result result = database_handler << query << problem_id;
 
 	if (!result.next())
-		// Solution not found
 		return NULL;
+	string solution_id;
+	result.fetch("HEX(solution_id)",solution_id);
 
-	return fetchSolution(result);
+	return searchSolution(solution_id);
 }
 
 list<Problem *> *DatabaseInterface::searchProblemsRandom(int amount) {
@@ -310,31 +301,21 @@ list<Problem *> *DatabaseInterface::searchProblemsLatest(int amount) {
 
 Problem *DatabaseInterface::searchProblemByAcceptedSolution(string solution_id) {
 	string query = ""
-			"	SELECT"
-			"		Problem.content AS content,"
-			"		UNIX_TIMESTAMP(Problem.creation_datetime) AS creation_datetime,"
-			"		Problem.creator_user_name AS creator_user_name,"
-			"		Solution.description AS description,"
-			"		HEX(Problem.id) AS id,"
-			"		Problem.is_anonymous AS is_anonymous,"
-			"		Problem.is_solved AS is_solved"
-			"		UNIX_TIMESTAMP(Problem.last_edition_datetime) AS last_edition_datetime,"
-			"		Problem.vote_balance AS vote_balance"
-			"	FROM"
-			"		problem_solved"
-			"		JOIN"
-			"		Problem"
-			"	ON problem_solved.problem_id = Problem.id"
-			"	WHERE"
-			"		solution_id = UNHEX(?)";
+					"	SELECT"
+					"		HEX(problem_id)"
+					"	FROM"
+					"		problem_solved"
+					"	WHERE"
+					"		solution_id = UNHEX(?)";
 
-	result result = database_handler << query << solution_id;
+			result result = database_handler << query << solution_id;
 
-	if (!result.next())
-		// Solution not found
-		return NULL;
+			if (!result.next())
+				return NULL;
+			string problem_id;
+			result.fetch("HEX(problem_id)",problem_id);
 
-	return fetchProblem(result);
+			return searchProblem(problem_id);
 }
 
 void  DatabaseInterface::insertProblem(Problem *problem) {
@@ -355,7 +336,8 @@ void  DatabaseInterface::deleteProblem(string id) {
 	database_handler << query << id << exec;
 }
 
-// FIXME: READ FROM problems_solved
+// FIXME: READ FROM problem_solution
+//TODO changes like others
 list<Solution *> *DatabaseInterface::searchSolutions(string problem_id) {
 
 	string query = "	SELECT"
@@ -1180,4 +1162,3 @@ void DatabaseInterface::voteProposal(std::string proposal_id, std::string user_n
 
 	database_handler << query << proposal_id << user_name << is_positive << exec;
 }
-

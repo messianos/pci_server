@@ -1,4 +1,3 @@
-
 #ifndef DATABASEINTERFACE_H_
 #define DATABASEINTERFACE_H_
 
