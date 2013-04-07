@@ -15,8 +15,85 @@
 		<% end template %>
 		
 		
+		<% template central_content() %>
+			<div class="central-content-container pull-left">
+				<% include problem_content() %>
+				<% include clarifications(problem, clarifications) using clarifications_view %>
+			</div>
+		<% end template %>
+		
+		
+		<% template set_accepted_solution_button() %>
+			<!-- TODO: COMPLETAR -->
+		<% end template %>
+		
+		
+		<% template unset_accepted_solution_button() %>
+			<!-- TODO: COMPLETAR -->
+		<% end template %>
+		
+		
+		<% template solution_description(SolutionPointer solution) %>
+			<div class="row-fluid">
+				<a class="solution-description-link" href="<% url "/publication" using solution->id %>">
+					<%= solution->description %>
+				</a>
+			</div>
+			<div class="row-fluid">
+				<% if solution->is_anonymous %>
+					<i>Publicado anónimamente</i>
+				<% else %>
+					<i>Por <a href="<% url "/user" using solution->creator_user_name %>"><%= solution->creator_user_name %></a></i>
+				<% end %>
+				- <%= solution->creation_datetime->toString("%d/%m/%Y a las %H:%M hs.") %>
+			</div>
+		<% end template %>
+		
+		
+		<% template solution_statistics(SolutionPointer solution) %>
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="solution-description-statistic"><%= solution->vote_balance %></div>
+					<div class="text-center">Votos</div>
+				</div>
+			</div>
+		<% end template %>
+		
+		
+		<% template solution_information(SolutionPointer solution, bool is_accepted_solution) %>
+			<div class="solution-information-container">
+				<div class="row-fluid">
+					<div class="span2">
+						<% include solution_statistics(solution) %>
+					</div>
+					<div class="span8">
+						<% include solution_description(solution) %>
+					</div>
+					<div class="span2">
+						<% if is_accepted_solution %>
+							<% include unset_accepted_solution_button() %>
+						<% else %>
+							<% include set_accepted_solution_button() %>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		<% end template %>
+		
+		
 		<% template solutions_sidebar() %>
-			Completar con soluciones
+			<div class="solutions-sidebar-container pull-right">
+				<% if problem->is_solved %>
+					<% include solution_information(accepted_solution, 1) %>
+				<% end %>
+				<% foreach solution in *solutions %>
+					<% item %>
+						<% include solution_information(solution, 0) %>
+					<% end %>
+					<% empty %>
+						No se encontraron soluciones
+					<% end %>
+			</div>
 		<% end template %>
 		
 		
@@ -142,16 +219,17 @@
 		
 		
 		<% template main_content() %>
-			<div class="main-container narrow header-bar-padding">
-				<% if signed_in %>
-					<% include problem_toolbar() %>	
+			<div class="main-container narrow">
+				<div class="main-container-padding">
+					<% if signed_in %>
+						<% include problem_toolbar() %>
+						<hr />
+					<% end %>
+					<% include problem_header() %>
 					<hr />
-				<% end %>
-				<% include problem_header() %>
-				<hr />
-				<% include solutions_sidebar() %>
-				<% include problem_content() %>
-				<% include clarifications(problem, clarifications) using clarifications_view %>
+					<% include solutions_sidebar() %>
+					<% include central_content() %>
+				</div>
 			</div>
 		<% end template %>
 		
@@ -170,6 +248,8 @@
 		
 		<% template head_content() %>
 			<% include page_template_view::head_content() %>
+			<link href="/css/problem.css" rel="stylesheet" type="text/css" />
+			<link href="/css/clarifications.css" rel="stylesheet" type="text/css" />
 			<link href="/lib/xbbcode/xbbcode.css" rel="stylesheet" type="text/css" />
 			<script src="/lib/xbbcode/xbbcode.js"></script>
 		<% end template %>

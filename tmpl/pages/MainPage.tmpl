@@ -6,10 +6,12 @@
 		
 		
 		<% template main_content() %>
-			<div class="main-container narrow header-bar-padding">
-				<div class="sign-up-form-container pull-right">
-					<legend>Regístrate</legend>
-					<% include sign_up_form() using forms_view %>
+			<div class="main-container narrow">
+				<div class="main-container-padding">
+					<div class="sign-up-form-container pull-right">
+						<legend>Regístrate</legend>
+						<% include sign_up_form() using forms_view %>
+					</div>
 				</div>
 			</div>
 		<% end template %>

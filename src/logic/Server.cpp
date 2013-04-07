@@ -871,6 +871,7 @@ void Server::askClarification() {
 		setSuccessResponseStatus();
 		
 	} catch (std::exception &e) {
+		cout << e.what() << endl;
 		setErrorResponseStatus(http::response::internal_server_error, ServerError::UNKNOWN);
 	}
 }

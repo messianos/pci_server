@@ -127,16 +127,18 @@
 		
 		
 		<% template main_content() %>
-			<div class="main-container narrow header-bar-padding">
-				<% if signed_in %>
-					<% include solution_toolbar() %>
+			<div class="main-container narrow">
+				<div class="main-container-padding">
+					<% if signed_in %>
+						<% include solution_toolbar() %>
+						<hr />
+					<% end %>
+					<% include solution_header() %>
 					<hr />
-				<% end %>
-				<% include solution_header() %>
-				<hr />
-				<% include proposals_sidebar() %>
-				<% include solution_content() %>
-				<% include clarifications(solution, clarifications) using clarifications_view %>
+					<% include proposals_sidebar() %>
+					<% include solution_content() %>
+					<% include clarifications(solution, clarifications) using clarifications_view %>
+				</div>
 			</div>
 		<% end template %>
 		
@@ -155,6 +157,7 @@
 		
 		<% template head_content() %>
 			<% include page_template_view::head_content() %>
+			<link href="/css/clarifications.css" rel="stylesheet" type="text/css" />
 		<% end template %>
 		
 		

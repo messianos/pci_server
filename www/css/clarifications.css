@@ -1,0 +1,24 @@
+
+.clarifications-row-container {
+	padding: 16px 8px;
+	overflow: hidden;
+}
+
+.clarifications-row-container.header {
+	background-color: #EDFFD8;
+}
+
+.clarifications-row-container.even {
+}
+
+.clarifications-row-container.odd {
+	background-color: #F9FFF3;
+}
+
+.clarifications-column-container {
+	width: 45%;
+}
+
+.clarifications-header {
+	text-align: center;
+}

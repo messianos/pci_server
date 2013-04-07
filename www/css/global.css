@@ -27,6 +27,14 @@ div {
 	padding: 0px;
 }
 
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+}
+
 a, a:active, a:hover, a:visited {
 	cursor: pointer;
 	text-decoration: none;

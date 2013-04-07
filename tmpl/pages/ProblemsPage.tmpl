@@ -25,11 +25,11 @@
 		<% template problem_statistics(ProblemPointer problem) %>
 			<div class="row-fluid">
 				<div class="span6">
-					<div class="problem-description-statistic text-center"><%= problem->vote_balance %></div>
+					<div class="problem-description-statistic"><%= problem->vote_balance %></div>
 					<div class="text-center">Votos</div>
 				</div>
 				<div class="span6">
-					<div class="problem-description-statistic text-center">N/A</div>
+					<div class="problem-description-statistic">N/A</div>
 					<div class="text-center">Soluciones</div>
 				</div>
 			</div>
@@ -109,12 +109,14 @@
 		
 		
 		<% template main_content() %>
-			<div class="main-container narrow header-bar-padding">
-				<% if signed_in %>
-					<% include problems_toolbar() %>	
-					<hr />
-				<% end %>
-				<% include problems_information() %>
+			<div class="main-container narrow">
+				<div class="main-container-padding">
+					<% if signed_in %>
+						<% include problems_toolbar() %>
+						<hr />
+					<% end %>
+					<% include problems_information() %>
+				</div>
 			</div>
 		<% end template %>
 		

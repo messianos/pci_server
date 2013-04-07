@@ -608,7 +608,7 @@ BEGIN
         INTO v_vote_balance;
        
         -- If the user already votes
-        SELECT count(*) FROM problem_votes
+        SELECT COUNT(*) FROM problem_votes
         WHERE problem_id = v_id_binary
         AND username = in_vote_user_name
         INTO checkExist;
@@ -799,7 +799,7 @@ BEGIN
         INTO v_vote_balance;
        
         -- If the user already votes
-        SELECT ROW_COUNT(*) FROM solution_votes
+        SELECT ROW_COUNT() FROM solution_votes
         WHERE solution_id = v_id_binary
         AND username = in_vote_user_name
         INTO checkExist;
@@ -1269,7 +1269,7 @@ DELIMITER ;
 CREATE EVENT myevent
     ON SCHEDULE EVERY 5 SECOND
     DO
-      update_all_users_rank();
+      CALL update_all_users_rank();
  
  
  

@@ -6,9 +6,11 @@
 		
 		
 		<% template main_content() %>
-			<div class="main-container narrow header-bar-padding">
-				<legend>Nueva solución</legend>
-				<% include publicate_solution_form() using forms_view %>
+			<div class="main-container narrow">
+				<div class="main-container-padding">
+					<legend>Nueva solución</legend>
+					<% include publicate_solution_form(problem_id) using forms_view %>
+				</div>
 			</div>
 		<% end template %>
 		

@@ -6,40 +6,51 @@
 		
 		
 		<% template clarification_row(PublicationPointer publication, ClarificationPointer clarification) %>
-			(Temporal)<br />
-			Pregunta: <%= clarification->question %><br />
-			<% if (! clarification->answer.empty()) %>
-				Respuesta: <%= clarification->answer %><br />
-			<% else %>
-				<% if (content.signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
-					<% include answer_clarification_form(clarification->id) using forms_view %>
+			<div class="clarifications-column-container pull-left">
+				<%= clarification->question %>
+			</div>
+			<div class="clarifications-column-container pull-right">
+				<% if (! clarification->answer.empty()) %>
+					<%= clarification->answer %>
+				<% else %>
+					<% if (content.signed_in && content.user_name.compare(publication->creator_user_name) == 0) %>
+						<% include answer_clarification_form(clarification->id) using forms_view %>
+					<% end %>
 				<% end %>
-			<% end %>
+			</div>
 		<% end template %>
 		
 		
 		<% template clarifications(PublicationPointer publication, ClarificationList clarifications) %>
 			<hr />
 			<h3>Aclaraciones</h3>
-			<div class="clarifications_row_container">
-				<div class="clarifications_question_container">
-					<div class="clarifications_column_header clarifications_question_content">
-						Pregunta
-					</div>
+			<div class="clarifications-row-container header">
+				<div class="clarifications-column-container clarifications-header pull-left">
+					Pregunta
 				</div>
-				<div class="clarifications_answer_container">
-					<div class="clarifications_answer_content clarifications_column_header">
-						Respuesta
-					</div>
+				<div class="clarifications-column-container clarifications-header pull-right">
+					Respuesta
 				</div>
-				<% foreach clarification in *clarifications %>
-					<% item %>
-						<% include clarification_row(publication, clarification) %>
-  					<% end %>
-  					<% empty %>
-  					<% end %>
 			</div>
+			<% c++ int row_index = 0; %>
+			<% foreach clarification in *clarifications %>
+				<% item %>
+					<% if (row_index % 2 == 0) %>
+						<div class="clarifications-row-container even">
+							<% include clarification_row(publication, clarification) %>
+						</div>
+					<% else %>
+						<div class="clarifications-row-container odd">
+							<% include clarification_row(publication, clarification) %>
+						</div>
+					<% end %>
+					<% c++ row_index++; %>
+				<% end %>
+ 				<% empty %>
+ 					No hay aclaraciones
+ 				<% end %>
 			<% if (content.signed_in && content.user_name.compare(publication->creator_user_name) != 0) %>
+				<br />
 				<% include ask_clarification_form(publication->id) using forms_view %>
 			<% end %>
 		<% end template %>

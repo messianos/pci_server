@@ -189,7 +189,7 @@
 		<% end template %>
 		
 		
-		<% template publicate_solution_form() %>
+		<% template publicate_solution_form(String problem_id) %>
 			<form id="publicate-solution-form">
 				<input id="publicate-solution-description" placeholder="Descripción de la solución" type="text" /><br />
 				<textarea id="publicate-solution-content"></textarea><br />
@@ -208,6 +208,7 @@
 					var description_field = $('#publicate-solution-description');
 					var content = $.trim(content_field.val());
 					var description = $.trim(description_field.val());
+					var problem_id = '<%= problem_id %>';
 					
 					Tooltip.hideAllTooltips();
 					var on_invalid_input = function(invalid_input_descriptions) {
@@ -226,7 +227,7 @@
 							Toast.showErrorToast(http_error_code, server_error_code, Server.Error.getErrorDescription(server_error_code));
 						};
 						
-						Server.publicateSolution(on_success, on_error, content, description);
+						Server.publicateSolution(on_success, on_error, content, description, problem_id);
 					}
 				});
 			</script>
